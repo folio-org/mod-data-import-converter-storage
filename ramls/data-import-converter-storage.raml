@@ -1,0 +1,33 @@
+#%RAML 1.0
+
+title: Data Import Converter Storage
+version: v0.1
+protocols: [ HTTP, HTTPS ]
+baseUri: http://localhost
+
+documentation:
+  - title: Data Import Converter Storage API
+    content: test API
+
+types:
+  errors: !include raml-storage/raml-util/schemas/errors.schema
+
+traits:
+  validate: !include raml-storage/raml-util/traits/validation.raml
+  language: !include raml-storage/raml-util/traits/language.raml
+  pageable:  !include raml-storage/raml-util/traits/pageable.raml
+  searchable: !include raml-storage/raml-util/traits/searchable.raml
+
+resourceTypes:
+  collection: !include raml-storage/raml-util/rtypes/collection.raml
+  collection-item: !include raml-storage/raml-util/rtypes/item-collection.raml
+
+/converter-storage:
+  get:
+    description: Stub endpoint
+    responses:
+      500:
+        description: "Internal server error"
+        body:
+          text/plain:
+            example: "Internal server error"

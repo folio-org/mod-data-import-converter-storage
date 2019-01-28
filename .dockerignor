@@ -1,0 +1,4 @@
+*
+!Dockerfile
+!docker*
+!mod-data-import-converter-storage-server/target/*.jar
