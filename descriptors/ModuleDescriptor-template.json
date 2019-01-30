@@ -1,0 +1,45 @@
+{
+  "id": "${artifactId}-${version}",
+  "name": "Data Import Converter Storage",
+  "requires": [],
+  "provides": [
+    {
+      "id": "data-import-converter-storage",
+      "version": "0.1",
+      "handlers": [
+        {
+          "methods": [
+            "GET"
+          ],
+          "pathPattern": "/converter-storage"
+        }
+      ]
+    },
+    {
+      "id": "_tenant",
+      "version": "1.0",
+      "interfaceType": "system",
+      "handlers": [
+        {
+          "methods": [
+            "POST"
+          ],
+          "pathPattern": "/_/tenant"
+        },
+        {
+          "methods": [
+            "DELETE"
+          ],
+          "pathPattern": "/_/tenant"
+        }
+      ]
+    }
+  ],
+  "launchDescriptor": {
+    "dockerImage": "${artifactId}:${version}",
+    "dockerArgs": {
+      "HostConfig": { "PortBindings": { "8081/tcp":  [{ "HostPort": "%p" }] } }
+    },
+    "dockerPull" : false
+  }
+}
