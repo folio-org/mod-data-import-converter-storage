@@ -6,8 +6,11 @@ import java.util.Optional;
 
 /**
  * Generic data access object
+ *
+ * @param <T> type of the entity
+ * @param <S> type of the collection of T entities
  */
-public interface ProfileDao <T,R> {
+public interface ProfileDao<T, S> {
 
   /**
    * Searches for T entities in database
@@ -15,9 +18,9 @@ public interface ProfileDao <T,R> {
    * @param query  query from URL
    * @param offset starting index in a list of results
    * @param limit  limit of records for pagination
-   * @return future with R, a collection of T entities
+   * @return future with S, a collection of T entities
    */
-  Future<R> getProfiles(String query, int offset, int limit);
+  Future<S> getProfiles(String query, int offset, int limit);
 
   /**
    * Searches for T entity by id
