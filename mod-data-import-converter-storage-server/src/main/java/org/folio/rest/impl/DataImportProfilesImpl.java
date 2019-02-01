@@ -12,8 +12,9 @@ import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.resource.DataImportProfiles;
 import org.folio.rest.tools.utils.TenantTool;
-import org.folio.services.JobProfileServiceImpl;
 import org.folio.services.ProfileService;
+import org.folio.spring.SpringContextUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
@@ -23,11 +24,14 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
   private static final Logger logger = LoggerFactory.getLogger(DataImportProfilesImpl.class);
 
+  @Autowired
   private ProfileService<JobProfile, JobProfileCollection> jobProfileService;
 
+  private String tenantId;
+
   public DataImportProfilesImpl(Vertx vertx, String tenantId) {
-    String calculatedTenantId = TenantTool.calculateTenantId(tenantId);
-    this.jobProfileService = new JobProfileServiceImpl(vertx, calculatedTenantId);
+    SpringContextUtil.autowireDependencies(this, Vertx.currentContext());
+    this.tenantId = TenantTool.calculateTenantId(tenantId);
   }
 
   @Override
@@ -35,7 +39,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                 Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        jobProfileService.saveProfile(entity)
+        jobProfileService.saveProfile(entity, tenantId)
           .map((Response) PostDataImportProfilesJobProfilesResponse
             .respond201WithApplicationJson(entity, PostDataImportProfilesJobProfilesResponse.headersFor201()))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -52,7 +56,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        jobProfileService.getProfiles(query, offset, limit)
+        jobProfileService.getProfiles(query, offset, limit, tenantId)
           .map(GetDataImportProfilesJobProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -70,7 +74,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.setId(id);
-        jobProfileService.updateProfile(entity)
+        jobProfileService.updateProfile(entity, tenantId)
           .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -86,7 +90,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        jobProfileService.getProfileById(id)
+        jobProfileService.getProfileById(id, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(String.format("Job Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesJobProfilesByIdResponse::respond200WithApplicationJson)
@@ -105,7 +109,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        jobProfileService.deleteProfile(id)
+        jobProfileService.deleteProfile(id, tenantId)
           .map(deleted -> deleted ?
             DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
               String.format("Job Profile with id '%s' was successfully deleted", id)) :

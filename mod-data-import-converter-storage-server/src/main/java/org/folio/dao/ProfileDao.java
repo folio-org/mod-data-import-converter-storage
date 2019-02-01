@@ -18,39 +18,44 @@ public interface ProfileDao<T, S> {
    * @param query  query from URL
    * @param offset starting index in a list of results
    * @param limit  limit of records for pagination
+   * @param tenantId tenant id
    * @return future with S, a collection of T entities
    */
-  Future<S> getProfiles(String query, int offset, int limit);
+  Future<S> getProfiles(String query, int offset, int limit, String tenantId);
 
   /**
    * Searches for T entity by id
    *
    * @param id Profile id
+   * @param tenantId tenant id
    * @return future with optional entity
    */
-  Future<Optional<T>> getProfileById(String id);
+  Future<Optional<T>> getProfileById(String id, String tenantId);
 
   /**
    * Saves T entity to database
    *
    * @param profile Profile to save
+   * @param tenantId tenant id
    * @return future
    */
-  Future<String> saveProfile(T profile);
+  Future<String> saveProfile(T profile, String tenantId);
 
   /**
    * Updates T entity in database
    *
    * @param profile Profile to update
+   * @param tenantId tenant id
    * @return future with updated entity
    */
-  Future<T> updateProfile(T profile);
+  Future<T> updateProfile(T profile, String tenantId);
 
   /**
    * Deletes entity from database
    *
    * @param id Profile id
+   * @param tenantId tenant id
    * @return future with true if succeeded
    */
-  Future<Boolean> deleteProfile(String id);
+  Future<Boolean> deleteProfile(String id, String tenantId);
 }
