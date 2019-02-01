@@ -30,7 +30,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private String tenantId;
 
   public DataImportProfilesImpl(Vertx vertx, String tenantId) {
-    SpringContextUtil.autowireDependencies(this, Vertx.currentContext());
+    SpringContextUtil.autowireDependencies(this, Vertx.currentContext()); //NOSONAR
     this.tenantId = TenantTool.calculateTenantId(tenantId);
   }
 
