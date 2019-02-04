@@ -13,6 +13,8 @@ types:
   errors: !include raml-storage/raml-util/schemas/errors.schema
   jobProfile: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfile.json
   jobProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfileCollection.json
+  matchProfile: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfile.json
+  matchProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfileCollection.json
 
 traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
@@ -56,6 +58,42 @@ resourceTypes:
             body:
               application/json:
                 type: jobProfile
+      delete:
+        responses:
+          204:
+            body:
+              text/plain: !!null
+  /matchProfiles:
+    displayName: Match Profiles
+    description: API for managing Match Profiles
+    type:
+      collection:
+        schemaCollection: matchProfileCollection
+        schemaItem: matchProfile
+        exampleCollection: !include raml-storage/examples/mod-data-import-converter-storage/matchProfileCollection.sample
+        exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/matchProfile.sample
+    post:
+      is: [validate]
+    get:
+      is: [
+        searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
+        pageable,
+        validate
+      ]
+    /{id}:
+      displayName: Match Profile
+      description: Get, Delete or Update a specific Match Profile
+      type:
+        collection-item:
+          schema: matchProfile
+          exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/matchProfile.sample
+      put:
+        is: [validate]
+        responses:
+          200:
+            body:
+              application/json:
+                type: matchProfile
       delete:
         responses:
           204:
