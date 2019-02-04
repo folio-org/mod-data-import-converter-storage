@@ -38,7 +38,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       CQLWrapper cql = getCQLWrapper(getTableName(), query, limit, offset);
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, future.completer());
     } catch (Exception e) {
-      logger.error("Error while searching for {}", getProfileType(), e);
+      logger.error("Error while searching for {}", getProfileType().getSimpleName(), e);
       future.fail(e);
     }
     return mapResultsToCollection(future);
@@ -51,7 +51,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       Criteria idCrit = constructCriteria(ID_FIELD, id);
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), new Criterion(idCrit), true, false, future.completer());
     } catch (Exception e) {
-      logger.error("Error querying {} by id", getProfileType(), e);
+      logger.error("Error querying {} by id", getProfileType().getSimpleName(), e);
       future.fail(e);
     }
     return future
@@ -69,14 +69,16 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   @Override
   public Future<T> updateProfile(T profile, String tenantId) {
     Future<T> future = Future.future();
+    String profileId = getProfileId(profile);
+    String className = getProfileType().getSimpleName();
     try {
       Criteria idCrit = constructCriteria(ID_FIELD, getProfileId(profile));
       pgClientFactory.createInstance(tenantId).update(getTableName(), profile, new Criterion(idCrit), true, updateResult -> {
         if (updateResult.failed()) {
-          logger.error("Could not update {} with id {}", getProfileType(), getProfileId(profile), updateResult.cause());
+          logger.error("Could not update {} with id {}", className, profileId, updateResult.cause());
           future.fail(updateResult.cause());
         } else if (updateResult.result().getUpdated() != 1) {
-          String errorMessage = String.format("%s with id '%s' was not found", getProfileType(), getProfileId(profile));
+          String errorMessage = String.format("%s with id '%s' was not found", className, profileId);
           logger.error(errorMessage);
           future.fail(new NotFoundException(errorMessage));
         } else {
@@ -84,7 +86,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
         }
       });
     } catch (Exception e) {
-      logger.error("Error updating {} with id {}", getProfileType(), getProfileId(profile), e);
+      logger.error("Error updating {} with id {}", className, profileId, e);
       future.fail(e);
     }
     return future;
