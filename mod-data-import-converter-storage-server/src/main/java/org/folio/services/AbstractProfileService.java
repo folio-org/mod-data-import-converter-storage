@@ -15,7 +15,7 @@ import java.util.Optional;
 public abstract class AbstractProfileService<T, S> implements ProfileService<T, S> {
 
   @Autowired
-  private ProfileDao<T, S> profileDao;
+  protected ProfileDao<T, S> profileDao;
 
   @Override
   public Future<S> getProfiles(String query, int offset, int limit, String tenantId) {
