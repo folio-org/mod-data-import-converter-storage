@@ -7,10 +7,12 @@ baseUri: http://localhost
 
 documentation:
   - title: Data Import Converter Storage API
-    content: test API
+    content: API for managing data import profiles
 
 types:
   errors: !include raml-storage/raml-util/schemas/errors.schema
+  jobProfile: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfile.json
+  jobProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfileCollection.json
 
 traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
@@ -22,12 +24,40 @@ resourceTypes:
   collection: !include raml-storage/raml-util/rtypes/collection.raml
   collection-item: !include raml-storage/raml-util/rtypes/item-collection.raml
 
-/converter-storage:
-  get:
-    description: Stub endpoint
-    responses:
-      500:
-        description: "Internal server error"
-        body:
-          text/plain:
-            example: "Internal server error"
+/data-import-profiles:
+  /jobProfiles:
+    displayName: Job Profiles
+    description: API for managing Job Profiles
+    type:
+      collection:
+        schemaCollection: jobProfileCollection
+        schemaItem: jobProfile
+        exampleCollection: !include raml-storage/examples/mod-data-import-converter-storage/jobProfileCollection.sample
+        exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/jobProfile.sample
+    post:
+      is: [validate]
+    get:
+      is: [
+        searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
+        pageable,
+        validate
+      ]
+    /{id}:
+      displayName: Job Profile
+      description: Get, Delete or Update a specific Job Profile
+      type:
+        collection-item:
+          schema: jobProfile
+          exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/jobProfile.sample
+      put:
+        is: [validate]
+        responses:
+          200:
+            body:
+              application/json:
+                type: jobProfile
+      delete:
+        responses:
+          204:
+            body:
+              text/plain: !!null
