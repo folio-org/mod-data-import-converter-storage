@@ -15,6 +15,8 @@ types:
   jobProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfileCollection.json
   matchProfile: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfile.json
   matchProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfileCollection.json
+  actionProfile: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfile.json
+  actionProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfileCollection.json
 
 traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
@@ -94,6 +96,42 @@ resourceTypes:
             body:
               application/json:
                 type: matchProfile
+      delete:
+        responses:
+          204:
+            body:
+              text/plain: !!null
+  /actionProfiles:
+    displayName: Action Profiles
+    description: API for managing Action Profiles
+    type:
+      collection:
+        schemaCollection: actionProfileCollection
+        schemaItem: actionProfile
+        exampleCollection: !include raml-storage/examples/mod-data-import-converter-storage/actionProfileCollection.sample
+        exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/actionProfile.sample
+    post:
+      is: [validate]
+    get:
+      is: [
+        searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
+        pageable,
+        validate
+      ]
+    /{id}:
+      displayName: Action Profile
+      description: Get, Delete or Update a specific Action Profile
+      type:
+        collection-item:
+          schema: actionProfile
+          exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/actionProfile.sample
+      put:
+        is: [validate]
+        responses:
+          200:
+            body:
+              application/json:
+                type: actionProfile
       delete:
         responses:
           204:

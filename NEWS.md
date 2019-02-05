@@ -3,6 +3,7 @@
 * Implemented CRUD endpoints for Job Profile entity
 * Populated sample Job Profile data
 * Implemented CRUD endpoints for Match Profile entity
+* Implemented CRUD endpoints for Action Profile entity
 
     | METHOD |             URL                          | DESCRIPTION                       |
     |--------|------------------------------------------|-----------------------------------|
@@ -16,3 +17,8 @@
     | GET    | /data-import-profiles/matchProfiles/{id} | Get Match Profile by id           |
     | PUT    | /data-import-profiles/matchProfiles/{id} | Update Match Profile entity       |
     | DELETE | /data-import-profiles/matchProfiles/{id} | Delete Match Profile entity       |
+    | GET    | /data-import-profiles/actionProfiles     | Get collection of Action Profiles |
+    | POST   | /data-import-profiles/actionProfiles     | Create Action Profile             |
+    | GET    | /data-import-profiles/actionProfiles/{id}| Get Action Profile by id          |
+    | PUT    | /data-import-profiles/actionProfiles/{id}| Update Action Profile entity      |
+    | DELETE | /data-import-profiles/actionProfiles/{id}| Delete Action Profile entity      |
