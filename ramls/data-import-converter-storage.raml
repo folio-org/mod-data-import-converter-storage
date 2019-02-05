@@ -14,7 +14,11 @@ types:
   jobProfile: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfile.json
   jobProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfileCollection.json
   matchProfile: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfile.json
+  mamatchProfile: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfile.json
   matchProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfileCollection.json
+  mappingProfile: !include raml-storage/schemas/mod-data-import-converter-storage/mappingProfile.json
+  mappingProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/mappingProfileCollection.json
+
 
 traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
@@ -94,6 +98,42 @@ resourceTypes:
             body:
               application/json:
                 type: matchProfile
+      delete:
+        responses:
+          204:
+            body:
+              text/plain: !!null
+  /mappingProfiles:
+    displayName: Mapping Profiles
+    description: API for managing Mapping Profiles
+    type:
+      collection:
+        schemaCollection: mappingProfileCollection
+        schemaItem: mappingProfile
+        exampleCollection: !include raml-storage/examples/mod-data-import-converter-storage/mappingProfileCollection.sample
+        exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/mappingProfile.sample
+    post:
+      is: [validate]
+    get:
+      is: [
+        searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
+        pageable,
+        validate
+      ]
+    /{id}:
+      displayName: Mapping Profile
+      description: Get, Delete or Update a specific Mapping Profile
+      type:
+        collection-item:
+          schema: mappingProfile
+          exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/mappingProfile.sample
+      put:
+        is: [validate]
+        responses:
+          200:
+            body:
+              application/json:
+                type: mappingProfile
       delete:
         responses:
           204:
