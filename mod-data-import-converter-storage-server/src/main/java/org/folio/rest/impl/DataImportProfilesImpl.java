@@ -8,6 +8,8 @@ import io.vertx.core.Vertx;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dataImport.util.ExceptionHelper;
+import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ActionProfileCollection;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfile;
@@ -30,6 +32,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private ProfileService<JobProfile, JobProfileCollection> jobProfileService;
   @Autowired
   private ProfileService<MatchProfile, MatchProfileCollection> matchProfileService;
+  @Autowired
+  private ProfileService<ActionProfile, ActionProfileCollection> actionProfileService;
 
   private String tenantId;
 
@@ -215,6 +219,97 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .setHandler(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to delete Match Profile with id {}",id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void postDataImportProfilesActionProfiles(String lang, ActionProfile entity, Map<String, String> okapiHeaders,
+                                                   Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        actionProfileService.saveProfile(entity, tenantId)
+          .map((Response) PostDataImportProfilesActionProfilesResponse
+            .respond201WithApplicationJson(entity, PostDataImportProfilesActionProfilesResponse.headersFor201()))
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to create Action Profile", e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void getDataImportProfilesActionProfiles(String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
+                                                  Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        actionProfileService.getProfiles(query, offset, limit, tenantId)
+          .map(GetDataImportProfilesActionProfilesResponse::respond200WithApplicationJson)
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to get Action Profiles");
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void putDataImportProfilesActionProfilesById(String id, String lang, ActionProfile entity, Map<String, String> okapiHeaders,
+                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        entity.setId(id);
+        actionProfileService.updateProfile(entity, tenantId)
+          .map(updatedEntity -> (Response) PutDataImportProfilesActionProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to update Action Profile with id {}", id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void getDataImportProfilesActionProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(c -> {
+      try {
+        actionProfileService.getProfileById(id, tenantId)
+          .map(optionalProfile -> optionalProfile.orElseThrow(() ->
+            new NotFoundException(String.format("Action Profile with id '%s' was not found", id))))
+          .map(GetDataImportProfilesActionProfilesByIdResponse::respond200WithApplicationJson)
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to get Action Profile by id {}", id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void deleteDataImportProfilesActionProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+                                                         Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        actionProfileService.deleteProfile(id, tenantId)
+          .map(deleted -> deleted ?
+            DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
+              String.format("Action Profile with id '%s' was successfully deleted", id)) :
+            DeleteDataImportProfilesActionProfilesByIdResponse.respond404WithTextPlain(
+              String.format("Action Profile with id '%s' was not found", id)))
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to delete Action Profile with id {}",id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });

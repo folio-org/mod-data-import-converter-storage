@@ -38,6 +38,25 @@
           "tOps": "ADD"
         }
       ]
+    },
+    {
+      "tableName": "action_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ]
     }
   ]
 }
