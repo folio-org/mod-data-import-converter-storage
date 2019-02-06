@@ -5,7 +5,7 @@
   "provides": [
     {
       "id": "data-import-converter-storage",
-      "version": "0.1",
+      "version": "1.0",
       "handlers": [
         {
           "methods": ["GET"],
@@ -15,7 +15,8 @@
         {
           "methods": ["POST"],
           "pathPattern": "/data-import-profiles/jobProfiles",
-          "permissionsRequired" : [ "converter-storage.jobprofile.post" ]
+          "permissionsRequired" : [ "converter-storage.jobprofile.post" ],
+          "modulePermissions": ["users.item.get"]
         },
         {
           "methods": ["GET"],
@@ -25,7 +26,8 @@
         {
           "methods": ["PUT"],
           "pathPattern": "/data-import-profiles/jobProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.jobprofile.put" ]
+          "permissionsRequired": [ "converter-storage.jobprofile.put" ],
+          "modulePermissions": ["users.item.get"]
         },
         {
           "methods": ["DELETE"],
@@ -40,7 +42,8 @@
         {
           "methods": ["POST"],
           "pathPattern": "/data-import-profiles/matchProfiles",
-          "permissionsRequired" : [ "converter-storage.matchprofile.post" ]
+          "permissionsRequired" : [ "converter-storage.matchprofile.post" ],
+          "modulePermissions": ["users.item.get"]
         },
         {
           "methods": ["GET"],
@@ -50,12 +53,67 @@
         {
           "methods": ["PUT"],
           "pathPattern": "/data-import-profiles/matchProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.matchprofile.put" ]
+          "permissionsRequired": [ "converter-storage.matchprofile.put" ],
+          "modulePermissions": ["users.item.get"]
         },
         {
           "methods": ["DELETE"],
           "pathPattern": "/data-import-profiles/matchProfiles/{id}",
           "permissionsRequired": [ "converter-storage.matchprofile.delete" ]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/data-import-profiles/actionProfiles",
+          "permissionsRequired" : [ "converter-storage.actionprofile.get" ]
+        },
+        {
+          "methods": ["POST"],
+          "pathPattern": "/data-import-profiles/actionProfiles",
+          "permissionsRequired" : [ "converter-storage.actionprofile.post" ],
+          "modulePermissions": ["users.item.get"]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/data-import-profiles/actionProfiles/{id}",
+          "permissionsRequired" : [ "converter-storage.actionprofile.get" ]
+        },
+        {
+          "methods": ["PUT"],
+          "pathPattern": "/data-import-profiles/actionProfiles/{id}",
+          "permissionsRequired": [ "converter-storage.actionprofile.put" ],
+          "modulePermissions": ["users.item.get"]
+        },
+        {
+          "methods": ["DELETE"],
+          "pathPattern": "/data-import-profiles/actionProfiles/{id}",
+          "permissionsRequired": [ "converter-storage.actionprofile.delete" ]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/data-import-profiles/mappingProfiles",
+          "permissionsRequired" : [ "converter-storage.mappingprofile.get" ]
+        },
+        {
+          "methods": ["POST"],
+          "pathPattern": "/data-import-profiles/mappingProfiles",
+          "permissionsRequired" : [ "converter-storage.mappingprofile.post" ],
+          "modulePermissions": ["users.item.get"]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
+          "permissionsRequired" : [ "converter-storage.mappingprofile.get" ]
+        },
+        {
+          "methods": ["PUT"],
+          "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
+          "permissionsRequired": [ "converter-storage.mappingprofile.put" ],
+          "modulePermissions": ["users.item.get"]
+        },
+        {
+          "methods": ["DELETE"],
+          "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
+          "permissionsRequired": [ "converter-storage.mappingprofile.delete" ]
         }
       ]
     },
@@ -121,6 +179,46 @@
       "description": "Delete Match Profile"
     },
     {
+      "permissionName": "converter-storage.actionprofile.get",
+      "displayName": "Data Import Converter Storage - get Action Profile(s)",
+      "description": "Get Action Profile(s)"
+    },
+    {
+      "permissionName": "converter-storage.actionprofile.post",
+      "displayName": "Data Import Converter Storage - create Action Profile",
+      "description": "Post Action Profile"
+    },
+    {
+      "permissionName": "converter-storage.actionprofile.put",
+      "displayName": "Data Import Converter Storage - update Action Profile",
+      "description": "Put Action Profile"
+    },
+    {
+      "permissionName": "converter-storage.actionprofile.delete",
+      "displayName": "Data Import Converter Storage - delete Action Profile",
+      "description": "Delete Action Profile"
+    },
+    {
+      "permissionName": "converter-storage.mappingprofile.get",
+      "displayName": "Data Import Converter Storage - get Mapping Profile(s)",
+      "description": "Get Mapping Profile(s)"
+    },
+    {
+      "permissionName": "converter-storage.mappingprofile.post",
+      "displayName": "Data Import Converter Storage - create Mapping Profile",
+      "description": "Post Mapping Profile"
+    },
+    {
+      "permissionName": "converter-storage.mappingprofile.put",
+      "displayName": "Data Import Converter Storage - update Mapping Profile",
+      "description": "Put Mapping Profile"
+    },
+    {
+      "permissionName": "converter-storage.mappingprofile.delete",
+      "displayName": "Data Import Converter Storage - delete Mapping Profile",
+      "description": "Delete Mapping Profile"
+    },
+    {
       "permissionName": "converter-storage.all",
       "displayName": "Data Import Converter Storage - all permissions",
       "description": "Entire set of permissions needed to manage Profiles",
@@ -132,7 +230,15 @@
         "converter-storage.matchprofile.get",
         "converter-storage.matchprofile.post",
         "converter-storage.matchprofile.put",
-        "converter-storage.matchprofile.delete"
+        "converter-storage.matchprofile.delete",
+        "converter-storage.actionprofile.get",
+        "converter-storage.actionprofile.post",
+        "converter-storage.actionprofile.put",
+        "converter-storage.actionprofile.delete",
+        "converter-storage.mappingprofile.get",
+        "converter-storage.mappingprofile.post",
+        "converter-storage.mappingprofile.put",
+        "converter-storage.mappingprofile.delete"
       ],
       "visible": false
     }

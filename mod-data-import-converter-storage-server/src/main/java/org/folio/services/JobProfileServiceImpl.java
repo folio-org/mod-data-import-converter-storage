@@ -1,6 +1,7 @@
 package org.folio.services;
 
 import io.vertx.core.Future;
+import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.DataType;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
@@ -14,20 +15,26 @@ import java.util.UUID;
 public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, JobProfileCollection> {
 
   @Override
-  public Future<JobProfile> saveProfile(JobProfile profile, String tenantId) {
+  public Future<JobProfile> saveProfile(JobProfile profile, OkapiConnectionParams params) {
     profile.setDataTypes(sortDataTypes(profile.getDataTypes()));
-    return profileDao.saveProfile(setProfileId(profile), tenantId).map(profile);
+    return super.saveProfile(profile, params);
   }
 
   @Override
-  public Future<JobProfile> updateProfile(JobProfile profile, String tenantId) {
+  public Future<JobProfile> updateProfile(JobProfile profile, OkapiConnectionParams params) {
     profile.setDataTypes(sortDataTypes(profile.getDataTypes()));
-    return profileDao.updateProfile(profile, tenantId);
+    return super.updateProfile(profile, params);
   }
 
   @Override
   JobProfile setProfileId(JobProfile profile) {
     return profile.withId(UUID.randomUUID().toString());
+  }
+
+  @Override
+  Future<JobProfile> setUserInfoForProfile(JobProfile profile, OkapiConnectionParams params) {
+    return lookupUser(profile.getMetadata().getUpdatedByUserId(), params)
+      .compose(userInfo -> Future.succeededFuture(profile.withUserInfo(userInfo)));
   }
 
   private List<DataType> sortDataTypes(List<DataType> list) {

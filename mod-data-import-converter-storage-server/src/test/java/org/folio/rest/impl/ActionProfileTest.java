@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
-import org.folio.rest.jaxrs.model.JobProfile;
+import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -26,16 +26,16 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(VertxUnitRunner.class)
-public class JobProfileTest extends AbstractRestVerticleTest {
+public class ActionProfileTest extends AbstractRestVerticleTest {
 
-  private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
-  private static final String JOB_PROFILES_PATH = "/data-import-profiles/jobProfiles";
+  private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
+  private static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
 
-  private static JobProfile jobProfile_1 = new JobProfile().withName("Bla")
+  private static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
-  private static JobProfile jobProfile_2 = new JobProfile().withName("Boo")
+  private static ActionProfile actionProfile_2 = new ActionProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
-  private static JobProfile jobProfile_3 = new JobProfile().withName("Foo")
+  private static ActionProfile actionProfile_3 = new ActionProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
 
   @Test
@@ -43,11 +43,11 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH)
+      .get(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(0))
-      .body("jobProfiles", empty());
+      .body("actionProfiles", empty());
   }
 
   @Test
@@ -56,7 +56,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH)
+      .get(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3));
@@ -68,11 +68,11 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH + "?query=userInfo.lastName=Doe")
+      .get(ACTION_PROFILES_PATH + "?query=userInfo.lastName=Doe")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
-      .body("jobProfiles*.userInfo.lastName", everyItem(is("Doe")));
+      .body("actionProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
   @Test
@@ -81,12 +81,12 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH + "?query=tags.tagList=/respectCase/respectAccents \\\"ipsum\\\"")
+      .get(ACTION_PROFILES_PATH + "?query=tags.tagList=/respectCase/respectAccents \\\"ipsum\\\"")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(2))
-      .body("jobProfiles.get(0).tags.tagList", hasItem("ipsum"))
-      .body("jobProfiles.get(1).tags.tagList", hasItem("ipsum"));
+      .body("actionProfiles.get(0).tags.tagList", hasItem("ipsum"))
+      .body("actionProfiles.get(1).tags.tagList", hasItem("ipsum"));
   }
 
   @Test
@@ -95,10 +95,10 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH + "?limit=2")
+      .get(ACTION_PROFILES_PATH + "?limit=2")
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("jobProfiles.size()", is(2))
+      .body("actionProfiles.size()", is(2))
       .body("totalRecords", is(3));
   }
 
@@ -109,7 +109,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new JsonObject().toString())
       .when()
-      .post(JOB_PROFILES_PATH)
+      .post(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
@@ -118,13 +118,13 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void shouldCreateProfileOnPost() {
     RestAssured.given()
       .spec(spec)
-      .body(jobProfile_1)
+      .body(actionProfile_1)
       .when()
-      .post(JOB_PROFILES_PATH)
+      .post(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .body("name", is(jobProfile_1.getName()))
-      .body("tags.tagList", is(jobProfile_1.getTags().getTagList()))
+      .body("name", is(actionProfile_1.getName()))
+      .body("tags.tagList", is(actionProfile_1.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -136,7 +136,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new JsonObject().toString())
       .when()
-      .put(JOB_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .put(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
@@ -145,9 +145,9 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void shouldReturnNotFoundOnPut() {
     RestAssured.given()
       .spec(spec)
-      .body(jobProfile_2)
+      .body(actionProfile_2)
       .when()
-      .put(JOB_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .put(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
   }
@@ -156,24 +156,24 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void shouldUpdateProfileOnPut() {
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(jobProfile_2)
+      .body(actionProfile_2)
       .when()
-      .post(JOB_PROFILES_PATH);
+      .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    JobProfile jobProfile = createResponse.body().as(JobProfile.class);
+    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
 
-    jobProfile.setDescription("test");
+    actionProfile.setDescription("test");
     RestAssured.given()
       .spec(spec)
-      .body(jobProfile)
+      .body(actionProfile)
       .when()
-      .put(JOB_PROFILES_PATH + "/" + jobProfile.getId())
+      .put(ACTION_PROFILES_PATH + "/" + actionProfile.getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(jobProfile.getId()))
-      .body("name", is(jobProfile.getName()))
+      .body("id", is(actionProfile.getId()))
       .body("description", is("test"))
-      .body("tags.tagList", is(jobProfile.getTags().getTagList()))
+      .body("name", is(actionProfile.getName()))
+      .body("tags.tagList", is(actionProfile.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -184,7 +184,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .get(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
   }
@@ -193,21 +193,21 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void shouldReturnProfileOnGetById() {
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(jobProfile_3)
+      .body(actionProfile_3)
       .when()
-      .post(JOB_PROFILES_PATH);
+      .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    JobProfile jobProfile = createResponse.body().as(JobProfile.class);
+    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH + "/" + jobProfile.getId())
+      .get(ACTION_PROFILES_PATH + "/" + actionProfile.getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(jobProfile.getId()))
-      .body("name", is(jobProfile.getName()))
-      .body("tags.tagList", is(jobProfile.getTags().getTagList()))
+      .body("id", is(actionProfile.getId()))
+      .body("name", is(actionProfile.getName()))
+      .body("tags.tagList", is(actionProfile.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -218,7 +218,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(JOB_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .delete(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
   }
@@ -227,28 +227,28 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void shouldDeleteProfileOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(jobProfile_2)
+      .body(actionProfile_2)
       .when()
-      .post(JOB_PROFILES_PATH);
+      .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    JobProfile profile = createResponse.body().as(JobProfile.class);
+    ActionProfile profile = createResponse.body().as(ActionProfile.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(JOB_PROFILES_PATH + "/" + profile.getId())
+      .delete(ACTION_PROFILES_PATH + "/" + profile.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
   }
 
   private void createProfiles() {
-    List<JobProfile> jobProfilesToPost = Arrays.asList(jobProfile_1, jobProfile_2, jobProfile_3);
-    for (JobProfile profile : jobProfilesToPost) {
+    List<ActionProfile> actionProfilesToPost = Arrays.asList(actionProfile_1, actionProfile_2, actionProfile_3);
+    for (ActionProfile profile : actionProfilesToPost) {
       RestAssured.given()
         .spec(spec)
         .body(profile)
         .when()
-        .post(JOB_PROFILES_PATH)
+        .post(ACTION_PROFILES_PATH)
         .then()
         .statusCode(HttpStatus.SC_CREATED);
     }
@@ -256,7 +256,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
 
   @Override
   public void clearTables(TestContext context) {
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event -> {
+    PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event -> {
       if (event.failed()) {
         context.fail(event.cause());
       }

@@ -1,6 +1,7 @@
 package org.folio.services;
 
 import io.vertx.core.Future;
+import org.folio.dataimport.util.OkapiConnectionParams;
 
 import java.util.Optional;
 
@@ -36,19 +37,19 @@ public interface ProfileService<T, S> {
    * Saves T entity
    *
    * @param profile Profile to save
-   * @param tenantId tenant id
+   * @param params {@link OkapiConnectionParams}
    * @return future with saved entity
    */
-  Future<T> saveProfile(T profile, String tenantId);
+  Future<T> saveProfile(T profile, OkapiConnectionParams params);
 
   /**
    * Updates T with given id
    *
    * @param profile Profile to update
-   * @param tenantId tenant id
+   * @param params {@link OkapiConnectionParams}
    * @return future with updated entity
    */
-  Future<T> updateProfile(T profile, String tenantId);
+  Future<T> updateProfile(T profile, OkapiConnectionParams params);
 
   /**
    * Deletes T entity by id
