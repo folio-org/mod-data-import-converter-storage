@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,14 +32,11 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   private static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
 
   private static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-    .withUserInfo(new UserInfo().withFirstName("Jane").withLastName("Doe").withUserName("@janedoe"));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
   private static ActionProfile actionProfile_2 = new ActionProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-    .withUserInfo(new UserInfo().withFirstName("Jane").withLastName("Doe").withUserName("@janedoe"));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
   private static ActionProfile actionProfile_3 = new ActionProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem")))
-    .withUserInfo(new UserInfo().withFirstName("John").withLastName("Smith").withUserName("@johnsmith"));
+    .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -70,11 +68,11 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "?query=userInfo.lastName=" + actionProfile_1.getUserInfo().getLastName())
+      .get(ACTION_PROFILES_PATH + "?query=userInfo.lastName=Doe")
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(2))
-      .body("actionProfiles*.userInfo.lastName", everyItem(is(actionProfile_1.getUserInfo().getLastName())));
+      .body("totalRecords", is(3))
+      .body("actionProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
   @Test
@@ -127,9 +125,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_CREATED)
       .body("name", is(actionProfile_1.getName()))
       .body("tags.tagList", is(actionProfile_1.getTags().getTagList()))
-      .body("userInfo.lastName", is(actionProfile_1.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(actionProfile_1.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(actionProfile_1.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test
@@ -164,7 +162,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
     ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
 
-    actionProfile.setUserInfo(new UserInfo().withFirstName("John").withLastName("Johnson").withUserName("@johnjohnson"));
+    actionProfile.setDescription("test");
     RestAssured.given()
       .spec(spec)
       .body(actionProfile)
@@ -173,11 +171,12 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("id", is(actionProfile.getId()))
+      .body("description", is("test"))
       .body("name", is(actionProfile.getName()))
       .body("tags.tagList", is(actionProfile.getTags().getTagList()))
-      .body("userInfo.lastName", is(actionProfile.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(actionProfile.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(actionProfile.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test
@@ -209,9 +208,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .body("id", is(actionProfile.getId()))
       .body("name", is(actionProfile.getName()))
       .body("tags.tagList", is(actionProfile.getTags().getTagList()))
-      .body("userInfo.lastName", is(actionProfile.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(actionProfile.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(actionProfile.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test

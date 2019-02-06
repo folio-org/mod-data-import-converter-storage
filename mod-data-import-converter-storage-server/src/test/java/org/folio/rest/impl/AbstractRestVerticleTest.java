@@ -32,6 +32,11 @@ public abstract class AbstractRestVerticleTest {
   private static String USER_ID = UUID.randomUUID().toString();
   private static String useExternalDatabase;
   private static final String GET_USER_URL = "/users?query=id==";
+  private static int PORT = NetworkUtils.nextFreePort();
+  private static int MOCK_PORT = NetworkUtils.nextFreePort();
+  private static String BASE_URL = "http://localhost:";
+  private static String OKAPI_URL = BASE_URL + PORT;
+  private static String MOCK_URL = BASE_URL + MOCK_PORT;
 
   private JsonObject userResponse = new JsonObject()
     .put("users",
@@ -43,15 +48,13 @@ public abstract class AbstractRestVerticleTest {
   @Rule
   public WireMockRule snapshotMockServer = new WireMockRule(
     WireMockConfiguration.wireMockConfig()
-      .dynamicPort()
+      .port(MOCK_PORT)
       .notifier(new Slf4jNotifier(true)));
 
   @BeforeClass
   public static void setUpClass(final TestContext context) throws Exception {
     Async async = context.async();
     vertx = Vertx.vertx();
-    int port = NetworkUtils.nextFreePort();
-    String okapiUrl = "http://localhost:" + port;
 
     useExternalDatabase = System.getProperty(
       "org.folio.converter.storage.test.database",
@@ -78,9 +81,9 @@ public abstract class AbstractRestVerticleTest {
         throw new Exception(message);
     }
 
-    TenantClient tenantClient = new TenantClient(okapiUrl, "diku", "dummy-token");
+    TenantClient tenantClient = new TenantClient(OKAPI_URL, "diku", "dummy-token");
     DeploymentOptions restVerticleDeploymentOptions = new DeploymentOptions()
-      .setConfig(new JsonObject().put("http.port", port));
+      .setConfig(new JsonObject().put("http.port", PORT));
     vertx.deployVerticle(RestVerticle.class.getName(), restVerticleDeploymentOptions, res -> {
       try {
         tenantClient.postTenant(null, res2 -> async.complete());
@@ -91,9 +94,10 @@ public abstract class AbstractRestVerticleTest {
 
     spec = new RequestSpecBuilder()
       .setContentType(ContentType.JSON)
-      .setBaseUri(okapiUrl)
+      .setBaseUri(OKAPI_URL)
       .addHeader(RestVerticle.OKAPI_HEADER_TENANT, TENANT_ID)
       .addHeader(RestVerticle.OKAPI_USERID_HEADER, USER_ID)
+      .addHeader(RestVerticle.OKAPI_HEADER_PREFIX + "-url", MOCK_URL)
       .build();
   }
 

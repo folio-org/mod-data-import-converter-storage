@@ -8,7 +8,6 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.Tags;
-import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,14 +31,11 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
 
   private static MatchProfile matchProfile_1 = new MatchProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-    .withUserInfo(new UserInfo().withFirstName("Jane").withLastName("Doe").withUserName("@janedoe"));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
   private static MatchProfile matchProfile_2 = new MatchProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-    .withUserInfo(new UserInfo().withFirstName("Jane").withLastName("Doe").withUserName("@janedoe"));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
   private static MatchProfile matchProfile_3 = new MatchProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem")))
-    .withUserInfo(new UserInfo().withFirstName("John").withLastName("Smith").withUserName("@johnsmith"));
+    .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -70,11 +67,11 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(MATCH_PROFILES_PATH + "?query=userInfo.lastName=" + matchProfile_1.getUserInfo().getLastName())
+      .get(MATCH_PROFILES_PATH + "?query=userInfo.lastName=Doe")
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(2))
-      .body("matchProfiles*.userInfo.lastName", everyItem(is(matchProfile_1.getUserInfo().getLastName())));
+      .body("totalRecords", is(3))
+      .body("matchProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
   @Test
@@ -127,9 +124,9 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_CREATED)
       .body("name", is(matchProfile_1.getName()))
       .body("tags.tagList", is(matchProfile_1.getTags().getTagList()))
-      .body("userInfo.lastName", is(matchProfile_1.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(matchProfile_1.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(matchProfile_1.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test
@@ -164,7 +161,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
     MatchProfile matchProfile = createResponse.body().as(MatchProfile.class);
 
-    matchProfile.setUserInfo(new UserInfo().withFirstName("John").withLastName("Johnson").withUserName("@johnjohnson"));
+    matchProfile.setDescription("test");
     RestAssured.given()
       .spec(spec)
       .body(matchProfile)
@@ -174,10 +171,11 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .body("id", is(matchProfile.getId()))
       .body("name", is(matchProfile.getName()))
+      .body("description", is("test"))
       .body("tags.tagList", is(matchProfile.getTags().getTagList()))
-      .body("userInfo.lastName", is(matchProfile.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(matchProfile.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(matchProfile.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test

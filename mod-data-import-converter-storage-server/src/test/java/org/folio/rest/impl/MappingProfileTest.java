@@ -9,7 +9,6 @@ import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.Tags;
-import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
@@ -17,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,14 +32,11 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   private static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
 
   private static MappingProfile mappingProfile_1 = new MappingProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-    .withUserInfo(new UserInfo().withFirstName("Jane").withLastName("Doe").withUserName("@janedoe"));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
   private static MappingProfile mappingProfile_2 = new MappingProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-    .withUserInfo(new UserInfo().withFirstName("Jane").withLastName("Doe").withUserName("@janedoe"));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
   private static MappingProfile mappingProfile_3 = new MappingProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem")))
-    .withUserInfo(new UserInfo().withFirstName("John").withLastName("Smith").withUserName("@johnsmith"));
+    .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -71,11 +68,11 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(MAPPING_PROFILES_PATH + "?query=userInfo.lastName=" + mappingProfile_1.getUserInfo().getLastName())
+      .get(MAPPING_PROFILES_PATH + "?query=userInfo.lastName=Doe")
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(2))
-      .body("mappingProfiles*.userInfo.lastName", everyItem(is(mappingProfile_1.getUserInfo().getLastName())));
+      .body("totalRecords", is(3))
+      .body("mappingProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
   @Test
@@ -128,9 +125,9 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_CREATED)
       .body("name", is(mappingProfile_1.getName()))
       .body("tags.tagList", is(mappingProfile_1.getTags().getTagList()))
-      .body("userInfo.lastName", is(mappingProfile_1.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(mappingProfile_1.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(mappingProfile_1.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test
@@ -165,7 +162,7 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
     MatchProfile mappingProfile = createResponse.body().as(MatchProfile.class);
 
-    mappingProfile.setUserInfo(new UserInfo().withFirstName("John").withLastName("Johnson").withUserName("@johnjohnson"));
+    mappingProfile.setDescription("test");
     RestAssured.given()
       .spec(spec)
       .body(mappingProfile)
@@ -175,10 +172,11 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .body("id", is(mappingProfile.getId()))
       .body("name", is(mappingProfile.getName()))
+      .body("description", is("test"))
       .body("tags.tagList", is(mappingProfile.getTags().getTagList()))
-      .body("userInfo.lastName", is(mappingProfile.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(mappingProfile.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(mappingProfile.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test
@@ -210,9 +208,9 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .body("id", is(mappingProfile.getId()))
       .body("name", is(mappingProfile.getName()))
       .body("tags.tagList", is(mappingProfile.getTags().getTagList()))
-      .body("userInfo.lastName", is(mappingProfile.getUserInfo().getLastName()))
-      .body("userInfo.firstName", is(mappingProfile.getUserInfo().getFirstName()))
-      .body("userInfo.userName", is(mappingProfile.getUserInfo().getUserName()));
+      .body("userInfo.lastName", is("Doe"))
+      .body("userInfo.firstName", is("Jane"))
+      .body("userInfo.userName", is("@janedoe"));
   }
 
   @Test
