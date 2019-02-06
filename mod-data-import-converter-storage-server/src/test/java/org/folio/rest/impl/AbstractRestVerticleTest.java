@@ -29,7 +29,7 @@ public abstract class AbstractRestVerticleTest {
   static final String TENANT_ID = "diku";
   static Vertx vertx;
   static RequestSpecification spec;
-  static String USER_ID = UUID.randomUUID().toString();
+  private static String USER_ID = UUID.randomUUID().toString();
   private static String useExternalDatabase;
   private static final String GET_USER_URL = "/users?query=id==";
 
