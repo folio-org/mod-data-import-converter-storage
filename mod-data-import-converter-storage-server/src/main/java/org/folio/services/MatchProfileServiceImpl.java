@@ -1,5 +1,7 @@
 package org.folio.services;
 
+import io.vertx.core.Future;
+import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.springframework.stereotype.Component;
@@ -12,5 +14,11 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
   @Override
   MatchProfile setProfileId(MatchProfile profile) {
     return profile.withId(UUID.randomUUID().toString());
+  }
+
+  @Override
+  Future<MatchProfile> setUserInfoForProfile(MatchProfile profile, OkapiConnectionParams params) {
+    return lookupUser(profile.getMetadata().getUpdatedByUserId(), params)
+      .compose(userInfo -> Future.succeededFuture(profile.withUserInfo(userInfo)));
   }
 }

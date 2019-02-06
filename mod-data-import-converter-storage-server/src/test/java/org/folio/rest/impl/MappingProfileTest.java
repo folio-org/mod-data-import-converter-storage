@@ -6,9 +6,9 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
-import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.MappingProfile;
+import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.Tags;
-import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
@@ -26,16 +26,16 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(VertxUnitRunner.class)
-public class ActionProfileTest extends AbstractRestVerticleTest {
+public class MappingProfileTest extends AbstractRestVerticleTest {
 
-  private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
-  private static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
+  private static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
+  private static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
 
-  private static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
+  private static MappingProfile mappingProfile_1 = new MappingProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
-  private static ActionProfile actionProfile_2 = new ActionProfile().withName("Boo")
+  private static MappingProfile mappingProfile_2 = new MappingProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
-  private static ActionProfile actionProfile_3 = new ActionProfile().withName("Foo")
+  private static MappingProfile mappingProfile_3 = new MappingProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
 
   @Test
@@ -43,11 +43,11 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH)
+      .get(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(0))
-      .body("actionProfiles", empty());
+      .body("mappingProfiles", empty());
   }
 
   @Test
@@ -56,7 +56,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH)
+      .get(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3));
@@ -68,11 +68,11 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "?query=userInfo.lastName=Doe")
+      .get(MAPPING_PROFILES_PATH + "?query=userInfo.lastName=Doe")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
-      .body("actionProfiles*.userInfo.lastName", everyItem(is("Doe")));
+      .body("mappingProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
   @Test
@@ -81,12 +81,12 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "?query=tags.tagList=/respectCase/respectAccents \\\"ipsum\\\"")
+      .get(MAPPING_PROFILES_PATH + "?query=tags.tagList=/respectCase/respectAccents \\\"ipsum\\\"")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(2))
-      .body("actionProfiles.get(0).tags.tagList", hasItem("ipsum"))
-      .body("actionProfiles.get(1).tags.tagList", hasItem("ipsum"));
+      .body("mappingProfiles.get(0).tags.tagList", hasItem("ipsum"))
+      .body("mappingProfiles.get(1).tags.tagList", hasItem("ipsum"));
   }
 
   @Test
@@ -95,10 +95,10 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "?limit=2")
+      .get(MAPPING_PROFILES_PATH + "?limit=2")
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("actionProfiles.size()", is(2))
+      .body("mappingProfiles.size()", is(2))
       .body("totalRecords", is(3));
   }
 
@@ -109,7 +109,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new JsonObject().toString())
       .when()
-      .post(ACTION_PROFILES_PATH)
+      .post(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
@@ -118,13 +118,13 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public void shouldCreateProfileOnPost() {
     RestAssured.given()
       .spec(spec)
-      .body(actionProfile_1)
+      .body(mappingProfile_1)
       .when()
-      .post(ACTION_PROFILES_PATH)
+      .post(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .body("name", is(actionProfile_1.getName()))
-      .body("tags.tagList", is(actionProfile_1.getTags().getTagList()))
+      .body("name", is(mappingProfile_1.getName()))
+      .body("tags.tagList", is(mappingProfile_1.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -136,7 +136,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new JsonObject().toString())
       .when()
-      .put(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .put(MAPPING_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
@@ -145,9 +145,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public void shouldReturnNotFoundOnPut() {
     RestAssured.given()
       .spec(spec)
-      .body(actionProfile_2)
+      .body(mappingProfile_2)
       .when()
-      .put(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .put(MAPPING_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
   }
@@ -156,24 +156,24 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public void shouldUpdateProfileOnPut() {
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(actionProfile_2)
+      .body(mappingProfile_2)
       .when()
-      .post(ACTION_PROFILES_PATH);
+      .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
+    MatchProfile mappingProfile = createResponse.body().as(MatchProfile.class);
 
-    actionProfile.setDescription("test");
+    mappingProfile.setDescription("test");
     RestAssured.given()
       .spec(spec)
-      .body(actionProfile)
+      .body(mappingProfile)
       .when()
-      .put(ACTION_PROFILES_PATH + "/" + actionProfile.getId())
+      .put(MAPPING_PROFILES_PATH + "/" + mappingProfile.getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(actionProfile.getId()))
+      .body("id", is(mappingProfile.getId()))
+      .body("name", is(mappingProfile.getName()))
       .body("description", is("test"))
-      .body("name", is(actionProfile.getName()))
-      .body("tags.tagList", is(actionProfile.getTags().getTagList()))
+      .body("tags.tagList", is(mappingProfile.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -184,7 +184,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .get(MAPPING_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
   }
@@ -193,21 +193,21 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public void shouldReturnProfileOnGetById() {
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(actionProfile_3)
+      .body(mappingProfile_3)
       .when()
-      .post(ACTION_PROFILES_PATH);
+      .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
+    MatchProfile mappingProfile = createResponse.body().as(MatchProfile.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "/" + actionProfile.getId())
+      .get(MAPPING_PROFILES_PATH + "/" + mappingProfile.getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(actionProfile.getId()))
-      .body("name", is(actionProfile.getName()))
-      .body("tags.tagList", is(actionProfile.getTags().getTagList()))
+      .body("id", is(mappingProfile.getId()))
+      .body("name", is(mappingProfile.getName()))
+      .body("tags.tagList", is(mappingProfile.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -218,7 +218,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
+      .delete(MAPPING_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
   }
@@ -227,28 +227,28 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public void shouldDeleteProfileOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(actionProfile_2)
+      .body(mappingProfile_2)
       .when()
-      .post(ACTION_PROFILES_PATH);
+      .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile profile = createResponse.body().as(ActionProfile.class);
+    MatchProfile profile = createResponse.body().as(MatchProfile.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(ACTION_PROFILES_PATH + "/" + profile.getId())
+      .delete(MAPPING_PROFILES_PATH + "/" + profile.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
   }
 
   private void createProfiles() {
-    List<ActionProfile> actionProfilesToPost = Arrays.asList(actionProfile_1, actionProfile_2, actionProfile_3);
-    for (ActionProfile profile : actionProfilesToPost) {
+    List<MappingProfile> mappingProfilesToPost = Arrays.asList(mappingProfile_1, mappingProfile_2, mappingProfile_3);
+    for (MappingProfile profile : mappingProfilesToPost) {
       RestAssured.given()
         .spec(spec)
         .body(profile)
         .when()
-        .post(ACTION_PROFILES_PATH)
+        .post(MAPPING_PROFILES_PATH)
         .then()
         .statusCode(HttpStatus.SC_CREATED);
     }
@@ -256,7 +256,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
   @Override
   public void clearTables(TestContext context) {
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event -> {
+    PostgresClient.getInstance(vertx, TENANT_ID).delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event -> {
       if (event.failed()) {
         context.fail(event.cause());
       }

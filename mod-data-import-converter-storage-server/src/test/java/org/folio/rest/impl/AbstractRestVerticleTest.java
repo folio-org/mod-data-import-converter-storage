@@ -1,10 +1,15 @@
 package org.folio.rest.impl;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -15,20 +20,41 @@ import org.folio.rest.tools.utils.NetworkUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
+
+import java.util.UUID;
 
 public abstract class AbstractRestVerticleTest {
 
   static final String TENANT_ID = "diku";
   static Vertx vertx;
   static RequestSpecification spec;
+  private static String USER_ID = UUID.randomUUID().toString();
   private static String useExternalDatabase;
+  private static final String GET_USER_URL = "/users?query=id==";
+  private static int PORT = NetworkUtils.nextFreePort();
+  private static int MOCK_PORT = NetworkUtils.nextFreePort();
+  private static String BASE_URL = "http://localhost:";
+  private static String OKAPI_URL = BASE_URL + PORT;
+  private static String MOCK_URL = BASE_URL + MOCK_PORT;
+
+  private JsonObject userResponse = new JsonObject()
+    .put("users",
+      new JsonArray().add(new JsonObject()
+        .put("username", "@janedoe")
+        .put("personal", new JsonObject().put("firstName", "Jane").put("lastName", "Doe"))))
+    .put("totalRecords", 1);
+
+  @Rule
+  public WireMockRule snapshotMockServer = new WireMockRule(
+    WireMockConfiguration.wireMockConfig()
+      .port(MOCK_PORT)
+      .notifier(new Slf4jNotifier(true)));
 
   @BeforeClass
   public static void setUpClass(final TestContext context) throws Exception {
     Async async = context.async();
     vertx = Vertx.vertx();
-    int port = NetworkUtils.nextFreePort();
-    String okapiUrl = "http://localhost:" + port;
 
     useExternalDatabase = System.getProperty(
       "org.folio.converter.storage.test.database",
@@ -55,9 +81,9 @@ public abstract class AbstractRestVerticleTest {
         throw new Exception(message);
     }
 
-    TenantClient tenantClient = new TenantClient(okapiUrl, "diku", "dummy-token");
+    TenantClient tenantClient = new TenantClient(OKAPI_URL, "diku", "dummy-token");
     DeploymentOptions restVerticleDeploymentOptions = new DeploymentOptions()
-      .setConfig(new JsonObject().put("http.port", port));
+      .setConfig(new JsonObject().put("http.port", PORT));
     vertx.deployVerticle(RestVerticle.class.getName(), restVerticleDeploymentOptions, res -> {
       try {
         tenantClient.postTenant(null, res2 -> async.complete());
@@ -68,8 +94,10 @@ public abstract class AbstractRestVerticleTest {
 
     spec = new RequestSpecBuilder()
       .setContentType(ContentType.JSON)
-      .setBaseUri(okapiUrl)
+      .setBaseUri(OKAPI_URL)
       .addHeader(RestVerticle.OKAPI_HEADER_TENANT, TENANT_ID)
+      .addHeader(RestVerticle.OKAPI_USERID_HEADER, USER_ID)
+      .addHeader(RestVerticle.OKAPI_HEADER_PREFIX + "-url", MOCK_URL)
       .build();
   }
 
@@ -82,6 +110,12 @@ public abstract class AbstractRestVerticleTest {
       }
       async.complete();
     }));
+  }
+
+  @Before
+  public void setUp(TestContext testContext) {
+    WireMock.stubFor(WireMock.get(GET_USER_URL + USER_ID)
+      .willReturn(WireMock.okJson(userResponse.toString())));
   }
 
   @Before
