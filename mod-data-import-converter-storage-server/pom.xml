@@ -13,6 +13,7 @@
     <basedir>${project.parent.basedir}</basedir>
     <ramlfiles_path>${project.parent.basedir}/ramls</ramlfiles_path>
     <jackson.version>2.9.8</jackson.version>
+    <wiremock.version>2.19.0</wiremock.version>
   </properties>
 
   <dependencies>
@@ -80,6 +81,18 @@
       <artifactId>folio-di-support</artifactId>
       <version>1.0.0</version>
       <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>net.sf.jopt-simple</groupId>
+          <artifactId>jopt-simple</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 

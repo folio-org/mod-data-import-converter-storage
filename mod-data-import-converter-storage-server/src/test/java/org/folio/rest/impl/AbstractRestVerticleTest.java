@@ -1,10 +1,15 @@
 package org.folio.rest.impl;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -15,13 +20,31 @@ import org.folio.rest.tools.utils.NetworkUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
+
+import java.util.UUID;
 
 public abstract class AbstractRestVerticleTest {
 
   static final String TENANT_ID = "diku";
   static Vertx vertx;
   static RequestSpecification spec;
+  static String USER_ID = UUID.randomUUID().toString();
   private static String useExternalDatabase;
+  private static final String GET_USER_URL = "/users?query=id==";
+
+  private JsonObject userResponse = new JsonObject()
+    .put("users",
+      new JsonArray().add(new JsonObject()
+        .put("username", "diku_admin")
+        .put("personal", new JsonObject().put("firstName", "DIKU").put("lastName", "ADMINISTRATOR"))))
+    .put("totalRecords", 1);
+
+  @Rule
+  public WireMockRule snapshotMockServer = new WireMockRule(
+    WireMockConfiguration.wireMockConfig()
+      .dynamicPort()
+      .notifier(new Slf4jNotifier(true)));
 
   @BeforeClass
   public static void setUpClass(final TestContext context) throws Exception {
@@ -70,6 +93,7 @@ public abstract class AbstractRestVerticleTest {
       .setContentType(ContentType.JSON)
       .setBaseUri(okapiUrl)
       .addHeader(RestVerticle.OKAPI_HEADER_TENANT, TENANT_ID)
+      .addHeader(RestVerticle.OKAPI_USERID_HEADER, USER_ID)
       .build();
   }
 
@@ -82,6 +106,12 @@ public abstract class AbstractRestVerticleTest {
       }
       async.complete();
     }));
+  }
+
+  @Before
+  public void setUp(TestContext testContext) {
+    WireMock.stubFor(WireMock.get(GET_USER_URL + USER_ID)
+      .willReturn(WireMock.okJson(userResponse.toString())));
   }
 
   @Before
