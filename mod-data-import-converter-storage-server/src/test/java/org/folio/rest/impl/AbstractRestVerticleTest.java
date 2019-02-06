@@ -36,8 +36,8 @@ public abstract class AbstractRestVerticleTest {
   private JsonObject userResponse = new JsonObject()
     .put("users",
       new JsonArray().add(new JsonObject()
-        .put("username", "diku_admin")
-        .put("personal", new JsonObject().put("firstName", "DIKU").put("lastName", "ADMINISTRATOR"))))
+        .put("username", "@janedoe")
+        .put("personal", new JsonObject().put("firstName", "Jane").put("lastName", "Doe"))))
     .put("totalRecords", 1);
 
   @Rule
