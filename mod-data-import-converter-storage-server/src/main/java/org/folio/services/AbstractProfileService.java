@@ -55,6 +55,11 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
     return profileDao.deleteProfile(id, tenantId);
   }
 
+  @Override
+  public Future<Boolean> isProfileExistByName(String profileName, String tenantId) {
+    return profileDao.isProfileExistByName(profileName, tenantId);
+  }
+
   /**
    * Generates id and sets it to the Profile entity
    *

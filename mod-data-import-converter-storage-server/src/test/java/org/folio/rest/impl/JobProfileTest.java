@@ -8,7 +8,6 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.Tags;
-import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
@@ -121,13 +120,22 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body(jobProfile_1)
       .when()
       .post(JOB_PROFILES_PATH)
-      .then()
+      .then().log().all()
       .statusCode(HttpStatus.SC_CREATED)
       .body("name", is(jobProfile_1.getName()))
       .body("tags.tagList", is(jobProfile_1.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
+
+    RestAssured.given().spec(spec)
+      .body(jobProfile_1)
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then().log().all()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors[0].message", is("jobProfile.duplication.invalid"));
+
   }
 
   @Test

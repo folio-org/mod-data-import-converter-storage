@@ -15,9 +15,9 @@ public interface ProfileDao<T, S> {
   /**
    * Searches for T entities in database
    *
-   * @param query  query from URL
-   * @param offset starting index in a list of results
-   * @param limit  limit of records for pagination
+   * @param query    query from URL
+   * @param offset   starting index in a list of results
+   * @param limit    limit of records for pagination
    * @param tenantId tenant id
    * @return future with S, a collection of T entities
    */
@@ -26,7 +26,7 @@ public interface ProfileDao<T, S> {
   /**
    * Searches for T entity by id
    *
-   * @param id Profile id
+   * @param id       Profile id
    * @param tenantId tenant id
    * @return future with optional entity
    */
@@ -35,7 +35,7 @@ public interface ProfileDao<T, S> {
   /**
    * Saves T entity to database
    *
-   * @param profile Profile to save
+   * @param profile  Profile to save
    * @param tenantId tenant id
    * @return future
    */
@@ -44,7 +44,7 @@ public interface ProfileDao<T, S> {
   /**
    * Updates T entity in database
    *
-   * @param profile Profile to update
+   * @param profile  Profile to update
    * @param tenantId tenant id
    * @return future with updated entity
    */
@@ -53,9 +53,18 @@ public interface ProfileDao<T, S> {
   /**
    * Deletes entity from database
    *
-   * @param id Profile id
+   * @param id       Profile id
    * @param tenantId tenant id
    * @return future with true if succeeded
    */
   Future<Boolean> deleteProfile(String id, String tenantId);
+
+  /**
+   * Search in database profile with the same name
+   *
+   * @param profileName - profile name
+   * @param tenantId    - tenant id from request
+   * @return - boolean value. True if job profile with the same name already exist
+   */
+  Future<Boolean> isProfileExistByName(String profileName, String tenantId);
 }
