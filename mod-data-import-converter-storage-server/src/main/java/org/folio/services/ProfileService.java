@@ -59,4 +59,13 @@ public interface ProfileService<T, S> {
    * @return future with true if succeeded
    */
   Future<Boolean> deleteProfile(String id, String tenantId);
+
+  /**
+   * Search in database profile with the same name
+   *
+   * @param profileName - profile name
+   * @param tenantId    - tenant id from request
+   * @return - boolean value. True if job profile with the same name already exist
+   */
+  Future<Boolean> isProfileExistByName(String profileName, String tenantId);
 }

@@ -6,6 +6,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.UpdateResult;
 import org.folio.rest.persist.Criteria.Criteria;
 import org.folio.rest.persist.Criteria.Criterion;
+import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,27 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
     Future<UpdateResult> future = Future.future();
     pgClientFactory.createInstance(tenantId).delete(getTableName(), id, future.completer());
     return future.map(updateResult -> updateResult.getUpdated() == 1);
+  }
+
+  @Override
+  public Future<Boolean> isProfileExistByName(String profileName, String tenantId) {
+    Future<Boolean> future = Future.future();
+    PostgresClient client = pgClientFactory.createInstance(tenantId);
+    StringBuilder selectQuery = new StringBuilder("SELECT jsonb FROM ") //NOSONAR
+      .append(PostgresClient.convertToPsqlStandard(tenantId))
+      .append(".")
+      .append(getTableName())
+      .append(" WHERE trim(both ' ' from lower(jsonb ->> 'name')) ='")
+      .append(profileName.toLowerCase().trim()).append("' LIMIT 1;");
+    client.select(selectQuery.toString(), reply -> {
+      if (reply.succeeded()) {
+        future.complete(reply.result().getNumRows() > 0);
+      } else {
+        logger.error("Error during counting profiles by its name. Profile name {}", profileName, reply.cause());
+        future.fail(reply.cause());
+      }
+    });
+    return future;
   }
 
   /**
