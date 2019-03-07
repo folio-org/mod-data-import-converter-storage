@@ -11,6 +11,8 @@ import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
+import org.folio.rest.jaxrs.model.Error;
+import org.folio.rest.jaxrs.model.Errors;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.MappingProfile;
@@ -25,11 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.Map;
 
 public class DataImportProfilesImpl implements DataImportProfiles {
 
   private static final Logger logger = LoggerFactory.getLogger(DataImportProfilesImpl.class);
+  private static final String DUPLICATE_JOB_PROFILE_ERROR_CODE = "jobProfile.duplication.invalid";
+  private static final String JOB_PROFILE_VALIDATE_ERROR_MESSAGE = "Failed to validate Job Profile";
 
   @Autowired
   private ProfileService<JobProfile, JobProfileCollection> jobProfileService;
@@ -52,11 +57,20 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                 Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        jobProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-          .map((Response) PostDataImportProfilesJobProfilesResponse
-            .respond201WithApplicationJson(entity, PostDataImportProfilesJobProfilesResponse.headersFor201()))
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+        validateJobProfileCreate(entity, tenantId).setHandler(errors -> {
+          if (errors.failed()) {
+            logger.error(JOB_PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
+            asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
+          } else if (errors.result().getTotalRecords() > 0) {
+            asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesJobProfilesResponse.respond422WithApplicationJson(errors.result())));
+          } else {
+            jobProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+              .map((Response) PostDataImportProfilesJobProfilesResponse
+                .respond201WithApplicationJson(entity, PostDataImportProfilesJobProfilesResponse.headersFor201()))
+              .otherwise(ExceptionHelper::mapExceptionToResponse)
+              .setHandler(asyncResultHandler);
+          }
+        });
       } catch (Exception e) {
         logger.error("Failed to create Job Profile", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -404,6 +418,17 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
+  }
+
+  private Future<Errors> validateJobProfileCreate(JobProfile profile, String tenantId) {
+    Errors errors = new Errors()
+      .withTotalRecords(0);
+    return jobProfileService.isProfileExistByName(profile.getName(), tenantId)
+      .map(isExist -> isExist
+        ? errors.withErrors(Collections.singletonList(new Error()
+        .withMessage(DUPLICATE_JOB_PROFILE_ERROR_CODE)))
+        .withTotalRecords(errors.getTotalRecords() + 1)
+        : errors);
   }
 
 }

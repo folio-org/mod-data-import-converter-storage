@@ -17,6 +17,10 @@
         {
           "fieldName": "id",
           "tOps": "ADD"
+        },
+        {
+          "fieldName": "name",
+          "tOps": "ADD"
         }
       ]
     },
