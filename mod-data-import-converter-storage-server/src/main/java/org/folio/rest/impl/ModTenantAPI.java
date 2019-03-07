@@ -24,7 +24,11 @@ public class ModTenantAPI extends TenantAPI {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ModTenantAPI.class);
   private static final String TEST_MODE = "test.mode";
-  private static final String SETUP_TEST_DATA_SQL = "templates/db_scripts/setup_test_data.sql";
+  private static final String TEST_JOB_PROFILES_SQL = "templates/db_scripts/test_job_profiles.sql";
+  private static final String TEST_MATCHING_PROFILES_SQL = "templates/db_scripts/test_matching_profiles.sql";
+  private static final String TEST_ACTION_PROFILES_SQL = "templates/db_scripts/test_action_profiles.sql";
+  private static final String TEST_MAPPING_PROFILES_SQL = "templates/db_scripts/test_mapping_profiles.sql";
+  private static final String TEST_PROFILE_ASSOCIATIONS_SQL = "templates/db_scripts/test_profile_associations.sql";
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
 
@@ -35,23 +39,27 @@ public class ModTenantAPI extends TenantAPI {
       if (ar.failed()) {
         handlers.handle(ar);
       } else {
-        setupTestData(headers, context)
-          .setHandler(event -> handlers.handle(ar));
+        if (!Boolean.TRUE.equals(Boolean.valueOf(System.getenv(TEST_MODE)))) {
+          LOGGER.info("Module is being deployed in production mode");
+          handlers.handle(ar);
+        } else {
+          setupTestData(TEST_JOB_PROFILES_SQL, headers, context)
+            .compose(event -> setupTestData(TEST_MATCHING_PROFILES_SQL, headers, context))
+            .compose(event -> setupTestData(TEST_ACTION_PROFILES_SQL, headers, context))
+            .compose(event -> setupTestData(TEST_MAPPING_PROFILES_SQL, headers, context))
+            .compose(event -> setupTestData(TEST_PROFILE_ASSOCIATIONS_SQL, headers, context))
+            .setHandler(event -> handlers.handle(ar));
+        }
       }
     }, context);
   }
 
-  private Future<List<String>> setupTestData(Map<String, String> headers, Context context) {
+  private Future<List<String>> setupTestData(String script, Map<String, String> headers, Context context) {
     try {
-      if (!Boolean.TRUE.equals(Boolean.valueOf(System.getenv(TEST_MODE)))) {
-        LOGGER.info("Module is being deployed in production mode");
-        return Future.succeededFuture();
-      }
-
-      InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(SETUP_TEST_DATA_SQL);
+      InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(script);
 
       if (inputStream == null) {
-        LOGGER.info("Module is being deployed in test mode, but test data was not initialized: no resources found: {}", SETUP_TEST_DATA_SQL);
+        LOGGER.info("Module is being deployed in test mode, but test data was not initialized: no resources found: {}", script);
         return Future.succeededFuture();
       }
 
@@ -60,7 +68,7 @@ public class ModTenantAPI extends TenantAPI {
         return Future.succeededFuture();
       }
 
-      String tenantId = TenantTool.calculateTenantId((String) headers.get("x-okapi-tenant"));
+      String tenantId = TenantTool.calculateTenantId(headers.get("x-okapi-tenant"));
       String moduleName = PostgresClient.getModuleName();
 
       sqlScript = sqlScript.replace(TENANT_PLACEHOLDER, tenantId).replace(MODULE_PLACEHOLDER, moduleName);
