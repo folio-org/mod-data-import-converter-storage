@@ -1,8 +1,6 @@
 package org.folio.dao.association;
 
 import io.vertx.core.Future;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
@@ -17,15 +15,11 @@ import java.util.Optional;
  * @param <D> entity data type of the 'detail' profile
  */
 public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAssociationDao<M, D> {
-
-  private static final Logger logger = LoggerFactory.getLogger(JobToMatchProfileAssociationDaoImpl.class);
-  private static final String ID_FIELD = "'id'";
-
+  private static final String ID_FIELD = "'id'"; //NOSONAR
   @Autowired
-  protected PostgresClientFactory pgClientFactory;
-
-  private ProfileDao masterProfileDao;
-  private ProfileDao detailProfileDao;
+  protected PostgresClientFactory pgClientFactory; //NOSONAR
+  private ProfileDao masterProfileDao;  //NOSONAR
+  private ProfileDao detailProfileDao;  //NOSONAR
 
   public AbstractProfileAssociationDao(ProfileDao masterProfileDao, ProfileDao detailProfileDao) {
     this.masterProfileDao = masterProfileDao;

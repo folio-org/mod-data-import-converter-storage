@@ -123,4 +123,29 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
+}'),
+('4b20facc-fbe8-4523-8f18-04ae35126ba6', '{
+	"id": "4b20facc-fbe8-4523-8f18-04ae35126ba6",
+	"name": "Create an Order and order line record",
+	"description": "Create an Order and order line record, using customized Order mappings, linked to that Inventory Instance, the Law Holdings, and the Law Item",
+	"action": "Create an Order",
+	"mapping": "EDI orders",
+	"tags": {
+    "tagList": [
+		  "Create", "Order"
+	  ]
+	},
+	"userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+	},
+	"metadata": {
+    "createdDate": "2018-10-30T12:41:22.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-11-02T12:09:51.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
 }') ON CONFLICT DO NOTHING;

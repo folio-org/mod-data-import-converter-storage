@@ -1,7 +1,5 @@
 package org.folio.dao.association;
 
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class JobToActionProfileAssociationDaoImpl extends AbstractProfileAssociationDao<JobProfileCollection, ActionProfileCollection> {
-
-  private static final Logger logger = LoggerFactory.getLogger(JobToActionProfileAssociationDaoImpl.class);
   private static final String TABLE_NAME = "job_to_action_profiles";
 
   public JobToActionProfileAssociationDaoImpl(@Autowired ProfileDao<JobProfile, JobProfileCollection> masterProfileDao,

@@ -76,6 +76,13 @@ INSERT INTO ${myuniversity}_${mymodule}.action_to_action_profiles (_id, jsonb) v
   "detailProfileId": "8176badd-bd7e-430d-aeb4-9f6ac342885f",
   "order": "0",
   "triggered": "false"
+}'),
+('fa07eef8-118f-4873-b9f8-40b7bba9916b', '{
+  "id": "fa07eef8-118f-4873-b9f8-40b7bba9916b",
+  "masterProfileId": "a260bf7f-a7c4-4c1d-bfb0-3be6230c71d4",
+  "detailProfileId": "4b20facc-fbe8-4523-8f18-04ae35126ba6",
+  "order": "2",
+  "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 
 INSERT INTO ${myuniversity}_${mymodule}.action_to_match_profiles (_id, jsonb) values
@@ -115,6 +122,12 @@ INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (_id, jsonb) 
   "detailProfileId": "79fc8de0-b094-43c5-89e0-4207420335f8",
   "order": "1",
   "triggered": "false"
+}'),
+('b59a628b-2e30-412c-a66e-0871f2eeb4e6', '{
+  "id": "b59a628b-2e30-412c-a66e-0871f2eeb4e6",
+  "masterProfileId": "4b20facc-fbe8-4523-8f18-04ae35126ba6",
+  "detailProfileId": "f4f075c6-67c9-411e-af24-01ceecd81b4b",
+  "order": "1",
+  "triggered": "false"
 }') ON CONFLICT DO NOTHING;
-
 

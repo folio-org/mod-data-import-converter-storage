@@ -1,7 +1,5 @@
 package org.folio.dao.association;
 
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ActionToMappingProfileAssociationDaoImpl extends AbstractProfileAssociationDao<ActionProfileCollection, MappingProfileCollection> {
-
-  private static final Logger logger = LoggerFactory.getLogger(ActionToMappingProfileAssociationDaoImpl.class);
   private static final String TABLE_NAME = "action_to_mapping_profiles";
 
   public ActionToMappingProfileAssociationDaoImpl(@Autowired ProfileDao<ActionProfile, ActionProfileCollection> masterProfileDao,
