@@ -6,14 +6,9 @@ import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
-import org.folio.rest.persist.Criteria.Criteria;
-import org.folio.rest.persist.Criteria.Criterion;
-import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
-
-import static org.folio.dao.util.DaoUtil.constructCriteria;
 
 /**
  * Generic implementation of the of the {@link ProfileAssociationDao}
@@ -39,24 +34,14 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
 
   @Override
   public Future<String> save(ProfileAssociation entity, String tenantId) {
-    Future<String> future = Future.future();
-    pgClientFactory.createInstance(tenantId).save(getTableName(), entity.getId(), entity, future.completer());
-    return future;
+    // STUB implementation
+    return Future.succeededFuture();
   }
 
   @Override
   public Future<Optional<ProfileAssociation>> getById(String id, String tenantId) {
-    Future<Results<ProfileAssociation>> future = Future.future();
-    try {
-      Criteria idCrit = constructCriteria(ID_FIELD, id);
-      pgClientFactory.createInstance(tenantId).get(getTableName(), ProfileAssociation.class, new Criterion(idCrit), true, false, future.completer());
-    } catch (Exception e) {
-      logger.error("Error querying {} by id", ProfileAssociation.class.getSimpleName(), e);
-      future.fail(e);
-    }
-    return future
-      .map(Results::getResults)
-      .map(profiles -> profiles.isEmpty() ? Optional.empty() : Optional.of(profiles.get(0)));
+    // STUB implementation
+    return Future.succeededFuture(Optional.of(null));
   }
 
   @Override

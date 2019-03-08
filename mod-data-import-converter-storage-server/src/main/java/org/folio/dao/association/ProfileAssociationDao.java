@@ -31,7 +31,19 @@ public interface ProfileAssociationDao<M, D> {
    */
   Future<Optional<ProfileAssociation>> getById(String id, String tenantId);
 
+  /**
+   * Returns 'detail' profiles linked to 'master' profile id
+   *
+   * @param masterId 'master' profile id
+   * @return future
+   */
   Future<D> getDetailProfilesByMasterId(String masterId);
 
+  /**
+   * Returns 'master' profiles linked to 'detail' profile id
+   *
+   * @param detailId 'detail' profile id
+   * @return future
+   */
   Future<M> getMasterProfilesByDetailId(String detailId);
 }

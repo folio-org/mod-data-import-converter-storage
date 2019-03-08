@@ -3,7 +3,10 @@ package org.folio.dao.association;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
-import org.folio.rest.jaxrs.model.*;
+import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ActionProfileCollection;
+import org.folio.rest.jaxrs.model.MatchProfile;
+import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +20,7 @@ public class ActionToMatchProfileAssociationDaoImpl extends AbstractProfileAssoc
   private static final String TABLE_NAME = "action_to_match_profiles";
 
   public ActionToMatchProfileAssociationDaoImpl(@Autowired ProfileDao<ActionProfile, ActionProfileCollection> detailProfileDao,
-                                                @Autowired ProfileDao<MatchProfile, JobProfileCollection> masterProfileDao) {
+                                                @Autowired ProfileDao<MatchProfile, MatchProfileCollection> masterProfileDao) {
     super(masterProfileDao, detailProfileDao);
   }
 
