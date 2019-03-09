@@ -15,7 +15,7 @@ import java.util.Optional;
  * @param <D> entity data type of the 'detail' profile
  */
 public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAssociationDao<M, D> {
-  private static final String ID_FIELD = "'id'"; //NOSONAR
+  protected static final String ID_FIELD = "'id'"; //NOSONAR
   @Autowired
   protected PostgresClientFactory pgClientFactory; //NOSONAR
   protected ProfileDao masterProfileDao;  //NOSONAR
