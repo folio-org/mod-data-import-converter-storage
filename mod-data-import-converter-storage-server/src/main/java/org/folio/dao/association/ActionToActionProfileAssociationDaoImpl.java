@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ActionToActionProfileAssociationDaoImpl extends AbstractProfileAssociationDao<ActionProfileCollection, ActionProfileCollection> {
-  private static final String TABLE_NAME = "match_to_match_profiles";
+  private static final String TABLE_NAME = "action_to_action_profiles";
 
   public ActionToActionProfileAssociationDaoImpl(@Autowired ProfileDao<ActionProfile, ActionProfileCollection> profileDao) {
     super(profileDao, profileDao);

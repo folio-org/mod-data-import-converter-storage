@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MatchToActionProfileAssociationDaoImpl extends AbstractProfileAssociationDao<MatchProfileCollection, ActionProfileCollection> {
-  private static final String TABLE_NAME = "match_to_match_profiles";
+  private static final String TABLE_NAME = "match_to_action_profiles";
 
   public MatchToActionProfileAssociationDaoImpl(@Autowired ProfileDao<MatchProfile, MatchProfileCollection> masterProfileDao,
                                                 @Autowired ProfileDao<ActionProfile, ActionProfileCollection> detailProfileDao) {
