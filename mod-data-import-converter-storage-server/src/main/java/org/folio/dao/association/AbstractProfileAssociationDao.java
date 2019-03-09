@@ -18,8 +18,8 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
   private static final String ID_FIELD = "'id'"; //NOSONAR
   @Autowired
   protected PostgresClientFactory pgClientFactory; //NOSONAR
-  private ProfileDao masterProfileDao;  //NOSONAR
-  private ProfileDao detailProfileDao;  //NOSONAR
+  protected ProfileDao masterProfileDao;  //NOSONAR
+  protected ProfileDao detailProfileDao;  //NOSONAR
 
   public AbstractProfileAssociationDao(ProfileDao masterProfileDao, ProfileDao detailProfileDao) {
     this.masterProfileDao = masterProfileDao;
