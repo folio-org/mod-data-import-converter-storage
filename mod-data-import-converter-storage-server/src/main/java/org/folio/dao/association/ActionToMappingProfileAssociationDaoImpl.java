@@ -6,12 +6,12 @@ import org.folio.rest.jaxrs.model.ActionProfileCollection;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * Data access object for {@link ProfileAssociationDao}
  */
-@Component
+@Repository
 public class ActionToMappingProfileAssociationDaoImpl extends AbstractProfileAssociationDao<ActionProfileCollection, MappingProfileCollection> {
   private static final String TABLE_NAME = "action_to_mapping_profiles";
 
