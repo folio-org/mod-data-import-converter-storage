@@ -26,9 +26,9 @@ import java.util.UUID;
 
 public abstract class AbstractRestVerticleTest {
 
-  static final String TENANT_ID = "diku";
-  static Vertx vertx;
-  static RequestSpecification spec;
+  public static final String TENANT_ID = "diku";
+  public static Vertx vertx;
+  public static RequestSpecification spec;
   private static String USER_ID = UUID.randomUUID().toString();
   private static String useExternalDatabase;
   private static final String GET_USER_URL = "/users?query=id==";
@@ -71,6 +71,7 @@ public abstract class AbstractRestVerticleTest {
         PostgresClient.setConfigFilePath(postgresConfigPath);
         break;
       case "embedded":
+        PostgresClient.stopEmbeddedPostgres();
         PostgresClient.setIsEmbedded(true);
         PostgresClient.getInstance(vertx).startEmbeddedPostgres();
         break;
