@@ -9,19 +9,12 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
-import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.ActionProfileCollection;
+import org.folio.rest.jaxrs.model.*;
 import org.folio.rest.jaxrs.model.Error;
-import org.folio.rest.jaxrs.model.Errors;
-import org.folio.rest.jaxrs.model.JobProfile;
-import org.folio.rest.jaxrs.model.JobProfileCollection;
-import org.folio.rest.jaxrs.model.MappingProfile;
-import org.folio.rest.jaxrs.model.MappingProfileCollection;
-import org.folio.rest.jaxrs.model.MatchProfile;
-import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.folio.rest.jaxrs.resource.DataImportProfiles;
 import org.folio.rest.tools.utils.TenantTool;
 import org.folio.services.ProfileService;
+import org.folio.services.association.ProfileAssociationService;
 import org.folio.spring.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,6 +37,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private ProfileService<ActionProfile, ActionProfileCollection> actionProfileService;
   @Autowired
   private ProfileService<MappingProfile, MappingProfileCollection> mappingProfileService;
+  @Autowired
+  private ProfileAssociationService<JobProfileCollection, ActionProfileCollection> jobToActionProfileService;
 
   private String tenantId;
 
@@ -394,6 +389,83 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .setHandler(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Action Profile by id {}", id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void postDataImportProfilesProfileAssociations(String lang, ProfileAssociation entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        jobToActionProfileService.save(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+          .map((Response) PostDataImportProfilesProfileAssociationsResponse
+            .respond201WithApplicationJson(entity, PostDataImportProfilesProfileAssociationsResponse.headersFor201()))
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to create Profile association", e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void getDataImportProfilesProfileAssociations(String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    // stub implementation
+    asyncResultHandler.handle(Future.succeededFuture());
+  }
+
+  @Override
+  public void putDataImportProfilesProfileAssociationsById(String id, String lang, ProfileAssociation entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        entity.setId(id);
+        jobToActionProfileService.update(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+          .map(updatedEntity -> (Response) PutDataImportProfilesProfileAssociationsByIdResponse.respond200WithApplicationJson(updatedEntity))
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to update Profile association with id {}", id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void deleteDataImportProfilesProfileAssociationsById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        jobToActionProfileService.delete(id, tenantId)
+          .map(deleted -> deleted
+            ? DeleteDataImportProfilesProfileAssociationsByIdResponse.respond204WithTextPlain(
+              String.format("Profile association with id '%s' was successfully deleted", id))
+            :
+            DeleteDataImportProfilesProfileAssociationsByIdResponse.respond404WithTextPlain(
+              String.format("Profile association with id '%s' was not found", id)))
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to delete Profile association with id {}", id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void getDataImportProfilesProfileAssociationsById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(c -> {
+      try {
+        jobToActionProfileService.getById(id, tenantId)
+          .map(optionalProfile -> optionalProfile.orElseThrow(() ->
+            new NotFoundException(String.format("Profile association with id '%s' was not found", id))))
+          .map(GetDataImportProfilesProfileAssociationsByIdResponse::respond200WithApplicationJson)
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to get Profile association by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
