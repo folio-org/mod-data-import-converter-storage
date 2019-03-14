@@ -20,7 +20,6 @@ import java.util.UUID;
  */
 @Service
 public class CommonProfileAssociationService<M, D> implements ProfileAssociationService<M, D> { //NOSOANR
-  private static final Logger logger = LoggerFactory.getLogger(CommonProfileAssociationService.class);
 
   @Autowired
   private ProfileAssociationDao<M, D> dao;
