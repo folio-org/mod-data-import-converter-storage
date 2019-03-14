@@ -22,7 +22,9 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(VertxUnitRunner.class)
 public class JobToActionProfileTest extends AbstractRestVerticleTest {
-  private static final String TABLE_NAME = "job_to_action_profiles";
+  private static final String ASSOCIATION_TABLE_NAME = "job_to_action_profiles";
+  private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
+  private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
   private static final String JOB_PROFILES_URL = "/data-import-profiles/jobProfiles";
   private static final String ACTION_PROFILES_URL = "/data-import-profiles/actionProfiles";
   private static final String ASSOCIATED_PROFILES_URL = "/data-import-profiles/profileAssociations";
@@ -144,7 +146,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   private JobProfile createJobProfile() {
     return RestAssured.given()
       .spec(spec)
-      .body(new JobProfile().withName("testJobProfile" + UUID.randomUUID().toString()))
+      .body(new JobProfile().withName("testJobProfile"))
       .when()
       .post(JOB_PROFILES_URL)
       .then()
@@ -168,11 +170,24 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(TABLE_NAME, new Criterion(), event -> {
-      if (event.failed()) {
-        context.fail(event.cause());
+    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
+    pgClient.delete(ASSOCIATION_TABLE_NAME, new Criterion(), associationsDeleteEvent -> {
+      if (associationsDeleteEvent.failed()) {
+        context.fail(associationsDeleteEvent.cause());
       } else {
-        async.complete();
+        pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), jobProfilesDeleteEvent -> {
+          if (jobProfilesDeleteEvent.failed()) {
+            context.fail(jobProfilesDeleteEvent.cause());
+          } else {
+            pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), actionProfilesDeleteEvent -> {
+              if (actionProfilesDeleteEvent.failed()) {
+                context.fail(actionProfilesDeleteEvent.cause());
+              } else {
+                async.complete();
+              }
+            });
+          }
+        });
       }
     });
   }
