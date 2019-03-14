@@ -12,7 +12,7 @@ import java.util.Optional;
  * @param <M> entity data type of the 'master' profile
  * @param <D> entity data type of the 'detail' profile
  */
-public interface ProfileAssociationService<M, D> { //NOSOANR
+public interface ProfileAssociationService<M, D> { //NOSONAR
 
   /**
    * Searches for ProfileAssociation by id
