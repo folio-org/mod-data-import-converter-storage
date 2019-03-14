@@ -9,8 +9,17 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
-import org.folio.rest.jaxrs.model.*;
+import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ActionProfileCollection;
 import org.folio.rest.jaxrs.model.Error;
+import org.folio.rest.jaxrs.model.Errors;
+import org.folio.rest.jaxrs.model.JobProfile;
+import org.folio.rest.jaxrs.model.JobProfileCollection;
+import org.folio.rest.jaxrs.model.MappingProfile;
+import org.folio.rest.jaxrs.model.MappingProfileCollection;
+import org.folio.rest.jaxrs.model.MatchProfile;
+import org.folio.rest.jaxrs.model.MatchProfileCollection;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.resource.DataImportProfiles;
 import org.folio.rest.tools.utils.TenantTool;
 import org.folio.services.ProfileService;
@@ -439,7 +448,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         jobToActionProfileService.delete(id, tenantId)
           .map(deleted -> deleted
             ? DeleteDataImportProfilesProfileAssociationsByIdResponse.respond204WithTextPlain(
-              String.format("Profile association with id '%s' was successfully deleted", id))
+            String.format("Profile association with id '%s' was successfully deleted", id))
             :
             DeleteDataImportProfilesProfileAssociationsByIdResponse.respond404WithTextPlain(
               String.format("Profile association with id '%s' was not found", id)))

@@ -21,10 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(VertxUnitRunner.class)
 public class MappingProfileTest extends AbstractRestVerticleTest {
