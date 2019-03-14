@@ -32,6 +32,24 @@ public interface ProfileAssociationDao<M, D> {
   Future<Optional<ProfileAssociation>> getById(String id, String tenantId);
 
   /**
+   * Updates ProfileAssociation entity in database
+   *
+   * @param entity   ProfileAssociation entity to update
+   * @param tenantId tenant id
+   * @return future with updated entity
+   */
+  Future<ProfileAssociation> update(ProfileAssociation entity, String tenantId);
+
+  /**
+   * Deletes entity from database
+   *
+   * @param id       ProfileAssociation  id
+   * @param tenantId tenant id
+   * @return future with true if succeeded
+   */
+  Future<Boolean> delete(String id, String tenantId);
+
+  /**
    * Returns 'detail' profiles linked to 'master' profile id
    *
    * @param masterId 'master' profile id

@@ -20,6 +20,7 @@ types:
   actionProfile: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfile.json
   actionProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfileCollection.json
   profileAssociation: !include raml-storage/schemas/mod-data-import-converter-storage/profileAssociation.json
+  profileAssociationCollection: !include raml-storage/schemas/mod-data-import-converter-storage/profileAssociationCollection.json
 
 traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
@@ -171,6 +172,38 @@ resourceTypes:
             body:
               application/json:
                 type: actionProfile
+      delete:
+        responses:
+          204:
+            body:
+              text/plain: !!null
+  /profileAssociations:
+    displayName: Profile associations
+    description: API for managing Profile associations
+    type:
+      collection:
+        schemaCollection: profileAssociationCollection
+        schemaItem: profileAssociation
+        exampleCollection: !include raml-storage/examples/mod-data-import-converter-storage/profileAssociationCollection.sample
+        exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/profileAssociation.sample
+    post:
+      is: [validate]
+    get:
+      is: [validate]
+    /{id}:
+      displayName: Profile associations
+      description: Get, Delete or Update a specific Profile association
+      type:
+        collection-item:
+          schema: profileAssociation
+          exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/profileAssociation.sample
+      put:
+        is: [validate]
+        responses:
+          200:
+            body:
+              application/json:
+                type: profileAssociation
       delete:
         responses:
           204:

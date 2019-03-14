@@ -3,6 +3,7 @@ package org.folio.dao.association;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.sql.UpdateResult;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
@@ -11,6 +12,7 @@ import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 
 import static org.folio.dao.util.DaoUtil.constructCriteria;
@@ -54,6 +56,37 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
     return future
       .map(Results::getResults)
       .map(profiles -> profiles.isEmpty() ? Optional.empty() : Optional.of(profiles.get(0)));
+  }
+
+  @Override
+  public Future<ProfileAssociation> update(ProfileAssociation entity, String tenantId) {
+    Future<ProfileAssociation> future = Future.future();
+    try {
+      Criteria idCrit = constructCriteria(ID_FIELD, entity.getId());
+      pgClientFactory.createInstance(tenantId).update(getTableName(), entity, new Criterion(idCrit), true, updateResult -> {
+        if (updateResult.failed()) {
+          logger.error("Could not update {} with id {}", ProfileAssociation.class, entity.getId(), updateResult.cause());
+          future.fail(updateResult.cause());
+        } else if (updateResult.result().getUpdated() != 1) {
+          String errorMessage = String.format("%s with id '%s' was not found", ProfileAssociation.class, entity.getId());
+          logger.error(errorMessage);
+          future.fail(new NotFoundException(errorMessage));
+        } else {
+          future.complete(entity);
+        }
+      });
+    } catch (Exception e) {
+      logger.error("Error updating {} with id {}", ProfileAssociation.class, entity.getId(), e);
+      future.fail(e);
+    }
+    return future;
+  }
+
+  @Override
+  public Future<Boolean> delete(String id, String tenantId) {
+    Future<UpdateResult> future = Future.future();
+    pgClientFactory.createInstance(tenantId).delete(getTableName(), id, future.completer());
+    return future.map(updateResult -> updateResult.getUpdated() == 1);
   }
 
   @Override
