@@ -23,11 +23,11 @@ import static org.folio.dao.util.DaoUtil.constructCriteria;
  * @param <M> entity data type of the 'master' profile
  * @param <D> entity data type of the 'detail' profile
  */
-public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAssociationDao<M, D> { //NOSOANR
-  protected static final String ID_FIELD = "'id'"; //NOSONAR
+public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAssociationDao<M, D> {
+  protected static final String ID_FIELD = "'id'";
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileAssociationDao.class);
   @Autowired
-  protected PostgresClientFactory pgClientFactory; //NOSONAR
+  protected PostgresClientFactory pgClientFactory;
   protected ProfileDao masterProfileDao;  //NOSONAR
   protected ProfileDao detailProfileDao;  //NOSONAR
 
