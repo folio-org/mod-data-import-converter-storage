@@ -30,6 +30,16 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   private static final String ASSOCIATED_PROFILES_URL = "/data-import-profiles/profileAssociations";
 
   @Test
+  public void shouldReturnEmptyOkResultOnGetAll() {
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(ASSOCIATED_PROFILES_URL )
+      .then()
+      .statusCode(HttpStatus.SC_OK);
+  }
+
+  @Test
   public void shouldReturnNotFoundOnGetById() {
     RestAssured.given()
       .spec(spec)

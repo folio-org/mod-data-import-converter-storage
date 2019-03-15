@@ -20,6 +20,7 @@ import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.resource.DataImportProfiles;
 import org.folio.rest.tools.utils.TenantTool;
 import org.folio.services.ProfileService;
@@ -422,7 +423,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   @Override
   public void getDataImportProfilesProfileAssociations(String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     // stub implementation
-    asyncResultHandler.handle(Future.succeededFuture());
+    vertxContext.runOnContext(v -> {
+      Future.succeededFuture(new ProfileAssociationCollection())
+        .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
+        .map(Response.class::cast)
+        .setHandler(asyncResultHandler);
+    });
   }
 
   @Override
