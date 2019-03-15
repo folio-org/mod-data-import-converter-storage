@@ -269,9 +269,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     PostgresClient.getInstance(vertx, TENANT_ID).delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event -> {
       if (event.failed()) {
         context.fail(event.cause());
-      } else {
-        async.complete();
       }
+      async.complete();
     });
   }
 }

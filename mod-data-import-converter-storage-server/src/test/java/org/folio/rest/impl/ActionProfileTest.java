@@ -260,9 +260,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event -> {
       if (event.failed()) {
         context.fail(event.cause());
-      } else {
-        async.complete();
       }
+      async.complete();
     });
   }
 }

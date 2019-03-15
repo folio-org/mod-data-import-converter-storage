@@ -221,21 +221,18 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     pgClient.delete(ASSOCIATION_TABLE_NAME, new Criterion(), associationsDeleteEvent -> {
       if (associationsDeleteEvent.failed()) {
         context.fail(associationsDeleteEvent.cause());
-      } else {
-        pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), jobProfilesDeleteEvent -> {
-          if (jobProfilesDeleteEvent.failed()) {
-            context.fail(jobProfilesDeleteEvent.cause());
-          } else {
-            pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), actionProfilesDeleteEvent -> {
-              if (actionProfilesDeleteEvent.failed()) {
-                context.fail(actionProfilesDeleteEvent.cause());
-              } else {
-                async.complete();
-              }
-            });
-          }
-        });
       }
+      pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), jobProfilesDeleteEvent -> {
+        if (jobProfilesDeleteEvent.failed()) {
+          context.fail(jobProfilesDeleteEvent.cause());
+        }
+        pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), actionProfilesDeleteEvent -> {
+          if (actionProfilesDeleteEvent.failed()) {
+            context.fail(actionProfilesDeleteEvent.cause());
+          }
+          async.complete();
+        });
+      });
     });
   }
 }
