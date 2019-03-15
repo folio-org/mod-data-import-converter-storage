@@ -5,7 +5,6 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.UpdateResult;
 import org.folio.dao.PostgresClientFactory;
-import org.folio.dao.ProfileDao;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.persist.Criteria.Criteria;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -28,13 +27,6 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileAssociationDao.class);
   @Autowired
   protected PostgresClientFactory pgClientFactory;
-  protected ProfileDao masterProfileDao;  //NOSONAR
-  protected ProfileDao detailProfileDao;  //NOSONAR
-
-  public AbstractProfileAssociationDao(ProfileDao masterProfileDao, ProfileDao detailProfileDao) {
-    this.masterProfileDao = masterProfileDao;
-    this.detailProfileDao = detailProfileDao;
-  }
 
   @Override
   public Future<String> save(ProfileAssociation entity, String tenantId) {
