@@ -30,7 +30,17 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   private static final String ASSOCIATED_PROFILES_URL = "/data-import-profiles/profileAssociations";
 
   @Test
-  public void shouldSaveAndReturnProfileAssociationOnGetById() {
+  public void shouldReturnNotFoundOnGetById() {
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
+  public void shouldPostAndGetById() {
     JobProfile jobProfile = createJobProfile();
     ActionProfile actionProfile = createActionProfile();
 
@@ -61,13 +71,14 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnNotFoundOnGetById() {
+  public void shouldReturnBadRequestOnPost() {
     RestAssured.given()
       .spec(spec)
+      .body(new JobProfile())
       .when()
-      .get(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
+      .post(ASSOCIATED_PROFILES_URL)
       .then()
-      .statusCode(HttpStatus.SC_NOT_FOUND);
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
@@ -108,7 +119,33 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldUpdateProfileAssociation() {
+  public void shouldReturnBadRequestOnPut() {
+    RestAssured.given()
+      .spec(spec)
+      .body(new JobProfile())
+      .when()
+      .put(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldReturnNotFoundOnPut() {
+    ProfileAssociation profileAssociation = new ProfileAssociation()
+      .withId(UUID.randomUUID().toString())
+      .withMasterProfileId(UUID.randomUUID().toString())
+      .withDetailProfileId(UUID.randomUUID().toString());
+    RestAssured.given()
+      .spec(spec)
+      .body(profileAssociation)
+      .when()
+      .put(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
+  public void shouldUpdateProfileAssociationOnPut() {
     JobProfile jobProfile = createJobProfile();
     ActionProfile actionProfile1 = createActionProfile();
     ProfileAssociation profileAssociation = new ProfileAssociation()
