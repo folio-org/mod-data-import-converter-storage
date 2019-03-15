@@ -34,7 +34,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ASSOCIATED_PROFILES_URL )
+      .get(ASSOCIATED_PROFILES_URL)
       .then()
       .statusCode(HttpStatus.SC_OK);
   }
