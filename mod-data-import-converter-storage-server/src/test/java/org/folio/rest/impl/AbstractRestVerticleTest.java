@@ -26,30 +26,28 @@ import java.util.UUID;
 
 public abstract class AbstractRestVerticleTest {
 
-  static final String TENANT_ID = "diku";
-  static Vertx vertx;
-  static RequestSpecification spec;
+  public static final String TENANT_ID = "diku";
+  private static final String GET_USER_URL = "/users?query=id==";
+  public static Vertx vertx;
+  public static RequestSpecification spec;
   private static String USER_ID = UUID.randomUUID().toString();
   private static String useExternalDatabase;
-  private static final String GET_USER_URL = "/users?query=id==";
   private static int PORT = NetworkUtils.nextFreePort();
   private static int MOCK_PORT = NetworkUtils.nextFreePort();
   private static String BASE_URL = "http://localhost:";
   private static String OKAPI_URL = BASE_URL + PORT;
   private static String MOCK_URL = BASE_URL + MOCK_PORT;
-
+  @Rule
+  public WireMockRule snapshotMockServer = new WireMockRule(
+    WireMockConfiguration.wireMockConfig()
+      .port(MOCK_PORT)
+      .notifier(new Slf4jNotifier(true)));
   private JsonObject userResponse = new JsonObject()
     .put("users",
       new JsonArray().add(new JsonObject()
         .put("username", "@janedoe")
         .put("personal", new JsonObject().put("firstName", "Jane").put("lastName", "Doe"))))
     .put("totalRecords", 1);
-
-  @Rule
-  public WireMockRule snapshotMockServer = new WireMockRule(
-    WireMockConfiguration.wireMockConfig()
-      .port(MOCK_PORT)
-      .notifier(new Slf4jNotifier(true)));
 
   @BeforeClass
   public static void setUpClass(final TestContext context) throws Exception {
@@ -71,6 +69,7 @@ public abstract class AbstractRestVerticleTest {
         PostgresClient.setConfigFilePath(postgresConfigPath);
         break;
       case "embedded":
+        PostgresClient.stopEmbeddedPostgres();
         PostgresClient.setIsEmbedded(true);
         PostgresClient.getInstance(vertx).startEmbeddedPostgres();
         break;

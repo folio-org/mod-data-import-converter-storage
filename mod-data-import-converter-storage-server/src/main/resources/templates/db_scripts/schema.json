@@ -80,6 +80,223 @@
           "tOps": "ADD"
         }
       ]
+    },
+    {
+      "tableName": "job_to_match_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "fieldName": "masterProfileId",
+          "targetTable": "job_profiles",
+          "tOps": "ADD"
+        },
+        {
+          "fieldName": "detailProfileId",
+          "targetTable": "match_profiles",
+          "tOps": "ADD"
+        }
+      ]
+    },
+    {
+      "tableName": "job_to_action_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "fieldName": "masterProfileId",
+          "targetTable": "job_profiles",
+          "tOps": "ADD"
+        },
+        {
+          "fieldName": "detailProfileId",
+          "targetTable": "action_profiles",
+          "tOps": "ADD"
+        }
+      ]
+    },
+    {
+      "tableName": "match_to_match_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "fieldName": "masterProfileId",
+          "targetTable": "match_profiles",
+          "tOps": "ADD"
+        },
+        {
+          "fieldName": "detailProfileId",
+          "targetTable": "match_profiles",
+          "tOps": "ADD"
+        }
+      ]
+    },
+    {
+      "tableName": "match_to_action_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "fieldName": "masterProfileId",
+          "targetTable": "match_profiles",
+          "tOps": "ADD"
+        },
+        {
+          "fieldName": "detailProfileId",
+          "targetTable": "action_profiles",
+          "tOps": "ADD"
+        }
+      ]
+    },
+    {
+      "tableName": "action_to_action_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "fieldName": "masterProfileId",
+          "targetTable": "action_profiles",
+          "tOps": "ADD"
+        },
+        {
+          "fieldName": "detailProfileId",
+          "targetTable": "action_profiles",
+          "tOps": "ADD"
+        }
+      ]
+    },
+    {
+      "tableName": "action_to_match_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "fieldName": "masterProfileId",
+          "targetTable": "action_profiles",
+          "tOps": "ADD"
+        },
+        {
+          "fieldName": "detailProfileId",
+          "targetTable": "match_profiles",
+          "tOps": "ADD"
+        }
+      ]
+    },
+    {
+      "tableName": "action_to_mapping_profiles",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": true,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "uniqueIndex": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "fieldName": "masterProfileId",
+          "targetTable": "action_profiles",
+          "tOps": "ADD"
+        },
+        {
+          "fieldName": "detailProfileId",
+          "targetTable": "mapping_profiles",
+          "tOps": "ADD"
+        }
+      ]
     }
   ]
 }
