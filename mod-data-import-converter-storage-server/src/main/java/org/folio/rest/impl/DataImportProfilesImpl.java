@@ -423,12 +423,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   @Override
   public void getDataImportProfilesProfileAssociations(String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     // stub implementation
-    vertxContext.runOnContext(v -> {
+    vertxContext.runOnContext(v ->
       Future.succeededFuture(new ProfileAssociationCollection())
         .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
         .map(Response.class::cast)
-        .setHandler(asyncResultHandler);
-    });
+        .setHandler(asyncResultHandler)
+    );
   }
 
   @Override
