@@ -38,7 +38,7 @@ public abstract class AbstractRestVerticleTest {
   private static String OKAPI_URL = BASE_URL + PORT;
   private static String MOCK_URL = BASE_URL + MOCK_PORT;
   @Rule
-  public WireMockRule snapshotMockServer = new WireMockRule(
+  public WireMockRule mockServer = new WireMockRule(
     WireMockConfiguration.wireMockConfig()
       .port(MOCK_PORT)
       .notifier(new Slf4jNotifier(true)));
@@ -53,6 +53,7 @@ public abstract class AbstractRestVerticleTest {
   public static void setUpClass(final TestContext context) throws Exception {
     Async async = context.async();
     vertx = Vertx.vertx();
+    PostgresClient.closeAllClients();
 
     useExternalDatabase = System.getProperty(
       "org.folio.converter.storage.test.database",
@@ -80,7 +81,7 @@ public abstract class AbstractRestVerticleTest {
         throw new Exception(message);
     }
 
-    TenantClient tenantClient = new TenantClient(OKAPI_URL, "diku", "dummy-token");
+    TenantClient tenantClient = new TenantClient(OKAPI_URL, TENANT_ID, "dummy-token");
     DeploymentOptions restVerticleDeploymentOptions = new DeploymentOptions()
       .setConfig(new JsonObject().put("http.port", PORT));
     vertx.deployVerticle(RestVerticle.class.getName(), restVerticleDeploymentOptions, res -> {
