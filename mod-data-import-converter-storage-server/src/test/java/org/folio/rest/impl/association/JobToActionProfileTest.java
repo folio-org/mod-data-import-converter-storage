@@ -30,35 +30,41 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   private static final String ASSOCIATED_PROFILES_URL = "/data-import-profiles/profileAssociations";
 
   @Test
-  public void shouldReturnEmptyOkResultOnGetAll() {
+  public void shouldReturnEmptyOkResultOnGetAll(TestContext testContext) {
+    Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .when()
       .get(ASSOCIATED_PROFILES_URL)
       .then()
       .statusCode(HttpStatus.SC_OK);
+    async.complete();
   }
 
   @Test
-  public void shouldReturnNotFoundOnGetById() {
+  public void shouldReturnNotFoundOnGetById(TestContext testContext) {
+    Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .when()
       .get(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
+    async.complete();
   }
 
   @Test
-  public void shouldPostAndGetById() {
-    JobProfile jobProfile = createJobProfile();
-    ActionProfile actionProfile = createActionProfile();
+  public void shouldPostAndGetById(TestContext testContext) {
+    JobProfile jobProfile = createJobProfile(testContext);
+    ActionProfile actionProfile = createActionProfile(testContext);
 
     ProfileAssociation profileAssociation = new ProfileAssociation()
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile.getId())
       .withOrder(5)
       .withTriggered(true);
+
+    Async async = testContext.async();
     Response createResponse = RestAssured.given()
       .spec(spec)
       .body(profileAssociation)
@@ -66,7 +72,9 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .post(ASSOCIATED_PROFILES_URL);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
     ProfileAssociation savedProfileAssociation = createResponse.body().as(ProfileAssociation.class);
+    async.complete();
 
+    async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .when()
@@ -78,10 +86,12 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .body("detailProfileId", is(actionProfile.getId()))
       .body("order", is(savedProfileAssociation.getOrder()))
       .body("triggered", is(savedProfileAssociation.getTriggered()));
+    async.complete();
   }
 
   @Test
-  public void shouldReturnBadRequestOnPost() {
+  public void shouldReturnBadRequestOnPost(TestContext testContext) {
+    Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .body(new JobProfile())
@@ -89,27 +99,32 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .post(ASSOCIATED_PROFILES_URL)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+    async.complete();
   }
 
   @Test
-  public void shouldReturnNotFoundOnDelete() {
+  public void shouldReturnNotFoundOnDelete(TestContext testContext) {
+    Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .when()
       .delete(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
+    async.complete();
   }
 
   @Test
-  public void shouldDeleteProfileOnDelete() {
-    JobProfile jobProfile = createJobProfile();
-    ActionProfile actionProfile = createActionProfile();
+  public void shouldDeleteProfileOnDelete(TestContext testContext) {
+    JobProfile jobProfile = createJobProfile(testContext);
+    ActionProfile actionProfile = createActionProfile(testContext);
     ProfileAssociation profileAssociation = new ProfileAssociation()
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile.getId())
       .withOrder(10)
       .withTriggered(false);
+
+    Async async = testContext.async();
     ProfileAssociation savedProfileAssociation = RestAssured.given()
       .spec(spec)
       .body(profileAssociation)
@@ -119,17 +134,21 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .statusCode(is(HttpStatus.SC_CREATED))
       .and()
       .extract().body().as(ProfileAssociation.class);
+    async.complete();
 
+    async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .when()
       .delete(ASSOCIATED_PROFILES_URL + "/" + savedProfileAssociation.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
+    async.complete();
   }
 
   @Test
-  public void shouldReturnBadRequestOnPut() {
+  public void shouldReturnBadRequestOnPut(TestContext testContext) {
+    Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .body(new JobProfile())
@@ -137,10 +156,12 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .put(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+    async.complete();
   }
 
   @Test
-  public void shouldReturnNotFoundOnPut() {
+  public void shouldReturnNotFoundOnPut(TestContext testContext) {
+    Async async = testContext.async();
     ProfileAssociation profileAssociation = new ProfileAssociation()
       .withId(UUID.randomUUID().toString())
       .withMasterProfileId(UUID.randomUUID().toString())
@@ -152,17 +173,20 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .put(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
+    async.complete();
   }
 
   @Test
-  public void shouldUpdateProfileAssociationOnPut() {
-    JobProfile jobProfile = createJobProfile();
-    ActionProfile actionProfile1 = createActionProfile();
+  public void shouldUpdateProfileAssociationOnPut(TestContext testContext) {
+    JobProfile jobProfile = createJobProfile(testContext);
+    ActionProfile actionProfile1 = createActionProfile(testContext);
     ProfileAssociation profileAssociation = new ProfileAssociation()
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile1.getId())
       .withOrder(7)
       .withTriggered(true);
+
+    Async async = testContext.async();
     ProfileAssociation savedProfileAssociation = RestAssured.given()
       .spec(spec)
       .body(profileAssociation)
@@ -172,10 +196,12 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .statusCode(is(HttpStatus.SC_CREATED))
       .and()
       .extract().body().as(ProfileAssociation.class);
+    async.complete();
 
-    ActionProfile actionProfile2 = createActionProfile();
+    ActionProfile actionProfile2 = createActionProfile(testContext);
     savedProfileAssociation.setDetailProfileId(actionProfile2.getId());
 
+    async = testContext.async();
     RestAssured.given()
       .spec(spec)
       .body(savedProfileAssociation)
@@ -188,10 +214,12 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .body("detailProfileId", is(actionProfile2.getId()))
       .body("order", is(savedProfileAssociation.getOrder()))
       .body("triggered", is(savedProfileAssociation.getTriggered()));
+    async.complete();
   }
 
-  private JobProfile createJobProfile() {
-    return RestAssured.given()
+  private JobProfile createJobProfile(TestContext testContext) {
+    Async async = testContext.async();
+    JobProfile jobProfile = RestAssured.given()
       .spec(spec)
       .body(new JobProfile().withName("testJobProfile"))
       .when()
@@ -200,10 +228,13 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_CREATED)
       .and()
       .extract().body().as(JobProfile.class);
+    async.complete();
+    return jobProfile;
   }
 
-  private ActionProfile createActionProfile() {
-    return RestAssured.given()
+  private ActionProfile createActionProfile(TestContext testContext) {
+    Async async = testContext.async();
+    ActionProfile actionProfile = RestAssured.given()
       .spec(spec)
       .body(new ActionProfile().withName("testActionProfile"))
       .when()
@@ -212,6 +243,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_CREATED)
       .and()
       .extract().body().as(ActionProfile.class);
+    async.complete();
+    return actionProfile;
   }
 
   @Override
