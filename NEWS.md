@@ -1,4 +1,4 @@
-## 2019-01-28 v0.0.1-SNAPSHOT
+## 2019-03-20 v1.0.0
 * Initial module setup
 * Implemented CRUD endpoints for Job Profile entity
 * Populated sample Job Profile data
