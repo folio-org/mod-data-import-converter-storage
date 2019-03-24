@@ -4,7 +4,7 @@ import io.vertx.core.Future;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.Child;
+import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
@@ -33,15 +33,15 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
   private ProfileSnapshotWrapper convertWrapper(@NotNull ProfileSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
-    for (Child child : wrapper.getChildren()) {
+    for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
       convertChild(child);
     }
     return wrapper;
   }
 
-  private Child convertChild(Child wrapper) {
+  private ChildSnapshotWrapper convertChild(ChildSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
-    for (Child child : wrapper.getChildren()) {
+    for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
       convertChild(child);
     }
     return wrapper;

@@ -21,8 +21,11 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
   private static final Logger logger = LoggerFactory.getLogger(ProfileSnapshotDaoImpl.class);
   private static final String TABLE_NAME = "profile_snapshots";
 
-  @Autowired
   protected PostgresClientFactory pgClientFactory;
+
+  public ProfileSnapshotDaoImpl(@Autowired PostgresClientFactory pgClientFactory) {
+    this.pgClientFactory = pgClientFactory;
+  }
 
   @Override
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
@@ -38,4 +41,13 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
       .map(Results::getResults)
       .map(wrappers -> wrappers.isEmpty() ? Optional.empty() : Optional.of(wrappers.get(0)));
   }
+
+  @Override
+  public Future<String> save(ProfileSnapshotWrapper entity, String tenantId) {
+    Future<String> future = Future.future();
+    pgClientFactory.createInstance(tenantId).save(TABLE_NAME, entity.getId(), entity, future.completer());
+    return future;
+  }
+
+
 }

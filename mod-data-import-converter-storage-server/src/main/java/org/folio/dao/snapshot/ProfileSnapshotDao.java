@@ -18,4 +18,12 @@ public interface ProfileSnapshotDao {
    */
   Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId);
 
+  /**
+   * Saves ProfileSnapshotWrapper entity to database
+   *
+   * @param entity   ProfileSnapshotWrapper to save
+   * @param tenantId tenant id
+   * @return future
+   */
+  Future<String> save(ProfileSnapshotWrapper entity, String tenantId);
 }
