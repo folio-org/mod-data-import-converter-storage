@@ -21,6 +21,8 @@ types:
   actionProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfileCollection.json
   profileAssociation: !include raml-storage/schemas/mod-data-import-converter-storage/profileAssociation.json
   profileAssociationCollection: !include raml-storage/schemas/mod-data-import-converter-storage/profileAssociationCollection.json
+  profileSnapshotType: !include raml-storage/schemas/mod-data-import-converter-storage/profileSnapshotType.json
+  profileSnapshotWrapper: !include raml-storage/schemas/mod-data-import-converter-storage/profileSnapshotWrapper.json
 
 traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
@@ -209,3 +211,13 @@ resourceTypes:
           204:
             body:
               text/plain: !!null
+  /jobProfileSnapshots:
+    displayName: Profile snapshots
+    description: API for managing Profile snapshots
+    /{id}:
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                type: profileSnapshotWrapper
