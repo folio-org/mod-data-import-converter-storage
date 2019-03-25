@@ -48,18 +48,17 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   }
 
   private <T> T convertContentByType(Object content, ProfileSnapshotWrapper.ContentType contentType) {
-    if (ProfileSnapshotWrapper.ContentType.JOB_PROFILE.equals(contentType)) {
-      return (T) new ObjectMapper().convertValue(content, JobProfile.class);
+    switch (contentType) {
+      case JOB_PROFILE:
+        return (T) new ObjectMapper().convertValue(content, JobProfile.class);
+      case MATCH_PROFILE:
+        return (T) new ObjectMapper().convertValue(content, MatchProfile.class);
+      case ACTION_PROFILE:
+        return (T) new ObjectMapper().convertValue(content, ActionProfile.class);
+      case MAPPING_PROFILE:
+        return (T) new ObjectMapper().convertValue(content, MappingProfile.class);
+      default:
+        throw new IllegalStateException("Can not find profile by snapshot content type: " + contentType.toString());
     }
-    if (ProfileSnapshotWrapper.ContentType.ACTION_PROFILE.equals(contentType)) {
-      return (T) new ObjectMapper().convertValue(content, ActionProfile.class);
-    }
-    if (ProfileSnapshotWrapper.ContentType.MATCH_PROFILE.equals(contentType)) {
-      return (T) new ObjectMapper().convertValue(content, MatchProfile.class);
-    }
-    if (ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE.equals(contentType)) {
-      return (T) new ObjectMapper().convertValue(content, MappingProfile.class);
-    }
-    throw new IllegalStateException();
   }
 }
