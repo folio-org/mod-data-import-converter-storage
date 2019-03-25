@@ -28,25 +28,46 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
     return profileSnapshotDao.getById(id, tenantId)
       .map(optionalWrapper ->
-        optionalWrapper.isPresent() ? Optional.of(convertWrapper(optionalWrapper.get())) : optionalWrapper);
+        optionalWrapper.isPresent() ? Optional.of(convertWrapperContent(optionalWrapper.get())) : optionalWrapper);
   }
 
-  private ProfileSnapshotWrapper convertWrapper(@NotNull ProfileSnapshotWrapper wrapper) {
+  /**
+   * Converts 'content' field of the given root wrapper (ProfileSnapshotWrapper) and it's child wrappers
+   * to concrete Profile class. The class resolution happens by 'content type' field.
+   *
+   * @param wrapper
+   * @return
+   */
+  private ProfileSnapshotWrapper convertWrapperContent(@NotNull ProfileSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
     for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
-      convertChild(child);
+      convertChildWrappersContent(child);
     }
     return wrapper;
   }
 
-  private ChildSnapshotWrapper convertChild(ChildSnapshotWrapper wrapper) {
+  /**
+   * Method converts an Object 'content' field to concrete Profile class doing the same for all the child wrappers.
+   *
+   * @param wrapper given child wrapper
+   * @return ChildSnapshotWrapper with properly converted 'content' field
+   */
+  private ChildSnapshotWrapper convertChildWrappersContent(ChildSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
     for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
-      convertChild(child);
+      convertChildWrappersContent(child);
     }
     return wrapper;
   }
 
+  /**
+   * Method converts an Object 'content' field to concrete Profile class.
+   *
+   * @param content     wrapper's content
+   * @param contentType type of wrapper's content
+   * @param <T>         concrete class of the Profile
+   * @return concrete class of the Profile
+   */
   private <T> T convertContentByType(Object content, ProfileSnapshotWrapper.ContentType contentType) {
     switch (contentType) {
       case JOB_PROFILE:

@@ -119,6 +119,6 @@ public abstract class AbstractRestVerticleTest {
   }
 
   @Before
-  public void clearTables(TestContext context) {}
+  public abstract void clearTables(TestContext context);
 
 }
