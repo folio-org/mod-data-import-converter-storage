@@ -28,20 +28,20 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
     return profileSnapshotDao.getById(id, tenantId)
       .map(optionalWrapper ->
-        optionalWrapper.isPresent() ? Optional.of(convertWrapperContent(optionalWrapper.get())) : optionalWrapper);
+        optionalWrapper.isPresent() ? Optional.of(convertRootSnapshotContent(optionalWrapper.get())) : optionalWrapper);
   }
 
   /**
    * Converts 'content' field of the given root wrapper (ProfileSnapshotWrapper) and it's child wrappers
    * to concrete Profile class. The class resolution happens by 'content type' field.
    *
-   * @param wrapper
-   * @return
+   * @param wrapper the given root ProfileSnapshotWrapper
+   * @return ProfileSnapshotWrapper with converted 'content' field
    */
-  private ProfileSnapshotWrapper convertWrapperContent(@NotNull ProfileSnapshotWrapper wrapper) {
+  private ProfileSnapshotWrapper convertRootSnapshotContent(@NotNull ProfileSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
     for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
-      convertChildWrappersContent(child);
+      convertChildSnapshotsContent(child);
     }
     return wrapper;
   }
@@ -52,10 +52,10 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    * @param wrapper given child wrapper
    * @return ChildSnapshotWrapper with properly converted 'content' field
    */
-  private ChildSnapshotWrapper convertChildWrappersContent(ChildSnapshotWrapper wrapper) {
+  private ChildSnapshotWrapper convertChildSnapshotsContent(ChildSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
     for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
-      convertChildWrappersContent(child);
+      convertChildSnapshotsContent(child);
     }
     return wrapper;
   }
