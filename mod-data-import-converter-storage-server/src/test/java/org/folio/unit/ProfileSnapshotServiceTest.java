@@ -41,6 +41,7 @@ public class ProfileSnapshotServiceTest {
   private ProfileSnapshotService service = new ProfileSnapshotServiceImpl(dao);
 
   public ProfileSnapshotServiceTest() {
+    PostgresClient.closeAllClients();
     MockitoAnnotations.initMocks(pgClientFactoryMock);
     Mockito.when(pgClientFactoryMock.createInstance(TENANT_ID)).thenReturn(PostgresClient.getInstance(vertx, TENANT_ID));
   }
