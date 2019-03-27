@@ -25,6 +25,7 @@ import org.folio.rest.jaxrs.resource.DataImportProfiles;
 import org.folio.rest.tools.utils.TenantTool;
 import org.folio.services.ProfileService;
 import org.folio.services.association.ProfileAssociationService;
+import org.folio.services.snapshot.ProfileSnapshotService;
 import org.folio.spring.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -49,6 +50,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private ProfileService<MappingProfile, MappingProfileCollection> mappingProfileService;
   @Autowired
   private ProfileAssociationService<JobProfileCollection, ActionProfileCollection> jobToActionProfileService;
+  @Autowired
+  private ProfileSnapshotService profileSnapshotService;
 
   private String tenantId;
 
@@ -481,6 +484,24 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .setHandler(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Profile association by id {}", id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void getDataImportProfilesJobProfileSnapshotsById(String id, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(c -> {
+      try {
+        profileSnapshotService.getById(id, tenantId)
+          .map(optionalSnapshot -> optionalSnapshot.orElseThrow(() ->
+            new NotFoundException(String.format("Profile snapshot with id '%s' was not found", id))))
+          .map(GetDataImportProfilesJobProfileSnapshotsByIdResponse::respond200WithApplicationJson)
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to get Profile snapshot by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });

@@ -297,6 +297,19 @@
           "tOps": "ADD"
         }
       ]
+    },
+    {
+      "tableName": "profile_snapshots",
+      "generateId": false,
+      "fromModuleVersion": "1.0",
+      "withMetadata": false,
+      "pkColumnName": "_id",
+      "index": [
+        {
+          "fieldName": "id",
+          "tOps": "ADD"
+        }
+      ]
     }
   ]
 }
