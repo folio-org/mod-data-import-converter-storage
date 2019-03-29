@@ -231,6 +231,32 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
     "updatedByUsername": ""
   }
 }'),
+('558dede0-515d-11e9-8647-d663bd873d93', '{
+  "id": "558dede0-515d-11e9-8647-d663bd873d93",
+  "name": "MARC TEST JOBS",
+  "description": "MARC TEST JOBS",
+  "dataTypes": [
+    "MARC"
+  ],
+  "tags": {
+    "tagList": [
+      "MARC", "TEST"
+    ]
+  },
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-11-01T10:18:42.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-12-05T13:08:12.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
+}'),
 ('828a787c-bcf3-4c28-891a-9e6f3ba5068b', '{
   "id": "828a787c-bcf3-4c28-891a-9e6f3ba5068b",
   "name": "Load MARC, then throw away",
