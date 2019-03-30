@@ -76,9 +76,9 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
         assertExpectedChildOnActualChild(expectedMappingProfileWrapper, actualMappingProfileWrapper, context);
 
         async.complete();
-        return Future.future();
+        return Future.succeededFuture();
       });
-      return Future.future();
+      return Future.succeededFuture();
     });
     async.complete();
   }
