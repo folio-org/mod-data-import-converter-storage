@@ -80,7 +80,6 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
       });
       return Future.succeededFuture();
     });
-    async.complete();
   }
 
   private void assertExpectedChildOnActualChild(ChildSnapshotWrapper expected, ChildSnapshotWrapper actual, TestContext context) {
