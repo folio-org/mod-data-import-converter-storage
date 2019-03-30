@@ -1,4 +1,4 @@
-package org.folio.unit;
+package org.folio.unit.snapshot;
 
 import io.vertx.core.Future;
 import io.vertx.ext.unit.Async;
@@ -13,6 +13,7 @@ import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.services.snapshot.ProfileSnapshotService;
+import org.folio.unit.AbstractUnitTest;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
