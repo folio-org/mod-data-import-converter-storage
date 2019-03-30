@@ -1,13 +1,9 @@
 package org.folio.unit;
 
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.folio.dao.PostgresClientFactory;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
-import org.folio.dao.snapshot.ProfileSnapshotDaoImpl;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
@@ -17,34 +13,19 @@ import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.services.snapshot.ProfileSnapshotService;
-import org.folio.services.snapshot.ProfileSnapshotServiceImpl;
 import org.junit.After;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(VertxUnitRunner.class)
-public class ProfileSnapshotServiceTest {
-
-  private static final String TENANT_ID = "diku";
+public class ProfileSnapshotServiceTest extends AbstractUnitTest {
   private static final String TABLE_NAME = "profile_snapshots";
-  private Vertx vertx = Vertx.vertx();
-  private PostgresClientFactory pgClientFactoryMock = Mockito.mock(PostgresClientFactory.class);
-  private ProfileSnapshotDao dao = new ProfileSnapshotDaoImpl(pgClientFactoryMock);
-  private ProfileSnapshotService service = new ProfileSnapshotServiceImpl(dao);
-
-  public ProfileSnapshotServiceTest() {
-    PostgresClient.closeAllClients();
-    MockitoAnnotations.initMocks(pgClientFactoryMock);
-    Mockito.when(pgClientFactoryMock.createInstance(TENANT_ID)).thenReturn(PostgresClient.getInstance(vertx, TENANT_ID));
-  }
+  @Autowired
+  private ProfileSnapshotDao dao;
+  @Autowired
+  private ProfileSnapshotService service;
 
   @Test
   public void shouldConvertWrappersByContentType(TestContext context) {
@@ -75,36 +56,37 @@ public class ProfileSnapshotServiceTest {
 
     dao.save(expectedJobProfileWrapper, TENANT_ID).compose(ar -> {
       service.getById(expectedJobProfileWrapper.getId(), TENANT_ID).compose(optionalAr -> {
-        assertTrue(optionalAr.isPresent());
+        context.assertTrue(optionalAr.isPresent());
 
         ProfileSnapshotWrapper actualJobProfileWrapper = optionalAr.get();
-        assertEquals(expectedJobProfileWrapper.getId(), actualJobProfileWrapper.getId());
-        assertEquals(expectedJobProfileWrapper.getContentType(), actualJobProfileWrapper.getContentType());
-        assertEquals(expectedJobProfileWrapper.getContent().getClass(), actualJobProfileWrapper.getContent().getClass());
+        context.assertEquals(expectedJobProfileWrapper.getId(), actualJobProfileWrapper.getId());
+        context.assertEquals(expectedJobProfileWrapper.getContentType(), actualJobProfileWrapper.getContentType());
+        context.assertEquals(expectedJobProfileWrapper.getContent().getClass(), actualJobProfileWrapper.getContent().getClass());
 
         ChildSnapshotWrapper expectedMatchProfileWrapper = expectedJobProfileWrapper.getChildSnapshotWrappers().get(0);
         ChildSnapshotWrapper actualMatchProfileWrapper = actualJobProfileWrapper.getChildSnapshotWrappers().get(0);
-        assertExpectedChildOnActualChild(expectedMatchProfileWrapper, actualMatchProfileWrapper);
+        assertExpectedChildOnActualChild(expectedMatchProfileWrapper, actualMatchProfileWrapper, context);
 
         ChildSnapshotWrapper expectedActionProfileWrapper = expectedMatchProfileWrapper.getChildSnapshotWrappers().get(0);
         ChildSnapshotWrapper actualActionProfileWrapper = actualMatchProfileWrapper.getChildSnapshotWrappers().get(0);
-        assertExpectedChildOnActualChild(expectedActionProfileWrapper, actualActionProfileWrapper);
+        assertExpectedChildOnActualChild(expectedActionProfileWrapper, actualActionProfileWrapper, context);
 
         ChildSnapshotWrapper expectedMappingProfileWrapper = expectedActionProfileWrapper.getChildSnapshotWrappers().get(0);
         ChildSnapshotWrapper actualMappingProfileWrapper = actualActionProfileWrapper.getChildSnapshotWrappers().get(0);
-        assertExpectedChildOnActualChild(expectedMappingProfileWrapper, actualMappingProfileWrapper);
+        assertExpectedChildOnActualChild(expectedMappingProfileWrapper, actualMappingProfileWrapper, context);
 
         async.complete();
         return Future.future();
       });
       return Future.future();
     });
+    async.complete();
   }
 
-  private void assertExpectedChildOnActualChild(ChildSnapshotWrapper expected, ChildSnapshotWrapper actual) {
-    assertEquals(expected.getId(), actual.getId());
-    assertEquals(expected.getContentType(), actual.getContentType());
-    assertEquals(expected.getContent().getClass(), actual.getContent().getClass());
+  private void assertExpectedChildOnActualChild(ChildSnapshotWrapper expected, ChildSnapshotWrapper actual, TestContext context) {
+    context.assertEquals(expected.getId(), actual.getId());
+    context.assertEquals(expected.getContentType(), actual.getContentType());
+    context.assertEquals(expected.getContent().getClass(), actual.getContent().getClass());
   }
 
   @After
