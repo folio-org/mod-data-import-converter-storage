@@ -96,7 +96,6 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
       if (event.failed()) {
         context.fail(event.cause());
       }
-      PostgresClient.closeAllClients();
       async.complete();
     });
   }
