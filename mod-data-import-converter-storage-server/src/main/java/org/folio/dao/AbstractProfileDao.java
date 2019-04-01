@@ -101,7 +101,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   }
 
   @Override
-  public Future<Boolean> isProfileExistByName(String profileName, String tenantId) {
+  public Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId) {
     Future<Boolean> future = Future.future();
     PostgresClient client = pgClientFactory.createInstance(tenantId);
     StringBuilder selectQuery = new StringBuilder("SELECT jsonb FROM ") //NOSONAR
@@ -109,7 +109,9 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       .append(".")
       .append(getTableName())
       .append(" WHERE trim(both ' ' from lower(jsonb ->> 'name')) ='")
-      .append(profileName.toLowerCase().trim()).append("' LIMIT 1;");
+      .append(profileName.toLowerCase().trim())
+      .append("' AND jsonb ->>").append(ID_FIELD).append("!= '").append(profileId)
+      .append("' LIMIT 1;");
     client.select(selectQuery.toString(), reply -> {
       if (reply.succeeded()) {
         future.complete(reply.result().getNumRows() > 0);

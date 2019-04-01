@@ -65,7 +65,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                 Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateJobProfileCreate(entity, tenantId).setHandler(errors -> {
+        validateJobProfile(entity, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(JOB_PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -108,7 +108,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateJobProfileCreate(entity, tenantId).setHandler(errors -> {
+        validateJobProfile(entity, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(JOB_PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -537,10 +537,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     });
   }
 
-  private Future<Errors> validateJobProfileCreate(JobProfile profile, String tenantId) {
+  private Future<Errors> validateJobProfile(JobProfile profile, String tenantId) {
     Errors errors = new Errors()
       .withTotalRecords(0);
-    return jobProfileService.isProfileExistByName(profile.getName(), tenantId)
+    return jobProfileService.isProfileExistByName(profile.getName(), profile.getId(), tenantId)
       .map(isExist -> isExist
         ? errors.withErrors(Collections.singletonList(new Error()
         .withMessage(DUPLICATE_JOB_PROFILE_ERROR_CODE)))
