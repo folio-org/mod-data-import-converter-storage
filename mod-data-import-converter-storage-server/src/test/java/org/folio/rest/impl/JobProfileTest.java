@@ -250,6 +250,37 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_NO_CONTENT);
   }
 
+  @Test
+  public void shouldReturnUnprocessableEntityOnPutJobProfileWithExistingName() {
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfile_1)
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED));
+
+    JobProfile newJobProfile = new JobProfile()
+      .withName("Boo")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(newJobProfile)
+      .when()
+      .post(JOB_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    JobProfile createdJobProfile = createResponse.body().as(JobProfile.class);
+
+    createdJobProfile.setName(jobProfile_1.getName());
+    RestAssured.given()
+      .spec(spec)
+      .body(createdJobProfile)
+      .when()
+      .put(JOB_PROFILES_PATH + "/" + createdJobProfile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
   private void createProfiles() {
     List<JobProfile> jobProfilesToPost = Arrays.asList(jobProfile_1, jobProfile_2, jobProfile_3);
     for (JobProfile profile : jobProfilesToPost) {
