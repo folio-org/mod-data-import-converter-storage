@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.folio.rest.jaxrs.model.JobProfile.DataType.DELIMITED;
+import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
@@ -32,11 +34,14 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   private static final String JOB_PROFILES_PATH = "/data-import-profiles/jobProfiles";
 
   private static JobProfile jobProfile_1 = new JobProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+    .withDataType(MARC);
   private static JobProfile jobProfile_2 = new JobProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+    .withDataType(MARC);
   private static JobProfile jobProfile_3 = new JobProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
+    .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+    .withDataType(MARC);
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -127,7 +132,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body("tags.tagList", is(jobProfile_1.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
-      .body("userInfo.userName", is("@janedoe"));
+      .body("userInfo.userName", is("@janedoe"))
+      .body("dataType", is(jobProfile_1.getDataType().value()));
 
     RestAssured.given().spec(spec)
       .body(jobProfile_1)
@@ -172,6 +178,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     JobProfile jobProfile = createResponse.body().as(JobProfile.class);
 
     jobProfile.setDescription("test");
+    jobProfile.setDataType(DELIMITED);
     RestAssured.given()
       .spec(spec)
       .body(jobProfile)
@@ -185,7 +192,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body("tags.tagList", is(jobProfile.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
-      .body("userInfo.userName", is("@janedoe"));
+      .body("userInfo.userName", is("@janedoe"))
+      .body("dataType", is(jobProfile.getDataType().value()));
   }
 
   @Test
@@ -219,7 +227,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body("tags.tagList", is(jobProfile.getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
-      .body("userInfo.userName", is("@janedoe"));
+      .body("userInfo.userName", is("@janedoe"))
+      .body("dataType", is(jobProfile.getDataType().value()));
   }
 
   @Test
