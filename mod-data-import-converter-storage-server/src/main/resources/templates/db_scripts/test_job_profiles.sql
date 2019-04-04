@@ -3,9 +3,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "448ae575-daec-49c1-8041-d64c8ed8e5b1",
   "name": "Load vendor order records",
   "description": "Ordered on vendor site; load MARC to create bib, holdings, item, and order; keep MARC",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "acq", "daily"
@@ -29,9 +27,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "295e28b4-aea2-4458-9073-385a31e1da05",
   "name": "Load shelfready cataloging records",
   "description": "Overlay brief bibs, update holdings and item records, create invoice",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "cat", "weekly"
@@ -55,9 +51,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "bb689511-5365-4050-8084-a03d94728d88",
   "name": "Approval plan records",
   "description": "Create bibs, holdings, items, orders, and invoices",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "acq", "cat", "weekly"
@@ -81,9 +75,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "3e705998-9169-4f31-b048-90ffdcbd24c1",
   "name": "Load KB eResource records",
   "description": "Create, update, delete existing eContent bib records",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "monthly", "KB"
@@ -107,9 +99,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "15426802-bb0d-4dfb-8eee-90f64fed0cf1",
   "name": "ETL Bib records",
   "description": "Reload bib records that were exported and updated outside of FOLIO",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": []
   },
@@ -131,9 +121,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "87e4ad58-d677-43dd-8b04-9795741b2103",
   "name": "Loading authority records",
   "description": "Load new and updated MARC authority records",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "cat", "monthly"
@@ -157,9 +145,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "72af7eb7-d7e2-4d16-93ac-682b9a58a94c",
   "name": "DDA discovery records",
   "description": "Load DDA discovery MARC records to create bib and holdings",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "weekly", "DDA"
@@ -183,9 +169,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "4d1b5024-2c49-42bd-b781-4330d14cefb0",
   "name": "Create orders from spreadsheets",
   "description": "Selector-provided spreadsheet creates instance, holdings, item, and order",
-  "dataTypes": [
-    "Delimited"
-  ],
+  "dataType": "Delimited",
   "tags": {
     "tagList": [
       "acq"
@@ -209,9 +193,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "b32e79bc-01d9-4d31-bc08-a3621fcfc1aa",
   "name": "Load EDI Invoice",
   "description": "",
-  "dataTypes": [
-    "EDIFACT"
-  ],
+  "dataType": "EDIFACT",
   "tags": {
     "tagList": [
       "acq"
@@ -235,9 +217,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "558dede0-515d-11e9-8647-d663bd873d93",
   "name": "MARC TEST JOBS",
   "description": "MARC TEST JOBS",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "MARC", "TEST"
@@ -261,9 +241,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "id": "828a787c-bcf3-4c28-891a-9e6f3ba5068b",
   "name": "Load MARC, then throw away",
   "description": "Ordered on vendor site; load MARC to create bib, holdings, item, and order; then discard MARC",
-  "dataTypes": [
-    "MARC"
-  ],
+  "dataType": "MARC",
   "tags": {
     "tagList": [
       "acq", "daily"
