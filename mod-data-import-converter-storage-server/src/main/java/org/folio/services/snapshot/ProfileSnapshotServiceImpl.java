@@ -43,8 +43,8 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   public Future<ProfileSnapshotWrapper> createSnapshot(String jobProfileId, String tenantId) {
     Future<ProfileSnapshotWrapper> future = Future.future();
     profileSnapshotDao.buildSnapshot(jobProfileId, tenantId).setHandler(ar -> {
-      List<ProfileSnapshotItem> viewItems = ar.result();
-      ProfileSnapshotWrapper rootWrapper = buildSnapshot(viewItems);
+      List<ProfileSnapshotItem> snapshotItems = ar.result();
+      ProfileSnapshotWrapper rootWrapper = buildSnapshot(snapshotItems);
       profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
         if (savedAr.failed()) {
           future.fail(savedAr.cause());
@@ -59,7 +59,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   /**
    * Creates ProfileSnapshotWrapper traversing through collection of profile snapshot items.
    *
-   * @param snapshotItems list of items returned by the database view
+   * @param snapshotItems list of snapshot items (rows)
    * @return root snapshot (ProfileSnapshotWrapper) with child items (ChildSnapshotWrapper) inside
    */
   private ProfileSnapshotWrapper buildSnapshot(List<ProfileSnapshotItem> snapshotItems) {
@@ -76,13 +76,13 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   }
 
   /**
-   * Fills given collection of child wrappers traversing through snapshot.
-   * The method finds the first child of given parent profile, adds a child to parent profile(into childWrappers)
+   * Fills given collection by child wrappers traversing through snapshot.
+   * The method finds a first child of given parent profile, adds a child to parent profile(in childWrappers collection)
    * and falls into recursion passing child profile just been found (Pre-order traversal algorithm).
    *
    * @param parentId      parent profile id
    * @param childWrappers collection of child snapshot wrappers linked to given parent id
-   * @param snapshotItems collection of view items
+   * @param snapshotItems collection of snapshot items
    */
   private void fillChildSnapshotWrappers(String parentId, List<ChildSnapshotWrapper> childWrappers, List<ProfileSnapshotItem> snapshotItems) {
     for (ProfileSnapshotItem snapshotItem : snapshotItems) {
@@ -100,11 +100,11 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   /**
    * Removes the items with the same association id
    *
-   * @param viewItems collection of view items
+   * @param snapshotItems collection of snapshot items (rows)
    */
-  private void removeDuplicatesByAssociationId(List<ProfileSnapshotItem> viewItems) {
-    Set<String> duplicates = new HashSet<>(viewItems.size());
-    Iterator<ProfileSnapshotItem> iterator = viewItems.listIterator();
+  private void removeDuplicatesByAssociationId(List<ProfileSnapshotItem> snapshotItems) {
+    Set<String> duplicates = new HashSet<>(snapshotItems.size());
+    Iterator<ProfileSnapshotItem> iterator = snapshotItems.listIterator();
     while (iterator.hasNext()) {
       ProfileSnapshotItem current = iterator.next();
       if (!duplicates.add(current.getAssociationId())) {
