@@ -65,7 +65,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                 Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateJobProfileCreate(entity, tenantId).setHandler(errors -> {
+        validateJobProfile(entity, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(JOB_PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -108,11 +108,20 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        entity.setId(id);
-        jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-          .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+        validateJobProfile(entity, tenantId).setHandler(errors -> {
+          if (errors.failed()) {
+            logger.error(JOB_PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
+            asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
+          } else if (errors.result().getTotalRecords() > 0) {
+            asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesJobProfilesResponse.respond422WithApplicationJson(errors.result())));
+          } else {
+            entity.setId(id);
+            jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+              .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
+              .otherwise(ExceptionHelper::mapExceptionToResponse)
+              .setHandler(asyncResultHandler);
+          }
+        });
       } catch (Exception e) {
         logger.error("Failed to update Job Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -544,10 +553,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     });
   }
 
-  private Future<Errors> validateJobProfileCreate(JobProfile profile, String tenantId) {
+  private Future<Errors> validateJobProfile(JobProfile profile, String tenantId) {
     Errors errors = new Errors()
       .withTotalRecords(0);
-    return jobProfileService.isProfileExistByName(profile.getName(), tenantId)
+    return jobProfileService.isProfileExistByName(profile.getName(), profile.getId(), tenantId)
       .map(isExist -> isExist
         ? errors.withErrors(Collections.singletonList(new Error()
         .withMessage(DUPLICATE_JOB_PROFILE_ERROR_CODE)))
