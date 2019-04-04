@@ -148,4 +148,29 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
+}'),
+('c4ce10c8-10fc-4213-b5ca-8210fcc65da6', '{
+	"id": "c4ce10c8-10fc-4213-b5ca-8210fcc65da6",
+	"name": "Create instance and associated inventory",
+	"description": "Create instance and associated inventory",
+	"action": "Create instance",
+	"mapping": "856",
+	"tags": {
+    "tagList": [
+		  "Instance", "Inventory"
+	  ]
+	},
+	"userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+	},
+	"metadata": {
+    "createdDate": "2018-10-30T12:41:22.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-11-02T12:09:51.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
 }') ON CONFLICT DO NOTHING;

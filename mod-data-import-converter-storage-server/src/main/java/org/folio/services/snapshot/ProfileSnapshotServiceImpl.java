@@ -3,6 +3,7 @@ package org.folio.services.snapshot;
 import io.vertx.core.Future;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
+import org.folio.dao.snapshot.ProfileSnapshotItem;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
@@ -13,8 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+/**
+ * Implementation for Profile snapshot service
+ */
 @Service
 public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
@@ -29,6 +37,80 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     return profileSnapshotDao.getById(id, tenantId)
       .map(optionalWrapper ->
         optionalWrapper.isPresent() ? Optional.of(convertRootSnapshotContent(optionalWrapper.get())) : optionalWrapper);
+  }
+
+  @Override
+  public Future<ProfileSnapshotWrapper> createSnapshot(String jobProfileId, String tenantId) {
+    Future<ProfileSnapshotWrapper> future = Future.future();
+    profileSnapshotDao.buildSnapshot(jobProfileId, tenantId).setHandler(ar -> {
+      List<ProfileSnapshotItem> viewItems = ar.result();
+      ProfileSnapshotWrapper rootWrapper = buildSnapshot(viewItems);
+      profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
+        if (savedAr.failed()) {
+          future.fail(savedAr.cause());
+        } else {
+          future.complete(rootWrapper);
+        }
+      });
+    });
+    return future;
+  }
+
+  /**
+   * Creates ProfileSnapshotWrapper traversing through collection of profile snapshot items.
+   *
+   * @param snapshotItems list of items returned by the database view
+   * @return root snapshot (ProfileSnapshotWrapper) with child items (ChildSnapshotWrapper) inside
+   */
+  private ProfileSnapshotWrapper buildSnapshot(List<ProfileSnapshotItem> snapshotItems) {
+    /* The root item always comes at the beginning */
+    ProfileSnapshotItem rootItem = snapshotItems.get(0);
+    ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
+    rootWrapper.setId(rootItem.getDetailId());
+    rootWrapper.setContentType(rootItem.getDetailType());
+    rootWrapper.setContent(convertContentByType(rootItem.getDetail(), rootItem.getDetailType()));
+    /* We need to remove duplicates to avoid double-appearance of the same child profiles in diamond inheritance */
+    removeDuplicatesByAssociationId(snapshotItems);
+    fillChildSnapshotWrappers(rootWrapper.getId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
+    return rootWrapper;
+  }
+
+  /**
+   * Fills given collection of child wrappers traversing through snapshot.
+   * The method finds the first child of given parent profile, adds a child to parent profile(into childWrappers)
+   * and falls into recursion passing child profile just been found (Pre-order traversal algorithm).
+   *
+   * @param parentId      parent profile id
+   * @param childWrappers collection of child snapshot wrappers linked to given parent id
+   * @param snapshotItems collection of view items
+   */
+  private void fillChildSnapshotWrappers(String parentId, List<ChildSnapshotWrapper> childWrappers, List<ProfileSnapshotItem> snapshotItems) {
+    for (ProfileSnapshotItem snapshotItem : snapshotItems) {
+      if (parentId.equals(snapshotItem.getMasterId())) {
+        ChildSnapshotWrapper childWrapper = new ChildSnapshotWrapper();
+        childWrapper.setId(snapshotItem.getDetailId());
+        childWrapper.setContentType(snapshotItem.getDetailType());
+        childWrapper.setContent(convertContentByType(snapshotItem.getDetail(), snapshotItem.getDetailType()));
+        childWrappers.add(childWrapper);
+        fillChildSnapshotWrappers(childWrapper.getId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
+      }
+    }
+  }
+
+  /**
+   * Removes the items with the same association id
+   *
+   * @param viewItems collection of view items
+   */
+  private void removeDuplicatesByAssociationId(List<ProfileSnapshotItem> viewItems) {
+    Set<String> duplicates = new HashSet<>(viewItems.size());
+    Iterator<ProfileSnapshotItem> iterator = viewItems.listIterator();
+    while (iterator.hasNext()) {
+      ProfileSnapshotItem current = iterator.next();
+      if (!duplicates.add(current.getAssociationId())) {
+        iterator.remove();
+      }
+    }
   }
 
   /**

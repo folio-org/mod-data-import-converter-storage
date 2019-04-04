@@ -99,7 +99,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
 	"id": "f4f075c6-67c9-411e-af24-01ceecd81b4b",
 	"name": "Test mapping profile№5",
 	"description": "Lorem ipsum dolor sit amet",
-	"mapped": "Order - 4 fields",
+	"mapped": "Order - 5 fields",
+	"tags": {
+    "tagList": [
+		  "Lorem", "ipsum"
+	  ]
+	},
+	"userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+	},
+	"metadata": {
+    "createdDate": "2018-10-30T12:41:22.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-11-02T12:09:51.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
+}'),
+('99b7bb53-a629-4058-a5f4-d2fcf5dc7125', '{
+	"id": "99b7bb53-a629-4058-a5f4-d2fcf5dc7125",
+	"name": "Test mapping profile№6",
+	"description": "Lorem ipsum dolor sit amet",
+	"mapped": "Order - 6 fields",
 	"tags": {
     "tagList": [
 		  "Lorem", "ipsum"

@@ -216,8 +216,26 @@ resourceTypes:
     description: API for managing Profile snapshots
     /{id}:
       get:
+        description: Method to get job profile snapshot by id
         responses:
           200:
             body:
               application/json:
                 type: profileSnapshotWrapper
+      post:
+        description: Method to create job profile snapshot by job profile id
+        responses:
+          201:
+            body:
+              application/json:
+                type: profileSnapshotWrapper
+          400:
+            description: "Bad request"
+            body:
+              text/plain:
+                example: "Bad request"
+          500:
+            description: "Internal server error"
+            body:
+              text/plain:
+                example: "Internal server error"

@@ -1,5 +1,4 @@
 {
-  "scripts": [],
   "tables": [
     {
       "tableName": "job_profiles",
@@ -310,6 +309,23 @@
           "tOps": "ADD"
         }
       ]
+    }
+  ],
+  "scripts": [
+    {
+      "run": "after",
+      "snippet": "CREATE OR REPLACE FUNCTION get_profile_association_snapshot(_association_table text, _master_table text, _detail_table text, _detail_type text) RETURNS TABLE(association_id uuid, master_id uuid, detail_id uuid, detail_type text, detail json) AS $$ BEGIN RETURN query EXECUTE format('SELECT association._id, association.masterprofileid AS master_id, association.detailprofileid AS detail_id, ''%s'' AS detail_type, json_agg(detail.jsonb) AS detail FROM %s association INNER JOIN %s master ON master._id = association.masterprofileid INNER JOIN %s detail ON detail._id = association.detailprofileid GROUP BY association._id', _detail_type, _association_table, _master_table, _detail_table); END $$ language plpgsql;",
+      "fromModuleVersion": "1.0"
+    },
+    {
+      "run": "after",
+      "snippet": "CREATE OR REPLACE VIEW snapshot_view AS SELECT job_profiles._id as association_id, null as master_id, job_profiles._id as detail_id, 'JOB_PROFILE' detail_type, json_agg(job_profiles.jsonb) detail FROM job_profiles GROUP BY detail_id UNION ALL SELECT association_id, master_id, detail_id, detail_type, detail FROM get_profile_association_snapshot('job_to_match_profiles', 'job_profiles', 'match_profiles', 'MATCH_PROFILE') UNION ALL SELECT association_id, master_id, detail_id, detail_type, detail FROM get_profile_association_snapshot('job_to_action_profiles', 'job_profiles', 'action_profiles', 'ACTION_PROFILE') UNION ALL SELECT association_id, master_id, detail_id, detail_type, detail FROM get_profile_association_snapshot('match_to_match_profiles', 'match_profiles', 'match_profiles', 'MATCH_PROFILE') UNION ALL SELECT association_id, master_id, detail_id, detail_type, detail FROM get_profile_association_snapshot('match_to_action_profiles', 'match_profiles', 'action_profiles', 'ACTION_PROFILE') UNION ALL SELECT association_id, master_id, detail_id, detail_type, detail FROM get_profile_association_snapshot('action_to_match_profiles', 'action_profiles', 'match_profiles', 'MATCH_PROFILE') UNION ALL SELECT association_id, master_id, detail_id, detail_type, detail FROM get_profile_association_snapshot('action_to_action_profiles', 'action_profiles', 'action_profiles', 'ACTION_PROFILE') UNION ALL SELECT association_id, master_id, detail_id, detail_type, detail FROM get_profile_association_snapshot('action_to_mapping_profiles', 'action_profiles', 'mapping_profiles', 'MAPPING_PROFILE');",
+      "fromModuleVersion": "1.0"
+    },
+    {
+      "run": "after",
+      "snippet": "CREATE OR REPLACE FUNCTION get_job_profile_snapshot(jobProfileId uuid) RETURNS TABLE(snapshot json) AS $$ WITH RECURSIVE recursive_snapshot AS (SELECT association_id, master_id, detail_id, detail_type, detail  FROM snapshot_view WHERE snapshot_view.detail_id = jobProfileId UNION ALL SELECT snapshot_view.association_id, snapshot_view.master_id as master_id, snapshot_view.detail_id as detail_id, snapshot_view.detail_type as detail_type, snapshot_view.detail as detail FROM snapshot_view INNER JOIN recursive_snapshot ON snapshot_view.master_id = recursive_snapshot.detail_id) SELECT row_to_json(row) FROM recursive_snapshot row $$ LANGUAGE 'sql' VOLATILE;",
+      "fromModuleVersion": "1.0"
     }
   ]
 }

@@ -24,11 +24,11 @@ public class ModTenantAPI extends TenantAPI {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ModTenantAPI.class);
   private static final String TEST_MODE = "test.mode";
-  private static final String TEST_JOB_PROFILES_SQL = "templates/db_scripts/test_job_profiles.sql";
-  private static final String TEST_MATCHING_PROFILES_SQL = "templates/db_scripts/test_matching_profiles.sql";
-  private static final String TEST_ACTION_PROFILES_SQL = "templates/db_scripts/test_action_profiles.sql";
-  private static final String TEST_MAPPING_PROFILES_SQL = "templates/db_scripts/test_mapping_profiles.sql";
-  private static final String TEST_PROFILE_ASSOCIATIONS_SQL = "templates/db_scripts/test_profile_associations.sql";
+  private static final String TEST_JOB_PROFILES_SQL = "templates/db_scripts/testData/test_job_profiles.sql";
+  private static final String TEST_MATCHING_PROFILES_SQL = "templates/db_scripts/testData/test_matching_profiles.sql";
+  private static final String TEST_ACTION_PROFILES_SQL = "templates/db_scripts/testData/test_action_profiles.sql";
+  private static final String TEST_MAPPING_PROFILES_SQL = "templates/db_scripts/testData/test_mapping_profiles.sql";
+  private static final String TEST_PROFILE_ASSOCIATIONS_SQL = "templates/db_scripts/testData/test_profile_associations.sql";
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
 
