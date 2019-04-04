@@ -12,16 +12,6 @@ import java.util.UUID;
 public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, JobProfileCollection> {
 
   @Override
-  public Future<JobProfile> saveProfile(JobProfile profile, OkapiConnectionParams params) {
-    return super.saveProfile(profile, params);
-  }
-
-  @Override
-  public Future<JobProfile> updateProfile(JobProfile profile, OkapiConnectionParams params) {
-    return super.updateProfile(profile, params);
-  }
-
-  @Override
   JobProfile setProfileId(JobProfile profile) {
     return profile.withId(UUID.randomUUID().toString());
   }
