@@ -78,7 +78,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   /**
    * Fills given collection by child wrappers traversing through snapshot.
    * The method finds a first child of given parent profile, adds a child to parent profile(in childWrappers collection)
-   * and falls into recursion passing child profile just been found (Pre-order traversal algorithm).
+   * and falls into recursion passing child profile just been found (Depth-first traversal algorithm).
    *
    * @param parentId      parent profile id
    * @param childWrappers collection of child snapshot wrappers linked to given parent id
