@@ -40,7 +40,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (_id, jsonb) valu
   "id": "c8f62bed-5c14-442c-9fae-bd239931b572",
   "masterProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "detailProfileId": "a260bf7f-a7c4-4c1d-bfb0-3be6230c71d4",
-  "order": "0",
+  "order": "1",
   "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 
@@ -49,7 +49,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_match_profiles (_id, jsonb) val
   "id": "a99a1d65-0796-44f0-9c7d-9e1ebd6b97c5",
   "masterProfileId": "ab32efdb-43c2-4cb5-b7dc-49dd45c02106",
   "detailProfileId": "88bb7c9f-79f2-4a97-b600-535f1d913378",
-  "order": "1",
+  "order": "0",
   "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 
@@ -72,7 +72,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (_id, jsonb) va
   "id": "f97a74a6-19bc-4bfa-8c3e-2dd80357e4d4",
   "masterProfileId": "ab32efdb-43c2-4cb5-b7dc-49dd45c02106",
   "detailProfileId": "c9573d66-c5e3-4bf7-a6a0-00a80e92cad5",
-  "order": "0",
+  "order": "1",
   "triggered": "false"
 }'),
 ('0c0fbca5-d67b-4932-898b-3963802db42d', '{
@@ -102,14 +102,14 @@ INSERT INTO ${myuniversity}_${mymodule}.action_to_action_profiles (_id, jsonb) v
   "id": "5e6068b2-a485-4e14-ad34-392fe2c6c10f",
   "masterProfileId": "a260bf7f-a7c4-4c1d-bfb0-3be6230c71d4",
   "detailProfileId": "8176badd-bd7e-430d-aeb4-9f6ac342885f",
-  "order": "0",
+  "order": "2",
   "triggered": "false"
 }'),
 ('fa07eef8-118f-4873-b9f8-40b7bba9916b', '{
   "id": "fa07eef8-118f-4873-b9f8-40b7bba9916b",
   "masterProfileId": "a260bf7f-a7c4-4c1d-bfb0-3be6230c71d4",
   "detailProfileId": "4b20facc-fbe8-4523-8f18-04ae35126ba6",
-  "order": "2",
+  "order": "1",
   "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 
@@ -148,21 +148,21 @@ INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (_id, jsonb) 
   "id": "eac6a251-7f7f-41f3-84f3-55f28996cf53",
   "masterProfileId": "a260bf7f-a7c4-4c1d-bfb0-3be6230c71d4",
   "detailProfileId": "79fc8de0-b094-43c5-89e0-4207420335f8",
-  "order": "1",
+  "order": "0",
   "triggered": "false"
 }'),
 ('b59a628b-2e30-412c-a66e-0871f2eeb4e6', '{
   "id": "b59a628b-2e30-412c-a66e-0871f2eeb4e6",
   "masterProfileId": "4b20facc-fbe8-4523-8f18-04ae35126ba6",
   "detailProfileId": "f4f075c6-67c9-411e-af24-01ceecd81b4b",
-  "order": "1",
+  "order": "0",
   "triggered": "false"
 }'),
 ('e38df953-fb5d-44aa-b286-55e12a78fdf5', '{
   "id": "e38df953-fb5d-44aa-b286-55e12a78fdf5",
   "masterProfileId": "c4ce10c8-10fc-4213-b5ca-8210fcc65da6",
   "detailProfileId": "99b7bb53-a629-4058-a5f4-d2fcf5dc7125",
-  "order": "1",
+  "order": "0",
   "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 

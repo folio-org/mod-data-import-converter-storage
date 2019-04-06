@@ -69,13 +69,13 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
       .map(results -> results.getResults().stream()
         .map(arrayItem -> {
           JsonObject jsonItem = new JsonObject(arrayItem.getString(0));
-          ProfileSnapshotItem viewItem = new ProfileSnapshotItem();
-          viewItem.setAssociationId(jsonItem.getString("association_id"));
-          viewItem.setMasterId(jsonItem.getString("master_id"));
-          viewItem.setDetailId(jsonItem.getString("detail_id"));
-          viewItem.setDetailType(ContentType.fromValue(jsonItem.getString("detail_type")));
-          viewItem.setDetail(jsonItem.getJsonArray("detail").getList().get(0));
-          return viewItem;
+          ProfileSnapshotItem snapshotItem = new ProfileSnapshotItem();
+          snapshotItem.setAssociationId(jsonItem.getString("association_id"));
+          snapshotItem.setMasterId(jsonItem.getString("master_id"));
+          snapshotItem.setDetailId(jsonItem.getString("detail_id"));
+          snapshotItem.setDetailType(ContentType.fromValue(jsonItem.getString("detail_type")));
+          snapshotItem.setDetail(jsonItem.getJsonArray("detail").getList().get(0));
+          return snapshotItem;
         })
         .collect(Collectors.toList()));
   }
