@@ -35,5 +35,5 @@ public interface ProfileSnapshotDao {
    * @param tenantId     tenant id
    * @return list of the snapshot items
    */
-  Future<List<ProfileSnapshotItem>> buildSnapshot(String jobProfileId, String tenantId);
+  Future<List<ProfileSnapshotItem>> getSnapshotItems(String jobProfileId, String tenantId);
 }

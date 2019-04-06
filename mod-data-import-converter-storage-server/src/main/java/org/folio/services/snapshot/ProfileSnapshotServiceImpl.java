@@ -42,7 +42,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   @Override
   public Future<ProfileSnapshotWrapper> createSnapshot(String jobProfileId, String tenantId) {
     Future<ProfileSnapshotWrapper> future = Future.future();
-    profileSnapshotDao.buildSnapshot(jobProfileId, tenantId).setHandler(ar -> {
+    profileSnapshotDao.getSnapshotItems(jobProfileId, tenantId).setHandler(ar -> {
       List<ProfileSnapshotItem> snapshotItems = ar.result();
       ProfileSnapshotWrapper rootWrapper = buildSnapshot(snapshotItems);
       profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
@@ -63,14 +63,14 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    * @return root snapshot (ProfileSnapshotWrapper) with child items (ChildSnapshotWrapper) inside
    */
   private ProfileSnapshotWrapper buildSnapshot(List<ProfileSnapshotItem> snapshotItems) {
-    /* The root item always comes at the beginning */
-    ProfileSnapshotItem rootItem = snapshotItems.get(0);
+    /* We need to remove duplicates to avoid double-appearance of the same child profiles in diamond inheritance */
+    removeDuplicatesByAssociationId(snapshotItems);
+
+    ProfileSnapshotItem rootItem = snapshotItems.stream().filter(item -> item.getMasterId() == null).findFirst().get();
     ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
     rootWrapper.setId(rootItem.getDetailId());
     rootWrapper.setContentType(rootItem.getDetailType());
     rootWrapper.setContent(convertContentByType(rootItem.getDetail(), rootItem.getDetailType()));
-    /* We need to remove duplicates to avoid double-appearance of the same child profiles in diamond inheritance */
-    removeDuplicatesByAssociationId(snapshotItems);
     fillChildSnapshotWrappers(rootWrapper.getId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
     return rootWrapper;
   }
