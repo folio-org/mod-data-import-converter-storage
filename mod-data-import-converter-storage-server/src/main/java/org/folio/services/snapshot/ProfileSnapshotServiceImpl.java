@@ -76,7 +76,11 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     /* We need to remove duplicates to avoid double-appearance of the same child profiles in diamond inheritance */
     removeDuplicatesByAssociationId(snapshotItems);
 
-    ProfileSnapshotItem rootItem = snapshotItems.stream().filter(item -> item.getMasterId() == null).findFirst().get();
+    Optional<ProfileSnapshotItem> optionalRootItem = snapshotItems.stream().filter(item -> item.getMasterId() == null).findFirst();
+    if (optionalRootItem.isPresent()) {
+      throw new IllegalArgumentException("Can not find the root item in snapshot items list");
+    }
+    ProfileSnapshotItem rootItem = optionalRootItem.get();
     ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
     rootWrapper.setId(UUID.randomUUID().toString());
     rootWrapper.setContentType(rootItem.getDetailType());
