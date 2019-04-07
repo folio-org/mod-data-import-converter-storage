@@ -28,4 +28,17 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_NOT_FOUND);
     async.complete();
   }
+
+  @Test
+  public void shouldBuildAndReturn500OnGetById(TestContext testContext) {
+    Async async = testContext.async();
+    String id = UUID.randomUUID().toString();
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .post(SNAPSHOT_PATH + "/" + id)
+      .then()
+      .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    async.complete();
+  }
 }

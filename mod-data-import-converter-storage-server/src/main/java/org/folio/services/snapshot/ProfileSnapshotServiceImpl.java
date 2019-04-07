@@ -1,6 +1,8 @@
 package org.folio.services.snapshot;
 
 import io.vertx.core.Future;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.dao.snapshot.ProfileSnapshotItem;
@@ -19,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Implementation for Profile snapshot service
@@ -26,6 +29,7 @@ import java.util.Set;
 @Service
 public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProfileSnapshotServiceImpl.class);
   private ProfileSnapshotDao profileSnapshotDao;
 
   public ProfileSnapshotServiceImpl(@Autowired ProfileSnapshotDao profileSnapshotDao) {
@@ -44,14 +48,20 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     Future<ProfileSnapshotWrapper> future = Future.future();
     profileSnapshotDao.getSnapshotItems(jobProfileId, tenantId).setHandler(ar -> {
       List<ProfileSnapshotItem> snapshotItems = ar.result();
-      ProfileSnapshotWrapper rootWrapper = buildSnapshot(snapshotItems);
-      profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
-        if (savedAr.failed()) {
-          future.fail(savedAr.cause());
-        } else {
-          future.complete(rootWrapper);
-        }
-      });
+      if (snapshotItems.isEmpty()) {
+        String errorMessage = "Can not build snapshot for Job Profile, probably jobProfileId is wrong: " + jobProfileId;
+        LOGGER.error(errorMessage);
+        future.fail(errorMessage);
+      } else {
+        ProfileSnapshotWrapper rootWrapper = buildSnapshot(snapshotItems);
+        profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
+          if (savedAr.failed()) {
+            future.fail(savedAr.cause());
+          } else {
+            future.complete(rootWrapper);
+          }
+        });
+      }
     });
     return future;
   }
@@ -68,10 +78,10 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
     ProfileSnapshotItem rootItem = snapshotItems.stream().filter(item -> item.getMasterId() == null).findFirst().get();
     ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
-    rootWrapper.setId(rootItem.getDetailId());
+    rootWrapper.setId(UUID.randomUUID().toString());
     rootWrapper.setContentType(rootItem.getDetailType());
     rootWrapper.setContent(convertContentByType(rootItem.getDetail(), rootItem.getDetailType()));
-    fillChildSnapshotWrappers(rootWrapper.getId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
+    fillChildSnapshotWrappers(rootItem.getDetailId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
     return rootWrapper;
   }
 
