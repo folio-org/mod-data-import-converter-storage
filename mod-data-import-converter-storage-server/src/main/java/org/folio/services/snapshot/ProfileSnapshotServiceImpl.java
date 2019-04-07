@@ -78,15 +78,16 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
     Optional<ProfileSnapshotItem> optionalRootItem = snapshotItems.stream().filter(item -> item.getMasterId() == null).findFirst();
     if (optionalRootItem.isPresent()) {
+      ProfileSnapshotItem rootItem = optionalRootItem.get();
+      ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
+      rootWrapper.setId(UUID.randomUUID().toString());
+      rootWrapper.setContentType(rootItem.getDetailType());
+      rootWrapper.setContent(convertContentByType(rootItem.getDetail(), rootItem.getDetailType()));
+      fillChildSnapshotWrappers(rootItem.getDetailId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
+      return rootWrapper;
+    } else {
       throw new IllegalArgumentException("Can not find the root item in snapshot items list");
     }
-    ProfileSnapshotItem rootItem = optionalRootItem.get();
-    ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
-    rootWrapper.setId(UUID.randomUUID().toString());
-    rootWrapper.setContentType(rootItem.getDetailType());
-    rootWrapper.setContent(convertContentByType(rootItem.getDetail(), rootItem.getDetailType()));
-    fillChildSnapshotWrappers(rootItem.getDetailId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
-    return rootWrapper;
   }
 
   /**
