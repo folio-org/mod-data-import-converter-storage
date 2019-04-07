@@ -213,17 +213,17 @@ resourceTypes:
               text/plain: !!null
   /jobProfileSnapshots:
     displayName: Profile snapshots
-    description: API for managing Profile snapshots
+    description: API for managing Job Profile Snapshots
     /{id}:
       get:
-        description: Method to get job profile snapshot by id
+        description: Method to get Job Profile Snapshot by id
         responses:
           200:
             body:
               application/json:
                 type: profileSnapshotWrapper
       post:
-        description: Method to create job profile snapshot by job profile id
+        description: Method to create Job Profile Snapshot by Job Profile id
         responses:
           201:
             body:
