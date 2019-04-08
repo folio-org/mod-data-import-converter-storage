@@ -49,7 +49,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     profileSnapshotDao.getSnapshotItems(jobProfileId, tenantId).setHandler(ar -> {
       List<ProfileSnapshotItem> snapshotItems = ar.result();
       if (snapshotItems.isEmpty()) {
-        String errorMessage = "Can not build snapshot for Job Profile, probably jobProfileId is wrong: " + jobProfileId;
+        String errorMessage = "Can not build snapshot for Job Profile, jobProfileId is wrong: " + jobProfileId;
         LOGGER.error(errorMessage);
         future.fail(errorMessage);
       } else {
