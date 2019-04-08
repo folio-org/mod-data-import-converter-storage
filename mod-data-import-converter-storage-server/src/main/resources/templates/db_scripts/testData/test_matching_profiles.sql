@@ -94,4 +94,52 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
+}'),
+('ab05c370-7b9d-400f-962b-cb7953b940dd', '{
+  "id": "ab05c370-7b9d-400f-962b-cb7953b940dd",
+  "name": "Match OCLC number",
+  "description": "Match OCLC number (may be one of several identifiers in the Instance record)",
+  "match": "035",
+  "tags": {
+    "tagList": [
+      "OCLC", "035"
+    ]
+  },
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-10-30T12:41:22.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-11-02T12:09:51.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
+}'),
+('afe7eb12-ea47-4970-8d0e-981b988aed0c', '{
+  "id": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
+  "name": "UUID or HRID in 001 ",
+  "description": "FOLIO UUID or HRID in 001 field",
+  "match": "001",
+  "tags": {
+    "tagList": [
+      "UUID", "HRID"
+    ]
+  },
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-10-30T12:41:22.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-11-02T12:09:51.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
 }') ON CONFLICT DO NOTHING;
