@@ -1,5 +1,5 @@
--- Custom script to create snapshot_view view. Changes in this file will not result in an update of the view.
--- To change the snapshot_view view, update this script and copy it to the appropriate scripts.snippet field of the schema.json
+-- Custom script to create associations_view view. Changes in this file will not result in an update of the view.
+-- To change the associations_view view, update this script and copy it to the appropriate scripts.snippet field of the schema.json
 
 CREATE OR REPLACE VIEW associations_view
   AS
