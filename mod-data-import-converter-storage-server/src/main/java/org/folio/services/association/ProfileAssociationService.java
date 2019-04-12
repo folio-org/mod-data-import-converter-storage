@@ -1,18 +1,17 @@
 package org.folio.services.association;
 
+import java.util.Optional;
+
 import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
-
-import java.util.Optional;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 
 /**
  * Generic Profile Association Service
- *
- * @param <M> entity data type of the 'master' profile
- * @param <D> entity data type of the 'detail' profile
  */
-public interface ProfileAssociationService<M, D> { //NOSONAR
+public interface ProfileAssociationService { //NOSONAR
 
   /**
    * Searches for ProfileAssociation by id
@@ -49,4 +48,24 @@ public interface ProfileAssociationService<M, D> { //NOSONAR
    * @return future with true if succeeded
    */
   Future<Boolean> delete(String id, String tenantId);
+
+  /**
+   * Finds details by master id.
+   *
+   * @param tenantId   a tenant id
+   * @param masterId   a master id
+   * @param masterType a master type
+   * @return list of details for specified master
+   */
+  Future<Optional<ProfileSnapshotWrapper>> findDetails(String tenantId, String masterId, ContentType masterType);
+
+  /**
+   * Finds masters by detail id.
+   *
+   * @param tenantId   a tenant id
+   * @param detailId   a detail id
+   * @param detailType a detail type
+   * @return list of masters profiles for specified detail profile
+   */
+  Future<Optional<ProfileSnapshotWrapper>> findMasters(String tenantId, String detailId, ContentType detailType);
 }

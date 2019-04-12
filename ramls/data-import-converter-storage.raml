@@ -211,6 +211,36 @@ resourceTypes:
           204:
             body:
               text/plain: !!null
+      /details:
+        displayName: Details profiles by master profile id
+        description: Retrives details profiles by master profile id
+        get:
+          queryParameters:
+            masterType:
+              description: "Type of master profile"
+              required: true
+              type: string
+          is: [validate]
+          responses:
+              200:
+                body:
+                  application/json:
+                    type: profileSnapshotWrapper
+      /masters:
+        displayName: Masters profiles by detail profile id
+        description: Retrives masters profiles by detail profile id
+        get:
+          queryParameters:
+            detailType:
+              description: "Type of detail profile"
+              required: true
+              type: string
+          is: [validate]
+          responses:
+              200:
+                body:
+                  application/json:
+                    type: profileSnapshotWrapper
   /jobProfileSnapshots:
     displayName: Profile snapshots
     description: API for managing Job Profile Snapshots
@@ -239,3 +269,4 @@ resourceTypes:
             body:
               text/plain:
                 example: "Internal server error"
+
