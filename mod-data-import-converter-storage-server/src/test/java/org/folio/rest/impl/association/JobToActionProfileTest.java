@@ -514,9 +514,9 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
 
   }
 
-  private void stopIfFailed(TestContext context, AsyncResult<UpdateResult> actionToActionProfiles) {
-    if (actionToActionProfiles.failed()) {
-      context.fail(actionToActionProfiles.cause());
+  private void stopIfFailed(TestContext context, AsyncResult<UpdateResult> asyncResult) {
+    if (asyncResult.failed()) {
+      context.fail(asyncResult.cause());
     }
   }
 }

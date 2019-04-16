@@ -58,7 +58,7 @@ public interface ProfileAssociationDao<M, D> {
    * @param tenantId tenant id
    * @return future
    */
-  Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String tenantId, String masterId);
+  Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, String tenantId);
 
   /**
    * Returns master profiles linked to detail profile id
@@ -67,5 +67,5 @@ public interface ProfileAssociationDao<M, D> {
    * @param detailId detail profile id
    * @return future
    */
-  Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String tenantId, String detailId);
+  Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, String tenantId);
 }

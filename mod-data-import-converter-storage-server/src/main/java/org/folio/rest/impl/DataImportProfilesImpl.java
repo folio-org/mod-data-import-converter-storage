@@ -555,7 +555,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
     vertxContext.runOnContext(event -> {
         try {
-          profileAssociationService.findDetails(tenantId, id, ContentType.valueOf(masterType))
+          profileAssociationService.findDetails(id, ContentType.valueOf(masterType), tenantId)
             .map(optional -> optional.orElseThrow(() -> new NotFoundException(format(MASTER_PROFILE_NOT_FOUND_MSG, id))))
             .map(GetDataImportProfilesProfileAssociationsDetailsByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
@@ -579,7 +579,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
     vertxContext.runOnContext(event -> {
         try {
-          profileAssociationService.findMasters(tenantId, id, ContentType.valueOf(detailType))
+          profileAssociationService.findMasters(id, ContentType.valueOf(detailType), tenantId)
             .map(optional -> optional.orElseThrow(() -> new NotFoundException(format(DETAIL_PROFILE_NOT_FOUND_MSG, id))))
             .map(GetDataImportProfilesProfileAssociationsMastersByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)

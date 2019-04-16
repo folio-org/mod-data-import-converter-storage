@@ -52,20 +52,20 @@ public interface ProfileAssociationService { //NOSONAR
   /**
    * Finds details by master id.
    *
-   * @param tenantId   a tenant id
    * @param masterId   a master id
    * @param masterType a master type
+   * @param tenantId   a tenant id
    * @return list of details for specified master
    */
-  Future<Optional<ProfileSnapshotWrapper>> findDetails(String tenantId, String masterId, ContentType masterType);
+  Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, String tenantId);
 
   /**
    * Finds masters by detail id.
    *
-   * @param tenantId   a tenant id
    * @param detailId   a detail id
    * @param detailType a detail type
+   * @param tenantId   a tenant id
    * @return list of masters profiles for specified detail profile
    */
-  Future<Optional<ProfileSnapshotWrapper>> findMasters(String tenantId, String detailId, ContentType detailType);
+  Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, String tenantId);
 }

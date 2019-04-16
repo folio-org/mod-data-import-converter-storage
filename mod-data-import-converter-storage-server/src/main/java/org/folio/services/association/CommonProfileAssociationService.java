@@ -7,6 +7,8 @@ import java.util.UUID;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.dao.association.ProfileAssociationDao;
 import org.folio.dataimport.util.OkapiConnectionParams;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CommonProfileAssociationService implements ProfileAssociationService { //NOSOANR
+  private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationService.class);
 
   @Autowired
   private ProfileAssociationDao<JobProfileCollection, ActionProfileCollection> jobToActionProfile;
@@ -66,13 +69,14 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
 
   @Override
-  public Future<Optional<ProfileSnapshotWrapper>> findDetails(String tenantId, String masterId, ContentType masterType) {
+  public Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, String tenantId) {
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    jobToActionProfile.getDetailProfilesByMasterId(tenantId, masterId)
+    jobToActionProfile.getDetailProfilesByMasterId(masterId, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
+          LOGGER.debug("I could not get details profiles by master id %s, for the tenant %s", masterId, tenantId);
           result.fail(ar.cause());
         }
         List<ChildSnapshotWrapper> details = ar.result();
@@ -84,13 +88,14 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   }
 
   @Override
-  public Future<Optional<ProfileSnapshotWrapper>> findMasters(String tenantId, String detailId, ContentType detailType) {
+  public Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, String tenantId) {
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    jobToActionProfile.getMasterProfilesByDetailId(tenantId, detailId)
+    jobToActionProfile.getMasterProfilesByDetailId(detailId, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
+          LOGGER.debug("I could not get master profiles by detail id %s, for the tenant %s", detailId, tenantId);
           result.fail(ar.cause());
         }
         ProfileSnapshotWrapper wrapper = getProfileWrapper(detailId, detailType, ar.result());
@@ -100,6 +105,13 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     return result;
   }
 
+  /**
+   * Retrieves profile by profile id and profile type and then fill profile wrapper with the instance.
+   *
+   * @param tenantId a tenant id.
+   * @param result   a result future.
+   * @param wrapper  a profile wrapper.
+   */
   private void fillProfile(String tenantId, Future<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
     String profileId = wrapper.getId();
     ContentType profileType = wrapper.getContentType();
@@ -117,6 +129,14 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     }
   }
 
+  /**
+   * Creates a profile wrapper.
+   *
+   * @param profileId   a profile id.
+   * @param profileType a profile type.
+   * @param children    a list of children
+   * @return
+   */
   private ProfileSnapshotWrapper getProfileWrapper(String profileId, ContentType profileType, List<ChildSnapshotWrapper> children) {
     ProfileSnapshotWrapper wrapper = new ProfileSnapshotWrapper();
     wrapper.setChildSnapshotWrappers(children);
@@ -125,9 +145,20 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     return wrapper;
   }
 
+  /**
+   * Fills a profile wrapper with a profile instance if it's present otherwise it will complete result future with empty optional.
+   *
+   * @param result  a future result.
+   * @param wrapper a profile wrapper.
+   * @param <T>     a profile type.
+   * @return the handler.
+   */
   private <T> Handler<AsyncResult<Optional<T>>> fillWrapperContent(Future<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
     return asyncResult -> {
-      if (asyncResult.failed()) result.fail(asyncResult.cause());
+      if (asyncResult.failed()) {
+        LOGGER.debug("I could not get a profile", asyncResult.cause());
+        result.fail(asyncResult.cause());
+      }
 
       Optional<T> resultOptional = asyncResult.result();
       if (resultOptional.isPresent()) {
