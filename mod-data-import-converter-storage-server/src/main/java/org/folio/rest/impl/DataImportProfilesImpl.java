@@ -2,9 +2,11 @@ package org.folio.rest.impl;
 
 import static java.lang.String.format;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -555,7 +557,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
     vertxContext.runOnContext(event -> {
         try {
-          profileAssociationService.findDetails(id, ContentType.valueOf(masterType), tenantId)
+          profileAssociationService.findDetails(id, mapContentType(masterType), tenantId)
             .map(optional -> optional.orElseThrow(() -> new NotFoundException(format(MASTER_PROFILE_NOT_FOUND_MSG, id))))
             .map(GetDataImportProfilesProfileAssociationsDetailsByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
@@ -579,7 +581,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
     vertxContext.runOnContext(event -> {
         try {
-          profileAssociationService.findMasters(id, ContentType.valueOf(detailType), tenantId)
+          profileAssociationService.findMasters(id, mapContentType(detailType), tenantId)
             .map(optional -> optional.orElseThrow(() -> new NotFoundException(format(DETAIL_PROFILE_NOT_FOUND_MSG, id))))
             .map(GetDataImportProfilesProfileAssociationsMastersByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
@@ -624,6 +626,16 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         .withMessage(DUPLICATE_JOB_PROFILE_ERROR_CODE)))
         .withTotalRecords(errors.getTotalRecords() + 1)
         : errors);
+  }
+
+
+  private ContentType mapContentType(String contentType) {
+    try {
+      return ContentType.fromValue(contentType);
+    } catch (IllegalArgumentException e) {
+      String message = "The specified type: %s is wrong. It should be " + Arrays.toString(ContentType.values());
+      throw new BadRequestException(format(message, contentType), e);
+    }
   }
 
 }

@@ -4,6 +4,7 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTI
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import io.restassured.RestAssured;
@@ -18,6 +19,8 @@ import org.folio.rest.impl.AbstractRestVerticleTest;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
@@ -310,6 +313,20 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void getDetailActionsByMasterProfile_WrongQueryParameter(TestContext testContext) {
+    Async async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("masterType", "foo")
+      .when()
+      .get(DETAILS_BY_MASTER_URL, UUID.randomUUID().toString())
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .body(is("The specified type: foo is wrong. It should be " + Arrays.toString(ContentType.values())));
+    async.complete();
+  }
+
+  @Test
   public void getDetailActionsByMasterProfile_emptyDetailsListWithMasterProfile(TestContext testContext) {
     JobProfile jobProfile = createJobProfile(testContext);
     Async async = testContext.async();
@@ -412,6 +429,20 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .get(MASTERS_BY_DETAIL_URL, UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
+    async.complete();
+  }
+
+  @Test
+  public void getMastersByDetailActionProfile_WrongQueryParameter(TestContext testContext) {
+    Async async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("detailType", "foo")
+      .when()
+      .get(MASTERS_BY_DETAIL_URL, UUID.randomUUID().toString())
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .body(is("The specified type: foo is wrong. It should be " + Arrays.toString(ContentType.values())));
     async.complete();
   }
 
