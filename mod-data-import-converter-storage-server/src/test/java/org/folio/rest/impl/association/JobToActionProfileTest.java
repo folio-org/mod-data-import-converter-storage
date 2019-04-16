@@ -28,9 +28,7 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class JobToActionProfileTest extends AbstractRestVerticleTest {
 
-  private static final String ACTION_TO_MAPPING_PROFILES = "action_to_mapping_profiles";
   private static final String JOB_TO_ACTION_PROFILES = "job_to_action_profiles";
-  private static final String JOB_TO_MATCH_PROFILES = "job_to_match_profiles";
   private static final String JOB_PROFILES = "job_profiles";
   private static final String ACTION_PROFILES = "action_profiles";
   private static final String JOB_PROFILES_URL = "/data-import-profiles/jobProfiles";
@@ -38,9 +36,6 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   private static final String ASSOCIATED_PROFILES_URL = "/data-import-profiles/profileAssociations";
   private static final String DETAILS_BY_MASTER_URL = "/data-import-profiles/profileAssociations/{masterId}/details";
   private static final String MASTERS_BY_DETAIL_URL = "/data-import-profiles/profileAssociations/{detailId}/masters";
-  private static final String ACTION_TO_MATCH_PROFILES = "action_to_match_profiles";
-  private static final String ACTION_TO_ACTION_PROFILES = "action_to_action_profiles";
-  private static final String MATCH_TO_ACTION_PROFILES = "match_to_action_profiles";
 
 
   @Test
@@ -485,33 +480,16 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
 
-    pgClient.delete(ACTION_TO_MATCH_PROFILES, new Criterion(), actionToMatchProfiles -> {
-      stopIfFailed(context, actionToMatchProfiles);
-      pgClient.delete(ACTION_TO_ACTION_PROFILES, new Criterion(), actionToActionProfiles -> {
-        stopIfFailed(context, actionToActionProfiles);
-        pgClient.delete(ACTION_TO_MAPPING_PROFILES, new Criterion(), actionToMappingProfiles -> {
-          stopIfFailed(context, actionToMappingProfiles);
-          pgClient.delete(MATCH_TO_ACTION_PROFILES, new Criterion(), matchToActionProfiles -> {
-            stopIfFailed(context, matchToActionProfiles);
-            pgClient.delete(JOB_TO_MATCH_PROFILES, new Criterion(), jobToMatchProfiles -> {
-              stopIfFailed(context, jobToMatchProfiles);
-              pgClient.delete(JOB_TO_ACTION_PROFILES, new Criterion(), associationsDeleteEvent -> {
-                stopIfFailed(context, associationsDeleteEvent);
-                pgClient.delete(JOB_PROFILES, new Criterion(), jobProfilesDeleteEvent -> {
-                  stopIfFailed(context, jobProfilesDeleteEvent);
-                  pgClient.delete(ACTION_PROFILES, new Criterion(), actionProfilesDeleteEvent -> {
-                    stopIfFailed(context, actionProfilesDeleteEvent);
-                    async.complete();
-                  });
-                });
-              });
-            });
-          });
+    pgClient.delete(JOB_TO_ACTION_PROFILES, new Criterion(), associationsDeleteEvent -> {
+      stopIfFailed(context, associationsDeleteEvent);
+      pgClient.delete(JOB_PROFILES, new Criterion(), jobProfilesDeleteEvent -> {
+        stopIfFailed(context, jobProfilesDeleteEvent);
+        pgClient.delete(ACTION_PROFILES, new Criterion(), actionProfilesDeleteEvent -> {
+          stopIfFailed(context, actionProfilesDeleteEvent);
+          async.complete();
         });
       });
     });
-
-
   }
 
   private void stopIfFailed(TestContext context, AsyncResult<UpdateResult> asyncResult) {
