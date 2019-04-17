@@ -1,9 +1,11 @@
 package org.folio.dao.association;
 
-import io.vertx.core.Future;
-import org.folio.rest.jaxrs.model.ProfileAssociation;
-
+import java.util.List;
 import java.util.Optional;
+
+import io.vertx.core.Future;
+import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 
 /**
  * This DAO is for association between 2 profiles (which are called 'master' profile and 'detail' profile).
@@ -53,15 +55,17 @@ public interface ProfileAssociationDao<M, D> {
    * Returns 'detail' profiles linked to 'master' profile id
    *
    * @param masterId 'master' profile id
+   * @param tenantId tenant id
    * @return future
    */
-  Future<D> getDetailProfilesByMasterId(String masterId);
+  Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, String tenantId);
 
   /**
-   * Returns 'master' profiles linked to 'detail' profile id
+   * Returns master profiles linked to detail profile id
    *
-   * @param detailId 'detail' profile id
+   * @param tenantId tenant id
+   * @param detailId detail profile id
    * @return future
    */
-  Future<M> getMasterProfilesByDetailId(String detailId);
+  Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, String tenantId);
 }

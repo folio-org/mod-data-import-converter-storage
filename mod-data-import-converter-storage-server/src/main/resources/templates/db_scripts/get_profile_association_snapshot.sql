@@ -2,8 +2,8 @@
 -- To change the get_profile_association_snapshot function, update this script and copy it to the appropriate scripts.snippet field of the schema.json
 
 CREATE OR REPLACE FUNCTION
-  get_profile_association_snapshot(_association_table text, _master_table text, _detail_table text, _detail_type text)
-  RETURNS TABLE(association_id uuid, master_id uuid, detail_id uuid, detail_type text, detail_order integer, detail json)
+  get_profile_association_snapshot(_association_table text, _master_table text, _master_type text, _detail_table text, _detail_type text)
+  RETURNS TABLE(association_id uuid, master_id uuid, master json, master_type text, detail_id uuid, detail_type text, detail_order integer, detail json)
     AS $$
       BEGIN
         RETURN query
@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION
             SELECT
               association._id,
               association.masterprofileid AS master_id,
+              json_agg(master.jsonb) AS master,
+              ''%s'' AS master_type,
               association.detailprofileid AS detail_id,
               ''%s'' AS detail_type,
               CAST(association.jsonb->>''order'' AS integer) AS detail_order,
@@ -19,6 +21,6 @@ CREATE OR REPLACE FUNCTION
               INNER JOIN %s master ON master._id = association.masterprofileid
               INNER JOIN %s detail ON detail._id = association.detailprofileid
             GROUP BY association._id',
-            _detail_type, _association_table, _master_table, _detail_table);
+            _master_type, _detail_type, _association_table, _master_table, _detail_table);
       END $$
 language plpgsql;
