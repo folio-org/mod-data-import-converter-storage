@@ -16,10 +16,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-10-30T12:41:22.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-11-02T12:09:51.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -40,10 +40,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-10-30T12:42:18.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-11-03T10:01:30.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -64,10 +64,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-10-30T12:45:33.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-11-03T11:22:30.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -88,10 +88,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-01T10:12:51.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-02T09:05:30.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -110,10 +110,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-01T10:37:53.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-03T11:45:21.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -134,10 +134,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-02T10:20:32.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-02T10:45:21.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -158,10 +158,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-02T10:18:44.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-03T14:20:21.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -182,10 +182,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-01T10:09:51.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-01T15:21:28.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -206,10 +206,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-01T10:18:42.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-05T13:08:12.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -230,10 +230,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-01T10:18:42.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-05T13:08:12.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }'),
@@ -254,10 +254,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   },
   "metadata": {
     "createdDate": "2018-11-01T11:08:21.000",
-    "createdByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "createdByUserId": "",
     "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-01T19:01:41.000",
-    "updatedByUserId": "04780a17-23c1-59be-9703-c63e9af207dc",
+    "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
 }') ON CONFLICT DO NOTHING;
