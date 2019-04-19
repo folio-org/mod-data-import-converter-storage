@@ -146,6 +146,35 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldReturnBadRequestOnPostJobProfileWithoutTags() {
+    JsonObject jobProfileWithoutTags = new JsonObject()
+      .put("name", "Bla");
+
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfileWithoutTags.encode())
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then().log().all()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnPostJobProfileWithInvalidField() {
+    JsonObject jobProfile = new JsonObject()
+      .put("name", "Bla")
+      .put("invalidField", "value");
+
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfile.encode())
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then().log().all()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
   public void shouldReturnBadRequestOnPut() {
     RestAssured.given()
       .spec(spec)
@@ -194,6 +223,28 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"))
       .body("dataType", is(jobProfile.getDataType().value()));
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnPutJobProfileWithInvalidField() {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(jobProfile_2)
+      .when()
+      .post(JOB_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    JobProfile jobProfile = createResponse.body().as(JobProfile.class);
+
+    JsonObject jobProfileJson = JsonObject.mapFrom(jobProfile)
+      .put("invalidField", "value");
+
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfileJson.encode())
+      .when()
+      .put(JOB_PROFILES_PATH + "/" + jobProfile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
