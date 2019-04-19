@@ -17,10 +17,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-10-30T12:41:22.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-11-02T12:09:51.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('295e28b4-aea2-4458-9073-385a31e1da05', '{
@@ -41,10 +41,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-10-30T12:42:18.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-11-03T10:01:30.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('bb689511-5365-4050-8084-a03d94728d88', ' {
@@ -65,10 +65,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-10-30T12:45:33.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-11-03T11:22:30.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('3e705998-9169-4f31-b048-90ffdcbd24c1', '{
@@ -89,10 +89,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-01T10:12:51.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-02T09:05:30.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('15426802-bb0d-4dfb-8eee-90f64fed0cf1', '{
@@ -111,10 +111,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-01T10:37:53.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-03T11:45:21.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('87e4ad58-d677-43dd-8b04-9795741b2103', '{
@@ -135,10 +135,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-02T10:20:32.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-02T10:45:21.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('72af7eb7-d7e2-4d16-93ac-682b9a58a94c', ' {
@@ -159,10 +159,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-02T10:18:44.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-03T14:20:21.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('4d1b5024-2c49-42bd-b781-4330d14cefb0', '{
@@ -183,10 +183,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-01T10:09:51.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-01T15:21:28.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('b32e79bc-01d9-4d31-bc08-a3621fcfc1aa', '{
@@ -207,10 +207,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-01T10:18:42.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-05T13:08:12.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('558dede0-515d-11e9-8647-d663bd873d93', '{
@@ -231,10 +231,10 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-01T10:18:42.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-05T13:08:12.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }'),
 ('828a787c-bcf3-4c28-891a-9e6f3ba5068b', '{
@@ -255,9 +255,9 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "metadata": {
     "createdDate": "2018-11-01T11:08:21.000",
     "createdByUserId": "",
-    "createdByUsername": "",
+    "createdByUsername": "diku_admin",
     "updatedDate": "2018-12-01T19:01:41.000",
     "updatedByUserId": "",
-    "updatedByUsername": ""
+    "updatedByUsername": "diku_admin"
   }
 }') ON CONFLICT DO NOTHING;
