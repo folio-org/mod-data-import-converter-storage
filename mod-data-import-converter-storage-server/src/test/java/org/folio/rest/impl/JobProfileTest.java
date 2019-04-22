@@ -146,7 +146,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnPostJobProfileWithoutTags() {
+  public void shouldReturnBadRequestOnPostJobProfileWithoutDataType() {
     JsonObject jobProfileWithoutTags = new JsonObject()
       .put("name", "Bla");
 
@@ -163,6 +163,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void shouldReturnBadRequestOnPostJobProfileWithInvalidField() {
     JsonObject jobProfile = new JsonObject()
       .put("name", "Bla")
+      .put("dataType", MARC)
       .put("invalidField", "value");
 
     RestAssured.given()
@@ -322,6 +323,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
 
     JobProfile newJobProfile = new JobProfile()
       .withName("Boo")
+      .withDataType(MARC)
       .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
     Response createResponse = RestAssured.given()
       .spec(spec)
