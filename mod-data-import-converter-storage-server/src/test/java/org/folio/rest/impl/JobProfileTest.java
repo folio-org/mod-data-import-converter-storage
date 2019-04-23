@@ -147,12 +147,12 @@ public class JobProfileTest extends AbstractRestVerticleTest {
 
   @Test
   public void shouldReturnBadRequestOnPostJobProfileWithoutDataType() {
-    JsonObject jobProfileWithoutTags = new JsonObject()
+    JsonObject jobProfileWithoutDataType = new JsonObject()
       .put("name", "Bla");
 
     RestAssured.given()
       .spec(spec)
-      .body(jobProfileWithoutTags.encode())
+      .body(jobProfileWithoutDataType.encode())
       .when()
       .post(JOB_PROFILES_PATH)
       .then().log().all()
