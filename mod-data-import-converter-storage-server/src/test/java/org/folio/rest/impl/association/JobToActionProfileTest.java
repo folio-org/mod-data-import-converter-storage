@@ -1,5 +1,6 @@
 package org.folio.rest.impl.association;
 
+import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.hamcrest.Matchers.is;
@@ -480,7 +481,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     JobProfile jobProfile = RestAssured.given()
       .spec(spec)
-      .body(new JobProfile().withName(profileName))
+      .body(new JobProfile().withName(profileName).withDataType(MARC))
       .when()
       .post(JOB_PROFILES_URL)
       .then()
