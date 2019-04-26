@@ -23,6 +23,7 @@ types:
   profileAssociationCollection: !include raml-storage/schemas/mod-data-import-converter-storage/profileAssociationCollection.json
   profileSnapshotType: !include raml-storage/schemas/mod-data-import-converter-storage/profileSnapshotType.json
   profileSnapshotWrapper: !include raml-storage/schemas/mod-data-import-converter-storage/profileSnapshotWrapper.json
+  entityTypeCollection: !include raml-storage/schemas/mod-data-import-converter-storage/entityTypeCollection.json
 
 traits:
   validate: !include raml-storage/raml-util/traits/validation.raml
@@ -271,4 +272,22 @@ resourceTypes:
             body:
               text/plain:
                 example: "Internal server error"
-
+  /entityTypes:
+    displayName: Entity types
+    get:
+      description: Get a list of entity types
+      responses:
+        200:
+          body:
+            application/json:
+              type: entityTypeCollection
+        400:
+          description: "Bad request"
+          body:
+            text/plain:
+              example: "Bad request"
+        500:
+          description: "Internal server error"
+          body:
+            text/plain:
+              example: "Internal server error"

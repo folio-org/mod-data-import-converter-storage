@@ -2,6 +2,7 @@ package org.folio.services;
 
 import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
+import org.folio.rest.jaxrs.model.EntityTypeCollection;
 
 import java.util.Optional;
 
@@ -69,4 +70,11 @@ public interface ProfileService<T, S> {
    * @return - boolean value. True if job profile with the same name already exist
    */
   Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId);
+
+  /**
+   * Returns {@link EntityTypeCollection}
+   *
+   * @return future with {@link EntityTypeCollection}
+   */
+  Future<EntityTypeCollection> getEntityTypes();
 }

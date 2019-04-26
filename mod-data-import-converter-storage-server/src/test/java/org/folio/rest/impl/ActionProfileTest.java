@@ -2,15 +2,19 @@ package org.folio.rest.impl;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.vertx.core.Context;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.EntityTypeCollection;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
+import org.folio.services.ActionProfileServiceImpl;
+import org.folio.services.ProfileService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
@@ -30,6 +35,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
   private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
   private static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
+  private static final String ENTITY_TYPES_PATH = " /data-import-profiles/entityTypes";
 
   private static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
@@ -239,6 +245,24 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .delete(ACTION_PROFILES_PATH + "/" + profile.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
+  }
+
+  @Test
+  public void shouldReturnAllEntityTypesOnGet() {
+    ProfileService actionProfileService = new ActionProfileServiceImpl();
+    EntityTypeCollection entityTypeCollection = (EntityTypeCollection) actionProfileService.getEntityTypes().result();
+
+    Response getResponse = RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(ENTITY_TYPES_PATH);
+
+    getResponse
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(entityTypeCollection.getTotalRecords()))
+      .body("entityTypes", containsInAnyOrder(entityTypeCollection.getEntityTypes().toArray()));
   }
 
   private void createProfiles() {
