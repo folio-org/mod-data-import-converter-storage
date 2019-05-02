@@ -10,11 +10,13 @@ import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.dataimport.util.RestUtil;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
 import org.folio.rest.jaxrs.model.UserInfo;
+import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Generic implementation of the {@link ProfileService}
@@ -27,21 +29,12 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
 
-  protected static final String INVENTORY_HOLDINGS = "INVENTORY_HOLDINGS";
-  protected static final String INVENTORY_INSTANCE = "INVENTORY_INSTANCE";
-  protected static final String INVENTORY_ITEM = "INVENTORY_ITEM";
-  protected static final String INVOICE = "INVOICE";
-  protected static final String MARC_AUTHORITY_RECORD = "MARC_AUTHORITY_RECORD";
-  protected static final String MARC_BIB_RECORD = "MARC_BIB_RECORD";
-  protected static final String MARC_HOLDINGS_RECORD = "MARC_HOLDINGS_RECORD";
-  protected static final String ORDER = "ORDER";
-  protected static final String ERROR = "ERROR";
-
   private final EntityTypeCollection entityTypeCollection;
 
   protected AbstractProfileService() {
-    List<String> entityTypeList = Arrays.asList(INVENTORY_HOLDINGS, INVENTORY_INSTANCE, INVENTORY_ITEM,
-      INVOICE, MARC_AUTHORITY_RECORD, MARC_BIB_RECORD, MARC_HOLDINGS_RECORD, ORDER, ERROR);
+    List<String> entityTypeList = Arrays.stream(EntityTypes.values())
+      .map(EntityTypes::getName)
+      .collect(Collectors.toList());
     entityTypeCollection = new EntityTypeCollection()
       .withEntityTypes(entityTypeList)
       .withTotalRecords(entityTypeList.size());

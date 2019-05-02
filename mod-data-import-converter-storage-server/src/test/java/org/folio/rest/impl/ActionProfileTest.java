@@ -15,6 +15,7 @@ import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.services.ActionProfileServiceImpl;
 import org.folio.services.ProfileService;
+import org.folio.services.util.EntityTypes;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -250,7 +252,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnAllEntityTypesOnGet() {
     ProfileService actionProfileService = new ActionProfileServiceImpl();
-    EntityTypeCollection entityTypeCollection = (EntityTypeCollection) actionProfileService.getEntityTypes().result();
+    List<String> entityTypesList = Arrays.stream(EntityTypes.values())
+      .map(EntityTypes::getName)
+      .collect(Collectors.toList());
 
     Response getResponse = RestAssured.given()
       .spec(spec)
@@ -261,8 +265,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .then()
       .log().all()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(entityTypeCollection.getTotalRecords()))
-      .body("entityTypes", containsInAnyOrder(entityTypeCollection.getEntityTypes().toArray()));
+      .body("totalRecords", is(entityTypesList.size()))
+      .body("entityTypes", containsInAnyOrder(entityTypesList.toArray()));
   }
 
   private void createProfiles() {
