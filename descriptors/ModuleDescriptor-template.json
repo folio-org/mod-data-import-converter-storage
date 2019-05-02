@@ -5,7 +5,7 @@
   "provides": [
     {
       "id": "data-import-converter-storage",
-      "version": "1.0",
+      "version": "1.1",
       "handlers": [
         {
           "methods": ["GET"],
@@ -114,6 +114,11 @@
           "methods": ["DELETE"],
           "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
           "permissionsRequired": [ "converter-storage.mappingprofile.delete" ]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/data-import-profiles/entityTypes",
+          "permissionsRequired": [ "converter-storage.entitytypes.get" ]
         }
       ]
     },
@@ -219,6 +224,11 @@
       "description": "Delete Mapping Profile"
     },
     {
+      "permissionName": "converter-storage.entitytypes.get",
+      "displayName": "Data Import Converter Storage - get Entity types",
+      "description": "Get collection of entity types"
+    },
+    {
       "permissionName": "converter-storage.all",
       "displayName": "Data Import Converter Storage - all permissions",
       "description": "Entire set of permissions needed to manage Profiles",
@@ -238,7 +248,8 @@
         "converter-storage.mappingprofile.get",
         "converter-storage.mappingprofile.post",
         "converter-storage.mappingprofile.put",
-        "converter-storage.mappingprofile.delete"
+        "converter-storage.mappingprofile.delete",
+        "converter-storage.entitytypes.get"
       ],
       "visible": false
     }
