@@ -617,6 +617,22 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     });
   }
 
+  @Override
+  public void getDataImportProfilesEntityTypes(Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        actionProfileService.getEntityTypes()
+          .map(GetDataImportProfilesEntityTypesResponse::respond200WithApplicationJson)
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to get all entity types", e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
   private Future<Errors> validateJobProfile(JobProfile profile, String tenantId) {
     Errors errors = new Errors()
       .withTotalRecords(0);
@@ -637,5 +653,6 @@ public class DataImportProfilesImpl implements DataImportProfiles {
       throw new BadRequestException(format(message, contentType), e);
     }
   }
+
 
 }

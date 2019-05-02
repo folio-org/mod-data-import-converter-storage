@@ -8,10 +8,15 @@ import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.dataimport.util.RestUtil;
+import org.folio.rest.jaxrs.model.EntityTypeCollection;
 import org.folio.rest.jaxrs.model.UserInfo;
+import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Generic implementation of the {@link ProfileService}
@@ -23,6 +28,17 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
+
+  private final EntityTypeCollection entityTypeCollection;
+
+  protected AbstractProfileService() {
+    List<String> entityTypeList = Arrays.stream(EntityTypes.values())
+      .map(EntityTypes::getName)
+      .collect(Collectors.toList());
+    entityTypeCollection = new EntityTypeCollection()
+      .withEntityTypes(entityTypeList)
+      .withTotalRecords(entityTypeList.size());
+  }
 
   @Autowired
   private ProfileDao<T, S> profileDao;
@@ -58,6 +74,11 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   @Override
   public Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId) {
     return profileDao.isProfileExistByName(profileName, profileId, tenantId);
+  }
+
+  @Override
+  public Future<EntityTypeCollection> getEntityTypes() {
+    return Future.succeededFuture(entityTypeCollection);
   }
 
   /**
