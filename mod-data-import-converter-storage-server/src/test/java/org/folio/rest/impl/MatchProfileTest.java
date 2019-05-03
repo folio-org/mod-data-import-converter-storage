@@ -8,6 +8,9 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.MatchProfile;
+import org.folio.rest.jaxrs.model.MatchProfile.ExistingRecordType;
+import org.folio.rest.jaxrs.model.MatchProfile.IncomingDataValueType;
+import org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -32,11 +35,20 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
 
   private static MatchProfile matchProfile_1 = new MatchProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+    .withIncomingRecordType(IncomingRecordType.MARC)
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
+    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
   private static MatchProfile matchProfile_2 = new MatchProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+    .withIncomingRecordType(IncomingRecordType.MARC)
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
+    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
   private static MatchProfile matchProfile_3 = new MatchProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
+    .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+    .withIncomingRecordType(IncomingRecordType.MARC)
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
+    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
 
   @Test
   public void shouldReturnEmptyListOnGet() {
