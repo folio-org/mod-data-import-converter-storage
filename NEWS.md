@@ -1,5 +1,13 @@
-## 2019-05-02 v1.1.0-SNAPSHOT
+## 2019-05-03 v1.1.0
 * Added endpoint to receive entity types list.
+* Updated Job Profile schema to contain single dataType. 
+* Updated existing sample data.
+* Added methods to work with associated profiles.
+* Designed and created Job Profile Snapshot entity.
+* Designed and created Job Profile Snapshot database view.
+* Added unique constraint for Job Profile name.
+* Updated Tenant API version.
+* Populated sample Match Profile data.
 
   | METHOD |             URL                                              | DESCRIPTION                         |
   |--------|--------------------------------------------------------------|-------------------------------------|
