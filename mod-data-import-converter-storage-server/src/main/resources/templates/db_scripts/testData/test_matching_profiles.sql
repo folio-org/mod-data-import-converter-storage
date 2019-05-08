@@ -37,6 +37,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -89,6 +90,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "BEGINS_WITH",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -140,6 +142,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -192,6 +195,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "NUMBERS_ONLY",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -245,6 +249,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -296,6 +301,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -347,6 +353,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -399,6 +406,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
   "existingDate": "",
   "existingInclude": "MATCH_ON",
   "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",

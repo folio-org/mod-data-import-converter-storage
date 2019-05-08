@@ -9,7 +9,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
 		  "Lorem", "ipsum"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -33,7 +34,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
 		  "Lorem", "ipsum"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -57,7 +59,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
 		  "Lorem", "ipsum"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -81,7 +84,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
 		  "Lorem", "ipsum"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -105,7 +109,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
 		  "Lorem", "ipsum"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -129,7 +134,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
 		  "Lorem", "ipsum"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"

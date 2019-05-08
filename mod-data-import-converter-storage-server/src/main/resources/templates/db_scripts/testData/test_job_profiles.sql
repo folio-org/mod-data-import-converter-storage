@@ -9,6 +9,8 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "acq", "daily"
     ]
   },
+  "deleted": false,
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -33,6 +35,8 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "cat", "weekly"
     ]
   },
+  "deleted": false,
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -57,6 +61,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "acq", "cat", "weekly"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -81,6 +86,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "monthly", "KB"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -103,6 +109,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "tags": {
     "tagList": []
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -127,6 +134,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "cat", "monthly"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -151,6 +159,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "weekly", "DDA"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -175,6 +184,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "acq"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -199,6 +209,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "acq"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -223,6 +234,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "MARC", "TEST"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -247,6 +259,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "acq", "daily"
     ]
   },
+  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
