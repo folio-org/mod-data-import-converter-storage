@@ -3,7 +3,6 @@ package org.folio.dao;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.sql.UpdateResult;
 import org.folio.rest.persist.Criteria.Criteria;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -38,7 +37,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       String[] fieldList = {"*"};
       CQLWrapper cql = getCQLWrapper(getTableName(), query, limit, offset);
       if (!showDeleted) {
-        cql.addWrapper(cql.addWrapper(getCQLWrapper(getTableName(), "deleted=" + false)));
+        cql.addWrapper(cql.addWrapper(getCQLWrapper(getTableName(), "deleted=false")));
       }
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, future.completer());
     } catch (Exception e) {
