@@ -60,7 +60,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .get(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(3));
+      .body("totalRecords", is(3))
+      .body("mappingProfiles*.deleted", everyItem(is(false)));
   }
 
   @Test
@@ -225,7 +226,7 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldDeleteProfileOnDelete() {
+  public void shouldMarkedProfileAsDeletedOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
       .body(mappingProfile_2)
@@ -240,6 +241,72 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .delete(MAPPING_PROFILES_PATH + "/" + profile.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(MAPPING_PROFILES_PATH + "/" + profile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("deleted", is(true));
+  }
+
+  @Test
+  public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
+    createProfiles();
+    MappingProfile mappingProfileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_1)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(MappingProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MAPPING_PROFILES_PATH + "/" + mappingProfileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .param("showDeleted", true)
+      .get(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(4));
+  }
+
+  @Test
+  public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed() {
+    createProfiles();
+    MappingProfile mappingProfileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_1)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(MappingProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MAPPING_PROFILES_PATH + "/" + mappingProfileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(3))
+      .body("mappingProfiles*.deleted", everyItem(is(false)));
   }
 
   private void createProfiles() {

@@ -48,6 +48,13 @@ resourceTypes:
     post:
       is: [validate]
     get:
+      queryParameters:
+        showDeleted:
+          description: selection condition of Job Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
       is: [
         searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
         pageable,
@@ -84,6 +91,13 @@ resourceTypes:
     post:
       is: [validate]
     get:
+      queryParameters:
+        showDeleted:
+          description: selection condition of Match Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
       is: [
         searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
         pageable,
@@ -120,6 +134,13 @@ resourceTypes:
     post:
       is: [validate]
     get:
+      queryParameters:
+        showDeleted:
+          description: selection condition of Mapping Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
       is: [
         searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
         pageable,
@@ -156,6 +177,13 @@ resourceTypes:
     post:
       is: [validate]
     get:
+      queryParameters:
+        showDeleted:
+          description: selection condition of Action Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
       is: [
         searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
         pageable,

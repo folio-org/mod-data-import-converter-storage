@@ -21,4 +21,14 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
     return lookupUser(profile.getMetadata().getUpdatedByUserId(), params)
       .compose(userInfo -> Future.succeededFuture(profile.withUserInfo(userInfo)));
   }
+
+  @Override
+  MatchProfile markProfileAsDeleted(MatchProfile profile) {
+    return profile.withDeleted(true);
+  }
+
+  @Override
+  Class<MatchProfile> getProfileType() {
+    return MatchProfile.class;
+  }
 }

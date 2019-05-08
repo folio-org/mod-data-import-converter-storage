@@ -64,7 +64,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .get(JOB_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(3));
+      .body("totalRecords", is(3))
+      .body("jobProfiles*.deleted", everyItem(is(false)));
   }
 
   @Test
@@ -77,6 +78,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
+      .body("jobProfiles*.deleted", everyItem(is(false)))
       .body("jobProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
@@ -90,6 +92,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(2))
+      .body("jobProfiles*.deleted", everyItem(is(false)))
       .body("jobProfiles.get(0).tags.tagList", hasItem("ipsum"))
       .body("jobProfiles.get(1).tags.tagList", hasItem("ipsum"));
   }
@@ -104,6 +107,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("jobProfiles.size()", is(2))
+      .body("jobProfiles*.deleted", everyItem(is(false)))
       .body("totalRecords", is(3));
   }
 
@@ -290,11 +294,12 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .when()
       .delete(JOB_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
+      .log().all()
       .statusCode(HttpStatus.SC_NOT_FOUND);
   }
 
   @Test
-  public void shouldDeleteProfileOnDelete() {
+  public void shouldMarkProfileAsDeletedOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
       .body(jobProfile_2)
@@ -309,6 +314,14 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .delete(JOB_PROFILES_PATH + "/" + profile.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(JOB_PROFILES_PATH + "/" + profile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("deleted", is(true));
   }
 
   @Test
@@ -341,6 +354,70 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .put(JOB_PROFILES_PATH + "/" + createdJobProfile.getId())
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
+    createProfiles();
+    JobProfile jobProfileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(new JobProfile().withName("ProfileToDelete")
+        .withDataType(MARC))
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(JobProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(JOB_PROFILES_PATH + "/" + jobProfileToDelete.getId())
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .param("showDeleted", true)
+      .get(JOB_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(4));
+  }
+
+  @Test
+  public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed() {
+    createProfiles();
+    JobProfile jobProfileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(new JobProfile().withName("ProfileToDelete")
+        .withDataType(MARC))
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(JobProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(JOB_PROFILES_PATH + "/" + jobProfileToDelete.getId())
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(JOB_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(3))
+      .body("jobProfiles*.deleted", everyItem(is(false)));
   }
 
   private void createProfiles() {

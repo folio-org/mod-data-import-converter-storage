@@ -21,4 +21,14 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
     return lookupUser(profile.getMetadata().getUpdatedByUserId(), params)
       .compose(userInfo -> Future.succeededFuture(profile.withUserInfo(userInfo)));
   }
+
+  @Override
+  JobProfile markProfileAsDeleted(JobProfile profile){
+    return profile.withDeleted(true);
+  }
+
+  Class<JobProfile> getProfileType() {
+    return JobProfile.class;
+  }
+
 }

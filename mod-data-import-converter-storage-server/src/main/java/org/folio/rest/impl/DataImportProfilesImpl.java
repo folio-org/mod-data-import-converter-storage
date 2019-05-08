@@ -1,15 +1,5 @@
 package org.folio.rest.impl;
 
-import static java.lang.String.format;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
@@ -39,6 +29,15 @@ import org.folio.services.association.ProfileAssociationService;
 import org.folio.services.snapshot.ProfileSnapshotService;
 import org.folio.spring.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 
 public class DataImportProfilesImpl implements DataImportProfiles {
@@ -96,11 +95,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesJobProfiles(String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesJobProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
                                                Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        jobProfileService.getProfiles(query, offset, limit, tenantId)
+        jobProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
           .map(GetDataImportProfilesJobProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -162,12 +161,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        jobProfileService.deleteProfile(id, tenantId)
-          .map(deleted -> deleted ?
-            DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
-              format("Job Profile with id '%s' was successfully deleted", id)) :
-            DeleteDataImportProfilesJobProfilesByIdResponse.respond404WithTextPlain(
-              format("Job Profile with id '%s' was not found", id)))
+        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+        jobProfileService.markProfileAsDeleted(id, params.getTenantId())
+          .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
+            format("Job Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -196,11 +193,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMatchProfiles(String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesMatchProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
                                                  Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        matchProfileService.getProfiles(query, offset, limit, tenantId)
+        matchProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
           .map(GetDataImportProfilesMatchProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -265,10 +262,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMappingProfiles(String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesMappingProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        mappingProfileService.getProfiles(query, offset, limit, tenantId)
+        mappingProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
           .map(GetDataImportProfilesMappingProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -300,12 +297,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void deleteDataImportProfilesMappingProfilesById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        mappingProfileService.deleteProfile(id, tenantId)
-          .map(deleted -> deleted ?
-            DeleteDataImportProfilesMappingProfilesByIdResponse.respond204WithTextPlain(
-              format("Mapping Profile with id '%s' was successfully deleted", id)) :
-            DeleteDataImportProfilesMappingProfilesByIdResponse.respond404WithTextPlain(
-              format("Mapping Profile with id '%s' was not found", id)))
+        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+        mappingProfileService.markProfileAsDeleted(id, params.getTenantId())
+          .map(DeleteDataImportProfilesMappingProfilesByIdResponse.respond204WithTextPlain(
+            format("Mapping Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -339,12 +334,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                         Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        matchProfileService.deleteProfile(id, tenantId)
-          .map(deleted -> deleted ?
-            DeleteDataImportProfilesMatchProfilesByIdResponse.respond204WithTextPlain(
-              format("Match Profile with id '%s' was successfully deleted", id)) :
-            DeleteDataImportProfilesMatchProfilesByIdResponse.respond404WithTextPlain(
-              format("Match Profile with id '%s' was not found", id)))
+        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+        matchProfileService.markProfileAsDeleted(id, params.getTenantId())
+          .map(DeleteDataImportProfilesMatchProfilesByIdResponse.respond204WithTextPlain(
+            format("Match Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -373,11 +366,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesActionProfiles(String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesActionProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
                                                   Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        actionProfileService.getProfiles(query, offset, limit, tenantId)
+        actionProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
           .map(GetDataImportProfilesActionProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -601,12 +594,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                          Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        actionProfileService.deleteProfile(id, tenantId)
-          .map(deleted -> deleted ?
-            DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
-              format("Action Profile with id '%s' was successfully deleted", id)) :
-            DeleteDataImportProfilesActionProfilesByIdResponse.respond404WithTextPlain(
-              format("Action Profile with id '%s' was not found", id)))
+        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+        actionProfileService.markProfileAsDeleted(id, params.getTenantId())
+          .map(DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
+            format("Action Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -653,6 +644,5 @@ public class DataImportProfilesImpl implements DataImportProfiles {
       throw new BadRequestException(format(message, contentType), e);
     }
   }
-
 
 }

@@ -32,11 +32,14 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   private PostgresClientFactory pgClientFactory;
 
   @Override
-  public Future<S> getProfiles(String query, int offset, int limit, String tenantId) {
+  public Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId) {
     Future<Results<T>> future = Future.future();
     try {
       String[] fieldList = {"*"};
       CQLWrapper cql = getCQLWrapper(getTableName(), query, limit, offset);
+      if (!showDeleted) {
+        cql.addWrapper(cql.addWrapper(getCQLWrapper(getTableName(), "deleted=" + false)));
+      }
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, future.completer());
     } catch (Exception e) {
       logger.error("Error while searching for {}", getProfileType().getSimpleName(), e);
@@ -91,13 +94,6 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       future.fail(e);
     }
     return future;
-  }
-
-  @Override
-  public Future<Boolean> deleteProfile(String id, String tenantId) {
-    Future<UpdateResult> future = Future.future();
-    pgClientFactory.createInstance(tenantId).delete(getTableName(), id, future.completer());
-    return future.map(updateResult -> updateResult.getUpdated() == 1);
   }
 
   @Override
