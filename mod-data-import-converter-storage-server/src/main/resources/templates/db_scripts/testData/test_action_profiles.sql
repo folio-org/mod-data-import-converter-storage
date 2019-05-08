@@ -10,7 +10,6 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Law", "holdings"
 	  ]
 	},
-	"deleted": false,
   "deleted": false,
   "userInfo": {
       "firstName": "DIKU",
@@ -37,7 +36,6 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Inventory", "Instance"
 	  ]
 	},
-	"deleted": false,
   "deleted": false,
   "userInfo": {
     "firstName": "DIKU",

@@ -10,7 +10,6 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
     ]
   },
   "deleted": false,
-  "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
@@ -35,7 +34,6 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
       "cat", "weekly"
     ]
   },
-  "deleted": false,
   "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
