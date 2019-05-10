@@ -29,6 +29,7 @@ public class ModTenantAPI extends TenantAPI {
   private static final String TEST_ACTION_PROFILES_SQL = "templates/db_scripts/testData/test_action_profiles.sql";
   private static final String TEST_MAPPING_PROFILES_SQL = "templates/db_scripts/testData/test_mapping_profiles.sql";
   private static final String TEST_PROFILE_ASSOCIATIONS_SQL = "templates/db_scripts/testData/test_profile_associations.sql";
+  private static final String DEFAULT_JOB_PROFILE_SQL = "templates/db_scripts/testData/default_job_profile.sql";
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
 
@@ -48,6 +49,7 @@ public class ModTenantAPI extends TenantAPI {
             .compose(event -> setupTestData(TEST_ACTION_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_MAPPING_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_PROFILE_ASSOCIATIONS_SQL, headers, context))
+            .compose(event -> setupTestData(DEFAULT_JOB_PROFILE_SQL, headers, context))
             .setHandler(event -> handlers.handle(ar));
         }
       }
