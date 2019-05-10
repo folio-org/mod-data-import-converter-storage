@@ -8,16 +8,16 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
     "tagList": []
   },
   "userInfo": {
-    "firstName": "DIKU",
-    "lastName": "ADMINISTRATOR",
-    "userName": "diku_admin"
+    "firstName": "System",
+    "lastName": "System",
+    "userName": "System"
   },
   "metadata": {
     "createdDate": "2018-05-07T12:41:22.000",
-    "createdByUserId": "",
-    "createdByUsername": "diku_admin",
+    "createdByUserId": "00000000-0000-0000-0000-000000000000",
+    "createdByUsername": "System",
     "updatedDate": "2018-05-08T12:09:51.000",
-    "updatedByUserId": "",
-    "updatedByUsername": "diku_admin"
+    "updatedByUserId": "00000000-0000-0000-0000-000000000000",
+    "updatedByUsername": "System"
   }
 }') ON CONFLICT DO NOTHING;
