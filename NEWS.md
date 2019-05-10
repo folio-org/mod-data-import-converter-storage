@@ -1,3 +1,7 @@
+## 2019-05-10 v1.1.1
+* Added default Job Profile for MARC Bibs records import
+* Added Match Profile samples
+
 ## 2019-05-03 v1.1.0
 * Added endpoint to receive entity types list.
 * Updated Job Profile schema to contain single dataType. 
