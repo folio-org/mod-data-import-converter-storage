@@ -13,7 +13,6 @@ import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.NotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -70,12 +69,8 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   }
 
   public Future<Boolean> markProfileAsDeleted(String id, String tenantId) {
-    return profileDao.getProfileById(id, tenantId)
-      .map(jobProfileOptional -> jobProfileOptional.orElseThrow(() ->
-        new NotFoundException(format("%s with id: '%s' was not found", getProfileType().getSimpleName(), id))))
-      .map(this::markProfileAsDeleted)
-      .compose(profile -> profileDao.updateProfile(profile, tenantId))
-      .compose(profile -> Future.succeededFuture(true));
+    return profileDao.updateBlocking(id, profile -> Future.succeededFuture(markProfileAsDeleted(profile)), tenantId)
+      .map(true);
   }
 
   @Override
@@ -112,13 +107,6 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @return Profile entity marked as deleted
    */
   abstract T markProfileAsDeleted(T profile);
-
-  /**
-   * Returns Class of the Profile type
-   *
-   * @return Class
-   */
-  abstract Class<T> getProfileType();
 
   /**
    * Finds user by user id and returns UserInfo

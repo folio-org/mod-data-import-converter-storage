@@ -27,8 +27,4 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
     return profile.withDeleted(true);
   }
 
-  @Override
-  Class<MatchProfile> getProfileType() {
-    return MatchProfile.class;
-  }
 }

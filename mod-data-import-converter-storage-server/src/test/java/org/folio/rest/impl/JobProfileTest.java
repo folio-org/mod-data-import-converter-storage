@@ -375,7 +375,6 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .when()
       .delete(JOB_PROFILES_PATH + "/" + jobProfileToDelete.getId())
       .then()
-      .log().all()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
     RestAssured.given()
@@ -384,6 +383,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .param("showDeleted", true)
       .get(JOB_PROFILES_PATH)
       .then()
+      .log().all()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(4));
   }

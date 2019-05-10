@@ -27,8 +27,4 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
     return profile.withDeleted(true);
   }
 
-  @Override
-  Class<MappingProfile> getProfileType() {
-    return MappingProfile.class;
-  }
 }

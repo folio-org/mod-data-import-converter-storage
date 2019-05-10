@@ -27,8 +27,4 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
     return profile.withDeleted(true);
   }
 
-  @Override
-  Class<ActionProfile> getProfileType() {
-    return ActionProfile.class;
-  }
 }

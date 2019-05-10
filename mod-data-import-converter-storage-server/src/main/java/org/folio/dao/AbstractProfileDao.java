@@ -1,17 +1,23 @@
 package org.folio.dao;
 
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.sql.SQLConnection;
+import io.vertx.ext.sql.UpdateResult;
 import org.folio.rest.persist.Criteria.Criteria;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
+import org.z3950.zing.cql.cql2pgjson.FieldException;
 
 import javax.ws.rs.NotFoundException;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static org.folio.dao.util.DaoUtil.constructCriteria;
 import static org.folio.dao.util.DaoUtil.getCQLWrapper;
@@ -93,6 +99,47 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       future.fail(e);
     }
     return future;
+  }
+
+  @Override
+  public Future<T> updateBlocking(String profileId, Function<T, Future<T>> profileMutator, String tenantId) {
+    Future<T> resultFuture = Future.future();
+    Future<SQLConnection> tx = Future.future();
+    Criteria idCrit = constructCriteria(ID_FIELD, profileId);
+    pgClientFactory.createInstance(tenantId).startTx(tx);
+    tx.compose(sqlConnection -> {
+      Future<Results<T>> selectFuture = Future.future();
+      pgClientFactory.createInstance(tenantId).get(tx, getTableName(), getProfileType(), new Criterion(idCrit), true, false, selectFuture);
+      return selectFuture;
+    }).compose(profileList -> profileList.getResults().isEmpty()
+        ? Future.failedFuture(new NotFoundException(String.format("%s with id '%s' was not found", getProfileType().getSimpleName(), profileId)))
+        : Future.succeededFuture(profileList.getResults().get(0)))
+      .compose(profileMutator::apply)
+      .compose(mutatedProfile -> updateProfile(tx, profileId, mutatedProfile, tenantId))
+      .setHandler(updateAr -> {
+        if (updateAr.succeeded()) {
+          pgClientFactory.createInstance(tenantId).endTx(tx, endTx -> resultFuture.complete(updateAr.result()));
+        } else {
+          pgClientFactory.createInstance(tenantId).rollbackTx(tx, rollbackAr -> {
+            String message = String.format("Rollback transaction. Error during %s update by id: %s ", getProfileType().getSimpleName(), profileId);
+            logger.error(message, updateAr.cause());
+            resultFuture.fail(updateAr.cause());
+          });
+        }
+      });
+      return resultFuture;
+  }
+
+  private Future<T> updateProfile(AsyncResult<SQLConnection> tx, String profileId, T profile, String tenantId) {
+    Future<UpdateResult> future = Future.future();
+    try {
+      CQLWrapper updateFilter = new CQLWrapper(new CQL2PgJSON(getTableName() + ".jsonb"), "id==" + profileId);
+      pgClientFactory.createInstance(tenantId).update(tx, getTableName(), profile, updateFilter, true, future.completer());
+    } catch (FieldException e) {
+      logger.error("Error during updating {} by ID ", getProfileType(), e);
+      future.fail(e);
+    }
+    return future.map(profile);
   }
 
   @Override

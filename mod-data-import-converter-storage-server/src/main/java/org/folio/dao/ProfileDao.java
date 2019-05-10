@@ -3,6 +3,7 @@ package org.folio.dao;
 import io.vertx.core.Future;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Generic data access object
@@ -50,6 +51,16 @@ public interface ProfileDao<T, S> {
    * @return future with updated entity
    */
   Future<T> updateProfile(T profile, String tenantId);
+
+  /**
+   * Updates T entity in database with row blocking
+   *
+   * @param profileId       Profile id
+   * @param profileMutator  callback for change Profile entity before save
+   * @param tenantId        tenant id
+   * @return  future with updated entity
+   */
+  Future<T> updateBlocking(String profileId, Function<T, Future<T>> profileMutator, String tenantId);
 
   /**
    * Search in database profile with the same name

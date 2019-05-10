@@ -27,8 +27,4 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
     return profile.withDeleted(true);
   }
 
-  Class<JobProfile> getProfileType() {
-    return JobProfile.class;
-  }
-
 }
