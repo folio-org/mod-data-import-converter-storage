@@ -1,4 +1,4 @@
-## 2019-05-10 v1.1.1
+## 2019-05-10 v1.1.2
 * Added default Job Profile for MARC Bibs records import
 * Added Match Profile samples
 
