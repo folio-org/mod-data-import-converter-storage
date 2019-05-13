@@ -81,7 +81,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "dataType": "MARC",
   "tags": {
     "tagList": [
-      "monthly", "KB"
+      "monthly", "kb"
     ]
   },
   "deleted": false,
@@ -154,7 +154,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "dataType": "MARC",
   "tags": {
     "tagList": [
-      "weekly", "DDA"
+      "weekly", "dda"
     ]
   },
   "deleted": false,
@@ -229,7 +229,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
   "dataType": "MARC",
   "tags": {
     "tagList": [
-      "MARC", "TEST"
+      "marc", "test"
     ]
   },
   "deleted": false,
