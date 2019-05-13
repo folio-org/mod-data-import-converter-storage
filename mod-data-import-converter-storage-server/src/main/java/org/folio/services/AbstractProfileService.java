@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+
 /**
  * Generic implementation of the {@link ProfileService}
  *
@@ -44,8 +46,8 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   private ProfileDao<T, S> profileDao;
 
   @Override
-  public Future<S> getProfiles(String query, int offset, int limit, String tenantId) {
-    return profileDao.getProfiles(query, offset, limit, tenantId);
+  public Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId) {
+    return profileDao.getProfiles(showDeleted, query, offset, limit, tenantId);
   }
 
   @Override
@@ -66,9 +68,9 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
       .compose(profileWithInfo -> profileDao.updateProfile(profileWithInfo, params.getTenantId()));
   }
 
-  @Override
-  public Future<Boolean> deleteProfile(String id, String tenantId) {
-    return profileDao.deleteProfile(id, tenantId);
+  public Future<Boolean> markProfileAsDeleted(String id, String tenantId) {
+    return profileDao.updateBlocking(id, profile -> Future.succeededFuture(markProfileAsDeleted(profile)), tenantId)
+      .map(true);
   }
 
   @Override
@@ -97,6 +99,14 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @return Profile with filled userInfo field
    */
   abstract Future<T> setUserInfoForProfile(T profile, OkapiConnectionParams params);
+
+  /**
+   * Sets deleted to {@code true} in Profile entity
+   *
+   * @param profile Profile entity
+   * @return Profile entity marked as deleted
+   */
+  abstract T markProfileAsDeleted(T profile);
 
   /**
    * Finds user by user id and returns UserInfo

@@ -21,4 +21,10 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
     return lookupUser(profile.getMetadata().getUpdatedByUserId(), params)
       .compose(userInfo -> Future.succeededFuture(profile.withUserInfo(userInfo)));
   }
+
+  @Override
+  MappingProfile markProfileAsDeleted(MappingProfile profile) {
+    return profile.withDeleted(true);
+  }
+
 }

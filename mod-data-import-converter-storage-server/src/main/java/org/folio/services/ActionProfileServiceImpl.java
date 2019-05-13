@@ -21,4 +21,10 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
     return lookupUser(profile.getMetadata().getUpdatedByUserId(), params)
       .compose(userInfo -> Future.succeededFuture(profile.withUserInfo(userInfo)));
   }
+
+  @Override
+  ActionProfile markProfileAsDeleted(ActionProfile profile) {
+    return profile.withDeleted(true);
+  }
+
 }

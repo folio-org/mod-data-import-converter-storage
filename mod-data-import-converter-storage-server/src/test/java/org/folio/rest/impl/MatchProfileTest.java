@@ -71,7 +71,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .get(MATCH_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(3));
+      .body("totalRecords", is(3))
+      .body("matchProfiles*.deleted", everyItem(is(false)));
   }
 
   @Test
@@ -84,6 +85,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
+      .body("matchProfiles*.deleted", everyItem(is(false)))
       .body("matchProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
@@ -236,7 +238,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldDeleteProfileOnDelete() {
+  public void shouldMarkAsDeletedProfileOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
       .body(matchProfile_2)
@@ -251,6 +253,72 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .delete(MATCH_PROFILES_PATH + "/" + profile.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(MATCH_PROFILES_PATH + "/" + profile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("deleted", is(true));
+  }
+
+  @Test
+  public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
+    createProfiles();
+    MatchProfile matchProfileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_1)
+      .when()
+      .post(MATCH_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(MatchProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MATCH_PROFILES_PATH + "/" + matchProfileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .param("showDeleted", true)
+      .get(MATCH_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(4));
+  }
+
+  @Test
+  public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed() {
+    createProfiles();
+    MatchProfile matchProfileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_1)
+      .when()
+      .post(MATCH_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(MatchProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MATCH_PROFILES_PATH + "/" + matchProfileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(MATCH_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(3))
+      .body("matchProfiles*.deleted", everyItem(is(false)));
   }
 
   private void createProfiles() {

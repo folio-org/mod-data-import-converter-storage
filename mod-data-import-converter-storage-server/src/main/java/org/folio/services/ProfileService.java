@@ -17,13 +17,14 @@ public interface ProfileService<T, S> {
   /**
    * Searches for T entities
    *
+   * @param showDeleted indicates to return T entities marked as deleted or not
    * @param query  query from URL
    * @param offset starting index in a list of results
    * @param limit  limit of records for pagination
    * @param tenantId tenant id
    * @return future with S, a collection of T entities
    */
-  Future<S> getProfiles(String query, int offset, int limit, String tenantId);
+  Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId);
 
   /**
    * Searches for T by id
@@ -53,15 +54,6 @@ public interface ProfileService<T, S> {
   Future<T> updateProfile(T profile, OkapiConnectionParams params);
 
   /**
-   * Deletes T entity by id
-   *
-   * @param id Profile id
-   * @param tenantId tenant id
-   * @return future with true if succeeded
-   */
-  Future<Boolean> deleteProfile(String id, String tenantId);
-
-  /**
    * Search in database profile with the same name
    *
    * @param profileName - profile name
@@ -70,6 +62,15 @@ public interface ProfileService<T, S> {
    * @return - boolean value. True if job profile with the same name already exist
    */
   Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId);
+
+  /**
+   * Updates the flag deleted to true in T entity
+   *
+   * @param id       Profile id
+   * @param tenantId tenant id from request
+   * @return future with true if succeeded
+   */
+  Future<Boolean> markProfileAsDeleted(String id, String tenantId);
 
   /**
    * Returns {@link EntityTypeCollection}

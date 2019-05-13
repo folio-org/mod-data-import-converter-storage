@@ -2,19 +2,15 @@ package org.folio.rest.impl;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.vertx.core.Context;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.EntityTypeCollection;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
-import org.folio.services.ActionProfileServiceImpl;
-import org.folio.services.ProfileService;
 import org.folio.services.util.EntityTypes;
 import org.junit.Assert;
 import org.junit.Test;
@@ -67,7 +63,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .get(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(3));
+      .body("totalRecords", is(3))
+      .body("actionProfiles*.deleted", everyItem(is(false)));
   }
 
   @Test
@@ -80,6 +77,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
+      .body("actionProfiles*.deleted", everyItem(is(false)))
       .body("actionProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
@@ -93,6 +91,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(2))
+      .body("actionProfiles*.deleted", everyItem(is(false)))
       .body("actionProfiles.get(0).tags.tagList", hasItem("ipsum"))
       .body("actionProfiles.get(1).tags.tagList", hasItem("ipsum"));
   }
@@ -232,7 +231,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldDeleteProfileOnDelete() {
+  public void shouldMarkProfileAsDeletedOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
       .body(actionProfile_2)
@@ -247,11 +246,76 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .delete(ACTION_PROFILES_PATH + "/" + profile.getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(ACTION_PROFILES_PATH + "/" + profile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("deleted", is(true));
+  }
+
+  @Test
+  public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
+    createProfiles();
+    ActionProfile profileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_1)
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(ActionProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .param("showDeleted", true)
+      .get(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(4));
+  }
+
+  @Test
+  public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed() {
+    createProfiles();
+    ActionProfile profileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_1)
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(ActionProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(3))
+      .body("actionProfiles*.deleted", everyItem(is(false)));
   }
 
   @Test
   public void shouldReturnAllEntityTypesOnGet() {
-    ProfileService actionProfileService = new ActionProfileServiceImpl();
     List<String> entityTypesList = Arrays.stream(EntityTypes.values())
       .map(EntityTypes::getName)
       .collect(Collectors.toList());

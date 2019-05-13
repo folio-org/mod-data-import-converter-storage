@@ -10,7 +10,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Law", "holdings"
 	  ]
 	},
-	"userInfo": {
+  "deleted": false,
+  "userInfo": {
       "firstName": "DIKU",
       "lastName": "ADMINISTRATOR",
       "userName": "diku_admin"
@@ -35,7 +36,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Inventory", "Instance"
 	  ]
 	},
-	"userInfo": {
+  "deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -60,7 +62,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Inventory", "Instance", "Bib"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -85,7 +88,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Merge", "bib"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -110,7 +114,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Create", "Inventory", "holding"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -135,7 +140,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Create", "Order"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
@@ -160,7 +166,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
 		  "Instance", "Inventory"
 	  ]
 	},
-	"userInfo": {
+	"deleted": false,
+  "userInfo": {
     "firstName": "DIKU",
     "lastName": "ADMINISTRATOR",
     "userName": "diku_admin"
