@@ -8,6 +8,7 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.JobProfile;
+import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -109,6 +110,23 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body("jobProfiles.size()", is(2))
       .body("jobProfiles*.deleted", everyItem(is(false)))
       .body("totalRecords", is(3));
+  }
+
+  @Test
+  public void shouldReturnSortedProfilesOnGetWhenSortByIsSpecified(TestContext testContext) {
+    createProfiles();
+    List<JobProfile> jobProfileList = RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(JOB_PROFILES_PATH + "?query=(cql.allRecords=1) sortBy metadata.createdDate/sort.descending")
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(3))
+      .extract().body().as(JobProfileCollection.class).getJobProfiles();
+
+    Assert.assertTrue(jobProfileList.get(0).getMetadata().getCreatedDate().after(jobProfileList.get(1).getMetadata().getCreatedDate()));
+    Assert.assertTrue(jobProfileList.get(1).getMetadata().getCreatedDate().after(jobProfileList.get(2).getMetadata().getCreatedDate()));
   }
 
   @Test
