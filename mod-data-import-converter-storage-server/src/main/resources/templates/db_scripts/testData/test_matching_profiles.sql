@@ -420,4 +420,56 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
-}') ON CONFLICT DO NOTHING;
+}'),
+('01bf0774-65dd-417f-8c76-4a417086ee20', '{
+  "id": "01bf0774-65dd-417f-8c76-4a417086ee20",
+  "name": "MARC 010 second",
+  "description": "LCCN match",
+  "tags": {
+    "tagList": [
+      "lccn"
+    ]
+  },
+  "entityType": "INVENTORY_ITEM",
+  "incomingRecordType": "MARC",
+  "existingRecordType": "MARC_AUTHORITY",
+  "incomingDataValueType": "VALUE_FROM_INCOMING_RECORD",
+  "field": "010",
+  "incomingIndicator1": " ",
+  "incomingIndicator2": " ",
+  "incomingRecordSubfield": "a",
+  "incomingText": "",
+  "incomingNumber": "",
+  "incomingFromDate": "",
+  "incomingToDate": "",
+  "incomingDate": "",
+  "incomingInclude": "MATCH_ON",
+  "incomingHowMuch": "COMPLETE_STRING",
+  "matchingCriteria": "EXACTLY_MATCHES",
+  "existingDataValueType": "VALUE_IN_EXISTING_RECORD",
+  "fieldMarc": "010",
+  "existingIndicator1": " ",
+  "existingIndicator2": " ",
+  "existingRecordSubfield": "a",
+  "existingText": "",
+  "existingNumber": "",
+  "existingFromDate": "",
+  "existingToDate": "",
+  "existingDate": "",
+  "existingInclude": "MATCH_ON",
+  "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-11-02T10:20:32.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-12-02T10:45:21.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
+}')ON CONFLICT DO NOTHING;

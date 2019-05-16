@@ -271,4 +271,73 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
+}'),
+('e83f0598-bbc7-437c-90e2-264c761539b9', '{
+  "id": "e83f0598-bbc7-437c-90e2-264c761539b9",
+  "name": "ETL Bib records 2",
+  "description": "Reload bib records that were exported and updated outside of FOLIO",
+  "dataType": "MARC",
+  "tags": {
+    "tagList": []
+  },
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-11-05T10:37:53.000",
+    "createdByUserId": "",
+    "createdByUsername": "diku_admin",
+    "updatedDate": "2018-12-04T11:45:21.000",
+    "updatedByUserId": "",
+    "updatedByUsername": "diku_admin"
+  }
+}'),
+('d016e32e-08cf-4a69-842d-f16dcbd2053f', '{
+  "id": "d016e32e-08cf-4a69-842d-f16dcbd2053f",
+  "name": "ETL Bib records 3",
+  "description": "Reload bib records that were exported and updated outside of FOLIO",
+  "dataType": "MARC",
+  "tags": {
+    "tagList": []
+  },
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-11-05T10:38:53.000",
+    "createdByUserId": "",
+    "createdByUsername": "diku_admin",
+    "updatedDate": "2018-12-04T11:45:21.000",
+    "updatedByUserId": "",
+    "updatedByUsername": "diku_admin"
+  }
+}'),
+('c53efe55-5817-4ca5-bcb1-e33861ba84c3', '{
+  "id": "c53efe55-5817-4ca5-bcb1-e33861ba84c3",
+  "name": "ETL Bib records 4",
+  "description": "Reload bib records that were exported and updated outside of FOLIO",
+  "dataType": "MARC",
+  "tags": {
+    "tagList": []
+  },
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-11-05T10:39:53.000",
+    "createdByUserId": "",
+    "createdByUsername": "diku_admin",
+    "updatedDate": "2018-12-05T11:45:21.000",
+    "updatedByUserId": "",
+    "updatedByUsername": "diku_admin"
+  }
 }') ON CONFLICT DO NOTHING;
