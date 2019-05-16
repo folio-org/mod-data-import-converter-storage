@@ -1,8 +1,8 @@
-## 2019-05-13 v1.2.0-SNAPSHOT
+## 2019-05-16 v1.2.0
 * Changed delete methods logic for action, job, match and mapping profiles. Profiles are being marked as deleted and not removed permanently from database.
 * Fixed get API endpoints for jobProfiles and matchProfiles when sortedBy is specified.
 
-## 2019-05-10 v1.1.1
+## 2019-05-10 v1.1.2
 * Added default Job Profile for MARC Bibs records import
 * Added Match Profile samples
 
