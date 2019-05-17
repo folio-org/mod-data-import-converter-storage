@@ -26,6 +26,48 @@ INSERT INTO ${myuniversity}_${mymodule}.job_to_match_profiles (_id, jsonb) value
   "detailProfileId": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
   "order": "1",
   "triggered": "false"
+}'),
+ ('7cf7bd62-a32c-4ea3-9e0e-e4d94ad09e71', '{
+  "id": "7cf7bd62-a32c-4ea3-9e0e-e4d94ad09e71",
+  "masterProfileId": "e83f0598-bbc7-437c-90e2-264c761539b9",
+  "detailProfileId": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
+  "order": "1",
+  "triggered": "false"
+}'),
+('9e005b1b-3a7c-42ec-bb01-8b861b36411e', '{
+  "id": "9e005b1b-3a7c-42ec-bb01-8b861b36411e",
+  "masterProfileId": "d016e32e-08cf-4a69-842d-f16dcbd2053f",
+  "detailProfileId": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
+  "order": "1",
+  "triggered": "false"
+}'),
+('832d6bfd-9ffd-4110-b87d-577e8b48bc5d', '{
+  "id": "832d6bfd-9ffd-4110-b87d-577e8b48bc5d",
+  "masterProfileId": "c53efe55-5817-4ca5-bcb1-e33861ba84c3",
+  "detailProfileId": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
+  "order": "1",
+  "triggered": "false"
+}'),
+('0acb9fc0-8fa9-4b75-beb7-d1a326d13417', '{
+  "id": "0acb9fc0-8fa9-4b75-beb7-d1a326d13417",
+  "masterProfileId": "e83f0598-bbc7-437c-90e2-264c761539b9",
+  "detailProfileId": "01bf0774-65dd-417f-8c76-4a417086ee20",
+  "order": "1",
+  "triggered": "false"
+}'),
+('b90d9d35-4a0c-4c9d-9c3a-f24c924e18b8', '{
+  "id": "b90d9d35-4a0c-4c9d-9c3a-f24c924e18b8",
+  "masterProfileId": "d016e32e-08cf-4a69-842d-f16dcbd2053f",
+  "detailProfileId": "01bf0774-65dd-417f-8c76-4a417086ee20",
+  "order": "1",
+  "triggered": "false"
+}'),
+('78937a54-7416-4779-b628-54c25a91c51b', '{
+  "id": "78937a54-7416-4779-b628-54c25a91c51b",
+  "masterProfileId": "c53efe55-5817-4ca5-bcb1-e33861ba84c3",
+  "detailProfileId": "01bf0774-65dd-417f-8c76-4a417086ee20",
+  "order": "1",
+  "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 
 INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (_id, jsonb) values
