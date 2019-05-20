@@ -27,4 +27,14 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
     return profile.withDeleted(true);
   }
 
+  @Override
+  protected String getProfileName(JobProfile profile) {
+    return profile.getName();
+  }
+
+  @Override
+  protected String getProfileId(JobProfile profile) {
+    return profile.getId();
+  }
+
 }

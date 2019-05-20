@@ -135,6 +135,14 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_1)
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
@@ -157,6 +165,28 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .put(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
+  public void shouldReturnUnprocessableEntityOnPutProfileWithExistingName() {
+    createProfiles();
+
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfile().withName("newProfile"))
+      .when()
+      .post(ACTION_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    ActionProfile createdProfile = createResponse.body().as(ActionProfile.class);
+
+    createdProfile.setName(actionProfile_1.getName());
+    RestAssured.given()
+      .spec(spec)
+      .body(createdProfile)
+      .when()
+      .put(ACTION_PROFILES_PATH + "/" + createdProfile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
@@ -261,7 +291,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     createProfiles();
     ActionProfile profileToDelete = RestAssured.given()
       .spec(spec)
-      .body(actionProfile_1)
+      .body(new ActionProfile()
+        .withName("ProfileToDelete"))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()
@@ -290,7 +321,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     createProfiles();
     ActionProfile profileToDelete = RestAssured.given()
       .spec(spec)
-      .body(actionProfile_1)
+      .body(new ActionProfile()
+        .withName("ProfileToDelete"))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()

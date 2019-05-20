@@ -27,4 +27,14 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
     return profile.withDeleted(true);
   }
 
+  @Override
+  protected String getProfileName(ActionProfile profile) {
+    return profile.getName();
+  }
+
+  @Override
+  protected String getProfileId(ActionProfile profile) {
+    return profile.getId();
+  }
+
 }
