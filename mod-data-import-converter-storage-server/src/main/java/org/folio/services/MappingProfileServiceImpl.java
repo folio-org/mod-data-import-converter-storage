@@ -27,4 +27,14 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
     return profile.withDeleted(true);
   }
 
+  @Override
+  protected String extractProfileName(MappingProfile profile) {
+    return profile.getName();
+  }
+
+  @Override
+  protected String extractProfileId(MappingProfile profile) {
+    return profile.getId();
+  }
+
 }
