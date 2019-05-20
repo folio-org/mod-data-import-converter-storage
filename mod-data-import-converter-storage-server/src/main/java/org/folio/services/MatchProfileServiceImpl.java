@@ -28,12 +28,12 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
   }
 
   @Override
-  protected String extractProfileName(MatchProfile profile) {
+  protected String getProfileName(MatchProfile profile) {
     return profile.getName();
   }
 
   @Override
-  protected String extractProfileId(MatchProfile profile) {
+  protected String getProfileId(MatchProfile profile) {
     return profile.getId();
   }
 

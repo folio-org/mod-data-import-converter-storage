@@ -28,12 +28,12 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
   }
 
   @Override
-  protected String extractProfileName(ActionProfile profile) {
+  protected String getProfileName(ActionProfile profile) {
     return profile.getName();
   }
 
   @Override
-  protected String extractProfileId(ActionProfile profile) {
+  protected String getProfileId(ActionProfile profile) {
     return profile.getId();
   }
 

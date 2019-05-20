@@ -75,8 +75,8 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
 
   @Override
   public Future<Boolean> isProfileExistByProfileName(T profile, String tenantId) {
-    String profileName = extractProfileName(profile);
-    String profileId = extractProfileId(profile);
+    String profileName = getProfileName(profile);
+    String profileId = getProfileId(profile);
     return profileDao.isProfileExistByName(profileName, profileId, tenantId);
   }
 
@@ -117,7 +117,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @param profile - profile entity
    * @return - profile name
    */
-  protected abstract String extractProfileName(T profile);
+  protected abstract String getProfileName(T profile);
 
   /**
    * Returns id of specified profile
@@ -125,7 +125,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @param profile - profile entity
    * @return - profile id
    */
-  protected abstract String extractProfileId(T profile);
+  protected abstract String getProfileId(T profile);
 
   /**
    * Finds user by user id and returns UserInfo

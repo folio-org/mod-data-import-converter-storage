@@ -28,12 +28,12 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   }
 
   @Override
-  protected String extractProfileName(MappingProfile profile) {
+  protected String getProfileName(MappingProfile profile) {
     return profile.getName();
   }
 
   @Override
-  protected String extractProfileId(MappingProfile profile) {
+  protected String getProfileId(MappingProfile profile) {
     return profile.getId();
   }
 

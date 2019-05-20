@@ -28,12 +28,12 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
   }
 
   @Override
-  protected String extractProfileName(JobProfile profile) {
+  protected String getProfileName(JobProfile profile) {
     return profile.getName();
   }
 
   @Override
-  protected String extractProfileId(JobProfile profile) {
+  protected String getProfileId(JobProfile profile) {
     return profile.getId();
   }
 
