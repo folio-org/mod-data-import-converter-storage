@@ -69,7 +69,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldPostAndGetById(TestContext testContext) {
     JobProfile jobProfile = createJobProfile(testContext);
-    ActionProfile actionProfile = createActionProfile(testContext);
+    ActionProfile actionProfile = createActionProfile(testContext, "testActionProfile_1");
 
     ProfileAssociation profileAssociation = new ProfileAssociation()
       .withMasterProfileId(jobProfile.getId())
@@ -130,7 +130,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldDeleteProfileOnDelete(TestContext testContext) {
     JobProfile jobProfile = createJobProfile(testContext);
-    ActionProfile actionProfile = createActionProfile(testContext);
+    ActionProfile actionProfile = createActionProfile(testContext, "testActionProfile_1");
     ProfileAssociation profileAssociation = new ProfileAssociation()
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile.getId())
@@ -192,7 +192,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldUpdateProfileAssociationOnPut(TestContext testContext) {
     JobProfile jobProfile = createJobProfile(testContext);
-    ActionProfile actionProfile1 = createActionProfile(testContext);
+    ActionProfile actionProfile1 = createActionProfile(testContext, "testActionProfile_1");
     ProfileAssociation profileAssociation = new ProfileAssociation()
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile1.getId())
@@ -211,7 +211,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .extract().body().as(ProfileAssociation.class);
     async.complete();
 
-    ActionProfile actionProfile2 = createActionProfile(testContext);
+    ActionProfile actionProfile2 = createActionProfile(testContext, "testActionProfile_2");
     savedProfileAssociation.setDetailProfileId(actionProfile2.getId());
 
     async = testContext.async();
@@ -237,8 +237,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     JobProfile jobProfile1 = createJobProfile(testContext);
     JobProfile jobProfile2 = createJobProfile(testContext, "testJobProfile2");
 
-    ActionProfile actionProfile1 = createActionProfile(testContext);
-    ActionProfile actionProfile2 = createActionProfile(testContext);
+    ActionProfile actionProfile1 = createActionProfile(testContext, "testActionProfile_1");
+    ActionProfile actionProfile2 = createActionProfile(testContext, "testActionProfile_2");
 
     ProfileAssociation profileAssociation1 = new ProfileAssociation()
       .withMasterProfileId(jobProfile1.getId())
@@ -356,8 +356,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     JobProfile jobProfile1 = createJobProfile(testContext);
     JobProfile jobProfile2 = createJobProfile(testContext, "testJobProfile2");
 
-    ActionProfile actionProfile1 = createActionProfile(testContext);
-    ActionProfile actionProfile2 = createActionProfile(testContext);
+    ActionProfile actionProfile1 = createActionProfile(testContext, "testActionProfile_1");
+    ActionProfile actionProfile2 = createActionProfile(testContext, "testActionProfile_2");
 
     ProfileAssociation profileAssociation1 = new ProfileAssociation()
       .withMasterProfileId(jobProfile1.getId())
@@ -449,7 +449,7 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
 
   @Test
   public void getMastersByDetailActionProfile_emptyDetailsListWithMasterProfile(TestContext testContext) {
-    ActionProfile actionProfile = createActionProfile(testContext);
+    ActionProfile actionProfile = createActionProfile(testContext, "testActionProfile_1");
     Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
@@ -492,11 +492,11 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     return jobProfile;
   }
 
-  private ActionProfile createActionProfile(TestContext testContext) {
+  private ActionProfile createActionProfile(TestContext testContext, String profileName) {
     Async async = testContext.async();
     ActionProfile actionProfile = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile().withName("testActionProfile"))
+      .body(new ActionProfile().withName(profileName))
       .when()
       .post(ACTION_PROFILES_URL)
       .then()

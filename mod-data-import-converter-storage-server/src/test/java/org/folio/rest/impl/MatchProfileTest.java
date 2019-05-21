@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType.MARC;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
@@ -36,17 +37,17 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
 
   private static MatchProfile matchProfile_1 = new MatchProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-    .withIncomingRecordType(IncomingRecordType.MARC)
+    .withIncomingRecordType(MARC)
     .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
     .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
   private static MatchProfile matchProfile_2 = new MatchProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-    .withIncomingRecordType(IncomingRecordType.MARC)
+    .withIncomingRecordType(MARC)
     .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
     .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
   private static MatchProfile matchProfile_3 = new MatchProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
-    .withIncomingRecordType(IncomingRecordType.MARC)
+    .withIncomingRecordType(MARC)
     .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
     .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
 
@@ -142,6 +143,14 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_1)
+      .when()
+      .post(MATCH_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
@@ -164,6 +173,32 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .put(MATCH_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
+  public void shouldReturnUnprocessableEntityOnPutProfileWithExistingName() {
+    createProfiles();
+
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(new MatchProfile()
+        .withName("newProfile")
+        .withIncomingRecordType(MARC)
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
+        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+      .when()
+      .post(MATCH_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MatchProfile createdProfile = createResponse.body().as(MatchProfile.class);
+
+    createdProfile.setName(matchProfile_1.getName());
+    RestAssured.given()
+      .spec(spec)
+      .body(createdProfile)
+      .when()
+      .put(MATCH_PROFILES_PATH + "/" + createdProfile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
@@ -268,7 +303,11 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     createProfiles();
     MatchProfile matchProfileToDelete = RestAssured.given()
       .spec(spec)
-      .body(matchProfile_1)
+      .body(new MatchProfile()
+        .withName("ProfileToDelete")
+        .withIncomingRecordType(MARC)
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
+        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
       .when()
       .post(MATCH_PROFILES_PATH)
       .then()
@@ -297,7 +336,11 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     createProfiles();
     MatchProfile matchProfileToDelete = RestAssured.given()
       .spec(spec)
-      .body(matchProfile_1)
+      .body(new MatchProfile()
+        .withName("ProfileToDelete")
+        .withIncomingRecordType(MARC)
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
+        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
       .when()
       .post(MATCH_PROFILES_PATH)
       .then()
