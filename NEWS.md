@@ -1,5 +1,7 @@
 ## 2019-05-17 v1.3.0-SNAPSHOT
 * Updated association profiles samples. 
+* Updated API endpoint for getting details by master id. Added query param to specify return type. Added searching by cql query for details
+* Updated API endpoint for getting masters by detail id. Added query param to specify return type. Added searching by cql query for details
 
 ## 2019-05-16 v1.2.0
 * Changed delete methods logic for action, job, match and mapping profiles. Profiles are being marked as deleted and not removed permanently from database.

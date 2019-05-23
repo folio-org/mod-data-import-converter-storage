@@ -243,14 +243,26 @@ resourceTypes:
       /details:
         displayName: Details profiles by master profile id
         description: Retrives details profiles by master profile id
+        Note that master-detail relationship is sort of parent-child relationship but one detail instance
+        can be associated with many master instances.
         get:
           queryParameters:
             masterType:
-              description: "Type of master profile"
+              description: It needs to identify master profile type for an id
               required: true
               type: string
               example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE"
-          is: [validate]
+            detailType:
+              description: "It filters returned type of details. For example you need to get only MATCH_PROFILEs
+              for a JOB_PROFILE but the JOB_PROFILE has ACTION_PROFILEs too. So use it as filter for a return type"
+              required: false
+              type: string
+              example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE"
+          is: [
+              searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
+              pageable,
+              validate
+          ]
           responses:
               200:
                 body:
@@ -258,7 +270,9 @@ resourceTypes:
                     type: profileSnapshotWrapper
       /masters:
         displayName: Masters profiles by detail profile id
-        description: Retrives masters profiles by detail profile id
+        description: Retrives masters profiles by detail profile id.
+        Note that master-detail relationship is sort of parent-child relationship but one detail instance
+        can be associated with many master instances.
         get:
           queryParameters:
             detailType:
@@ -266,7 +280,18 @@ resourceTypes:
               required: true
               type: string
               example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE"
-          is: [validate]
+            masterType:
+              description: "It filters returned type of masters. For example you need to get only JOB_PROFILEs
+              for a MATCH_PROFILE but the MATCH_PROFILE has ACTION_PROFILEs too. So use it as filter for a return type"
+              required: false
+              type: string
+              example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE"
+          is: [
+              searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
+              pageable,
+              validate
+          ]
+
           responses:
               200:
                 body:

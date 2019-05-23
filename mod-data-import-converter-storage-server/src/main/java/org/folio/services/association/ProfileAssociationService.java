@@ -54,18 +54,26 @@ public interface ProfileAssociationService { //NOSONAR
    *
    * @param masterId   a master id
    * @param masterType a master type
+   * @param detailType detail type that should be find
+   * @param query      a cql query for a detail
+   * @param offset     an offset
+   * @param limit      a limit
    * @param tenantId   a tenant id
    * @return list of details for specified master
    */
-  Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, String tenantId);
+  Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, ContentType detailType, String query, int offset, int limit, String tenantId);
 
   /**
    * Finds masters by detail id.
    *
    * @param detailId   a detail id
    * @param detailType a detail type
+   * @param masterType a master type that should be find
+   * @param query      a cql query for a master
+   * @param offset     an offset
+   * @param limit      a limit
    * @param tenantId   a tenant id
    * @return list of masters profiles for specified detail profile
    */
-  Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, String tenantId);
+  Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, ContentType masterType, String query, int offset, int limit, String tenantId);
 }
