@@ -1,6 +1,9 @@
 package org.folio.dao.association;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.folio.dao.sql.SelectBuilder.parseQuery;
+import static org.folio.dao.sql.SelectBuilder.putInQuotes;
 import static org.folio.dao.util.DaoUtil.constructCriteria;
 
 import javax.ws.rs.NotFoundException;
@@ -17,6 +20,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.UpdateResult;
 import org.folio.dao.PostgresClientFactory;
+import org.folio.dao.sql.SelectBuilder;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
@@ -41,11 +45,11 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
   /**
    * This query selects detail profiles by master profile id.
    */
-  private static final String RETRIEVES_DETAILS_SQL = "SELECT detail_id, detail_type, detail FROM associations_view WHERE master_id='%s'";
+  private static final String RETRIEVES_DETAILS_SQL = "SELECT detail_id, detail_type, detail FROM associations_view";
   /**
    * This query selects master profiles by detail profile id.
    */
-  private static final String RETRIEVES_MASTERS_SQL = "SELECT master_id, master_type, master FROM associations_view WHERE detail_id='%s'";
+  private static final String RETRIEVES_MASTERS_SQL = "SELECT master_id, master_type, master FROM associations_view";
 
   private static final String MASTER_ID_FIELD = "master_id";
   private static final String MASTER_TYPE_FIELD = "master_type";
@@ -112,8 +116,23 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
   }
 
   @Override
-  public Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, String tenantId) {
-    return select(tenantId, format(RETRIEVES_DETAILS_SQL, masterId)).map(this::mapToDetails);
+  public Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, ContentType detailType, String query, int offset, int limit, String tenantId) {
+
+    SelectBuilder selectBuilder = new SelectBuilder(RETRIEVES_DETAILS_SQL)
+      .where()
+      .equals(MASTER_ID_FIELD, putInQuotes(masterId));
+
+    if (detailType != null) {
+      selectBuilder.and().equals(DETAIL_TYPE_FIELD, putInQuotes(detailType.value()));
+    }
+
+    if (isNotBlank(query)) {
+      selectBuilder.and().appendQuery(parseQuery("associations_view.detail->(0)", query));
+    }
+
+    selectBuilder.limit(limit).offset(offset);
+
+    return select(tenantId, selectBuilder.toString()).map(this::mapToDetails);
   }
 
   /**
@@ -159,8 +178,23 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
 
 
   @Override
-  public Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, String tenantId) {
-    return select(tenantId, format(RETRIEVES_MASTERS_SQL, detailId)).map(this::mapToMasters);
+  public Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, ContentType masterType, String query, int offset, int limit, String tenantId) {
+
+    SelectBuilder selectBuilder = new SelectBuilder(RETRIEVES_MASTERS_SQL)
+      .where()
+      .equals(DETAIL_ID_FIELD, putInQuotes(detailId));
+
+    if (masterType != null) {
+      selectBuilder.and().equals(MASTER_TYPE_FIELD, putInQuotes(masterType.value()));
+    }
+
+    if (isNotBlank(query)) {
+      selectBuilder.and().appendQuery(parseQuery("associations_view.master->(0)", query));
+    }
+
+    selectBuilder.limit(limit).offset(offset);
+
+    return select(tenantId, selectBuilder.toString()).map(this::mapToMasters);
   }
 
   /**

@@ -20,7 +20,6 @@ import org.folio.rest.impl.AbstractRestVerticleTest;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
-import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -279,6 +278,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .queryParam("masterType", "JOB_PROFILE")
+      .queryParam("detailType", "ACTION_PROFILE")
+      .queryParam("query", "name=" + actionProfile1.getName())
       .when()
       .get(DETAILS_BY_MASTER_URL, jobProfile1.getId())
       .then().statusCode(is(HttpStatus.SC_OK))
@@ -398,6 +399,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .queryParam("detailType", "ACTION_PROFILE")
+      .queryParam("masterType", "JOB_PROFILE")
+      .queryParam("query", "name=" + jobProfile1.getName())
       .when()
       .get(MASTERS_BY_DETAIL_URL, actionProfile1.getId())
       .then().statusCode(is(HttpStatus.SC_OK))

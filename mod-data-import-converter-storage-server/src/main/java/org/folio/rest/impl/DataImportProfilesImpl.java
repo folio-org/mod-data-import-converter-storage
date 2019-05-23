@@ -1,5 +1,15 @@
 package org.folio.rest.impl;
 
+import static java.lang.String.format;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
@@ -29,15 +39,6 @@ import org.folio.services.association.ProfileAssociationService;
 import org.folio.services.snapshot.ProfileSnapshotService;
 import org.folio.spring.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-
-import static java.lang.String.format;
 
 
 public class DataImportProfilesImpl implements DataImportProfiles {
@@ -544,13 +545,17 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void getDataImportProfilesProfileAssociationsDetailsById(
     String id,
     String masterType,
+    String detailType,
+    String query,
+    int offset,
+    int limit,
     Map<String, String> okapiHeaders,
     Handler<AsyncResult<Response>> asyncResultHandler,
     Context vertxContext) {
 
     vertxContext.runOnContext(event -> {
         try {
-          profileAssociationService.findDetails(id, mapContentType(masterType), tenantId)
+          profileAssociationService.findDetails(id, mapContentType(masterType), mapContentTypeOrNull(detailType), query, offset, limit, tenantId)
             .map(optional -> optional.orElseThrow(() -> new NotFoundException(format(MASTER_PROFILE_NOT_FOUND_MSG, id))))
             .map(GetDataImportProfilesProfileAssociationsDetailsByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
@@ -564,17 +569,28 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     );
   }
 
+  private ContentType mapContentTypeOrNull(String detailType) {
+    return Arrays.stream(ContentType.values())
+      .filter(it -> it.value().equals(detailType))
+      .findFirst()
+      .orElse(null);
+  }
+
   @Override
   public void getDataImportProfilesProfileAssociationsMastersById(
     String id,
     String detailType,
+    String masterType,
+    String query,
+    int offset,
+    int limit,
     Map<String, String> okapiHeaders,
     Handler<AsyncResult<Response>> asyncResultHandler,
     Context vertxContext) {
 
     vertxContext.runOnContext(event -> {
         try {
-          profileAssociationService.findMasters(id, mapContentType(detailType), tenantId)
+          profileAssociationService.findMasters(id, mapContentType(detailType), mapContentTypeOrNull(masterType), query, offset, limit, tenantId)
             .map(optional -> optional.orElseThrow(() -> new NotFoundException(format(DETAIL_PROFILE_NOT_FOUND_MSG, id))))
             .map(GetDataImportProfilesProfileAssociationsMastersByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
