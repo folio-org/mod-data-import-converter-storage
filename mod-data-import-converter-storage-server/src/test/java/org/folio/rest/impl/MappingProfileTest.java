@@ -130,6 +130,14 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_1)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
@@ -152,6 +160,28 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .put(MAPPING_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
+  public void shouldReturnUnprocessableEntityOnPutProfileWithExistingName() {
+    createProfiles();
+
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfile().withName("newProfile"))
+      .when()
+      .post(MAPPING_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MappingProfile createdProfile = createResponse.body().as(MappingProfile.class);
+
+    createdProfile.setName(mappingProfile_1.getName());
+    RestAssured.given()
+      .spec(spec)
+      .body(createdProfile)
+      .when()
+      .put(MAPPING_PROFILES_PATH + "/" + createdProfile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
 
   @Test
@@ -256,7 +286,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     createProfiles();
     MappingProfile mappingProfileToDelete = RestAssured.given()
       .spec(spec)
-      .body(mappingProfile_1)
+      .body(new MappingProfile()
+        .withName("ProfileToDelete"))
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()
@@ -285,7 +316,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     createProfiles();
     MappingProfile mappingProfileToDelete = RestAssured.given()
       .spec(spec)
-      .body(mappingProfile_1)
+      .body(new MappingProfile()
+        .withName("ProfileToDelete"))
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()

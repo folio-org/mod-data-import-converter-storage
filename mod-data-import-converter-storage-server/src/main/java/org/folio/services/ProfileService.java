@@ -54,14 +54,14 @@ public interface ProfileService<T, S> {
   Future<T> updateProfile(T profile, OkapiConnectionParams params);
 
   /**
-   * Search in database profile with the same name
+   * Search in database profile with the same name which contains in specified profile
    *
-   * @param profileName - profile name
-   * @param profileId   - profile Id
+   *
+   * @param profile - T entity
    * @param tenantId    - tenant id from request
    * @return - boolean value. True if job profile with the same name already exist
    */
-  Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId);
+  Future<Boolean> isProfileExistByProfileName(T profile, String tenantId);
 
   /**
    * Updates the flag deleted to true in T entity
