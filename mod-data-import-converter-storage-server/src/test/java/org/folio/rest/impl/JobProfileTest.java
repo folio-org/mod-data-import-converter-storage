@@ -438,6 +438,38 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body("jobProfiles*.deleted", everyItem(is(false)));
   }
 
+  @Test
+  public void shouldCreateProfileOnPostWhenWasDeletedProfileWithSameNameBefore() {
+    JobProfile jobProfile = new JobProfile().withName("profileName")
+      .withDataType(MARC);
+
+    JobProfile jobProfileToDelete = RestAssured.given()
+      .spec(spec)
+      .body(jobProfile)
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(JobProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(JOB_PROFILES_PATH + "/" + jobProfileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfile)
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_CREATED);
+  }
+
   private void createProfiles() {
     List<JobProfile> jobProfilesToPost = Arrays.asList(jobProfile_1, jobProfile_2, jobProfile_3);
     for (JobProfile profile : jobProfilesToPost) {

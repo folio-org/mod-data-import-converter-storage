@@ -155,7 +155,8 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       .append(" WHERE trim(both ' ' from lower(jsonb ->> 'name')) ='")
       .append(profileName.toLowerCase().trim())
       .append("' AND jsonb ->>").append(ID_FIELD).append("!= '").append(profileId)
-      .append("' LIMIT 1;");
+      .append("' AND jsonb ->> 'deleted' ='false' ")
+      .append(" LIMIT 1;");
     client.select(selectQuery.toString(), reply -> {
       if (reply.succeeded()) {
         future.complete(reply.result().getNumRows() > 0);
