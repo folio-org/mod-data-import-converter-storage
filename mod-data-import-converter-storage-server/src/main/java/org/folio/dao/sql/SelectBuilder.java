@@ -1,5 +1,6 @@
 package org.folio.dao.sql;
 
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -33,7 +34,7 @@ public class SelectBuilder {
    * @return a value in quotes.
    */
   public static String putInQuotes(String value) {
-    return String.format("'%s'", value);
+    return format("'%s'", value);
   }
 
   /**
@@ -63,7 +64,7 @@ public class SelectBuilder {
         //here is jsonField is a jsonb array field and (0) is first element in the array, so this way we search in a json.
         parsedQuery = new CQL2PgJSON(jsonField).cql2pgJson(query);
       } catch (Exception e) {
-        throw new IllegalStateException("Can not parse the cql query: %s", e);
+        throw new IllegalStateException(format("Can not parse the cql query: %s", query), e);
       }
     }
     return parsedQuery;

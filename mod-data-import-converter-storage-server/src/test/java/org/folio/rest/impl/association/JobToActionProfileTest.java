@@ -352,6 +352,86 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void getDetailActionsByMasterProfile_sortByName_OK(TestContext testContext) {
+
+    JobProfile jobProfile1 = createJobProfile(testContext);
+
+    //creates association 2
+    ActionProfile actionProfile2 = createActionProfile(testContext, "testActionProfile_2", "test-description");
+    ProfileAssociation profileAssociation2 = new ProfileAssociation()
+      .withMasterProfileId(jobProfile1.getId())
+      .withDetailProfileId(actionProfile2.getId())
+      .withOrder(7)
+      .withTriggered(true);
+    Async async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .body(profileAssociation2)
+      .when()
+      .post(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED))
+      .and()
+      .extract().body().as(ProfileAssociation.class);
+    async.complete();
+    //end
+
+    //creates association 1
+    ActionProfile actionProfile1 = createActionProfile(testContext, "testActionProfile_1", "test-description");
+    ProfileAssociation profileAssociation1 = new ProfileAssociation()
+      .withMasterProfileId(jobProfile1.getId())
+      .withDetailProfileId(actionProfile1.getId())
+      .withOrder(7)
+      .withTriggered(true);
+    async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .body(profileAssociation1)
+      .when()
+      .post(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED))
+      .and()
+      .extract().body().as(ProfileAssociation.class);
+    async.complete();
+    //end
+
+    //creates association 3
+    ActionProfile actionProfile3 = createActionProfile(testContext, "testActionProfile_3", "some description");
+    ProfileAssociation profileAssociation3 = new ProfileAssociation()
+      .withMasterProfileId(jobProfile1.getId())
+      .withDetailProfileId(actionProfile3.getId())
+      .withOrder(7)
+      .withTriggered(true);
+    async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .body(profileAssociation3)
+      .when()
+      .post(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED))
+      .and()
+      .extract().body().as(ProfileAssociation.class);
+    async.complete();
+    //end
+
+    //searching by description and sorting by name
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("masterType", "JOB_PROFILE")
+      .queryParam("detailType", "ACTION_PROFILE")
+      .queryParam("query", "description=test-description and (cql.allRecords=1) sortBy name")
+      .when()
+      .get(DETAILS_BY_MASTER_URL, jobProfile1.getId())
+      .then().statusCode(is(HttpStatus.SC_OK))
+      .body("contentType", is(JOB_PROFILE.value()))
+      .body("childSnapshotWrappers.size()", is(2))
+      .body("childSnapshotWrappers[0].content.name", is(actionProfile1.getName()))
+      .body("childSnapshotWrappers[1].content.name", is(actionProfile2.getName()));
+  }
+
+  @Test
   public void getMastersByDetailActionProfile_OK(TestContext testContext) {
 
     JobProfile jobProfile1 = createJobProfile(testContext);
@@ -473,6 +553,82 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async.complete();
   }
 
+  @Test
+  public void getMastersByDetailActionProfile_sortBy_OK(TestContext testContext) {
+
+    ActionProfile actionProfile = createActionProfile(testContext, "testActionProfile");
+    JobProfile jobProfile3 = createJobProfile(testContext, "testJobProfile_3", "some-description");
+    JobProfile jobProfile2 = createJobProfile(testContext, "testJobProfile_2", "test-description");
+    JobProfile jobProfile1 = createJobProfile(testContext, "testJobProfile_1", "test-description");
+
+    //creates association 3
+    Async async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .body(new ProfileAssociation()
+        .withMasterProfileId(jobProfile3.getId())
+        .withDetailProfileId(actionProfile.getId())
+        .withOrder(7)
+        .withTriggered(true))
+      .when()
+      .post(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED))
+      .and()
+      .extract().body().as(ProfileAssociation.class);
+    async.complete();
+    //end
+
+    //creates association 2
+    async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .body(new ProfileAssociation()
+        .withMasterProfileId(jobProfile2.getId())
+        .withDetailProfileId(actionProfile.getId())
+        .withOrder(7)
+        .withTriggered(true))
+      .when()
+      .post(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED))
+      .and()
+      .extract().body().as(ProfileAssociation.class);
+    async.complete();
+    //end
+
+    //creates association 1
+    async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .body(new ProfileAssociation()
+        .withMasterProfileId(jobProfile1.getId())
+        .withDetailProfileId(actionProfile.getId())
+        .withOrder(7)
+        .withTriggered(true))
+      .when()
+      .post(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED))
+      .and()
+      .extract().body().as(ProfileAssociation.class);
+    async.complete();
+    //end
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("detailType", "ACTION_PROFILE")
+      .queryParam("masterType", "JOB_PROFILE")
+      .queryParam("query", "description=test-description and (cql.allRecords=1) sortBy name")
+      .when()
+      .get(MASTERS_BY_DETAIL_URL, actionProfile.getId())
+      .then().statusCode(is(HttpStatus.SC_OK))
+      .body("contentType", is(ACTION_PROFILE.value()))
+      .body("childSnapshotWrappers.size()", is(2))
+      .body("childSnapshotWrappers[0].content.name", is(jobProfile1.getName()))
+      .body("childSnapshotWrappers[1].content.name", is(jobProfile2.getName()));
+  }
+
   private JobProfile createJobProfile(TestContext testContext) {
 
     return createJobProfile(testContext, "testJobProfile");
@@ -480,11 +636,15 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
 
 
   private JobProfile createJobProfile(TestContext testContext, String profileName) {
+    return createJobProfile(testContext, profileName, null);
+  }
+
+  private JobProfile createJobProfile(TestContext testContext, String profileName, String description) {
 
     Async async = testContext.async();
     JobProfile jobProfile = RestAssured.given()
       .spec(spec)
-      .body(new JobProfile().withName(profileName).withDataType(MARC))
+      .body(new JobProfile().withName(profileName).withDataType(MARC).withDescription(description))
       .when()
       .post(JOB_PROFILES_URL)
       .then()
@@ -496,10 +656,14 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
   }
 
   private ActionProfile createActionProfile(TestContext testContext, String profileName) {
+    return createActionProfile(testContext, profileName, null);
+  }
+
+  private ActionProfile createActionProfile(TestContext testContext, String profileName, String description) {
     Async async = testContext.async();
     ActionProfile actionProfile = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile().withName(profileName))
+      .body(new ActionProfile().withName(profileName).withDescription(description))
       .when()
       .post(ACTION_PROFILES_URL)
       .then()
