@@ -6,6 +6,7 @@ import java.util.Optional;
 import io.vertx.core.Future;
 import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 
 /**
  * This DAO is for association between 2 profiles (which are called 'master' profile and 'detail' profile).
@@ -54,18 +55,26 @@ public interface ProfileAssociationDao<M, D> {
   /**
    * Returns 'detail' profiles linked to 'master' profile id
    *
-   * @param masterId 'master' profile id
-   * @param tenantId tenant id
-   * @return future
+   * @param masterId   'master' profile id
+   * @param detailType detail type that should be find
+   * @param query      a cql query for a detail
+   * @param offset     an offset
+   * @param limit      a limit
+   * @param tenantId   tenant id
+   * @return a list of details for a master id
    */
-  Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, String tenantId);
+  Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, ProfileSnapshotWrapper.ContentType detailType, String query, int offset, int limit, String tenantId);
 
   /**
    * Returns master profiles linked to detail profile id
    *
-   * @param tenantId tenant id
-   * @param detailId detail profile id
-   * @return future
+   * @param detailId   detail profile id
+   * @param masterType a master type that should be find
+   * @param query      a cql query for a master
+   * @param offset     an offset
+   * @param limit      a limit
+   * @param tenantId   tenant id
+   * @return a list of masters for a detail id
    */
-  Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, String tenantId);
+  Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, ProfileSnapshotWrapper.ContentType masterType, String query, int offset, int limit, String tenantId);
 }
