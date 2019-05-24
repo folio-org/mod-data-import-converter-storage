@@ -69,11 +69,11 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
 
   @Override
-  public Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, String tenantId) {
+  public Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, ContentType detailType, String query, int offset, int limit, String tenantId) {
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    jobToActionProfile.getDetailProfilesByMasterId(masterId, tenantId)
+    jobToActionProfile.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.debug("I could not get details profiles by master id %s, for the tenant %s", masterId, tenantId);
@@ -88,11 +88,11 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   }
 
   @Override
-  public Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, String tenantId) {
+  public Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, ContentType masterType, String query, int offset, int limit, String tenantId) {
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    jobToActionProfile.getMasterProfilesByDetailId(detailId, tenantId)
+    jobToActionProfile.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.debug("I could not get master profiles by detail id %s, for the tenant %s", detailId, tenantId);
