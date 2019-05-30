@@ -218,8 +218,30 @@ resourceTypes:
         exampleCollection: !include raml-storage/examples/mod-data-import-converter-storage/profileAssociationCollection.sample
         exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/profileAssociation.sample
     post:
+      queryParameters:
+        master:
+          description: It needs to identify master profile type in association
+          required: true
+          type: string
+          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+        detail:
+          description: It needs to identify master profile type in association
+          required: true
+          type: string
+          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
       is: [validate]
     get:
+      queryParameters:
+        master:
+          description: It needs to identify master profile type in association
+          required: true
+          type: string
+          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+        detail:
+          description: It needs to identify master profile type in association
+          required: true
+          type: string
+          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
       is: [validate]
     /{id}:
       displayName: Profile associations
@@ -228,7 +250,30 @@ resourceTypes:
         collection-item:
           schema: profileAssociation
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/profileAssociation.sample
+      get:
+        queryParameters:
+          master:
+            description: It needs to identify master profile type in association
+            required: true
+            type: string
+            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+          detail:
+            description: It needs to identify master profile type in association
+            required: true
+            type: string
+            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
       put:
+        queryParameters:
+          master:
+            description: It needs to identify master profile type in association
+            required: true
+            type: string
+            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+          detail:
+            description: It needs to identify master profile type in association
+            required: true
+            type: string
+            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
         is: [validate]
         responses:
           200:
@@ -236,6 +281,17 @@ resourceTypes:
               application/json:
                 type: profileAssociation
       delete:
+        queryParameters:
+          master:
+            description: It needs to identify master profile type in association
+            required: true
+            type: string
+            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+          detail:
+            description: It needs to identify master profile type in association
+            required: true
+            type: string
+            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
         responses:
           204:
             body:

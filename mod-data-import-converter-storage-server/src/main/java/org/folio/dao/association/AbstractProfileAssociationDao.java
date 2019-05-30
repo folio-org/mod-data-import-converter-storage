@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.folio.dao.sql.SelectBuilder.parseQuery;
 import static org.folio.dao.sql.SelectBuilder.putInQuotes;
 import static org.folio.dao.util.DaoUtil.constructCriteria;
+import static org.folio.dao.util.DaoUtil.getCQLWrapper;
 
 import javax.ws.rs.NotFoundException;
 
@@ -27,6 +28,7 @@ import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.persist.Criteria.Criteria;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -36,10 +38,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Generic implementation of the of the {@link ProfileAssociationDao}
  *
- * @param <M> entity data type of the 'master' profile
- * @param <D> entity data type of the 'detail' profile
  */
-public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAssociationDao<M, D> {
+public abstract class AbstractProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractProfileAssociationDao.class);
   /**
@@ -67,6 +67,21 @@ public abstract class AbstractProfileAssociationDao<M, D> implements ProfileAsso
     Future<String> future = Future.future();
     pgClientFactory.createInstance(tenantId).save(getTableName(), entity.getId(), entity, future.completer());
     return future;
+  }
+
+  @Override
+  public Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId) {
+    Future<Results<ProfileAssociation>> future = Future.future();
+    try {
+      String[] fieldList = {"*"};
+      pgClientFactory.createInstance(tenantId).get(getTableName(), ProfileAssociation.class, fieldList, null, true, future.completer());
+    } catch (Exception e) {
+      LOGGER.error("Error while searching for ProfileAssociations", e);
+      future.fail(e);
+    }
+    return future.map(profileAssociationResults -> new ProfileAssociationCollection()
+      .withProfileAssociations(profileAssociationResults.getResults())
+      .withTotalRecords(profileAssociationResults.getResultInfo().getTotalRecords()));
   }
 
   @Override

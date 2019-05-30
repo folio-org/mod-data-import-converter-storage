@@ -22,10 +22,15 @@ import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+import static java.lang.String.format;
 
 
 /**
@@ -36,7 +41,8 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationService.class);
 
   @Autowired
-  private ProfileAssociationDao<JobProfileCollection, ActionProfileCollection> jobToActionProfile;
+  @Qualifier("JOB_PROFILE_TO_ACTION_PROFILE")
+  private ProfileAssociationDao profileAssociationDao;
   @Autowired
   private ProfileDao<JobProfile, JobProfileCollection> jobProfileDao;
   @Autowired
@@ -45,26 +51,33 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   private ProfileDao<MappingProfile, MappingProfileCollection> mappingProfileDao;
   @Autowired
   private ProfileDao<MatchProfile, MatchProfileCollection> matchProfileDao;
+  @Autowired
+  private ApplicationContext applicationContext;
 
   @Override
-  public Future<Optional<ProfileAssociation>> getById(String id, String tenantId) {
-    return jobToActionProfile.getById(id, tenantId);
+  public Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId) {
+    return getProfileAssociationDao(masterType, detailType).getAll(masterType, detailType, tenantId);
   }
 
   @Override
-  public Future<ProfileAssociation> save(ProfileAssociation entity, OkapiConnectionParams params) {
+  public Future<Optional<ProfileAssociation>> getById(String id, ContentType masterType, ContentType detailType, String tenantId) {
+    return getProfileAssociationDao(masterType, detailType).getById(id, tenantId);
+  }
+
+  @Override
+  public Future<ProfileAssociation> save(ProfileAssociation entity, ContentType masterType, ContentType detailType, OkapiConnectionParams params) {
     entity.setId(UUID.randomUUID().toString());
-    return jobToActionProfile.save(entity, params.getTenantId()).map(entity);
+    return getProfileAssociationDao(masterType, detailType).save(entity, params.getTenantId()).map(entity);
   }
 
   @Override
-  public Future<ProfileAssociation> update(ProfileAssociation entity, OkapiConnectionParams params) {
-    return jobToActionProfile.update(entity, params.getTenantId());
+  public Future<ProfileAssociation> update(ProfileAssociation entity, ContentType masterType, ContentType detailType, OkapiConnectionParams params) {
+    return getProfileAssociationDao(masterType, detailType).update(entity, params.getTenantId());
   }
 
   @Override
-  public Future<Boolean> delete(String id, String tenantId) {
-    return jobToActionProfile.delete(id, tenantId);
+  public Future<Boolean> delete(String id, ContentType masterType, ContentType detailType, String tenantId) {
+    return getProfileAssociationDao(masterType, detailType).delete(id, tenantId);
   }
 
 
@@ -73,10 +86,10 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    jobToActionProfile.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
+    profileAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
-          LOGGER.debug("I could not get details profiles by master id %s, for the tenant %s", masterId, tenantId);
+          LOGGER.debug("I could not getAll details profiles by master id %s, for the tenant %s", masterId, tenantId);
           result.fail(ar.cause());
         }
         List<ChildSnapshotWrapper> details = ar.result();
@@ -92,10 +105,10 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    jobToActionProfile.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
+    profileAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
-          LOGGER.debug("I could not get master profiles by detail id %s, for the tenant %s", detailId, tenantId);
+          LOGGER.debug("I could not getAll master profiles by detail id %s, for the tenant %s", detailId, tenantId);
           result.fail(ar.cause());
         }
         ProfileSnapshotWrapper wrapper = getProfileWrapper(detailId, detailType, ar.result());
@@ -103,6 +116,17 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
       });
 
     return result;
+  }
+
+  /**
+   * Returns ProfileAssociationDao instance according to specified master and detail types
+   *
+   * @param masterType a master type in association
+   * @param detailType a detail type in association
+   * @return ProfileAssociationDao implementation
+   */
+  private ProfileAssociationDao getProfileAssociationDao(ContentType masterType, ContentType detailType) {
+    return (ProfileAssociationDao) applicationContext.getBean(format("%s_TO_%s", masterType.value(), detailType.value()));
   }
 
   /**
@@ -135,7 +159,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
    * @param profileId   a profile id.
    * @param profileType a profile type.
    * @param children    a list of children
-   * @return
+   * @return profile wrapper
    */
   private ProfileSnapshotWrapper getProfileWrapper(String profileId, ContentType profileType, List<ChildSnapshotWrapper> children) {
     ProfileSnapshotWrapper wrapper = new ProfileSnapshotWrapper();
@@ -156,7 +180,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   private <T> Handler<AsyncResult<Optional<T>>> fillWrapperContent(Future<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
     return asyncResult -> {
       if (asyncResult.failed()) {
-        LOGGER.debug("I could not get a profile", asyncResult.cause());
+        LOGGER.debug("I could not getAll a profile", asyncResult.cause());
         result.fail(asyncResult.cause());
       }
 

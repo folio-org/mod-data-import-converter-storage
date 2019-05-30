@@ -46,6 +46,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .when()
       .get(ASSOCIATED_PROFILES_URL)
       .then()
@@ -58,6 +60,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .when()
       .get(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
       .then()
@@ -79,6 +83,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     Response createResponse = RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation)
       .when()
       .post(ASSOCIATED_PROFILES_URL);
@@ -89,6 +95,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .when()
       .get(ASSOCIATED_PROFILES_URL + "/" + savedProfileAssociation.getId())
       .then()
@@ -119,6 +127,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .when()
       .delete(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
       .then()
@@ -139,6 +149,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     ProfileAssociation savedProfileAssociation = RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -151,6 +163,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .when()
       .delete(ASSOCIATED_PROFILES_URL + "/" + savedProfileAssociation.getId())
       .then()
@@ -180,6 +194,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
       .withDetailProfileId(UUID.randomUUID().toString());
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation)
       .when()
       .put(ASSOCIATED_PROFILES_URL + "/" + UUID.randomUUID().toString())
@@ -201,6 +217,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     ProfileAssociation savedProfileAssociation = RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -216,6 +234,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(savedProfileAssociation)
       .when()
       .put(ASSOCIATED_PROFILES_URL + "/" + savedProfileAssociation.getId())
@@ -254,6 +274,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     ProfileAssociation savedProfileAssociation = RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation1)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -266,6 +288,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     ProfileAssociation savedProfileAssociation2 = RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation2)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -366,6 +390,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation2)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -386,6 +412,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation1)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -406,6 +434,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation3)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -455,6 +485,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     ProfileAssociation savedProfileAssociation = RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation1)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -467,6 +499,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     ProfileAssociation savedProfileAssociation2 = RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(profileAssociation2)
       .when()
       .post(ASSOCIATED_PROFILES_URL)
@@ -565,6 +599,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     Async async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(new ProfileAssociation()
         .withMasterProfileId(jobProfile3.getId())
         .withDetailProfileId(actionProfile.getId())
@@ -583,6 +619,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(new ProfileAssociation()
         .withMasterProfileId(jobProfile2.getId())
         .withDetailProfileId(actionProfile.getId())
@@ -601,6 +639,8 @@ public class JobToActionProfileTest extends AbstractRestVerticleTest {
     async = testContext.async();
     RestAssured.given()
       .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
       .body(new ProfileAssociation()
         .withMasterProfileId(jobProfile1.getId())
         .withDetailProfileId(actionProfile.getId())

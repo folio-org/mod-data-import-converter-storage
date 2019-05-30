@@ -475,10 +475,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void postDataImportProfilesProfileAssociations(String lang, ProfileAssociation entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void postDataImportProfilesProfileAssociations(String master, String detail, String lang, ProfileAssociation entity, Map<String, String> okapiHeaders,
+                                                        Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        profileAssociationService.save(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+        profileAssociationService.save(entity, mapContentType(master), mapContentType(detail), new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
           .map((Response) PostDataImportProfilesProfileAssociationsResponse
             .respond201WithApplicationJson(entity, PostDataImportProfilesProfileAssociationsResponse.headersFor201()))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -491,22 +492,31 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesProfileAssociations(String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
-    // stub implementation
-    vertxContext.runOnContext(v ->
-      Future.succeededFuture(new ProfileAssociationCollection())
-        .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
-        .map(Response.class::cast)
-        .setHandler(asyncResultHandler)
+  public void getDataImportProfilesProfileAssociations(String master, String detail, String lang, Map<String, String> okapiHeaders,
+                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+        profileAssociationService.getAll(mapContentType(master), mapContentType(detail), params.getTenantId())
+          .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
+          .map(Response.class::cast)
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to get ProfileAssociations by masterType '{}' and detailType '{}", master, detail, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+      }
     );
   }
 
   @Override
-  public void putDataImportProfilesProfileAssociationsById(String id, String lang, ProfileAssociation entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void putDataImportProfilesProfileAssociationsById(String id, String master, String detail, String lang, ProfileAssociation entity,
+                                                           Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
         entity.setId(id);
-        profileAssociationService.update(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+        profileAssociationService.update(entity, mapContentType(master), mapContentType(detail), new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
           .map(updatedEntity -> (Response) PutDataImportProfilesProfileAssociationsByIdResponse.respond200WithApplicationJson(updatedEntity))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -518,10 +528,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void deleteDataImportProfilesProfileAssociationsById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void deleteDataImportProfilesProfileAssociationsById(String id, String master, String detail, String lang, Map<String, String> okapiHeaders,
+                                                              Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        profileAssociationService.delete(id, tenantId)
+        profileAssociationService.delete(id, mapContentType(master), mapContentType(detail), tenantId)
           .map(deleted -> deleted
             ? DeleteDataImportProfilesProfileAssociationsByIdResponse.respond204WithTextPlain(
             format("Profile association with id '%s' was successfully deleted", id))
@@ -541,6 +552,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   @Override
   public void getDataImportProfilesProfileAssociationsById(
     String id,
+    String master,
+    String detail,
     String lang,
     Map<String, String> okapiHeaders,
     Handler<AsyncResult<Response>> asyncResultHandler,
@@ -548,7 +561,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
     vertxContext.runOnContext(c -> {
       try {
-        profileAssociationService.getById(id, tenantId)
+        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+        profileAssociationService.getById(id, mapContentType(master), mapContentType(detail), params.getTenantId())
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Profile association with id '%s' was not found", id))))
           .map(GetDataImportProfilesProfileAssociationsByIdResponse::respond200WithApplicationJson)

@@ -1,14 +1,12 @@
 package org.folio.dao.association;
 
-import org.folio.rest.jaxrs.model.ActionProfileCollection;
-import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.springframework.stereotype.Repository;
 
 /**
  * Data access object for {@link ProfileAssociationDao}
  */
-@Repository
-public class JobToActionProfileAssociationDaoImpl extends AbstractProfileAssociationDao<JobProfileCollection, ActionProfileCollection> {
+@Repository("JOB_PROFILE_TO_ACTION_PROFILE")
+public class JobToActionProfileAssociationDaoImpl extends AbstractProfileAssociationDao {
   private static final String TABLE_NAME = "job_to_action_profiles";
 
   @Override

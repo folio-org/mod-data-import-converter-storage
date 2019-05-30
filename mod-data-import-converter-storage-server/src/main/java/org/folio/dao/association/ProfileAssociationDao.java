@@ -6,15 +6,16 @@ import java.util.Optional;
 import io.vertx.core.Future;
 import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 
 /**
  * This DAO is for association between 2 profiles (which are called 'master' profile and 'detail' profile).
  *
- * @param <M> entity data type of the 'master' profile
- * @param <D> entity data type of the 'detail' profile
+// * @param <M> entity data type of the 'master' profile
+// * @param <D> entity data type of the 'detail' profile
  */
-public interface ProfileAssociationDao<M, D> {
+public interface ProfileAssociationDao {
 
   /**
    * Saves ProfileAssociation entity to database
@@ -24,6 +25,16 @@ public interface ProfileAssociationDao<M, D> {
    * @return future
    */
   Future<String> save(ProfileAssociation entity, String tenantId);
+
+  /**
+   * Searches for ProfileAssociation by masterType and detailType
+   *
+   * @param masterType a master type in association
+   * @param detailType a detail type in association
+   * @param tenantId tenant id
+   * @return future with {@link ProfileAssociationCollection}
+   */
+  Future<ProfileAssociationCollection> getAll(ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
 
   /**
    * Searches for ProfileAssociation entity by id
