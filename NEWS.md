@@ -2,7 +2,7 @@
 * Updated association profiles samples. 
 * Updated API endpoint for getting details by master id. Added query param to specify return type. Added searching by cql query for details
 * Updated API endpoint for getting masters by detail id. Added query param to specify return type. Added searching by cql query for details
-* Updated API endpoints for Profile Association entity.
+* Updated API endpoints for Profile Association entity. Added query parameters to specify master and detail types of profile association.
 
   | METHOD |             URL                                              | DESCRIPTION                         |
   |--------|--------------------------------------------------------------|-------------------------------------|
