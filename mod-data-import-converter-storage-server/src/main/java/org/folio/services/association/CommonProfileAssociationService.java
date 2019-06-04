@@ -1,9 +1,5 @@
 package org.folio.services.association;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -25,10 +21,15 @@ import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+import javax.ws.rs.BadRequestException;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -39,11 +40,10 @@ import static java.lang.String.format;
 @Service
 public class CommonProfileAssociationService implements ProfileAssociationService {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationService.class);
-  public static final String PROFILE_ASSOCIATION_DAO_NAME_PATTERN = "%s_TO_%s";
+  private static final String PROFILE_ASSOCIATION_TYPE_PATTERN = "%s_TO_%s";
+  private static final String CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE = "Correct ProfileAssociation types: ACTION_PROFILE_TO_ACTION_PROFILE, ACTION_PROFILE_TO_MAPPING_PROFILE, "
+    + "ACTION_PROFILE_TO_MATCH_PROFILE, JOB_PROFILE_TO_ACTION_PROFILE, JOB_PROFILE_TO_MATCH_PROFILE, MATCH_PROFILE_TO_ACTION_PROFILE, MATCH_PROFILE_TO_MATCH_PROFILE";
 
-  @Autowired
-  @Qualifier("JOB_PROFILE_TO_ACTION_PROFILE")
-  private ProfileAssociationDao profileAssociationDao;
   @Autowired
   private ProfileDao<JobProfile, JobProfileCollection> jobProfileDao;
   @Autowired
@@ -87,7 +87,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    profileAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
+    getProfileAssociationDao(masterType, detailType).getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get details profiles by master id '{}', for the tenant '{}'", masterId, tenantId);
@@ -106,7 +106,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    profileAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
+    getProfileAssociationDao(masterType, detailType).getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get master profiles by detail id '{}', for the tenant '{}'", detailId, tenantId);
@@ -120,14 +120,22 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   }
 
   /**
-   * Returns ProfileAssociationDao instance according to specified master and detail types
+   * Returns ProfileAssociationDao instance according to profile association type,
+   * which is built on the pattern {masterType}_TO_{detailType}.
    *
    * @param masterType a master type in association
    * @param detailType a detail type in association
    * @return ProfileAssociationDao implementation
    */
   private ProfileAssociationDao getProfileAssociationDao(ContentType masterType, ContentType detailType) {
-    return (ProfileAssociationDao) applicationContext.getBean(format(PROFILE_ASSOCIATION_DAO_NAME_PATTERN, masterType.value(), detailType.value()));
+    String profileAssociationType = format(PROFILE_ASSOCIATION_TYPE_PATTERN, masterType.value(), detailType.value());
+    try {
+      return (ProfileAssociationDao) applicationContext.getBean(profileAssociationType);
+    } catch (BeansException e) {
+      String message = format("Invalid ProfileAssociation type with master type '%s' and detail type '%s'. ", masterType, detailType);
+      LOGGER.error(message);
+      throw new BadRequestException(message + CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE);
+    }
   }
 
   /**

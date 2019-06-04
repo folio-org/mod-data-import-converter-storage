@@ -11,8 +11,8 @@ public class ActionProfileWrapper implements ProfileWrapper<ActionProfile> {
 
   private ActionProfile actionProfile;
 
-  public ActionProfileWrapper(ActionProfile jobProfile) {
-    this.actionProfile = jobProfile;
+  public ActionProfileWrapper(ActionProfile actionProfile) {
+    this.actionProfile = actionProfile;
   }
 
   @Override

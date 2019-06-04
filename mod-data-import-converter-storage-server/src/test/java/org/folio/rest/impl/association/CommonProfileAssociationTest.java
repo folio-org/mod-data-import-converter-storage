@@ -181,6 +181,27 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
     clearTables(testContext);
   }
 
+  @Test
+  public void runTestShouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes() {
+    shouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes(MAPPING_PROFILE, ACTION_PROFILE);
+    shouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes(MAPPING_PROFILE, MATCH_PROFILE);
+    shouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes(MAPPING_PROFILE, MAPPING_PROFILE);
+    shouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes(ACTION_PROFILE, JOB_PROFILE);
+    shouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes(MAPPING_PROFILE, JOB_PROFILE);
+    shouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes(MATCH_PROFILE, JOB_PROFILE);
+  }
+
+  public void shouldReturnBadRequestOnGetWhenSpecifiedIncompatibleMasterAndDetailTypes(ContentType masterProfileType, ContentType detailProfileType) {
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", masterProfileType.value())
+      .queryParam("detail", detailProfileType.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
 
   @Test
   public void runTestShouldReturnNotFoundOnGetById(TestContext testContext) {
