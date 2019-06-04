@@ -90,7 +90,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     profileAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
-          LOGGER.debug("Could not get details profiles by master id %s, for the tenant %s", masterId, tenantId);
+          LOGGER.error("Could not get details profiles by master id '{}', for the tenant '{}'", masterId, tenantId);
           result.fail(ar.cause());
         }
         List<ChildSnapshotWrapper> details = ar.result();
@@ -109,7 +109,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     profileAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
-          LOGGER.debug("Could not get master profiles by detail id %s, for the tenant %s", detailId, tenantId);
+          LOGGER.error("Could not get master profiles by detail id '{}', for the tenant '{}'", detailId, tenantId);
           result.fail(ar.cause());
         }
         ProfileSnapshotWrapper wrapper = getProfileWrapper(detailId, detailType, ar.result());
@@ -181,7 +181,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   private <T> Handler<AsyncResult<Optional<T>>> fillWrapperContent(Future<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
     return asyncResult -> {
       if (asyncResult.failed()) {
-        LOGGER.debug("Could not get a profile", asyncResult.cause());
+        LOGGER.error("Could not get a profile", asyncResult.cause());
         result.fail(asyncResult.cause());
       }
 
