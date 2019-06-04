@@ -32,6 +32,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 
 
 /**
@@ -87,7 +89,9 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    getProfileAssociationDao(masterType, detailType).getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
+    // functionality of searching details by masterId is common for all ProfileAssociationDao implementation,
+    // so here can be used any ProfileAssociationDao implementation, for example JOB_TO_ACTION
+    getProfileAssociationDao(JOB_PROFILE, ACTION_PROFILE).getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get details profiles by master id '{}', for the tenant '{}'", masterId, tenantId);
@@ -106,7 +110,9 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    getProfileAssociationDao(masterType, detailType).getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
+    // functionality of searching masters by detailId is common for all ProfileAssociationDao implementation,
+    // so here can be used any ProfileAssociationDao implementation, for example JOB_TO_ACTION
+    getProfileAssociationDao(JOB_PROFILE, ACTION_PROFILE).getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get master profiles by detail id '{}', for the tenant '{}'", detailId, tenantId);
@@ -151,7 +157,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     if (profileType == ContentType.JOB_PROFILE) {
       jobProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
-    } else if (profileType == ContentType.ACTION_PROFILE) {
+    } else if (profileType == ACTION_PROFILE) {
       actionProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
     } else if (profileType == ContentType.MAPPING_PROFILE) {
       mappingProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
