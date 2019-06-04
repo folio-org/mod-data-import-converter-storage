@@ -210,7 +210,8 @@ resourceTypes:
               text/plain: !!null
   /profileAssociations:
     displayName: Profile associations
-    description: API for managing Profile associations
+    description: API for managing Profile associations. Correct ProfileAssociation types are ACTION_PROFILE_TO_ACTION_PROFILE, ACTION_PROFILE_TO_MAPPING_PROFILE,
+                 ACTION_PROFILE_TO_MATCH_PROFILE, JOB_PROFILE_TO_ACTION_PROFILE, JOB_PROFILE_TO_MATCH_PROFILE, MATCH_PROFILE_TO_ACTION_PROFILE, MATCH_PROFILE_TO_MATCH_PROFILE.
     type:
       collection:
         schemaCollection: profileAssociationCollection
@@ -223,12 +224,12 @@ resourceTypes:
           description: It needs to identify master profile type in association
           required: true
           type: string
-          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+          example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE"
         detail:
           description: It needs to identify master profile type in association
           required: true
           type: string
-          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+          example: "ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
       is: [validate]
     get:
       queryParameters:
@@ -236,16 +237,17 @@ resourceTypes:
           description: It needs to identify master profile type in association
           required: true
           type: string
-          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+          example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE"
         detail:
           description: It needs to identify master profile type in association
           required: true
           type: string
-          example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+          example: "ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
       is: [validate]
     /{id}:
       displayName: Profile associations
-      description: Get, Delete or Update a specific Profile association
+      description: Get, Delete or Update a specific Profile association. Correct ProfileAssociation types are ACTION_PROFILE_TO_ACTION_PROFILE, ACTION_PROFILE_TO_MAPPING_PROFILE,
+                   ACTION_PROFILE_TO_MATCH_PROFILE, JOB_PROFILE_TO_ACTION_PROFILE, JOB_PROFILE_TO_MATCH_PROFILE, MATCH_PROFILE_TO_ACTION_PROFILE, MATCH_PROFILE_TO_MATCH_PROFILE.
       type:
         collection-item:
           schema: profileAssociation
@@ -256,24 +258,24 @@ resourceTypes:
             description: It needs to identify master profile type in association
             required: true
             type: string
-            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+            example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE"
           detail:
             description: It needs to identify master profile type in association
             required: true
             type: string
-            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+            example: "ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
       put:
         queryParameters:
           master:
             description: It needs to identify master profile type in association
             required: true
             type: string
-            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+            example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE"
           detail:
             description: It needs to identify master profile type in association
             required: true
             type: string
-            example: "JOB_PROFILE, ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
+            example: "ACTION_PROFILE, MAPPING_PROFILE, MATCH_PROFILE"
         is: [validate]
         responses:
           200:
@@ -301,19 +303,21 @@ resourceTypes:
         description: Retrives details profiles by master profile id
           Note that master-detail relationship is sort of parent-child relationship but one detail instance
           can be associated with many master instances.
+          Correct ProfileAssociation types are ACTION_PROFILE_TO_ACTION_PROFILE, ACTION_PROFILE_TO_MAPPING_PROFILE, ACTION_PROFILE_TO_MATCH_PROFILE,
+          JOB_PROFILE_TO_ACTION_PROFILE, JOB_PROFILE_TO_MATCH_PROFILE, MATCH_PROFILE_TO_ACTION_PROFILE, MATCH_PROFILE_TO_MATCH_PROFILE.
         get:
           queryParameters:
             masterType:
               description: It needs to identify master profile type for an id
               required: true
               type: string
-              example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE"
+              example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE"
             detailType:
               description: "It filters returned type of details. For example you need to get only MATCH_PROFILEs
               for a JOB_PROFILE but the JOB_PROFILE has ACTION_PROFILEs too. So use it as filter for a return type"
               required: false
               type: string
-              example: "JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE"
+              example: "ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE"
           is: [
               searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
               pageable,
@@ -329,6 +333,8 @@ resourceTypes:
         description: Retrives masters profiles by detail profile id.
           Note that master-detail relationship is sort of parent-child relationship but one detail instance
           can be associated with many master instances.
+          Correct ProfileAssociation types are ACTION_PROFILE_TO_ACTION_PROFILE, ACTION_PROFILE_TO_MAPPING_PROFILE, ACTION_PROFILE_TO_MATCH_PROFILE,
+          JOB_PROFILE_TO_ACTION_PROFILE, JOB_PROFILE_TO_MATCH_PROFILE, MATCH_PROFILE_TO_ACTION_PROFILE, MATCH_PROFILE_TO_MATCH_PROFILE.
         get:
           queryParameters:
             detailType:
