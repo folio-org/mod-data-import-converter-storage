@@ -4,6 +4,9 @@ import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.rest.jaxrs.model.UserInfo;
 
+/**
+ * Wrapper for {@link JobProfile} entity
+ */
 public class JobProfileWrapper implements ProfileWrapper<JobProfile> {
 
   private JobProfile jobProfile;

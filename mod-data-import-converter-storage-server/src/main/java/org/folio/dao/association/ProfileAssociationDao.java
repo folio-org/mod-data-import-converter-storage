@@ -11,9 +11,6 @@ import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 
 /**
  * This DAO is for association between 2 profiles (which are called 'master' profile and 'detail' profile).
- *
-// * @param <M> entity data type of the 'master' profile
-// * @param <D> entity data type of the 'detail' profile
  */
 public interface ProfileAssociationDao {
 

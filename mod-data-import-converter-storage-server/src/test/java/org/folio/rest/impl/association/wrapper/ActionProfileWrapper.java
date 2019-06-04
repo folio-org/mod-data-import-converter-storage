@@ -4,6 +4,9 @@ import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.rest.jaxrs.model.UserInfo;
 
+/**
+ * Wrapper for {@link ActionProfile} entity
+ */
 public class ActionProfileWrapper implements ProfileWrapper<ActionProfile> {
 
   private ActionProfile actionProfile;

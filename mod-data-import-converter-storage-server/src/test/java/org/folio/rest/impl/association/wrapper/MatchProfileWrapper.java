@@ -4,6 +4,9 @@ import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.rest.jaxrs.model.UserInfo;
 
+/**
+ * Wrapper for {@link MatchProfile} entity
+ */
 public class MatchProfileWrapper implements ProfileWrapper<MatchProfile> {
 
   private MatchProfile matchProfile;

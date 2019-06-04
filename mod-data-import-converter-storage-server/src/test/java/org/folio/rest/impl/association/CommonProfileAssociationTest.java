@@ -51,7 +51,6 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   private static final String MAPPING_PROFILES_TABLE = "mapping_profiles";
   private static final String MATCH_PROFILES_TABLE = "match_profiles";
 
-
   private static final String JOB_PROFILES_URL = "/data-import-profiles/jobProfiles";
   private static final String ACTION_PROFILES_URL = "/data-import-profiles/actionProfiles";
   private static final String MAPPING_PROFILES_URL = "/data-import-profiles/mappingProfiles";

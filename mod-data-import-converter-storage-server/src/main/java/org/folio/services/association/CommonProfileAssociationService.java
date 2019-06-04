@@ -37,8 +37,9 @@ import static java.lang.String.format;
  * Generic implementation of the {@link ProfileAssociationService}
  */
 @Service
-public class CommonProfileAssociationService implements ProfileAssociationService { //NOSOANR
+public class CommonProfileAssociationService implements ProfileAssociationService {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationService.class);
+  public static final String PROFILE_ASSOCIATION_DAO_NAME_PATTERN = "%s_TO_%s";
 
   @Autowired
   @Qualifier("JOB_PROFILE_TO_ACTION_PROFILE")
@@ -89,7 +90,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     profileAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
-          LOGGER.debug("I could not getAll details profiles by master id %s, for the tenant %s", masterId, tenantId);
+          LOGGER.debug("Could not get details profiles by master id %s, for the tenant %s", masterId, tenantId);
           result.fail(ar.cause());
         }
         List<ChildSnapshotWrapper> details = ar.result();
@@ -108,7 +109,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     profileAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
-          LOGGER.debug("I could not getAll master profiles by detail id %s, for the tenant %s", detailId, tenantId);
+          LOGGER.debug("Could not get master profiles by detail id %s, for the tenant %s", detailId, tenantId);
           result.fail(ar.cause());
         }
         ProfileSnapshotWrapper wrapper = getProfileWrapper(detailId, detailType, ar.result());
@@ -126,7 +127,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
    * @return ProfileAssociationDao implementation
    */
   private ProfileAssociationDao getProfileAssociationDao(ContentType masterType, ContentType detailType) {
-    return (ProfileAssociationDao) applicationContext.getBean(format("%s_TO_%s", masterType.value(), detailType.value()));
+    return (ProfileAssociationDao) applicationContext.getBean(format(PROFILE_ASSOCIATION_DAO_NAME_PATTERN, masterType.value(), detailType.value()));
   }
 
   /**
@@ -180,7 +181,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   private <T> Handler<AsyncResult<Optional<T>>> fillWrapperContent(Future<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
     return asyncResult -> {
       if (asyncResult.failed()) {
-        LOGGER.debug("I could not getAll a profile", asyncResult.cause());
+        LOGGER.debug("Could not get a profile", asyncResult.cause());
         result.fail(asyncResult.cause());
       }
 
