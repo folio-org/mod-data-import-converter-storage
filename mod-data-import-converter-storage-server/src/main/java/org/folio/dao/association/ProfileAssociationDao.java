@@ -26,12 +26,10 @@ public interface ProfileAssociationDao {
   /**
    * Searches for ProfileAssociation by masterType and detailType
    *
-   * @param masterType a master type in association
-   * @param detailType a detail type in association
    * @param tenantId tenant id
    * @return future with {@link ProfileAssociationCollection}
    */
-  Future<ProfileAssociationCollection> getAll(ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
+  Future<ProfileAssociationCollection> getAll(String tenantId);
 
   /**
    * Searches for ProfileAssociation entity by id

@@ -70,7 +70,7 @@ public abstract class AbstractProfileAssociationDao implements ProfileAssociatio
   }
 
   @Override
-  public Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId) {
+  public Future<ProfileAssociationCollection> getAll(String tenantId) {
     Future<Results<ProfileAssociation>> future = Future.future();
     try {
       String[] fieldList = {"*"};

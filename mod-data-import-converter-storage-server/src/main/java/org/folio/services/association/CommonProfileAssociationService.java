@@ -57,7 +57,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
   @Override
   public Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId) {
-    return getProfileAssociationDao(masterType, detailType).getAll(masterType, detailType, tenantId);
+    return getProfileAssociationDao(masterType, detailType).getAll(tenantId);
   }
 
   @Override
