@@ -2,8 +2,7 @@ package org.folio.rest.impl.association;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.vertx.core.AsyncResult;
-import io.vertx.ext.sql.UpdateResult;
+import io.vertx.core.Future;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -180,9 +179,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .body("totalRecords", is(1));
     async.complete();
 
-    async = testContext.async();
     clearTables(testContext);
-    async.complete();
   }
 
 
@@ -274,9 +271,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .body("triggered", is(savedProfileAssociation.getTriggered()));
     async.complete();
 
-    async = testContext.async();
     clearTables(testContext);
-    async.complete();
   }
 
   @Test
@@ -377,9 +372,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_NO_CONTENT);
     async.complete();
 
-    async = testContext.async();
     clearTables(testContext);
-    async.complete();
   }
 
   @Test
@@ -503,9 +496,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
         .body("triggered", is(savedProfileAssociation.getTriggered()));
       async.complete();
 
-      async = testContext.async();
       clearTables(testContext);
-      async.complete();
     }
 
   @Test
@@ -607,9 +598,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .body("childSnapshotWrappers[0].content.userInfo.lastName", is(detailProfileWrapper1.getUserInfo().getLastName()))
       .body("childSnapshotWrappers[0].content.userInfo.userName", is(detailProfileWrapper1.getUserInfo().getUserName()));
 
-    async = testContext.async();
     clearTables(testContext);
-    async.complete();
   }
 
   @Test
@@ -901,9 +890,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .body("childSnapshotWrappers[0].content.userInfo.lastName", is(masterProfileWrapper1.getUserInfo().getLastName()))
       .body("childSnapshotWrappers[0].content.userInfo.userName", is(masterProfileWrapper1.getUserInfo().getUserName()));
 
-    async = testContext.async();
     clearTables(testContext);
-    async.complete();
   }
 
   @Test
@@ -1080,9 +1067,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .body("childSnapshotWrappers[0].content.name", is(masterWrapper1.getName()))
       .body("childSnapshotWrappers[1].content.name", is(masterWrapper2.getName()));
 
-    async = testContext.async();
     clearTables(testContext);
-    async.complete();
   }
 
   private <T> ProfileWrapper<T> postProfile(TestContext testContext, ProfileWrapper<T> profileWrapper, String profileUrl) {
@@ -1104,48 +1089,37 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-
-    pgClient.delete(ACTION_TO_ACTION_PROFILES, new Criterion(), actionToActionDeleteEvent -> {
-      stopIfFailed(context, actionToActionDeleteEvent);
-      pgClient.delete(ACTION_TO_MAPPING_PROFILES, new Criterion(), actionToMappingDeleteEvent -> {
-        stopIfFailed(context, actionToMappingDeleteEvent);
-        pgClient.delete(ACTION_TO_MATCH_PROFILES, new Criterion(), actionToMatchDeleteEvent -> {
-          stopIfFailed(context, actionToMatchDeleteEvent);
-          pgClient.delete(JOB_TO_ACTION_PROFILES, new Criterion(), jobToActionDeleteEvent -> {
-            stopIfFailed(context, jobToActionDeleteEvent);
-            pgClient.delete(JOB_TO_MATCH_PROFILES, new Criterion(), jobToMatchDeleteEvent -> {
-              stopIfFailed(context, jobToMatchDeleteEvent);
-              pgClient.delete(MATCH_TO_ACTION_PROFILES, new Criterion(), matchToActionDeleteEvent -> {
-                stopIfFailed(context, matchToActionDeleteEvent);
-                pgClient.delete(MATCH_TO_MATCH_PROFILES, new Criterion(), matchToMatchDeleteEvent -> {
-                  stopIfFailed(context, matchToMatchDeleteEvent);
-                  pgClient.delete(ACTION_PROFILES_TABLE, new Criterion(), actionProfilesDeleteEvent -> {
-                    stopIfFailed(context, actionProfilesDeleteEvent);
-                    pgClient.delete(JOB_PROFILES_TABLE, new Criterion(), jobProfilesDeleteEvent -> {
-                      stopIfFailed(context, jobProfilesDeleteEvent);
-                      pgClient.delete(MAPPING_PROFILES_TABLE, new Criterion(), mappingProfilesDeleteEvent -> {
-                        stopIfFailed(context, mappingProfilesDeleteEvent);
-                        pgClient.delete(MATCH_PROFILES_TABLE, new Criterion(), matchProfilesDeleteEvent -> {
-                          stopIfFailed(context, matchProfilesDeleteEvent);
-                          async.complete();
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
+    deleteTable(ACTION_TO_ACTION_PROFILES)
+      .compose(e -> deleteTable(ACTION_TO_MAPPING_PROFILES))
+      .compose(e -> deleteTable(ACTION_TO_MATCH_PROFILES))
+      .compose(e -> deleteTable(JOB_TO_ACTION_PROFILES))
+      .compose(e -> deleteTable(JOB_TO_MATCH_PROFILES))
+      .compose(e -> deleteTable(MATCH_TO_ACTION_PROFILES))
+      .compose(e -> deleteTable(MATCH_TO_MATCH_PROFILES))
+      .compose(e -> deleteTable(ACTION_PROFILES_TABLE))
+      .compose(e -> deleteTable(JOB_PROFILES_TABLE))
+      .compose(e -> deleteTable(MAPPING_PROFILES_TABLE))
+      .compose(e -> deleteTable(MATCH_PROFILES_TABLE))
+      .setHandler(clearAr -> {
+        if (clearAr.failed()) {
+          context.fail(clearAr.cause());
+        }
+        async.complete();
       });
-    });
     async.awaitSuccess();
   }
 
-  private void stopIfFailed(TestContext context, AsyncResult<UpdateResult> asyncResult) {
-    if (asyncResult.failed()) {
-      context.fail(asyncResult.cause());
-    }
+  private Future<Void> deleteTable(String tableName) {
+    Future<Void> future = Future.future();
+    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
+    pgClient.delete(tableName, new Criterion(), ar -> {
+      if (ar.failed()) {
+        future.fail(ar.cause());
+      }
+      else {
+        future.complete();
+      }
+    });
+    return future;
   }
 }
