@@ -1,15 +1,5 @@
 package org.folio.rest.impl;
 
-import static java.lang.String.format;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
@@ -31,7 +21,6 @@ import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
-import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.resource.DataImportProfiles;
 import org.folio.rest.tools.utils.TenantTool;
@@ -40,6 +29,15 @@ import org.folio.services.association.ProfileAssociationService;
 import org.folio.services.snapshot.ProfileSnapshotService;
 import org.folio.spring.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 
 public class DataImportProfilesImpl implements DataImportProfiles {
