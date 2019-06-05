@@ -6,6 +6,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
+import org.folio.dao.association.MasterToDetailAssociationDao;
 import org.folio.dao.association.ProfileAssociationDao;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -32,8 +33,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
-import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
-import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 
 
 /**
@@ -56,6 +55,8 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   private ProfileDao<MatchProfile, MatchProfileCollection> matchProfileDao;
   @Autowired
   private ApplicationContext applicationContext;
+  @Autowired
+  private MasterToDetailAssociationDao masterToDetailAssociationDao;
 
   @Override
   public Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId) {
@@ -89,9 +90,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    // functionality of searching details by masterId is common for all ProfileAssociationDao implementation,
-    // so here can be used any ProfileAssociationDao implementation, for example JOB_TO_ACTION
-    getProfileAssociationDao(JOB_PROFILE, ACTION_PROFILE).getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
+    masterToDetailAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get details profiles by master id '{}', for the tenant '{}'", masterId, tenantId);
@@ -110,9 +109,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    // functionality of searching masters by detailId is common for all ProfileAssociationDao implementation,
-    // so here can be used any ProfileAssociationDao implementation, for example JOB_TO_ACTION
-    getProfileAssociationDao(JOB_PROFILE, ACTION_PROFILE).getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
+    masterToDetailAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get master profiles by detail id '{}', for the tenant '{}'", detailId, tenantId);
@@ -157,7 +154,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     if (profileType == ContentType.JOB_PROFILE) {
       jobProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
-    } else if (profileType == ACTION_PROFILE) {
+    } else if (profileType == ContentType.ACTION_PROFILE) {
       actionProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
     } else if (profileType == ContentType.MAPPING_PROFILE) {
       mappingProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
