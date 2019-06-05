@@ -78,4 +78,14 @@ public interface ProfileService<T, S> {
    * @return future with {@link EntityTypeCollection}
    */
   Future<EntityTypeCollection> getEntityTypes();
+
+  /**
+   * Search in database associations with profile by its id
+   *
+   * @param profileId - profile id
+   * @param tenantId - tenant id
+   * @return - future with boolean value.
+   * True if profile with specified profileId associated as master or detail with other profiles
+   */
+  Future<Boolean> isProfileHasAssociations(String profileId, String tenantId);
 }

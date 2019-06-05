@@ -19,6 +19,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.lang.String.format;
 import static org.folio.dao.util.DaoUtil.constructCriteria;
 import static org.folio.dao.util.DaoUtil.getCQLWrapper;
 
@@ -32,9 +33,11 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
   private static final String ID_FIELD = "'id'";
+  public static final String ASSOCIATIONS_VIEW = "associations_view";
 
   @Autowired
   private PostgresClientFactory pgClientFactory;
+  public static final String GET_ALL_ASSOCIATIONS_BY_PROFILE_ID_SQL = "SELECT * FROM associations_view WHERE master_id = '%s' OR detail_id = '%s'";
 
   @Override
   public Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId) {
@@ -89,7 +92,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
           logger.error("Could not update {} with id {}", className, profileId, updateResult.cause());
           future.fail(updateResult.cause());
         } else if (updateResult.result().getUpdated() != 1) {
-          String errorMessage = String.format("%s with id '%s' was not found", className, profileId);
+          String errorMessage = format("%s with id '%s' was not found", className, profileId);
           logger.error(errorMessage);
           future.fail(new NotFoundException(errorMessage));
         } else {
@@ -114,7 +117,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       pgClientFactory.createInstance(tenantId).get(tx, getTableName(), getProfileType(), new Criterion(idCrit), true, false, selectFuture);
       return selectFuture;
     }).compose(profileList -> profileList.getResults().isEmpty()
-        ? Future.failedFuture(new NotFoundException(String.format("%s with id '%s' was not found", getProfileType().getSimpleName(), profileId)))
+        ? Future.failedFuture(new NotFoundException(format("%s with id '%s' was not found", getProfileType().getSimpleName(), profileId)))
         : Future.succeededFuture(profileList.getResults().get(0)))
       .compose(profileMutator::apply)
       .compose(mutatedProfile -> updateProfile(tx, profileId, mutatedProfile, tenantId))
@@ -123,7 +126,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
           pgClientFactory.createInstance(tenantId).endTx(tx, endTx -> resultFuture.complete(updateAr.result()));
         } else {
           pgClientFactory.createInstance(tenantId).rollbackTx(tx, rollbackAr -> {
-            String message = String.format("Rollback transaction. Error during %s update by id: %s ", getProfileType().getSimpleName(), profileId);
+            String message = format("Rollback transaction. Error during %s update by id: %s ", getProfileType().getSimpleName(), profileId);
             logger.error(message, updateAr.cause());
             resultFuture.fail(updateAr.cause());
           });
@@ -163,6 +166,21 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       } else {
         logger.error("Error during counting profiles by its name. Profile name {}", profileName, reply.cause());
         future.fail(reply.cause());
+      }
+    });
+    return future;
+  }
+
+  @Override
+  public Future<Boolean> isProfileHasAssociations(String profileId, String tenantId) {
+    Future<Boolean> future = Future.future();
+    String preparedSql = format(GET_ALL_ASSOCIATIONS_BY_PROFILE_ID_SQL, profileId, profileId);
+    pgClientFactory.createInstance((tenantId)).select(preparedSql, selectAr -> {
+      if (selectAr.succeeded()) {
+        future.complete(selectAr.result().getNumRows() > 0);
+      } else {
+        logger.error("Error during retrieving associations for particular profile by its id. Profile id {}", profileId, selectAr.cause());
+        future.fail(selectAr.cause());
       }
     });
     return future;

@@ -47,6 +47,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String PROFILE_VALIDATE_ERROR_MESSAGE = "Failed to validate %s";
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
+  private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
   @Autowired
   private ProfileService<JobProfile, JobProfileCollection> jobProfileService;
@@ -162,9 +163,13 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        jobProfileService.markProfileAsDeleted(id, params.getTenantId())
-          .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
-            format("Job Profile with id '%s' was successfully deleted", id)))
+        jobProfileService.isProfileHasAssociations(id, params.getTenantId())
+          .compose(isHasAssociations -> isHasAssociations
+            ? Future.succeededFuture(DeleteDataImportProfilesJobProfilesByIdResponse
+              .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
+            : jobProfileService.markProfileAsDeleted(id, params.getTenantId())
+              .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
+                format("Job Profile with id '%s' was successfully deleted", id))))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -334,9 +339,13 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        mappingProfileService.markProfileAsDeleted(id, params.getTenantId())
-          .map(DeleteDataImportProfilesMappingProfilesByIdResponse.respond204WithTextPlain(
-            format("Mapping Profile with id '%s' was successfully deleted", id)))
+        mappingProfileService.isProfileHasAssociations(id, params.getTenantId())
+          .compose(isHasAssociations -> isHasAssociations
+            ? Future.succeededFuture(DeleteDataImportProfilesMappingProfilesByIdResponse
+              .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
+            : mappingProfileService.markProfileAsDeleted(id, params.getTenantId())
+              .map(DeleteDataImportProfilesMappingProfilesByIdResponse.respond204WithTextPlain(
+                format("Mapping Profile with id '%s' was successfully deleted", id))))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -371,9 +380,13 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        matchProfileService.markProfileAsDeleted(id, params.getTenantId())
-          .map(DeleteDataImportProfilesMatchProfilesByIdResponse.respond204WithTextPlain(
-            format("Match Profile with id '%s' was successfully deleted", id)))
+        matchProfileService.isProfileHasAssociations(id, params.getTenantId())
+          .compose(isHasAssociations -> isHasAssociations
+            ? Future.succeededFuture(DeleteDataImportProfilesMatchProfilesByIdResponse
+              .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
+            : matchProfileService.markProfileAsDeleted(id, params.getTenantId())
+              .map(DeleteDataImportProfilesMatchProfilesByIdResponse.respond204WithTextPlain(
+                format("Match Profile with id '%s' was successfully deleted", id))))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -678,9 +691,13 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        actionProfileService.markProfileAsDeleted(id, params.getTenantId())
-          .map(DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
-            format("Action Profile with id '%s' was successfully deleted", id)))
+        actionProfileService.isProfileHasAssociations(id, params.getTenantId())
+          .compose(isHasAssociations -> isHasAssociations
+            ? Future.succeededFuture(DeleteDataImportProfilesActionProfilesByIdResponse
+              .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
+            : actionProfileService.markProfileAsDeleted(id, tenantId)
+              .map(DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
+                format("Action Profile with id '%s' was successfully deleted", id))))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);

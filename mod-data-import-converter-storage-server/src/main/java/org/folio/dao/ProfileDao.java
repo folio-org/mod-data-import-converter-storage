@@ -71,4 +71,13 @@ public interface ProfileDao<T, S> {
    * @return - boolean value. True if job profile with the same name already exist
    */
   Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId);
+
+  /**
+   * Search in database associations with profile by its id
+   *
+   * @param profileId - profile id
+   * @param tenantId - tenant id
+   * @return - boolean value. True if profile with specified profileId associated as master or detail with other profiles
+   */
+  Future<Boolean> isProfileHasAssociations(String profileId, String tenantId);
 }

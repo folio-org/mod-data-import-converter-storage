@@ -85,6 +85,11 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
     return Future.succeededFuture(entityTypeCollection);
   }
 
+  @Override
+  public Future<Boolean> isProfileHasAssociations(String profileId, String tenantId) {
+    return profileDao.isProfileHasAssociations(profileId, tenantId);
+  }
+
   /**
    * Generates id and sets it to the Profile entity
    *
