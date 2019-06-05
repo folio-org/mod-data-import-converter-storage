@@ -8,6 +8,7 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
@@ -31,9 +33,12 @@ import static org.hamcrest.Matchers.is;
 @RunWith(VertxUnitRunner.class)
 public class ActionProfileTest extends AbstractRestVerticleTest {
 
-  private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
-  private static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
+  static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
+  private static final String ACTION_TO_ACTION_PROFILES_TABLE = "action_to_action_profiles";
+  static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
   private static final String ENTITY_TYPES_PATH = " /data-import-profiles/entityTypes";
+
+  private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
@@ -261,6 +266,46 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldReturnBadRequestOnDeleteProfileAssociatedWithOtherProfiles() {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_1)
+      .when()
+      .post(ACTION_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    ActionProfile profileToDelete = createResponse.body().as(ActionProfile.class);
+
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_2)
+      .when()
+      .post(ACTION_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    ActionProfile associatedActionProfile = createResponse.body().as(ActionProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", ACTION_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
+      .body(new ProfileAssociation()
+        .withMasterProfileId(profileToDelete.getId())
+        .withDetailProfileId(associatedActionProfile.getId())
+        .withOrder(1))
+      .when()
+      .post(ASSOCIATED_PROFILES_PATH)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED));
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_CONFLICT);
+  }
+
+  @Test
   public void shouldMarkProfileAsDeletedOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
@@ -381,11 +426,12 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event -> {
-      if (event.failed()) {
-        context.fail(event.cause());
-      }
-      async.complete();
-    });
+    PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
+      PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
+        if (event2.failed()) {
+          context.fail(event2.cause());
+        }
+        async.complete();
+      }));
   }
 }
