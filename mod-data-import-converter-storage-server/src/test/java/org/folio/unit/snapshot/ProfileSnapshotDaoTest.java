@@ -17,6 +17,7 @@ import org.folio.unit.AbstractUnitTest;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +33,8 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
   @Autowired
   private ProfileDao<ActionProfile, ActionProfileCollection> actionProfileDao;
   @Autowired
-  private ProfileAssociationDao<JobProfileCollection, ActionProfileCollection> jobToActionAssociationDao;
+  @Qualifier("JOB_PROFILE_TO_ACTION_PROFILE")
+  private ProfileAssociationDao jobToActionAssociationDao;
   @Autowired
   private ProfileSnapshotDao dao;
 
