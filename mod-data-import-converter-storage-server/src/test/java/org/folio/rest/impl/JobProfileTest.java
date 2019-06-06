@@ -38,9 +38,7 @@ import static org.hamcrest.Matchers.is;
 public class JobProfileTest extends AbstractRestVerticleTest {
 
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
-  private static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
   private static final String JOB_PROFILES_PATH = "/data-import-profiles/jobProfiles";
-  private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static JobProfile jobProfile_1 = new JobProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
@@ -351,48 +349,6 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnDeleteProfileAssociatedWithOtherProfiles() {
-    Response createResponse = RestAssured.given()
-      .spec(spec)
-      .body(jobProfile_1)
-      .when()
-      .post(JOB_PROFILES_PATH);
-    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    JobProfile jobProfileToDelete = createResponse.body().as(JobProfile.class);
-
-    createResponse = RestAssured.given()
-      .spec(spec)
-      .body(new ActionProfile().withName("testActionProfile"))
-      .when()
-      .post(ACTION_PROFILES_PATH);
-
-    createResponse.then().log().all();
-
-    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
-
-    RestAssured.given()
-      .spec(spec)
-      .queryParam("master", JOB_PROFILE.value())
-      .queryParam("detail", ACTION_PROFILE.value())
-      .body(new ProfileAssociation()
-        .withMasterProfileId(jobProfileToDelete.getId())
-        .withDetailProfileId(actionProfile.getId())
-        .withOrder(1))
-      .when()
-      .post(ASSOCIATED_PROFILES_PATH)
-      .then()
-      .statusCode(is(HttpStatus.SC_CREATED));
-
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(JOB_PROFILES_PATH + "/" + jobProfileToDelete.getId())
-      .then()
-      .statusCode(HttpStatus.SC_CONFLICT);
-  }
-
-  @Test
   public void shouldReturnUnprocessableEntityOnPutJobProfileWithExistingName() {
     RestAssured.given()
       .spec(spec)
@@ -536,13 +492,11 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(JOB_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
-      PostgresClient.getInstance(vertx, TENANT_ID).delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event2 ->
-        PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 -> {
-          if (event.failed()) {
-            context.fail(event3.cause());
-          }
-          async.complete();
-        })));
+    PostgresClient.getInstance(vertx, TENANT_ID).delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event -> {
+      if (event.failed()) {
+        context.fail(event.cause());
+      }
+      async.complete();
+    });
   }
 }

@@ -37,7 +37,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   @Autowired
   private PostgresClientFactory pgClientFactory;
-  public static final String GET_ALL_ASSOCIATIONS_BY_PROFILE_ID_SQL = "SELECT * FROM associations_view WHERE master_id = '%s' OR detail_id = '%s'";
+  public static final String GET_ASSOCIATIONS_ID_WHERE_PROFILE_AS_DETAIL_BY_ID_SQL = "SELECT association_id FROM associations_view WHERE detail_id = '%s'";
 
   @Override
   public Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId) {
@@ -172,9 +172,9 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   }
 
   @Override
-  public Future<Boolean> isProfileHasAssociations(String profileId, String tenantId) {
+  public Future<Boolean> isProfileAssociatedAsDetail(String profileId, String tenantId) {
     Future<Boolean> future = Future.future();
-    String preparedSql = format(GET_ALL_ASSOCIATIONS_BY_PROFILE_ID_SQL, profileId, profileId);
+    String preparedSql = format(GET_ASSOCIATIONS_ID_WHERE_PROFILE_AS_DETAIL_BY_ID_SQL, profileId);
     pgClientFactory.createInstance((tenantId)).select(preparedSql, selectAr -> {
       if (selectAr.succeeded()) {
         future.complete(selectAr.result().getNumRows() > 0);

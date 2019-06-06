@@ -77,7 +77,8 @@ public interface ProfileDao<T, S> {
    *
    * @param profileId - profile id
    * @param tenantId - tenant id
-   * @return - boolean value. True if profile with specified profileId associated as master or detail with other profiles
+   * @return - future with boolean value.
+   * True if profile with specified profileId associated as detail with other profiles
    */
-  Future<Boolean> isProfileHasAssociations(String profileId, String tenantId);
+  Future<Boolean> isProfileAssociatedAsDetail(String profileId, String tenantId);
 }

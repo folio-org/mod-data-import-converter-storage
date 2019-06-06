@@ -86,8 +86,8 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   }
 
   @Override
-  public Future<Boolean> isProfileHasAssociations(String profileId, String tenantId) {
-    return profileDao.isProfileHasAssociations(profileId, tenantId);
+  public Future<Boolean> isProfileAssociatedAsDetail(String profileId, String tenantId) {
+    return profileDao.isProfileAssociatedAsDetail(profileId, tenantId);
   }
 
   /**

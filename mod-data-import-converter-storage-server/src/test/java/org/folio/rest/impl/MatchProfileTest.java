@@ -423,9 +423,10 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event ->
-      PostgresClient.getInstance(vertx, TENANT_ID).delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
-        if (event.failed()) {
+    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
+    pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event ->
+      pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
+        if (event2.failed()) {
           context.fail(event2.cause());
         }
         async.complete();

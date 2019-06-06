@@ -405,10 +405,11 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event ->
-      PostgresClient.getInstance(vertx, TENANT_ID).delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event2 ->
-        PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 -> {
-          if (event.failed()) {
+    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
+    pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event ->
+      pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event2 ->
+        pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 -> {
+          if (event3.failed()) {
             context.fail(event3.cause());
           }
           async.complete();

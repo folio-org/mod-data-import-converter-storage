@@ -288,8 +288,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .queryParam("master", ACTION_PROFILE.value())
       .queryParam("detail", ACTION_PROFILE.value())
       .body(new ProfileAssociation()
-        .withMasterProfileId(profileToDelete.getId())
-        .withDetailProfileId(associatedActionProfile.getId())
+        .withMasterProfileId(associatedActionProfile.getId())
+        .withDetailProfileId(profileToDelete.getId())
         .withOrder(1))
       .when()
       .post(ASSOCIATED_PROFILES_PATH)
@@ -426,8 +426,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
-      PostgresClient.getInstance(vertx, TENANT_ID).delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
+    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
+    pgClient.delete(ACTION_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
+      pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
         if (event2.failed()) {
           context.fail(event2.cause());
         }

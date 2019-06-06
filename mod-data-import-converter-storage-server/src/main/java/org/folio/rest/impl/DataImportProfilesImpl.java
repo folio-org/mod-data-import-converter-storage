@@ -163,13 +163,9 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        jobProfileService.isProfileHasAssociations(id, params.getTenantId())
-          .compose(isHasAssociations -> isHasAssociations
-            ? Future.succeededFuture(DeleteDataImportProfilesJobProfilesByIdResponse
-              .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
-            : jobProfileService.markProfileAsDeleted(id, params.getTenantId())
-              .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
-                format("Job Profile with id '%s' was successfully deleted", id))))
+        jobProfileService.markProfileAsDeleted(id, params.getTenantId())
+          .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
+            format("Job Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .setHandler(asyncResultHandler);
@@ -339,7 +335,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        mappingProfileService.isProfileHasAssociations(id, params.getTenantId())
+        mappingProfileService.isProfileAssociatedAsDetail(id, params.getTenantId())
           .compose(isHasAssociations -> isHasAssociations
             ? Future.succeededFuture(DeleteDataImportProfilesMappingProfilesByIdResponse
               .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
@@ -380,7 +376,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        matchProfileService.isProfileHasAssociations(id, params.getTenantId())
+        matchProfileService.isProfileAssociatedAsDetail(id, params.getTenantId())
           .compose(isHasAssociations -> isHasAssociations
             ? Future.succeededFuture(DeleteDataImportProfilesMatchProfilesByIdResponse
               .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
@@ -691,7 +687,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        actionProfileService.isProfileHasAssociations(id, params.getTenantId())
+        actionProfileService.isProfileAssociatedAsDetail(id, params.getTenantId())
           .compose(isHasAssociations -> isHasAssociations
             ? Future.succeededFuture(DeleteDataImportProfilesActionProfilesByIdResponse
               .respond409WithTextPlain(format(DELETE_PROFILE_ERROR_MESSAGE, id)))
