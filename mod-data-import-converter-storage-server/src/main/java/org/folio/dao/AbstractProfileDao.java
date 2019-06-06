@@ -33,7 +33,6 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
   private static final String ID_FIELD = "'id'";
-  public static final String ASSOCIATIONS_VIEW = "associations_view";
 
   @Autowired
   private PostgresClientFactory pgClientFactory;
