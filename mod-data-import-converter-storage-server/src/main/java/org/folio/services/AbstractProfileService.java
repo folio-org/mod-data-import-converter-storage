@@ -8,11 +8,13 @@ import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.dataimport.util.RestUtil;
+import org.folio.dataimport.util.exception.ConflictException;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
 import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
+  private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
   private final EntityTypeCollection entityTypeCollection;
 
@@ -69,7 +72,10 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   }
 
   public Future<Boolean> markProfileAsDeleted(String id, String tenantId) {
-    return profileDao.updateBlocking(id, profile -> Future.succeededFuture(markProfileAsDeleted(profile)), tenantId)
+    return profileDao.isProfileAssociatedAsDetail(id, tenantId)
+      .compose(isAssociated -> isAssociated
+        ? Future.failedFuture(new ConflictException(String.format(DELETE_PROFILE_ERROR_MESSAGE, id)))
+        : profileDao.updateBlocking(id, profile -> Future.succeededFuture(markProfileAsDeleted(profile)), tenantId))
       .map(true);
   }
 
@@ -83,11 +89,6 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   @Override
   public Future<EntityTypeCollection> getEntityTypes() {
     return Future.succeededFuture(entityTypeCollection);
-  }
-
-  @Override
-  public Future<Boolean> isProfileAssociatedAsDetail(String profileId, String tenantId) {
-    return profileDao.isProfileAssociatedAsDetail(profileId, tenantId);
   }
 
   /**

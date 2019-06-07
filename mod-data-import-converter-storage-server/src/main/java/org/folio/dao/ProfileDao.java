@@ -73,7 +73,7 @@ public interface ProfileDao<T, S> {
   Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId);
 
   /**
-   * Search in database associations with profile by its id
+   * Checks is profile by specified id associated as detail with other profiles
    *
    * @param profileId - profile id
    * @param tenantId - tenant id
