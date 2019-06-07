@@ -10,7 +10,7 @@ import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfile.ExistingRecordType;
 import org.folio.rest.jaxrs.model.MatchProfile.IncomingDataValueType;
-import org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType.MARC;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
@@ -33,7 +34,9 @@ import static org.hamcrest.Matchers.is;
 public class MatchProfileTest extends AbstractRestVerticleTest {
 
   private static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
+  private static final String MATCH_TO_MATCH_PROFILES_TABLE = "match_to_match_profiles";
   private static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
+  private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static MatchProfile matchProfile_1 = new MatchProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
@@ -273,6 +276,46 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldReturnBadRequestOnDeleteProfileAssociatedWithOtherProfiles() {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_1)
+      .when()
+      .post(MATCH_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MatchProfile profileToDelete = createResponse.body().as(MatchProfile.class);
+
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_2)
+      .when()
+      .post(MATCH_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MatchProfile matchProfile = createResponse.body().as(MatchProfile.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", MATCH_PROFILE.value())
+      .queryParam("detail", MATCH_PROFILE.value())
+      .body(new ProfileAssociation()
+        .withMasterProfileId(matchProfile.getId())
+        .withDetailProfileId(profileToDelete.getId())
+        .withOrder(1))
+      .when()
+      .post(ASSOCIATED_PROFILES_PATH)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED));
+
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MATCH_PROFILES_PATH + "/" + profileToDelete.getId())
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_CONFLICT);
+  }
+
+  @Test
   public void shouldMarkAsDeletedProfileOnDelete() {
     Response createResponse = RestAssured.given()
       .spec(spec)
@@ -380,11 +423,13 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event -> {
-      if (event.failed()) {
-        context.fail(event.cause());
-      }
-      async.complete();
-    });
+    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
+    pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event ->
+      pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
+        if (event2.failed()) {
+          context.fail(event2.cause());
+        }
+        async.complete();
+      }));
   }
 }

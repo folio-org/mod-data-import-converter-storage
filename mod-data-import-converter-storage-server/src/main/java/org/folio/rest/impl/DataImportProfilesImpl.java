@@ -678,7 +678,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        actionProfileService.markProfileAsDeleted(id, params.getTenantId())
+        actionProfileService.markProfileAsDeleted(id, tenantId)
           .map(DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
             format("Action Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
