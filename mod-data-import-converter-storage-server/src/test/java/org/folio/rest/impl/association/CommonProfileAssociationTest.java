@@ -28,6 +28,8 @@ import org.junit.runner.RunWith;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
+import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
@@ -64,10 +66,14 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   JobProfile jobProfile2 = new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description");
   JobProfile jobProfile3 = new JobProfile().withName("testJobProfile3").withDataType(MARC);
 
-  ActionProfile actionProfile1 = new ActionProfile().withName("testActionProfile1").withDescription("test-description");
-  ActionProfile actionProfile2 = new ActionProfile().withName("testActionProfile2").withDescription("test-description");
-  ActionProfile actionProfile3 = new ActionProfile().withName("testActionProfile3").withDescription("test-description");
-  ActionProfile actionProfile4 = new ActionProfile().withName("testActionProfile4");
+  ActionProfile actionProfile1 = new ActionProfile().withName("testActionProfile1").withDescription("test-description")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
+  ActionProfile actionProfile2 = new ActionProfile().withName("testActionProfile2").withDescription("test-description")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
+  ActionProfile actionProfile3 = new ActionProfile().withName("testActionProfile3").withDescription("test-description")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
+  ActionProfile actionProfile4 = new ActionProfile().withName("testActionProfile4")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
 
   MappingProfile mappingProfile1 = new MappingProfile().withName("testMappingProfile1").withDescription("test-description");
   MappingProfile mappingProfile2 = new MappingProfile().withName("testMappingProfile2").withDescription("test-description");
