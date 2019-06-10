@@ -25,6 +25,8 @@ import java.util.UUID;
 
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
+import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
+import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
 import static org.hamcrest.Matchers.empty;
@@ -275,7 +277,10 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
 
     createResponse = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile().withName("testActionProfile"))
+      .body(new ActionProfile()
+        .withName("testActionProfile")
+        .withAction(CREATE)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC))
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));

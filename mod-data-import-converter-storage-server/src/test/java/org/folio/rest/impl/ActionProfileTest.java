@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
+import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.INSTANCE;
+import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -41,11 +44,17 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+    .withAction(CREATE)
+    .withFolioRecord(MARC_BIBLIOGRAPHIC);
   private static ActionProfile actionProfile_2 = new ActionProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
+    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+    .withAction(CREATE)
+    .withFolioRecord(MARC_BIBLIOGRAPHIC);
   private static ActionProfile actionProfile_3 = new ActionProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Collections.singletonList("lorem")));
+    .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+    .withAction(CREATE)
+    .withFolioRecord(MARC_BIBLIOGRAPHIC);
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -178,7 +187,10 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile().withName("newProfile"))
+      .body(new ActionProfile()
+        .withName("newProfile")
+        .withAction(CREATE)
+        .withFolioRecord(INSTANCE))
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
@@ -337,7 +349,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     ActionProfile profileToDelete = RestAssured.given()
       .spec(spec)
       .body(new ActionProfile()
-        .withName("ProfileToDelete"))
+        .withName("ProfileToDelete")
+        .withAction(CREATE)
+        .withFolioRecord(INSTANCE))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()
@@ -367,7 +381,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     ActionProfile profileToDelete = RestAssured.given()
       .spec(spec)
       .body(new ActionProfile()
-        .withName("ProfileToDelete"))
+        .withName("ProfileToDelete")
+        .withAction(CREATE)
+        .withFolioRecord(INSTANCE))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()
