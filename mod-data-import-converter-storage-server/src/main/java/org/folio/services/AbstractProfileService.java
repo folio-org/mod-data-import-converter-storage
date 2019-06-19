@@ -75,7 +75,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
     return profileDao.isProfileAssociatedAsDetail(id, tenantId)
       .compose(isAssociated -> isAssociated
         ? Future.failedFuture(new ConflictException(String.format(DELETE_PROFILE_ERROR_MESSAGE, id)))
-        : profileDao.updateBlocking(id, profile -> Future.succeededFuture(markProfileAsDeleted(profile)), tenantId))
+        : profileDao.markProfileAsDeleted(id, tenantId))
       .map(true);
   }
 
@@ -107,15 +107,6 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @return Profile with filled userInfo field
    */
   abstract Future<T> setUserInfoForProfile(T profile, OkapiConnectionParams params);
-
-  /**
-   * Sets deleted to {@code true} in Profile entity
-   *
-   * @param profile Profile entity
-   * @return Profile entity marked as deleted
-   */
-  abstract T markProfileAsDeleted(T profile);
-
 
   /**
    * Returns name of specified profile

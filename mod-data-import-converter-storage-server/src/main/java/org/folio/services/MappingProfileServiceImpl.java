@@ -23,11 +23,6 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   }
 
   @Override
-  MappingProfile markProfileAsDeleted(MappingProfile profile) {
-    return profile.withDeleted(true);
-  }
-
-  @Override
   protected String getProfileName(MappingProfile profile) {
     return profile.getName();
   }

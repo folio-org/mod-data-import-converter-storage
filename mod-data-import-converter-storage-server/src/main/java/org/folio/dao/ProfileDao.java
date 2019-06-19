@@ -81,4 +81,13 @@ public interface ProfileDao<T, S> {
    * True if profile with specified profileId associated as detail with other profiles
    */
   Future<Boolean> isProfileAssociatedAsDetail(String profileId, String tenantId);
+
+  /**
+   * Marks profile as deleted by its id.
+   *
+   * @param profileId profile id
+   * @param tenantId tenant id
+   * @return future with true if succeeded
+   */
+  Future<Boolean> markProfileAsDeleted(String profileId, String tenantId);
 }
