@@ -3,14 +3,19 @@ package org.folio.rest.impl;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.dropwizard.Match;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
+import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfile.ExistingRecordType;
 import org.folio.rest.jaxrs.model.MatchProfile.IncomingDataValueType;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -23,7 +28,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
+import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
+import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
+import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType.MARC;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
@@ -33,9 +44,10 @@ import static org.hamcrest.Matchers.is;
 @RunWith(VertxUnitRunner.class)
 public class MatchProfileTest extends AbstractRestVerticleTest {
 
-  private static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
+  static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
   private static final String MATCH_TO_MATCH_PROFILES_TABLE = "match_to_match_profiles";
-  private static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
+  public static final String MATCH_TO_ACTION_PROFILES_TABLE = "match_to_action_profiles";
+  static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static MatchProfile matchProfile_1 = new MatchProfile().withName("Bla")
@@ -342,6 +354,74 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldDeleteAssociationsWithDetailProfilesOnDelete() {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_1)
+      .when()
+      .post(MATCH_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MatchProfile profileToDelete = createResponse.body().as(MatchProfile.class);
+
+    // creation detail-profiles
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_2)
+      .when()
+      .post(MATCH_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MatchProfile associatedMatchProfile = createResponse.body().as(MatchProfile.class);
+
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfile()
+        .withName("testAction")
+        .withAction(CREATE)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC))
+      .when()
+      .post(ACTION_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    ActionProfile associatedActionProfile = createResponse.body().as(ActionProfile.class);
+
+    // creation associations
+    ProfileAssociation profileAssociation = new ProfileAssociation()
+      .withMasterProfileId(profileToDelete.getId())
+      .withOrder(1);
+
+    ProfileAssociation matchToMatchAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedMatchProfile.getId()),
+      MATCH_PROFILE, MATCH_PROFILE);
+    ProfileAssociation matchToActionAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedActionProfile.getId()),
+      MATCH_PROFILE, ACTION_PROFILE);
+
+    // deleting match profile
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MATCH_PROFILES_PATH + "/" + profileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    // receiving deleted associations
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", MATCH_PROFILE.value())
+      .queryParam("detail", MATCH_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH + "/" + matchToMatchAssociation.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", MATCH_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH + "/" + matchToActionAssociation.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
   public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
     createProfiles();
     MatchProfile matchProfileToDelete = RestAssured.given()
@@ -420,16 +500,30 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     }
   }
 
+  private ProfileAssociation postProfileAssociation(ProfileAssociation profileAssociation, ContentType masterType, ContentType detailType) {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .queryParam("master", masterType.value())
+      .queryParam("detail", detailType.value())
+      .body(profileAssociation)
+      .when()
+      .post(ASSOCIATED_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    return createResponse.body().as(ProfileAssociation.class);
+  }
+
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event ->
-      pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
-        if (event2.failed()) {
-          context.fail(event2.cause());
-        }
-        async.complete();
-      }));
+    pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
+      pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
+      pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event3 ->
+        pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event4 -> {
+          if (event4.failed()) {
+            context.fail(event4.cause());
+          }
+          async.complete();
+        }))));
   }
 }

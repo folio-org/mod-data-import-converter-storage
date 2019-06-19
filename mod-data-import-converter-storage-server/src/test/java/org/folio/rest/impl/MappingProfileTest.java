@@ -37,9 +37,9 @@ import static org.hamcrest.Matchers.is;
 @RunWith(VertxUnitRunner.class)
 public class MappingProfileTest extends AbstractRestVerticleTest {
 
-  private static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
+  static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
   private static final String ACTION_TO_MAPPING_PROFILES_TABLE = "action_to_mapping_profiles";
-  private static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
+  static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static MappingProfile mappingProfile_1 = new MappingProfile().withName("Bla")
