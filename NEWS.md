@@ -1,3 +1,6 @@
+## 2019-06-19 v1.4.0-SNAPSHOT
+* Added profile associations deletion  with detail-profiles on delete target profile. 
+
 ## 2019-06-12 v1.3.0
 * Updated association profiles samples. 
 * Updated API endpoint for getting details by master id. Added query param to specify return type. Added searching by cql query for details.
