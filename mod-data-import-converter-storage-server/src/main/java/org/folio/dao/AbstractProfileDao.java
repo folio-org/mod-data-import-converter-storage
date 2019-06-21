@@ -195,6 +195,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
     pgClient.startTx(tx);
     tx.compose(sqlConnection -> {
+      // updating profile field 'deleted' to true in DB
       Future<Results<T>> selectFuture = Future.future();
       pgClient.get(tx, getTableName(), getProfileType(), new Criterion(idCrit), true, false, selectFuture);
       return selectFuture;
@@ -202,7 +203,9 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
         ? Future.failedFuture(new NotFoundException(format("%s with id '%s' was not found", getProfileType().getSimpleName(), profileId)))
         : Future.succeededFuture(profileList.getResults().get(0)))
       .map(this::markProfileEntityAsDeleted)
-      .compose(mutatedProfile -> updateProfile(tx, profileId, mutatedProfile, tenantId))
+      .compose(markedProfile -> updateProfile(tx, profileId, markedProfile, tenantId))
+
+      // deletion all associations of marked profile with other detail-profiles
       .compose(updatedProfile -> deleteAllAssociationsWithDetails(tx, profileId, tenantId))
       .setHandler(ar -> {
         if (ar.succeeded()) {
