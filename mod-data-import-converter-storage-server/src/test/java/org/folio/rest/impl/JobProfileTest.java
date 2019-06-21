@@ -10,7 +10,10 @@ import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
+import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -25,10 +28,16 @@ import java.util.UUID;
 
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
+import static org.folio.rest.impl.MatchProfileTest.MATCH_PROFILES_PATH;
+import static org.folio.rest.impl.MatchProfileTest.MATCH_PROFILES_TABLE_NAME;
+import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
+import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.JobProfile.DataType.DELIMITED;
 import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
@@ -38,7 +47,10 @@ import static org.hamcrest.Matchers.is;
 public class JobProfileTest extends AbstractRestVerticleTest {
 
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
+  public static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
+  public static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
   private static final String JOB_PROFILES_PATH = "/data-import-profiles/jobProfiles";
+  private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static JobProfile jobProfile_1 = new JobProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
@@ -349,6 +361,78 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldDeleteAssociationsWithDetailProfilesOnDelete() {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(jobProfile_1)
+      .when()
+      .post(JOB_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    JobProfile profileToDelete = createResponse.body().as(JobProfile.class);
+
+    // creation detail-profiles
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfile()
+        .withName("testAction")
+        .withAction(CREATE)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC))
+      .when()
+      .post(ACTION_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    ActionProfile associatedActionProfile = createResponse.body().as(ActionProfile.class);
+
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(new MatchProfile()
+        .withName("testMatch")
+        .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
+        .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
+        .withIncomingDataValueType(MatchProfile.IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+      .when()
+      .post(MATCH_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MatchProfile associatedMatchProfile = createResponse.body().as(MatchProfile.class);
+
+    // creation associations
+    ProfileAssociation profileAssociation = new ProfileAssociation()
+      .withMasterProfileId(profileToDelete.getId())
+      .withOrder(1);
+
+    ProfileAssociation jobToActionAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedActionProfile.getId()),
+      JOB_PROFILE, ACTION_PROFILE);
+    ProfileAssociation jobToMatchAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedMatchProfile.getId()),
+      JOB_PROFILE, MATCH_PROFILE);
+
+    // deleting job profile
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(JOB_PROFILES_PATH + "/" + profileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    // receiving deleted associations
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH + "/" + jobToActionAssociation.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", JOB_PROFILE.value())
+      .queryParam("detail", MATCH_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH + "/" + jobToMatchAssociation.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
   public void shouldReturnUnprocessableEntityOnPutJobProfileWithExistingName() {
     RestAssured.given()
       .spec(spec)
@@ -489,14 +573,31 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     }
   }
 
+  private ProfileAssociation postProfileAssociation(ProfileAssociation profileAssociation, ContentType masterType, ContentType detailType) {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .queryParam("master", masterType.value())
+      .queryParam("detail", detailType.value())
+      .body(profileAssociation)
+      .when()
+      .post(ASSOCIATED_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    return createResponse.body().as(ProfileAssociation.class);
+  }
+
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    PostgresClient.getInstance(vertx, TENANT_ID).delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event -> {
-      if (event.failed()) {
-        context.fail(event.cause());
-      }
-      async.complete();
-    });
+    PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
+    pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
+      pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
+        pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event3 ->
+          pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event4 ->
+            pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event5 -> {
+              if (event5.failed()) {
+                context.fail(event5.cause());
+              }
+              async.complete();
+            })))));
   }
 }

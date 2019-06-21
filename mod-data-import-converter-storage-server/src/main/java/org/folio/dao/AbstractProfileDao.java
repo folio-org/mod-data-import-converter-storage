@@ -33,9 +33,10 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
   private static final String ID_FIELD = "'id'";
+  public static final String MASTER_PROFILE_ID_FIELD = "'masterProfileId'";
 
   @Autowired
-  private PostgresClientFactory pgClientFactory;
+  protected PostgresClientFactory pgClientFactory;
   public static final String IS_PROFILE_ASSOCIATED_AS_DETAIL_BY_ID_SQL = "SELECT exists (SELECT association_id FROM associations_view WHERE detail_id = '%s')";
 
   @Override
@@ -134,7 +135,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       return resultFuture;
   }
 
-  private Future<T> updateProfile(AsyncResult<SQLConnection> tx, String profileId, T profile, String tenantId) {
+  protected Future<T> updateProfile(AsyncResult<SQLConnection> tx, String profileId, T profile, String tenantId) {
     Future<UpdateResult> future = Future.future();
     try {
       CQLWrapper updateFilter = new CQLWrapper(new CQL2PgJSON(getTableName() + ".jsonb"), "id==" + profileId);
@@ -180,6 +181,83 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       } else {
         logger.error("Error during retrieving associations for particular profile by its id. Profile id {}", profileId, selectAr.cause());
         future.fail(selectAr.cause());
+      }
+    });
+    return future;
+  }
+
+  @Override
+  public Future<Boolean> markProfileAsDeleted(String profileId, String tenantId) {
+    Future<Boolean> future = Future.future();
+    Future<SQLConnection> tx = Future.future();
+    Criteria idCrit = constructCriteria(ID_FIELD, profileId);
+    PostgresClient pgClient = pgClientFactory.createInstance(tenantId);
+
+    pgClient.startTx(tx);
+    tx.compose(sqlConnection -> {
+      // updating profile field 'deleted' to true in DB
+      Future<Results<T>> selectFuture = Future.future();
+      pgClient.get(tx, getTableName(), getProfileType(), new Criterion(idCrit), true, false, selectFuture);
+      return selectFuture;
+    }).compose(profileList -> profileList.getResults().isEmpty()
+        ? Future.failedFuture(new NotFoundException(format("%s with id '%s' was not found", getProfileType().getSimpleName(), profileId)))
+        : Future.succeededFuture(profileList.getResults().get(0)))
+      .map(this::markProfileEntityAsDeleted)
+      .compose(markedProfile -> updateProfile(tx, profileId, markedProfile, tenantId))
+
+      // deletion all associations of marked profile with other detail-profiles
+      .compose(updatedProfile -> deleteAllAssociationsWithDetails(tx, profileId, tenantId))
+      .setHandler(ar -> {
+        if (ar.succeeded()) {
+          pgClient.endTx(tx, endTx -> future.complete(true));
+        } else {
+          pgClient.rollbackTx(tx, rollbackAr -> {
+            String message = format("Rollback transaction. Error during mark %s as deleted by id: %s ", getProfileType().getSimpleName(), profileId);
+            logger.error(message, ar.cause());
+            future.fail(ar.cause());
+          });
+        }
+      });
+    return future;
+  }
+
+  /**
+   * Sets deleted to {@code true} in Profile entity
+   *
+   * @param profile Profile entity
+   * @return Profile entity marked as deleted
+   */
+  protected abstract T markProfileEntityAsDeleted(T profile);
+
+  /**
+   * Deletes all associations of certain profile with other detail-profiles by its id.
+   *
+   * @param txConnection future with connection which will be used to perform deletion
+   * @param profileId profile id
+   * @param tenantId tenant id
+   * @return future with true if succeeded
+   */
+  protected abstract Future<Boolean> deleteAllAssociationsWithDetails(Future<SQLConnection> txConnection, String profileId, String tenantId);
+
+  /**
+   * Deletes associations of certain profile with other detail-profiles by its id in specified table.
+   *
+   * @param txConnection future with connection which will be used to perform deletion
+   * @param profileId profile id
+   * @param associationsTableName table name in which delete associations
+   * @param tenantId tenant id
+   * @return future with true if succeeded
+   */
+  protected Future<Boolean> deleteAssociationsWithDetails(Future<SQLConnection> txConnection, String profileId, String associationsTableName, String tenantId) {
+    Future<Boolean> future = Future.future();
+    PostgresClient pgClient = pgClientFactory.createInstance(tenantId);
+    Criteria masterIdCrit = constructCriteria(MASTER_PROFILE_ID_FIELD, profileId);
+    pgClient.delete(txConnection, associationsTableName, new Criterion(masterIdCrit), deleteAr -> {
+      if (deleteAr.failed()) {
+        logger.error("Error during delete associations of profile with other detail-profiles by its id '{}'", deleteAr.cause(), profileId);
+        future.fail(deleteAr.cause());
+      } else {
+        future.complete(true);
       }
     });
     return future;

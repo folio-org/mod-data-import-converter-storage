@@ -8,7 +8,9 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -23,10 +25,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.folio.rest.impl.MappingProfileTest.MAPPING_PROFILES_PATH;
+import static org.folio.rest.impl.MappingProfileTest.MAPPING_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.INSTANCE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
@@ -38,6 +43,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
   static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
   private static final String ACTION_TO_ACTION_PROFILES_TABLE = "action_to_action_profiles";
+  private static final String ACTION_TO_MAPPING_PROFILES_TABLE = "action_to_mapping_profiles";
   static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
   private static final String ENTITY_TYPES_PATH = " /data-import-profiles/entityTypes";
 
@@ -344,6 +350,71 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldDeleteAssociationsWithDetailProfilesOnDelete() {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_1)
+      .when()
+      .post(ACTION_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    ActionProfile profileToDelete = createResponse.body().as(ActionProfile.class);
+
+    // creation detail-profiles
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_2)
+      .when()
+      .post(ACTION_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    ActionProfile associatedActionProfile = createResponse.body().as(ActionProfile.class);
+
+    createResponse = RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfile().withName("testMapping"))
+      .when()
+      .post(MAPPING_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MappingProfile associatedMappingProfile = createResponse.body().as(MappingProfile.class);
+
+    // creation associations
+    ProfileAssociation profileAssociation = new ProfileAssociation()
+      .withMasterProfileId(profileToDelete.getId())
+      .withOrder(1);
+
+    ProfileAssociation actionToActionAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedActionProfile.getId()),
+      ACTION_PROFILE, ACTION_PROFILE);
+    ProfileAssociation actionToMappingAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedMappingProfile.getId()),
+      ACTION_PROFILE, MAPPING_PROFILE);
+
+    // deleting action profile
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    // receiving deleted associations
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", ACTION_PROFILE.value())
+      .queryParam("detail", ACTION_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH + "/" + actionToActionAssociation.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", ACTION_PROFILE.value())
+      .queryParam("detail", MAPPING_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH + "/" + actionToMappingAssociation.getId())
+      .then()
+      .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test
   public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
     createProfiles();
     ActionProfile profileToDelete = RestAssured.given()
@@ -439,16 +510,31 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     }
   }
 
+  private ProfileAssociation postProfileAssociation(ProfileAssociation profileAssociation, ContentType masterType, ContentType detailType) {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .queryParam("master", masterType.value())
+      .queryParam("detail", detailType.value())
+      .body(profileAssociation)
+      .when()
+      .post(ASSOCIATED_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    return createResponse.body().as(ProfileAssociation.class);
+  }
+
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
     pgClient.delete(ACTION_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
-      pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event2 -> {
-        if (event2.failed()) {
-          context.fail(event2.cause());
-        }
-        async.complete();
-      }));
+      pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event2 ->
+        pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 ->
+          pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event4 -> {
+          if (event4.failed()) {
+            context.fail(event4.cause());
+          }
+          async.complete();
+        })))
+    );
   }
 }

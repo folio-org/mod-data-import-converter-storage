@@ -23,11 +23,6 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
   }
 
   @Override
-  MatchProfile markProfileAsDeleted(MatchProfile profile) {
-    return profile.withDeleted(true);
-  }
-
-  @Override
   protected String getProfileName(MatchProfile profile) {
     return profile.getName();
   }

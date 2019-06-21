@@ -64,7 +64,7 @@ public interface ProfileService<T, S> {
   Future<Boolean> isProfileExistByProfileName(T profile, String tenantId);
 
   /**
-   * Updates the flag deleted to true in T entity
+   * Marks profile as deleted by its id
    *
    * @param id       Profile id
    * @param tenantId tenant id from request
