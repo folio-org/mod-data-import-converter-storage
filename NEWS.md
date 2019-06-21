@@ -1,5 +1,5 @@
 ## 2019-06-19 v1.4.0-SNAPSHOT
-* Added profile associations deletion  with detail-profiles on delete target profile. 
+* Added removing all profile associations when it's marked as deleted.
 
 ## 2019-06-12 v1.3.0
 * Updated association profiles samples. 
