@@ -23,11 +23,6 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
   }
 
   @Override
-  JobProfile markProfileAsDeleted(JobProfile profile){
-    return profile.withDeleted(true);
-  }
-
-  @Override
   protected String getProfileName(JobProfile profile) {
     return profile.getName();
   }

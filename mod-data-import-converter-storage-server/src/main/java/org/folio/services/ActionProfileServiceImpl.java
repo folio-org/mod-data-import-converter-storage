@@ -23,11 +23,6 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
   }
 
   @Override
-  ActionProfile markProfileAsDeleted(ActionProfile profile) {
-    return profile.withDeleted(true);
-  }
-
-  @Override
   protected String getProfileName(ActionProfile profile) {
     return profile.getName();
   }
