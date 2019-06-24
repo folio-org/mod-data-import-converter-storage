@@ -472,4 +472,108 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
-}')ON CONFLICT DO NOTHING;
+}'),
+('1490430a-4d72-494b-ae6b-a8e4d9614e0e', '{
+  "id": "1490430a-4d72-494b-ae6b-a8e4d9614e0e",
+  "name": "Invoice check",
+  "description": "To check whether invoice has already been loaded",
+  "tags": {
+    "tagList": [
+      "invoice", "submatch"
+    ]
+  },
+  "entityType": "INVENTORY_ITEM",
+  "incomingRecordType": "EDIFACT",
+  "existingRecordType": "INVOICE",
+  "incomingDataValueType": "VALUE_FROM_INCOMING_RECORD",
+  "field": "123",
+  "incomingIndicator1": "",
+  "incomingIndicator2": "",
+  "incomingRecordSubfield": "",
+  "incomingText": "",
+  "incomingNumber": "",
+  "incomingFromDate": "",
+  "incomingToDate": "",
+  "incomingDate": "",
+  "incomingHowMuch": "COMPLETE_STRING",
+  "matchingCriteria": "EXACTLY_MATCHES",
+  "existingDataValueType": "VALUE_IN_EXISTING_RECORD",
+  "fieldMarc": "",
+  "existingIndicator1": "",
+  "existingIndicator2": "",
+  "existingRecordSubfield": "",
+  "fieldNonMarc": "VENDOR_INVOICE_NUMBER",
+  "existingText": "",
+  "existingNumber": "",
+  "existingFromDate": "",
+  "existingToDate": "",
+  "existingDate": "",
+  "existingInclude": "MATCH_ON",
+  "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-11-02T10:18:44.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-12-03T14:20:21.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
+}'),
+('4c1d47ba-c527-4ef1-b497-42676c82254f', '{
+  "id": "4c1d47ba-c527-4ef1-b497-42676c82254f",
+  "name": "Item Barcode match",
+  "description": "Find item record by barcode number",
+  "tags": {
+    "tagList": [
+      "barcode", "item"
+    ]
+  },
+  "entityType": "INVENTORY_ITEM",
+  "incomingRecordType": "MARC",
+  "existingRecordType": "ITEM",
+  "incomingDataValueType": "VALUE_FROM_INCOMING_RECORD",
+  "field": "945",
+  "incomingIndicator1": " ",
+  "incomingIndicator2": " ",
+  "incomingRecordSubfield": "i",
+  "incomingText": "",
+  "incomingNumber": "",
+  "incomingFromDate": "",
+  "incomingToDate": "",
+  "incomingDate": "",
+  "incomingHowMuch": "COMPLETE_STRING",
+  "matchingCriteria": "EXACTLY_MATCHES",
+  "existingDataValueType": "VALUE_IN_EXISTING_RECORD",
+  "fieldMarc": "",
+  "existingIndicator1": "",
+  "existingIndicator2": "",
+  "existingRecordSubfield": "",
+  "fieldNonMarc": "ITEM_BARCODE",
+  "existingText": "",
+  "existingNumber": "",
+  "existingFromDate": "",
+  "existingToDate": "",
+  "existingDate": "",
+  "existingInclude": "MATCH_ON",
+  "existingHowMuch": "COMPLETE_STRING",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2018-11-01T10:09:51.000",
+    "createdByUserId": "",
+    "createdByUsername": "",
+    "updatedDate": "2018-12-01T15:21:28.000",
+    "updatedByUserId": "",
+    "updatedByUsername": ""
+  }
+}') ON CONFLICT DO NOTHING;
