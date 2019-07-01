@@ -1,7 +1,6 @@
 package org.folio.dao;
 
 import io.vertx.core.Future;
-import io.vertx.ext.sql.SQLConnection;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.persist.interfaces.Results;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Component;
 public class JobProfileDaoImpl extends AbstractProfileDao <JobProfile, JobProfileCollection> {
 
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
-  private static final String JOB_TO_ACTION_ASSOCIATION_TABLE = "job_to_action_profiles";
-  private static final String JOB_TO_MATCH_ASSOCIATION_TABLE = "job_to_match_profiles";
 
   @Override
   String getTableName() {
@@ -42,11 +39,5 @@ public class JobProfileDaoImpl extends AbstractProfileDao <JobProfile, JobProfil
   @Override
   protected JobProfile markProfileEntityAsDeleted(JobProfile profile) {
     return profile.withDeleted(true);
-  }
-
-  @Override
-  protected Future<Boolean> deleteAllAssociationsWithDetails(Future<SQLConnection> txConnection, String masterProfileId, String tenantId) {
-    return deleteAssociationsWithDetails(txConnection, masterProfileId, JOB_TO_ACTION_ASSOCIATION_TABLE, tenantId)
-      .compose(voidDeleteRes -> deleteAssociationsWithDetails(txConnection, masterProfileId, JOB_TO_MATCH_ASSOCIATION_TABLE, tenantId));
   }
 }

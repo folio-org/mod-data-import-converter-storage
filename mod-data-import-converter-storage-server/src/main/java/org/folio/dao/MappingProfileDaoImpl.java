@@ -1,7 +1,6 @@
 package org.folio.dao;
 
 import io.vertx.core.Future;
-import io.vertx.ext.sql.SQLConnection;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.persist.interfaces.Results;
@@ -41,11 +40,4 @@ public class MappingProfileDaoImpl extends AbstractProfileDao<MappingProfile, Ma
   protected MappingProfile markProfileEntityAsDeleted(MappingProfile profile) {
     return profile.withDeleted(true);
   }
-
-  @Override
-  protected Future<Boolean> deleteAllAssociationsWithDetails(Future<SQLConnection> txConnection, String masterProfileId, String tenantId) {
-    // Mapping profile can not be associated with detail-profiles
-    return Future.succeededFuture();
-  }
-
 }
