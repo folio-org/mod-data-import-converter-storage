@@ -33,7 +33,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
   private static final String ID_FIELD = "'id'";
-  public static final String MASTER_PROFILE_ID_FIELD = "'masterProfileId'";
+  public static final String MASTER_PROFILE_ID_FIELD = "'masterId'";
 
   @Autowired
   protected PostgresClientFactory pgClientFactory;
@@ -206,7 +206,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       .compose(markedProfile -> updateProfile(tx, profileId, markedProfile, tenantId))
 
       // deletion all associations of marked profile with other detail-profiles
-      .compose(updatedProfile -> deleteAllAssociationsWithDetails(tx, profileId, tenantId))
+      .compose(updatedProfile -> deleteAssociationsWithDetails(tx, profileId, tenantId))
       .setHandler(ar -> {
         if (ar.succeeded()) {
           pgClient.endTx(tx, endTx -> future.complete(true));
@@ -237,22 +237,11 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
    * @param tenantId tenant id
    * @return future with true if succeeded
    */
-  protected abstract Future<Boolean> deleteAllAssociationsWithDetails(Future<SQLConnection> txConnection, String profileId, String tenantId);
-
-  /**
-   * Deletes associations of certain profile with other detail-profiles by its id in specified table.
-   *
-   * @param txConnection future with connection which will be used to perform deletion
-   * @param profileId profile id
-   * @param associationsTableName table name in which delete associations
-   * @param tenantId tenant id
-   * @return future with true if succeeded
-   */
-  protected Future<Boolean> deleteAssociationsWithDetails(Future<SQLConnection> txConnection, String profileId, String associationsTableName, String tenantId) {
+  protected Future<Boolean> deleteAssociationsWithDetails(Future<SQLConnection> txConnection, String profileId, String tenantId) {
     Future<Boolean> future = Future.future();
     PostgresClient pgClient = pgClientFactory.createInstance(tenantId);
-    Criteria masterIdCrit = constructCriteria(MASTER_PROFILE_ID_FIELD, profileId);
-    pgClient.delete(txConnection, associationsTableName, new Criterion(masterIdCrit), deleteAr -> {
+    String deleteQuery = String.format("DELETE FROM associations_view WHERE master_id = '%s'", profileId);
+    pgClient.execute(txConnection, deleteQuery, deleteAr -> {
       if (deleteAr.failed()) {
         logger.error("Error during delete associations of profile with other detail-profiles by its id '{}'", deleteAr.cause(), profileId);
         future.fail(deleteAr.cause());
