@@ -280,7 +280,7 @@
     },
     {
       "permissionName": "converter-storage.profileassociation.get",
-      "displayName": "Data Import Converter Storage - get Profile Association",
+      "displayName": "Data Import Converter Storage - get Profile Association(s)",
       "description": "Get Profile Association(s)"
     },
     {
