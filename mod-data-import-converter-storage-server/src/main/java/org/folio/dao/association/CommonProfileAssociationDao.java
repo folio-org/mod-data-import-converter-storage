@@ -36,26 +36,27 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATC
 public class CommonProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationDao.class);
-  private static final String CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE = "Correct ProfileAssociation types: ACTION_PROFILE_TO_ACTION_PROFILE, ACTION_PROFILE_TO_MAPPING_PROFILE, "
-    + "ACTION_PROFILE_TO_MATCH_PROFILE, JOB_PROFILE_TO_ACTION_PROFILE, JOB_PROFILE_TO_MATCH_PROFILE, MATCH_PROFILE_TO_ACTION_PROFILE, MATCH_PROFILE_TO_MATCH_PROFILE";
-  private Map<String, String> associationTableNamesMap;
-
+  private static final String CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE = "Correct ProfileAssociation types: " +
+                                                                          "ACTION_PROFILE_TO_ACTION_PROFILE, " +
+                                                                          "ACTION_PROFILE_TO_MAPPING_PROFILE, " +
+                                                                          "ACTION_PROFILE_TO_MATCH_PROFILE, " +
+                                                                          "JOB_PROFILE_TO_ACTION_PROFILE, " +
+                                                                          "JOB_PROFILE_TO_MATCH_PROFILE, " +
+                                                                          "MATCH_PROFILE_TO_ACTION_PROFILE, " +
+                                                                          "MATCH_PROFILE_TO_MATCH_PROFILE";
+  private static Map<String, String> associationTableNamesMap;
   @Autowired
   protected PostgresClientFactory pgClientFactory;
 
-  public CommonProfileAssociationDao() {
-    initAssociationTableNamesMap();
-  }
-
-  private void initAssociationTableNamesMap() {
-    this.associationTableNamesMap = new HashMap<>();
-    this.associationTableNamesMap.put(ACTION_PROFILE.value() + ACTION_PROFILE.value(), "action_to_action_profiles");
-    this.associationTableNamesMap.put(ACTION_PROFILE.value() + MAPPING_PROFILE.value(), "action_to_mapping_profiles");
-    this.associationTableNamesMap.put(ACTION_PROFILE.value() + MATCH_PROFILE.value(), "action_to_match_profiles");
-    this.associationTableNamesMap.put(JOB_PROFILE.value() + ACTION_PROFILE.value(), "job_to_action_profiles");
-    this.associationTableNamesMap.put(JOB_PROFILE.value() + MATCH_PROFILE.value(), "job_to_match_profiles");
-    this.associationTableNamesMap.put(MATCH_PROFILE.value() + ACTION_PROFILE.value(), "match_to_action_profiles");
-    this.associationTableNamesMap.put(MATCH_PROFILE.value() + MATCH_PROFILE.value(), "match_to_match_profiles");
+  static {
+    associationTableNamesMap = new HashMap<>();
+    associationTableNamesMap.put(ACTION_PROFILE.value() + ACTION_PROFILE.value(), "action_to_action_profiles");
+    associationTableNamesMap.put(ACTION_PROFILE.value() + MAPPING_PROFILE.value(), "action_to_mapping_profiles");
+    associationTableNamesMap.put(ACTION_PROFILE.value() + MATCH_PROFILE.value(), "action_to_match_profiles");
+    associationTableNamesMap.put(JOB_PROFILE.value() + ACTION_PROFILE.value(), "job_to_action_profiles");
+    associationTableNamesMap.put(JOB_PROFILE.value() + MATCH_PROFILE.value(), "job_to_match_profiles");
+    associationTableNamesMap.put(MATCH_PROFILE.value() + ACTION_PROFILE.value(), "match_to_action_profiles");
+    associationTableNamesMap.put(MATCH_PROFILE.value() + MATCH_PROFILE.value(), "match_to_match_profiles");
   }
 
   @Override
@@ -133,7 +134,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
    * @return table name
    */
   private String getAssociationTableName(ContentType masterType, ContentType detailType) {
-    String associationTableName = this.associationTableNamesMap.get(masterType.value() + detailType.value());
+    String associationTableName = associationTableNamesMap.get(masterType.value() + detailType.value());
     if (associationTableName == null) {
       String message = format("Invalid ProfileAssociation type with master type '%s' and detail type '%s'. ", masterType, detailType);
       LOGGER.error(message);

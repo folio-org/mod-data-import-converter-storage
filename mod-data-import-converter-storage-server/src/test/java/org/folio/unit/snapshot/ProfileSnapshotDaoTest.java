@@ -11,14 +11,12 @@ import org.folio.rest.jaxrs.model.ActionProfileCollection;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
-import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.unit.AbstractUnitTest;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +35,7 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
   @Autowired
   private ProfileDao<ActionProfile, ActionProfileCollection> actionProfileDao;
   @Autowired
-  private ProfileAssociationDao jobToActionAssociationDao;
+  private ProfileAssociationDao profileAssociationDao;
   @Autowired
   private ProfileSnapshotDao dao;
 
@@ -66,7 +64,7 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
       context.assertTrue(savedJobProfileAr.succeeded());
       actionProfileDao.saveProfile(actionProfile, TENANT_ID).setHandler(savedActionProfileAr -> {
         context.assertTrue(savedActionProfileAr.succeeded());
-        jobToActionAssociationDao.save(jobToAction1Association, JOB_PROFILE, ACTION_PROFILE, TENANT_ID).setHandler(savedAssociationAr -> {
+        profileAssociationDao.save(jobToAction1Association, JOB_PROFILE, ACTION_PROFILE, TENANT_ID).setHandler(savedAssociationAr -> {
           context.assertTrue(savedAssociationAr.succeeded());
           dao.getSnapshotItems(jobProfile.getId(), TENANT_ID).setHandler(itemsAr -> {
             // then
