@@ -9,6 +9,7 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
+import org.folio.rest.jaxrs.model.MappingProfile.IncomingRecordType;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
@@ -370,7 +371,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
     createResponse = RestAssured.given()
       .spec(spec)
-      .body(new MappingProfile().withName("testMapping"))
+      .body(new MappingProfile().withName("testMapping")
+        .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
+        .withFolioRecord(MappingProfile.FolioRecord.INSTANCE))
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
