@@ -132,7 +132,7 @@ Example of sending a request to the mod-data-import-converter-storage
 The module contains sample data for job, action, match and mapping profiles which will be created only in test mode.
 To run module in test mode should specify evnironment variable test.mode = true. \
 NOTE: so far, sample data for the default job profile are used to initiate processing of records using 
-the magic button on UI, so to provide this functionality you should run the module in test mode.
+the secret button on UI, so to provide this functionality you should run the module in test mode.
  
 ## Issue tracker
 
