@@ -12,6 +12,7 @@
     <basedir>${project.parent.basedir}</basedir>
     <ramlfiles_path>${project.parent.basedir}/ramls</ramlfiles_path>
     <jackson.version>2.9.9.1</jackson.version>
+    <jackson.jaxb.version>2.9.9</jackson.jaxb.version>
     <wiremock.version>2.19.0</wiremock.version>
   </properties>
 
@@ -73,7 +74,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jaxb-annotations</artifactId>
-      <version>${jackson.version}</version>
+      <version>${jackson.jaxb.version}</version>
     </dependency>
     <dependency>
       <groupId>org.folio</groupId>
