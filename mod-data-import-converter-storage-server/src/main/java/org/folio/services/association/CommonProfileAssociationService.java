@@ -6,7 +6,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
-import org.folio.dao.association.MasterToDetailAssociationDao;
+import org.folio.dao.association.MasterDetailAssociationDao;
 import org.folio.dao.association.ProfileAssociationDao;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -48,7 +48,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   @Autowired
   private ProfileAssociationDao profileAssociationDao;
   @Autowired
-  private MasterToDetailAssociationDao masterToDetailAssociationDao;
+  private MasterDetailAssociationDao masterDetailAssociationDao;
 
   @Override
   public Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId) {
@@ -82,7 +82,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    masterToDetailAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
+    masterDetailAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get details profiles by master id '{}', for the tenant '{}'", masterId, tenantId);
@@ -101,7 +101,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
     Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
 
-    masterToDetailAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
+    masterDetailAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
       .setHandler(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get master profiles by detail id '{}', for the tenant '{}'", detailId, tenantId);

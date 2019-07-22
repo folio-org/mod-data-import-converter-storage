@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * This DAO is for profiles which are associated with other in 'master' to 'detail' relationship
  */
-public interface MasterToDetailAssociationDao {
+public interface MasterDetailAssociationDao {
 
   /**
    * Returns 'detail' profiles linked to 'master' profile id
