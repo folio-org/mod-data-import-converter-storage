@@ -1,4 +1,4 @@
-## 2019-06-19 v1.4.0-SNAPSHOT
+## 2019-07-22 v1.4.0
 * Added removing all profile associations when it's marked as deleted.
 * Changed implementation of delete functionality for profile associations using DB rule.
 * Updated Mapping Profile schema and sample data.
