@@ -12,7 +12,6 @@ import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
-import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -36,7 +35,6 @@ import static org.folio.rest.jaxrs.model.JobProfile.DataType.DELIMITED;
 import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
-import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
@@ -387,8 +385,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("testMatch")
         .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
-        .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
-        .withIncomingDataValueType(MatchProfile.IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+        .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));

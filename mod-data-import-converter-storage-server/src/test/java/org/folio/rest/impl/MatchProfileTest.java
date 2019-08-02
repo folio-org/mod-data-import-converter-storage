@@ -10,7 +10,6 @@ import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfile.ExistingRecordType;
-import org.folio.rest.jaxrs.model.MatchProfile.IncomingDataValueType;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
@@ -49,18 +48,15 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   private static MatchProfile matchProfile_1 = new MatchProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
     .withIncomingRecordType(MARC)
-    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC);
   private static MatchProfile matchProfile_2 = new MatchProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
     .withIncomingRecordType(MARC)
-    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC);
   private static MatchProfile matchProfile_3 = new MatchProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
     .withIncomingRecordType(MARC)
-    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC);
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -195,8 +191,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("newProfile")
         .withIncomingRecordType(MARC)
-        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
@@ -425,8 +420,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("ProfileToDelete")
         .withIncomingRecordType(MARC)
-        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH)
       .then()
@@ -458,8 +452,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("ProfileToDelete")
         .withIncomingRecordType(MARC)
-        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH)
       .then()
