@@ -9,10 +9,9 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.ExistingMatchExpression;
 import org.folio.rest.jaxrs.model.Field;
-import org.folio.rest.jaxrs.model.IncomingMatchExpression;
 import org.folio.rest.jaxrs.model.MatchDetail;
+import org.folio.rest.jaxrs.model.MatchExpression;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfile.ExistingRecordType;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
@@ -34,8 +33,8 @@ import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
-import static org.folio.rest.jaxrs.model.IncomingMatchExpression.DataValueType.VALUE_FROM_RECORD;
 import static org.folio.rest.jaxrs.model.MatchDetail.MatchCriterion.EXACTLY_MATCHES;
+import static org.folio.rest.jaxrs.model.MatchExpression.DataValueType.VALUE_FROM_RECORD;
 import static org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
@@ -490,7 +489,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     MatchDetail matchDetail = new MatchDetail()
       .withIncomingRecordType(MARC)
       .withExistingRecordType(ExistingRecordType.INSTANCE)
-      .withIncomingMatchExpression(new IncomingMatchExpression()
+      .withIncomingMatchExpression(new MatchExpression()
         .withDataValueType(VALUE_FROM_RECORD)
         .withFields(Arrays.asList(
           new Field().withLabel("field").withValue("001"),
@@ -499,7 +498,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
           new Field().withLabel("recordSubfield").withValue(StringUtils.EMPTY)))
       .withQualifier(new Qualifier().withComparisonPart(NUMERICS_ONLY)))
       .withMatchCriterion(EXACTLY_MATCHES)
-      .withExistingMatchExpression(new ExistingMatchExpression()
+      .withExistingMatchExpression(new MatchExpression()
         .withDataValueType(VALUE_FROM_RECORD)
         .withFields(Collections.singletonList(
           new Field().withLabel("field").withValue("INSTANCE_HRID")))
