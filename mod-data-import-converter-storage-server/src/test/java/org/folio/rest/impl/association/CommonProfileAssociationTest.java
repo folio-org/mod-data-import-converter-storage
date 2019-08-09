@@ -89,22 +89,18 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   MatchProfile matchProfile1 = new MatchProfile().withName("testMatchProfile1")
     .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
     .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(MatchProfile.IncomingDataValueType.VALUE_FROM_INCOMING_RECORD)
     .withDescription("test-description");
   MatchProfile matchProfile2 = new MatchProfile().withName("testMatchProfile2")
     .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
     .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(MatchProfile.IncomingDataValueType.VALUE_FROM_INCOMING_RECORD)
     .withDescription("test-description");
   MatchProfile matchProfile3 = new MatchProfile().withName("testMatchProfile3")
     .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
     .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(MatchProfile.IncomingDataValueType.VALUE_FROM_INCOMING_RECORD)
     .withDescription("test-description");
   MatchProfile matchProfile4 = new MatchProfile().withName("testMatchProfile4")
     .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
-    .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(MatchProfile.IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
+    .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC);
 
   @Test
   public void runTestShouldReturnEmptyOkResultOnGetAll(TestContext testContext) {

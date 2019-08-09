@@ -6,13 +6,17 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.Field;
+import org.folio.rest.jaxrs.model.MatchDetail;
+import org.folio.rest.jaxrs.model.MatchExpression;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfile.ExistingRecordType;
-import org.folio.rest.jaxrs.model.MatchProfile.IncomingDataValueType;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
+import org.folio.rest.jaxrs.model.Qualifier;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -29,9 +33,12 @@ import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
+import static org.folio.rest.jaxrs.model.MatchDetail.MatchCriterion.EXACTLY_MATCHES;
+import static org.folio.rest.jaxrs.model.MatchExpression.DataValueType.VALUE_FROM_RECORD;
 import static org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
+import static org.folio.rest.jaxrs.model.Qualifier.ComparisonPart.NUMERICS_ONLY;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
@@ -49,18 +56,15 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   private static MatchProfile matchProfile_1 = new MatchProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
     .withIncomingRecordType(MARC)
-    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC);
   private static MatchProfile matchProfile_2 = new MatchProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
     .withIncomingRecordType(MARC)
-    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC);
   private static MatchProfile matchProfile_3 = new MatchProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
     .withIncomingRecordType(MARC)
-    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-    .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD);
+    .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC);
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -195,8 +199,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("newProfile")
         .withIncomingRecordType(MARC)
-        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
@@ -425,8 +428,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("ProfileToDelete")
         .withIncomingRecordType(MARC)
-        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH)
       .then()
@@ -458,8 +460,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("ProfileToDelete")
         .withIncomingRecordType(MARC)
-        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
-        .withIncomingDataValueType(IncomingDataValueType.VALUE_FROM_INCOMING_RECORD))
+        .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH)
       .then()
@@ -481,6 +482,89 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
       .body("matchProfiles*.deleted", everyItem(is(false)));
+  }
+
+  @Test
+  public void shouldCreateProfileWithMatchDetailsOnPost() {
+    MatchDetail matchDetail = new MatchDetail()
+      .withIncomingRecordType(MARC)
+      .withExistingRecordType(ExistingRecordType.INSTANCE)
+      .withIncomingMatchExpression(new MatchExpression()
+        .withDataValueType(VALUE_FROM_RECORD)
+        .withFields(Arrays.asList(
+          new Field().withLabel("field").withValue("001"),
+          new Field().withLabel("indicator1").withValue(StringUtils.EMPTY),
+          new Field().withLabel("indicator2").withValue(StringUtils.EMPTY),
+          new Field().withLabel("recordSubfield").withValue(StringUtils.EMPTY)))
+      .withQualifier(new Qualifier().withComparisonPart(NUMERICS_ONLY)))
+      .withMatchCriterion(EXACTLY_MATCHES)
+      .withExistingMatchExpression(new MatchExpression()
+        .withDataValueType(VALUE_FROM_RECORD)
+        .withFields(Collections.singletonList(
+          new Field().withLabel("field").withValue("INSTANCE_HRID")))
+        .withQualifier(new Qualifier().withComparisonPart(NUMERICS_ONLY)));
+
+    MatchProfile matchProfile = new MatchProfile()
+      .withName("Bla")
+      .withTags(new Tags().withTagList(Collections.singletonList("hrid")))
+      .withIncomingRecordType(MARC)
+      .withExistingRecordType(ExistingRecordType.MARC_BIBLIOGRAPHIC)
+      .withMatchDetails(Collections.singletonList(matchDetail));
+
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(matchProfile)
+      .when()
+      .post(MATCH_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    MatchProfile createdMatchProfile = createResponse.body().as(MatchProfile.class);
+
+    Response getResponse = RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(MATCH_PROFILES_PATH + "/" + createdMatchProfile.getId());
+    Assert.assertThat(getResponse.statusCode(), is(HttpStatus.SC_OK));
+    MatchProfile receivedMatchProfile = getResponse.body().as(MatchProfile.class);
+
+    // assert id and name
+    Assert.assertThat(receivedMatchProfile.getId(), is(createdMatchProfile.getId()));
+    Assert.assertThat(receivedMatchProfile.getName(), is(createdMatchProfile.getName()));
+
+    // assert matchDetail
+    Assert.assertThat(receivedMatchProfile.getMatchDetails().size(), is(1));
+    MatchDetail receivedMatchDetail1 = receivedMatchProfile.getMatchDetails().get(0);
+    Assert.assertThat(receivedMatchDetail1.getIncomingRecordType(), is(matchDetail.getIncomingRecordType()));
+    Assert.assertThat(receivedMatchDetail1.getExistingRecordType(), is(matchDetail.getExistingRecordType()));
+
+    // assert incomingMatchExpression
+    Assert.assertThat(receivedMatchDetail1.getIncomingMatchExpression().getDataValueType(),
+      is(matchDetail.getIncomingMatchExpression().getDataValueType()));
+    Assert.assertThat(receivedMatchDetail1.getIncomingMatchExpression().getQualifier().getComparisonPart(),
+      is(matchDetail.getIncomingMatchExpression().getQualifier().getComparisonPart()));
+
+    // assert incoming fields
+    Assert.assertThat(receivedMatchDetail1.getIncomingMatchExpression().getFields().size(), is(4));
+    List<Field> createdIncomingFields = receivedMatchDetail1.getIncomingMatchExpression().getFields();
+    for (int i = 0; i < createdIncomingFields.size(); i++) {
+      Assert.assertThat(createdIncomingFields.get(i).getLabel(),
+        is(matchDetail.getIncomingMatchExpression().getFields().get(i).getLabel()));
+      Assert.assertThat(createdIncomingFields.get(i).getValue(),
+        is(matchDetail.getIncomingMatchExpression().getFields().get(i).getValue()));
+    }
+
+    // assert matchCriterion
+    Assert.assertThat(receivedMatchDetail1.getMatchCriterion(), is(matchDetail.getMatchCriterion()));
+
+    // assert existingMatchExpression
+    Assert.assertThat(receivedMatchDetail1.getExistingMatchExpression().getDataValueType(),
+      is(matchDetail.getExistingMatchExpression().getDataValueType()));
+    Assert.assertThat(receivedMatchDetail1.getExistingMatchExpression().getFields().size(), is(1));
+    Assert.assertThat(receivedMatchDetail1.getExistingMatchExpression().getFields().get(0).getLabel(),
+      is(matchDetail.getExistingMatchExpression().getFields().get(0).getLabel()));
+    Assert.assertThat(receivedMatchDetail1.getExistingMatchExpression().getFields().get(0).getValue(),
+      is(matchDetail.getExistingMatchExpression().getFields().get(0).getValue()));
+    Assert.assertThat(receivedMatchDetail1.getExistingMatchExpression().getQualifier().getComparisonPart(),
+      is(matchDetail.getExistingMatchExpression().getQualifier().getComparisonPart()));
   }
 
   private void createProfiles() {
