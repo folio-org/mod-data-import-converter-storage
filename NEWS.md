@@ -1,4 +1,4 @@
-## 2019-08-02 v1.5.0-SNAPSHOT
+## 2019-09-09 v1.5.0
 * Updated Match Profile schema and sample data.
 * Filled in "fromModuleVersion" value for each "tables" and "scripts" section in schema.json
 
