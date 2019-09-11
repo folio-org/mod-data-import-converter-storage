@@ -1087,7 +1087,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .spec(spec)
       .queryParam("detailType", detailProfileType.value())
       .queryParam("masterType", masterProfileType.value())
-      .queryParam("query", "description=test-description and (cql.allRecords=1) sortBy name")
+      .queryParam("query", "description=\"test*\" or description=\"*description\" sortBy name")
       .when()
       .get(MASTERS_BY_DETAIL_URL, detailWrapper.getId())
       .then().statusCode(is(HttpStatus.SC_OK))

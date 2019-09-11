@@ -1,3 +1,6 @@
+## 2019-09-10 v1.5.1
+* Fixed filtering of profile associations
+
 ## 2019-09-09 v1.5.0
 * Updated Match Profile schema and sample data.
 * Filled in "fromModuleVersion" value for each "tables" and "scripts" section in schema.json
