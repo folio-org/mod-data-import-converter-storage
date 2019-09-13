@@ -1,4 +1,4 @@
-## 2019-09-10 v1.5.1
+## 2019-09-13 v1.5.1
 * Fixed filtering of profile associations
 * Fixed match profiles sample data
 
