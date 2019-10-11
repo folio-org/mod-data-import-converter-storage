@@ -33,6 +33,7 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATC
  *
  */
 @Repository
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class CommonProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationDao.class);
