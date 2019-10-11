@@ -2,10 +2,8 @@
   "tables": [
     {
       "tableName": "job_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -21,10 +19,8 @@
     },
     {
       "tableName": "match_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -40,10 +36,8 @@
     },
     {
       "tableName": "action_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -59,10 +53,8 @@
     },
     {
       "tableName": "mapping_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -78,10 +70,8 @@
     },
     {
       "tableName": "job_to_match_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -109,10 +99,8 @@
     },
     {
       "tableName": "job_to_action_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -140,10 +128,8 @@
     },
     {
       "tableName": "match_to_match_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -171,10 +157,8 @@
     },
     {
       "tableName": "match_to_action_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -202,10 +186,8 @@
     },
     {
       "tableName": "action_to_action_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -233,10 +215,8 @@
     },
     {
       "tableName": "action_to_match_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -264,10 +244,8 @@
     },
     {
       "tableName": "action_to_mapping_profiles",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.0.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -295,10 +273,8 @@
     },
     {
       "tableName": "profile_snapshots",
-      "generateId": false,
       "fromModuleVersion": "mod-data-import-converter-storage-1.1.0",
       "withMetadata": false,
-      "pkColumnName": "_id",
       "index": [
         {
           "fieldName": "id",
@@ -310,7 +286,7 @@
   "scripts": [
     {
       "run": "after",
-      "snippet": "CREATE OR REPLACE FUNCTION get_profile_association_snapshot(_association_table text, _master_table text, _master_type text, _detail_table text, _detail_type text)  RETURNS TABLE(association_id uuid, master_id uuid, master json, master_type text, detail_id uuid, detail_type text, detail_order integer, detail json) AS $$ BEGIN RETURN query EXECUTE format(' SELECT association._id, association.masterprofileid AS master_id, json_agg(master.jsonb) AS master, ''%s'' AS master_type, association.detailprofileid AS detail_id, ''%s'' AS detail_type, CAST(association.jsonb->>''order'' AS integer) AS detail_order, json_agg(detail.jsonb) AS detail FROM %s association INNER JOIN %s master ON master._id = association.masterprofileid INNER JOIN %s detail ON detail._id = association.detailprofileid  GROUP BY association._id',  _master_type, _detail_type, _association_table, _master_table, _detail_table); END $$ language plpgsql;",
+      "snippet": "CREATE OR REPLACE FUNCTION get_profile_association_snapshot(_association_table text, _master_table text, _master_type text, _detail_table text, _detail_type text) RETURNS TABLE(association_id uuid, master_id uuid, master json, master_type text, detail_id uuid, detail_type text, detail_order integer, detail json) AS $$ BEGIN RETURN query EXECUTE format('SELECT association.id, association.masterprofileid AS master_id, json_agg(master.jsonb) AS master, ''%s'' AS master_type, association.detailprofileid AS detail_id, ''%s'' AS detail_type, CAST(association.jsonb->>''order'' AS integer) AS detail_order, json_agg(detail.jsonb) AS detail FROM %s association INNER JOIN %s master ON master.id = association.masterprofileid INNER JOIN %s detail ON detail.id = association.detailprofileid GROUP BY association.id', _master_type, _detail_type, _association_table, _master_table, _detail_table); END $$ language plpgsql;",
       "fromModuleVersion": "mod-data-import-converter-storage-1.1.0"
     },
     {
@@ -325,7 +301,7 @@
     },
     {
       "run": "after",
-      "snippet": "CREATE OR REPLACE FUNCTION get_job_profile_snapshot(jobProfileId uuid) RETURNS TABLE(snapshot json) AS $$ WITH RECURSIVE recursive_snapshot AS (SELECT job_profile._id AS association_id, CAST(NULL AS uuid) AS master_id, job_profile._id AS detail_id, 'JOB_PROFILE' detail_type, 0 AS detail_order, json_agg(job_profile.jsonb) detail FROM job_profiles AS job_profile WHERE job_profile._id = jobProfileId GROUP BY job_profile._id UNION ALL SELECT associations_view.association_id, associations_view.master_id AS master_id, associations_view.detail_id AS detail_id, associations_view.detail_type AS detail_type, associations_view.detail_order AS detail_order, associations_view.detail AS detail FROM associations_view INNER JOIN recursive_snapshot ON associations_view.master_id = recursive_snapshot.detail_id) SELECT row_to_json(row) FROM recursive_snapshot row ORDER BY row.detail_order ASC $$ language 'sql' VOLATILE;",
+      "snippet": "CREATE OR REPLACE FUNCTION get_job_profile_snapshot(jobProfileId uuid) RETURNS TABLE(snapshot json) AS $$ WITH RECURSIVE recursive_snapshot AS ( SELECT job_profile.id AS association_id, CAST(NULL AS uuid) AS master_id, job_profile.id AS detail_id, 'JOB_PROFILE' detail_type, 0 AS detail_order, json_agg(job_profile.jsonb) detail FROM job_profiles AS job_profile WHERE job_profile.id = jobProfileId GROUP BY job_profile.id UNION ALL SELECT associations_view.association_id, associations_view.master_id AS master_id, associations_view.detail_id AS detail_id, associations_view.detail_type AS detail_type, associations_view.detail_order AS detail_order, associations_view.detail AS detail FROM associations_view INNER JOIN recursive_snapshot ON associations_view.master_id = recursive_snapshot.detail_id) SELECT row_to_json(row) FROM recursive_snapshot row ORDER BY row.detail_order ASC $$ language 'sql' VOLATILE;",
       "fromModuleVersion": "mod-data-import-converter-storage-1.1.0"
     }
   ]

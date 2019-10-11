@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.folio.dao.util.DaoUtil.constructCriteria;
+import static org.folio.dataimport.util.DaoUtil.constructCriteria;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;

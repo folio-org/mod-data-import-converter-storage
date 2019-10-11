@@ -6,22 +6,22 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.sql.UpdateResult;
+import org.folio.cql2pgjson.CQL2PgJSON;
+import org.folio.cql2pgjson.exception.FieldException;
 import org.folio.rest.persist.Criteria.Criteria;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
-import org.z3950.zing.cql.cql2pgjson.FieldException;
 
 import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static java.lang.String.format;
-import static org.folio.dao.util.DaoUtil.constructCriteria;
-import static org.folio.dao.util.DaoUtil.getCQLWrapper;
+import static org.folio.dataimport.util.DaoUtil.constructCriteria;
+import static org.folio.dataimport.util.DaoUtil.getCQLWrapper;
 
 /**
  * Generic implementation of the {@link ProfileDao}

@@ -1,3 +1,6 @@
+## 2019-10-10 v1.6.0-SNAPSHOT
+* Updated raml-module-builder version.
+
 ## 2019-09-10 v1.5.1
 * Fixed filtering of profile associations
 * Fixed match profiles sample data
