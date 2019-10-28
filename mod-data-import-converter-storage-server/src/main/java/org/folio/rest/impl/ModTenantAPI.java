@@ -23,7 +23,7 @@ import java.util.Map;
 public class ModTenantAPI extends TenantAPI {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ModTenantAPI.class);
-  private static final String TEST_MODE = "test.mode";
+  private static final String LOAD_SAMPLE_PARAMETER = "loadSample";
   private static final String TEST_JOB_PROFILES_SQL = "templates/db_scripts/testData/test_job_profiles.sql";
   private static final String TEST_MATCHING_PROFILES_SQL = "templates/db_scripts/testData/test_matching_profiles.sql";
   private static final String TEST_ACTION_PROFILES_SQL = "templates/db_scripts/testData/test_action_profiles.sql";
@@ -40,8 +40,8 @@ public class ModTenantAPI extends TenantAPI {
       if (ar.failed()) {
         handlers.handle(ar);
       } else {
-        if (!Boolean.TRUE.equals(Boolean.valueOf(System.getenv(TEST_MODE)))) {
-          LOGGER.info("Module is being deployed in production mode");
+        if (!isLoadSample(entity)) {
+          LOGGER.info("Test data was not initialized.");
           handlers.handle(ar);
         } else {
           setupTestData(TEST_JOB_PROFILES_SQL, headers, context)
@@ -84,6 +84,16 @@ public class ModTenantAPI extends TenantAPI {
     } catch (IOException e) {
       return Future.failedFuture(e);
     }
+  }
+
+  private boolean isLoadSample(TenantAttributes attributes) {
+    if (attributes == null) {
+      return false;
+    }
+    return attributes.getParameters()
+      .stream()
+      .anyMatch(p -> p.getKey().equals(LOAD_SAMPLE_PARAMETER)
+        && p.getValue().equals(Boolean.TRUE.toString()));
   }
 
 }
