@@ -41,7 +41,7 @@ public class ModTenantAPI extends TenantAPI {
         handlers.handle(ar);
       } else {
         if (!isLoadSample(entity)) {
-          LOGGER.info("Test data was not initialized.");
+          LOGGER.debug("Test data will not be initialized.");
           handlers.handle(ar);
         } else {
           setupTestData(TEST_JOB_PROFILES_SQL, headers, context)
