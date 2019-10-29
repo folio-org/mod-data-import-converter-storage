@@ -92,8 +92,8 @@ public class ModTenantAPI extends TenantAPI {
     }
     return attributes.getParameters()
       .stream()
-      .anyMatch(p -> p.getKey().equals(LOAD_SAMPLE_PARAMETER)
-        && p.getValue().equals(Boolean.TRUE.toString()));
+      .anyMatch(parameter -> parameter.getKey().equals(LOAD_SAMPLE_PARAMETER)
+        && Boolean.parseBoolean(parameter.getValue()));
   }
 
 }
