@@ -2,6 +2,7 @@
 * Fixed filtering of profile associations
 * Fixed match profiles sample data
 * Added loading sample data by "loadSample" tenant parameter.
+* Added 'profileId' field to profileSnapshotWrapper schema
 
 ## 2019-09-09 v1.5.0
 * Updated Match Profile schema and sample data.
