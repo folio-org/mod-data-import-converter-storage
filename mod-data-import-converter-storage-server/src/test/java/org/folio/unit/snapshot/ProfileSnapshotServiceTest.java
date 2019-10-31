@@ -171,18 +171,22 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
       ProfileSnapshotWrapper jobProfileWrapper = ar.result();
       JobProfile actualJobProfile = (JobProfile) jobProfileWrapper.getContent();
       testContext.assertEquals(jobProfile.getId(), actualJobProfile.getId());
+      testContext.assertEquals(jobProfile.getId(), jobProfileWrapper.getProfileId());
 
       ChildSnapshotWrapper matchProfileWrapper = jobProfileWrapper.getChildSnapshotWrappers().get(0);
       MatchProfile actualMatchProfile = (MatchProfile) matchProfileWrapper.getContent();
       testContext.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
+      testContext.assertEquals(matchProfile.getId(), matchProfileWrapper.getProfileId());
 
       ChildSnapshotWrapper actionProfileWrapper = matchProfileWrapper.getChildSnapshotWrappers().get(0);
       ActionProfile actualActionProfile = (ActionProfile) actionProfileWrapper.getContent();
       testContext.assertEquals(actionProfile.getId(), actualActionProfile.getId());
+      testContext.assertEquals(actionProfile.getId(), actionProfileWrapper.getProfileId());
 
       ChildSnapshotWrapper mappingProfileWrapper = actionProfileWrapper.getChildSnapshotWrappers().get(0);
       MappingProfile actualMappingProfile = (MappingProfile) mappingProfileWrapper.getContent();
       testContext.assertEquals(mappingProfile.getId(), actualMappingProfile.getId());
+      testContext.assertEquals(mappingProfile.getId(), mappingProfileWrapper.getProfileId());
       async.complete();
     });
   }

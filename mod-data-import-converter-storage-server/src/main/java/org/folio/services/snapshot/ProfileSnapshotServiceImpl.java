@@ -81,6 +81,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
       ProfileSnapshotItem rootItem = optionalRootItem.get();
       ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
       rootWrapper.setId(UUID.randomUUID().toString());
+      rootWrapper.setProfileId(rootItem.getDetailId());
       rootWrapper.setContentType(rootItem.getDetailType());
       rootWrapper.setContent(convertContentByType(rootItem.getDetail(), rootItem.getDetailType()));
       fillChildSnapshotWrappers(rootItem.getDetailId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
@@ -103,11 +104,12 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     for (ProfileSnapshotItem snapshotItem : snapshotItems) {
       if (parentId.equals(snapshotItem.getMasterId())) {
         ChildSnapshotWrapper childWrapper = new ChildSnapshotWrapper();
-        childWrapper.setId(snapshotItem.getDetailId());
+        childWrapper.setId(UUID.randomUUID().toString());
+        childWrapper.setProfileId(snapshotItem.getDetailId());
         childWrapper.setContentType(snapshotItem.getDetailType());
         childWrapper.setContent(convertContentByType(snapshotItem.getDetail(), snapshotItem.getDetailType()));
         childWrappers.add(childWrapper);
-        fillChildSnapshotWrappers(childWrapper.getId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
+        fillChildSnapshotWrappers(childWrapper.getProfileId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
       }
     }
   }
