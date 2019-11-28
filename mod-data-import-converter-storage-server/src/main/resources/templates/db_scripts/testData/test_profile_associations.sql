@@ -1,4 +1,4 @@
-INSERT INTO ${myuniversity}_${mymodule}.job_to_match_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.job_to_match_profiles (id, jsonb) values
 ('e9ff0afb-6a73-4ba7-a0db-4fb089d3041f', '{
   "id": "e9ff0afb-6a73-4ba7-a0db-4fb089d3041f",
   "masterProfileId": "295e28b4-aea2-4458-9073-385a31e1da05",

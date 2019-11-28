@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION
         RETURN query
           EXECUTE format('
             SELECT
-              association._id,
+              association.id,
               association.masterprofileid AS master_id,
               json_agg(master.jsonb) AS master,
               ''%s'' AS master_type,
@@ -18,9 +18,9 @@ CREATE OR REPLACE FUNCTION
               CAST(association.jsonb->>''order'' AS integer) AS detail_order,
               json_agg(detail.jsonb) AS detail
             FROM %s association
-              INNER JOIN %s master ON master._id = association.masterprofileid
-              INNER JOIN %s detail ON detail._id = association.detailprofileid
-            GROUP BY association._id',
+              INNER JOIN %s master ON master.id = association.masterprofileid
+              INNER JOIN %s detail ON detail.id = association.detailprofileid
+            GROUP BY association.id',
             _master_type, _detail_type, _association_table, _master_table, _detail_table);
       END $$
 language plpgsql;
