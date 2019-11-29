@@ -56,7 +56,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_to_match_profiles (id, jsonb) values
   "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 
-INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (id, jsonb) values
 ('d9cfbef2-1a3c-4681-8d82-71baace27cf9', '{
   "id": "d9cfbef2-1a3c-4681-8d82-71baace27cf9",
   "masterProfileId": "448ae575-daec-49c1-8041-d64c8ed8e5b1",
@@ -310,7 +310,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (_id, jsonb) valu
   "triggered": "false"
 }') ON CONFLICT DO NOTHING;
 
-INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (id, jsonb) values
 ('460332ee-9800-43fe-8b89-19c8e5a0a5b8', '{
   "id": "460332ee-9800-43fe-8b89-19c8e5a0a5b8",
   "masterProfileId": "cf3d7393-8534-44fb-93fd-7495d220f4f6",
