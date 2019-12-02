@@ -48,8 +48,8 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       if (!showDeleted) {
         notDeletedProfilesFilter = "deleted=false";
       }
-      CQLWrapper cql = getCQLWrapper(getTableName(), notDeletedProfilesFilter, limit, offset);
-      cql.addWrapper(getCQLWrapper(getTableName(), query));
+      CQLWrapper cql = getCQLWrapper(getTableName(), query, limit, offset);
+      cql.addWrapper(getCQLWrapper(getTableName(), notDeletedProfilesFilter));
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, future.completer());
     } catch (Exception e) {
       logger.error("Error while searching for {}", getProfileType().getSimpleName(), e);
