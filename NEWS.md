@@ -1,3 +1,8 @@
+## 2019-12-04 v1.6.0
+* Fixed security vulnerabilities
+* Applied new JVM features to manage container memory
+* Updated schema for ProfileSnapshot
+
 ## 2019-09-10 v1.5.1
 * Fixed filtering of profile associations
 * Fixed match profiles sample data
