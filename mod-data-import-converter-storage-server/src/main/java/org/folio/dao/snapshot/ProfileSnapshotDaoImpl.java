@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  * Implementation for Profile snapshot DAO
  */
 @Repository
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
   private static final Logger logger = LoggerFactory.getLogger(ProfileSnapshotDaoImpl.class);
   private static final String TABLE_NAME = "profile_snapshots";

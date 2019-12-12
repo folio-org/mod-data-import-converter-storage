@@ -29,6 +29,7 @@ import static org.folio.dao.util.DaoUtil.getCQLWrapper;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
