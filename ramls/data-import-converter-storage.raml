@@ -55,6 +55,12 @@ resourceTypes:
           type: boolean
           default: false
           required: false
+        withRelations:
+          description: Load profile with related child and parent profiles
+          example: false
+          type: boolean
+          default: false
+          required: false
       is: [
         searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
         pageable,
@@ -97,6 +103,12 @@ resourceTypes:
       queryParameters:
         showDeleted:
           description: selection condition of Match Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
+        withRelations:
+          description: Load profile with related child and parent profiles
           example: false
           type: boolean
           default: false
@@ -147,6 +159,12 @@ resourceTypes:
           type: boolean
           default: false
           required: false
+        withRelations:
+          description: Load profile with related child and parent profiles
+          example: false
+          type: boolean
+          default: false
+          required: false
       is: [
         searchable: {description: "with valid searchable fields: for example userInfo.lastName=Doe", example: "userInfo.lastName=Doe"},
         pageable,
@@ -189,6 +207,12 @@ resourceTypes:
       queryParameters:
         showDeleted:
           description: selection condition of Action Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
+        withRelations:
+          description: Load profile with related child and parent profiles
           example: false
           type: boolean
           default: false

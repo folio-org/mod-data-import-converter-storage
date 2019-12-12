@@ -95,8 +95,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesJobProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
-                                               Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesJobProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
         jobProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
@@ -202,8 +201,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMatchProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
-                                                 Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesMatchProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
         matchProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
@@ -289,7 +287,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMappingProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesMappingProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
         mappingProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
@@ -411,8 +409,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesActionProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
-                                                  Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesActionProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
         actionProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
