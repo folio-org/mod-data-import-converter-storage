@@ -1,9 +1,9 @@
 package org.folio.services.snapshot;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.dao.snapshot.ProfileSnapshotItem;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -12,6 +12,7 @@ import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
+import org.folio.rest.tools.utils.ObjectMapperTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -168,15 +169,16 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    * @return concrete class of the Profile
    */
   private <T> T convertContentByType(Object content, ProfileSnapshotWrapper.ContentType contentType) {
+    ObjectMapper mapper = ObjectMapperTool.getMapper();
     switch (contentType) {
       case JOB_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, JobProfile.class);
+        return (T) mapper.convertValue(content, JobProfile.class);
       case MATCH_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, MatchProfile.class);
+        return (T) mapper.convertValue(content, MatchProfile.class);
       case ACTION_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, ActionProfile.class);
+        return (T) mapper.convertValue(content, ActionProfile.class);
       case MAPPING_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, MappingProfile.class);
+        return (T) mapper.convertValue(content, MappingProfile.class);
       default:
         throw new IllegalStateException("Can not find profile by snapshot content type: " + contentType.toString());
     }
