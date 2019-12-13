@@ -2,7 +2,6 @@ package org.folio.services;
 
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile, MatchProfileCollection> {
@@ -39,30 +37,26 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
   }
 
   @Override
+  protected ProfileSnapshotWrapper.ContentType getProfileContentType() {
+    return ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
+  }
+
+  @Override
   protected Future<MatchProfileCollection> fetchRelations(MatchProfileCollection profileCollection, String query, int offset, int limit, String tenantId) {
     Future<MatchProfileCollection> result = Future.future();
     List<Future> futureList = new ArrayList<>();
-    profileCollection.getMatchProfiles().forEach(profile -> {
-      String profileId = profile.getId();
-      futureList.add(
-        associationService.findDetails(profileId, ProfileSnapshotWrapper.ContentType.MATCH_PROFILE, null, query, offset, limit, tenantId)
-          .compose(childProfiles -> {
-            childProfiles.ifPresent(profileSnapshotWrapper -> profile.setChildProfiles(profileSnapshotWrapper.getChildSnapshotWrappers()
-              .stream()
-              .map(JsonObject::mapFrom)
-              .map(json -> json.mapTo(ProfileSnapshotWrapper.class))
-              .collect(Collectors.toList())));
-            return Future.succeededFuture();
-          }).compose(v -> associationService.findMasters(profileId, ProfileSnapshotWrapper.ContentType.MATCH_PROFILE, null, query, offset, limit, tenantId))
-          .compose(parentProfiles -> {
-            parentProfiles.ifPresent(profileSnapshotWrapper -> profile.setChildProfiles(profileSnapshotWrapper.getChildSnapshotWrappers()
-              .stream()
-              .map(JsonObject::mapFrom)
-              .map(json -> json.mapTo(ProfileSnapshotWrapper.class))
-              .collect(Collectors.toList())));
-            return Future.succeededFuture();
-          }));
-    });
+    profileCollection.getMatchProfiles().forEach(profile ->
+      futureList.add(fetchChildProfiles(profile, query, offset, limit, tenantId)
+        .compose(childProfiles -> {
+          profile.setChildProfiles(childProfiles);
+          return Future.succeededFuture();
+        })
+        .compose(v -> fetchParentProfiles(profile, query, offset, limit, tenantId))
+        .compose(parentProfiles -> {
+          profile.setParentProfiles(parentProfiles);
+          return Future.succeededFuture();
+        }))
+    );
     CompositeFuture.all(futureList).setHandler(ar -> {
       if (ar.succeeded()) {
         result.complete(profileCollection);

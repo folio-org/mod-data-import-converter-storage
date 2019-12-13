@@ -10,11 +10,13 @@ import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.dataimport.util.RestUtil;
 import org.folio.dataimport.util.exception.ConflictException;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.services.association.CommonProfileAssociationService;
 import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +61,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
     Future<S> result = Future.succeededFuture();
     result = result.compose(v -> profileDao.getProfiles(showDeleted, query, offset, limit, tenantId));
     if (withRelations) {
-      result.compose(collection-> fetchRelations(collection, query, offset, limit, tenantId));
+      result.compose(collection -> fetchRelations(collection, query, offset, limit, tenantId));
     }
     return result;
   }
@@ -136,12 +138,59 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   protected abstract String getProfileId(T profile);
 
   /**
+   * Returns type of profile
+   *
+   * @return - ContentType of profiles type
+   */
+  protected abstract ProfileSnapshotWrapper.ContentType getProfileContentType();
+
+  /**
    * Fetch parent and child profiles for each profile in collection
    *
    * @param profileCollection - profile collection entity
    * @return - profile collection with fetched relations
    */
   protected abstract Future<S> fetchRelations(S profileCollection, String query, int offset, int limit, String tenantId);
+
+  /**
+   * Load all related child profiles for existing profile
+   *
+   * @param profile  - profile entity
+   * @param query    -  query from URL
+   * @param offset   - starting index in a list of results
+   * @param limit    -   limit of records for pagination
+   * @param tenantId - tenant id
+   * @return - List of all related child profiles
+   */
+  protected Future<List<ProfileSnapshotWrapper>> fetchChildProfiles(T profile, String query, int offset, int limit, String tenantId) {
+    return associationService.findDetails(getProfileId(profile), getProfileContentType(), null, query, offset, limit, tenantId)
+      .map(this::convertToProfileSnapshotWrapper);
+  }
+
+  /**
+   * Load all related parent profiles for existing profile
+   *
+   * @param profile  - profile entity
+   * @param query    - query from URL
+   * @param offset   - starting index in a list of results
+   * @param limit    -  limit of records for pagination
+   * @param tenantId - tenant id
+   * @return - List of all related parent profiles
+   */
+  protected Future<List<ProfileSnapshotWrapper>> fetchParentProfiles(T profile, String query, int offset, int limit, String tenantId) {
+    return associationService.findMasters(getProfileId(profile), getProfileContentType(), null, query, offset, limit, tenantId)
+      .map(this::convertToProfileSnapshotWrapper);
+  }
+
+  private List<ProfileSnapshotWrapper> convertToProfileSnapshotWrapper(Optional<ProfileSnapshotWrapper> rootWrapper) {
+    List<ProfileSnapshotWrapper> profileSnapshotWrappers = new ArrayList<>();
+    rootWrapper.ifPresent(profileSnapshotWrapper -> profileSnapshotWrappers.addAll(profileSnapshotWrapper.getChildSnapshotWrappers()
+      .stream()
+      .map(JsonObject::mapFrom)
+      .map(json -> json.mapTo(ProfileSnapshotWrapper.class))
+      .collect(Collectors.toList())));
+    return profileSnapshotWrappers;
+  }
 
   /**
    * Finds user by user id and returns UserInfo
