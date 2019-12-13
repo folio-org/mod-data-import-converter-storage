@@ -1,4 +1,4 @@
-INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ('448ae575-daec-49c1-8041-d64c8ed8e5b1', '{
   "id": "448ae575-daec-49c1-8041-d64c8ed8e5b1",
   "name": "Load vendor order records",

@@ -1,4 +1,4 @@
-INSERT INTO ${myuniversity}_${mymodule}.action_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 ('cf3d7393-8534-44fb-93fd-7495d220f4f6', '{
   "id": "cf3d7393-8534-44fb-93fd-7495d220f4f6",
   "name": "Create preliminary instance",

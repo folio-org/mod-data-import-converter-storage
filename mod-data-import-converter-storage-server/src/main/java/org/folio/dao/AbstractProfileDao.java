@@ -12,8 +12,8 @@ import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
-import org.z3950.zing.cql.cql2pgjson.FieldException;
+import org.folio.cql2pgjson.CQL2PgJSON;
+import org.folio.cql2pgjson.exception.FieldException;
 
 import javax.ws.rs.NotFoundException;
 import java.util.Optional;
@@ -29,6 +29,7 @@ import static org.folio.dao.util.DaoUtil.getCQLWrapper;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
@@ -48,8 +49,8 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       if (!showDeleted) {
         notDeletedProfilesFilter = "deleted=false";
       }
-      CQLWrapper cql = getCQLWrapper(getTableName(), notDeletedProfilesFilter, limit, offset);
-      cql.addWrapper(getCQLWrapper(getTableName(), query));
+      CQLWrapper cql = getCQLWrapper(getTableName(), query, limit, offset);
+      cql.addWrapper(getCQLWrapper(getTableName(), notDeletedProfilesFilter));
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, future.completer());
     } catch (Exception e) {
       logger.error("Error while searching for {}", getProfileType().getSimpleName(), e);
