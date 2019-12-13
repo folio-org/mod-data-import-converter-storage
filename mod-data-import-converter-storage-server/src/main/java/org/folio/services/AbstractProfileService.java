@@ -11,16 +11,14 @@ import org.folio.dataimport.util.RestUtil;
 import org.folio.dataimport.util.exception.ConflictException;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
 import org.folio.rest.jaxrs.model.UserInfo;
+import org.folio.services.association.CommonProfileAssociationService;
 import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.lang.String.format;
 
 /**
  * Generic implementation of the {@link ProfileService}
@@ -30,7 +28,7 @@ import static java.lang.String.format;
  */
 public abstract class AbstractProfileService<T, S> implements ProfileService<T, S> {
 
-  private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
+  protected static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
   private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
@@ -48,9 +46,22 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   @Autowired
   private ProfileDao<T, S> profileDao;
 
+  @Autowired
+  protected CommonProfileAssociationService associationService;
+
   @Override
   public Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId) {
-    return profileDao.getProfiles(showDeleted, query, offset, limit, tenantId);
+    return getProfiles(showDeleted, false, query, offset, limit, tenantId);
+  }
+
+  @Override
+  public Future<S> getProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String tenantId) {
+    Future<S> result = Future.succeededFuture();
+    result = result.compose(v -> profileDao.getProfiles(showDeleted, query, offset, limit, tenantId));
+    if (withRelations) {
+      result.compose(collection-> fetchRelations(collection, query, offset, limit, tenantId));
+    }
+    return result;
   }
 
   @Override
@@ -123,6 +134,14 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @return - profile id
    */
   protected abstract String getProfileId(T profile);
+
+  /**
+   * Fetch parent and child profiles for each profile in collection
+   *
+   * @param profileCollection - profile collection entity
+   * @return - profile collection with fetched relations
+   */
+  protected abstract Future<S> fetchRelations(S profileCollection, String query, int offset, int limit, String tenantId);
 
   /**
    * Finds user by user id and returns UserInfo
