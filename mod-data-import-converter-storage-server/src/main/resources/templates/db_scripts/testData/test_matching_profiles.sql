@@ -1,4 +1,4 @@
-INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 ('cdf0ca3a-b515-4abd-82b6-48ce65374963', '{
   "id": "cdf0ca3a-b515-4abd-82b6-48ce65374963",
   "name": "POL-MARC",

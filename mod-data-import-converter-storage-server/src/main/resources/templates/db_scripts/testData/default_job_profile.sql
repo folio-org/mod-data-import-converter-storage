@@ -1,4 +1,4 @@
-INSERT INTO ${myuniversity}_${mymodule}.job_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ('22fafcc3-f582-493d-88b0-3c538480cd83', '{
   "id": "22fafcc3-f582-493d-88b0-3c538480cd83",
   "name": "Create MARC Bibs",

@@ -8,9 +8,6 @@ import io.vertx.ext.sql.ResultSet;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
-import org.folio.rest.persist.Criteria.Criteria;
-import org.folio.rest.persist.Criteria.Criterion;
-import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,14 +15,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.folio.dataimport.util.DaoUtil.constructCriteria;
-
 /**
  * Implementation for Profile snapshot DAO
  */
 @Repository
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
-  protected static final String ID_FIELD = "'id'";
   private static final Logger logger = LoggerFactory.getLogger(ProfileSnapshotDaoImpl.class);
   private static final String TABLE_NAME = "profile_snapshots";
   private static final String GET_JOB_PROFILE_SNAPSHOT = "select get_job_profile_snapshot('%s');";
@@ -37,17 +32,15 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
 
   @Override
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
-    Future<Results<ProfileSnapshotWrapper>> future = Future.future();
+    Future<ProfileSnapshotWrapper> future = Future.future();
     try {
-      Criteria idCrit = constructCriteria(ID_FIELD, id);
-      pgClientFactory.createInstance(tenantId).get(TABLE_NAME, ProfileSnapshotWrapper.class, new Criterion(idCrit), true, false, future.completer());
+      pgClientFactory.createInstance(tenantId).getById(TABLE_NAME, id, ProfileSnapshotWrapper.class, future);
     } catch (Exception e) {
       logger.error("Error querying {} by id", ProfileSnapshotWrapper.class.getSimpleName(), e);
       future.fail(e);
     }
     return future
-      .map(Results::getResults)
-      .map(wrappers -> wrappers.isEmpty() ? Optional.empty() : Optional.of(wrappers.get(0)));
+      .map(wrapper -> wrapper == null ? Optional.empty() : Optional.of(wrapper));
   }
 
   @Override
