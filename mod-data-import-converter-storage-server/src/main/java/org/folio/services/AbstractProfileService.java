@@ -1,5 +1,6 @@
 package org.folio.services;
 
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractProfileService<T, S> implements ProfileService<T, S> {
 
-  protected static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
+  private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
   private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
@@ -53,12 +54,14 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
 
   @Override
   public Future<S> getProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String tenantId) {
-    Future<S> result = Future.succeededFuture();
-    result = result.compose(v -> profileDao.getProfiles(showDeleted, query, offset, limit, tenantId));
-    if (withRelations) {
-      result.compose(collection -> fetchRelations(collection, query, offset, limit, tenantId));
-    }
-    return result;
+    return profileDao.getProfiles(showDeleted, query, offset, limit, tenantId)
+      .compose(profilesCollection -> {
+        if (withRelations) {
+          return fetchRelations(profilesCollection, query, offset, limit, tenantId);
+        } else {
+          return Future.succeededFuture(profilesCollection);
+        }
+      });
   }
 
   @Override
@@ -139,13 +142,11 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    */
   protected abstract ProfileSnapshotWrapper.ContentType getProfileContentType();
 
-  /**
-   * Fetch parent and child profiles for each profile in collection
-   *
-   * @param profileCollection - profile collection entity
-   * @return - profile collection with fetched relations
-   */
-  protected abstract Future<S> fetchRelations(S profileCollection, String query, int offset, int limit, String tenantId);
+  protected abstract void setChildProfiles(T profile, List<ProfileSnapshotWrapper> childProfiles);
+
+  protected abstract void setParentProfiles(T profile, List<ProfileSnapshotWrapper> parentProfiles);
+
+  protected abstract List<T> getProfilesList(S profilesCollection);
 
   /**
    * Load all related child profiles for existing profile
@@ -157,7 +158,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @param tenantId - tenant id
    * @return - List of all related child profiles
    */
-  protected Future<List<ProfileSnapshotWrapper>> fetchChildProfiles(T profile, String query, int offset, int limit, String tenantId) {
+  private Future<List<ProfileSnapshotWrapper>> fetchChildProfiles(T profile, String query, int offset, int limit, String tenantId) {
     return associationService.findDetails(getProfileId(profile), getProfileContentType(), null, query, offset, limit, tenantId)
       .map(this::convertToProfileSnapshotWrapper);
   }
@@ -172,9 +173,41 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @param tenantId - tenant id
    * @return - List of all related parent profiles
    */
-  protected Future<List<ProfileSnapshotWrapper>> fetchParentProfiles(T profile, String query, int offset, int limit, String tenantId) {
+  private Future<List<ProfileSnapshotWrapper>> fetchParentProfiles(T profile, String query, int offset, int limit, String tenantId) {
     return associationService.findMasters(getProfileId(profile), getProfileContentType(), null, query, offset, limit, tenantId)
       .map(this::convertToProfileSnapshotWrapper);
+  }
+
+  /**
+   * Fetch parent and child profiles for each profile in collection
+   *
+   * @param profilesCollection - profile collection entity
+   * @return - profile collection with fetched relations
+   */
+  private Future<S> fetchRelations(S profilesCollection, String query, int offset, int limit, String tenantId) {
+    List<T> profilesList = getProfilesList(profilesCollection);
+    List<Future> futureList = new ArrayList<>();
+    Future<S> result = Future.future();
+    profilesList.forEach(profile ->
+      futureList.add(fetchChildProfiles(profile, query, offset, limit, tenantId)
+        .compose(childProfiles -> {
+          setChildProfiles(profile, childProfiles);
+          return Future.succeededFuture(profile);
+        })
+        .compose(v -> fetchParentProfiles(profile, query, offset, limit, tenantId))
+        .compose(parentProfiles -> {
+          setParentProfiles(profile, parentProfiles);
+          return Future.succeededFuture(profile);
+        })));
+    CompositeFuture.all(futureList).setHandler(ar -> {
+      if (ar.succeeded()) {
+        result.complete(profilesCollection);
+      } else {
+        logger.error("Error during fetching related profiles", ar.cause());
+        result.fail(ar.cause());
+      }
+    });
+    return result;
   }
 
   private List<ProfileSnapshotWrapper> convertToProfileSnapshotWrapper(Optional<ProfileSnapshotWrapper> rootWrapper) {

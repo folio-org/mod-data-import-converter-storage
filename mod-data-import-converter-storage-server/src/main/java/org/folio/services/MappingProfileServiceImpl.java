@@ -1,6 +1,5 @@
 package org.folio.services;
 
-import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MappingProfile;
@@ -8,7 +7,6 @@ import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,30 +40,17 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   }
 
   @Override
-  protected Future<MappingProfileCollection> fetchRelations(MappingProfileCollection profileCollection, String query, int offset, int limit, String tenantId) {
-    Future<MappingProfileCollection> result = Future.future();
-    List<Future> futureList = new ArrayList<>();
-    profileCollection.getMappingProfiles().forEach(profile ->
-      futureList.add(fetchChildProfiles(profile, query, offset, limit, tenantId)
-        .compose(childProfiles -> {
-          profile.setChildProfiles(childProfiles);
-          return Future.succeededFuture();
-        })
-        .compose(v -> fetchParentProfiles(profile, query, offset, limit, tenantId))
-        .compose(parentProfiles -> {
-          profile.setParentProfiles(parentProfiles);
-          return Future.succeededFuture();
-        }))
-    );
-    CompositeFuture.all(futureList).setHandler(ar -> {
-      if (ar.succeeded()) {
-        result.complete(profileCollection);
-      } else {
-        logger.error("Error during fetching related profiles", ar.cause());
-        result.fail(ar.cause());
-      }
-    });
-    return result;
+  protected void setChildProfiles(MappingProfile profile, List<ProfileSnapshotWrapper> childProfiles) {
+    profile.setChildProfiles(childProfiles);
   }
 
+  @Override
+  protected void setParentProfiles(MappingProfile profile, List<ProfileSnapshotWrapper> parentProfiles) {
+    profile.setParentProfiles(parentProfiles);
+  }
+
+  @Override
+  protected List<MappingProfile> getProfilesList(MappingProfileCollection profilesCollection) {
+    return profilesCollection.getMappingProfiles();
+  }
 }
