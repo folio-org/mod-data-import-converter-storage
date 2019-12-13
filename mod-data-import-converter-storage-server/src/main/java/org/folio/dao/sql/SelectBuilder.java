@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
+import org.z3950.zing.cql.cql2pgjson.SqlSelect;
 
 public class SelectBuilder {
   private final StringBuilder query;
@@ -58,16 +59,27 @@ public class SelectBuilder {
    * @return sql query.
    */
   public static String parseQuery(String jsonField, String query) {
-    String parsedQuery = StringUtils.EMPTY;
+    StringBuilder parsedQuery = new StringBuilder();
     if (isNotBlank(query)) {
       try {
         //here is jsonField is a jsonb array field and (0) is first element in the array, so this way we search in a json.
-        parsedQuery = new CQL2PgJSON(jsonField).cql2pgJson(query);
+        SqlSelect select = new CQL2PgJSON(jsonField).toSql(query);
+        parsedQuery
+          .append("(")
+          .append(select.getWhere())
+          .append(")");
+        if (StringUtils.isNotEmpty(select.getOrderBy())) {
+          parsedQuery
+            .append(SPACE)
+            .append("ORDER BY")
+            .append(SPACE)
+            .append(select.getOrderBy());
+        }
       } catch (Exception e) {
         throw new IllegalStateException(format("Can not parse the cql query: %s", query), e);
       }
     }
-    return parsedQuery;
+    return parsedQuery.toString();
   }
 
   /**

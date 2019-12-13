@@ -1,5 +1,17 @@
-## 2019-08-02 v1.5.0-SNAPSHOT
+## 2019-12-04 v1.6.0
+* Fixed security vulnerabilities
+* Applied new JVM features to manage container memory
+* Updated schema for ProfileSnapshot
+
+## 2019-09-10 v1.5.1
+* Fixed filtering of profile associations
+* Fixed match profiles sample data
+* Added loading sample data by "loadSample" tenant parameter.
+* Added 'profileId' field to profileSnapshotWrapper schema
+
+## 2019-09-09 v1.5.0
 * Updated Match Profile schema and sample data.
+* Filled in "fromModuleVersion" value for each "tables" and "scripts" section in schema.json
 
 ## 2019-07-22 v1.4.0
 * Added removing all profile associations when it's marked as deleted.

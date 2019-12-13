@@ -1,9 +1,9 @@
 package org.folio.services.snapshot;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.dao.snapshot.ProfileSnapshotItem;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -12,6 +12,7 @@ import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
+import org.folio.rest.tools.utils.ObjectMapperTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,6 +82,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
       ProfileSnapshotItem rootItem = optionalRootItem.get();
       ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
       rootWrapper.setId(UUID.randomUUID().toString());
+      rootWrapper.setProfileId(rootItem.getDetailId());
       rootWrapper.setContentType(rootItem.getDetailType());
       rootWrapper.setContent(convertContentByType(rootItem.getDetail(), rootItem.getDetailType()));
       fillChildSnapshotWrappers(rootItem.getDetailId(), rootWrapper.getChildSnapshotWrappers(), snapshotItems);
@@ -103,11 +105,12 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     for (ProfileSnapshotItem snapshotItem : snapshotItems) {
       if (parentId.equals(snapshotItem.getMasterId())) {
         ChildSnapshotWrapper childWrapper = new ChildSnapshotWrapper();
-        childWrapper.setId(snapshotItem.getDetailId());
+        childWrapper.setId(UUID.randomUUID().toString());
+        childWrapper.setProfileId(snapshotItem.getDetailId());
         childWrapper.setContentType(snapshotItem.getDetailType());
         childWrapper.setContent(convertContentByType(snapshotItem.getDetail(), snapshotItem.getDetailType()));
         childWrappers.add(childWrapper);
-        fillChildSnapshotWrappers(childWrapper.getId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
+        fillChildSnapshotWrappers(childWrapper.getProfileId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
       }
     }
   }
@@ -166,15 +169,16 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    * @return concrete class of the Profile
    */
   private <T> T convertContentByType(Object content, ProfileSnapshotWrapper.ContentType contentType) {
+    ObjectMapper mapper = ObjectMapperTool.getMapper();
     switch (contentType) {
       case JOB_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, JobProfile.class);
+        return (T) mapper.convertValue(content, JobProfile.class);
       case MATCH_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, MatchProfile.class);
+        return (T) mapper.convertValue(content, MatchProfile.class);
       case ACTION_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, ActionProfile.class);
+        return (T) mapper.convertValue(content, ActionProfile.class);
       case MAPPING_PROFILE:
-        return (T) new ObjectMapper().convertValue(content, MappingProfile.class);
+        return (T) mapper.convertValue(content, MappingProfile.class);
       default:
         throw new IllegalStateException("Can not find profile by snapshot content type: " + contentType.toString());
     }

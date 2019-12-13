@@ -595,33 +595,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (_id, jsonb) values
       }
     }
   ],
-
-  "incomingDataValueType": "VALUE_FROM_INCOMING_RECORD",
-  "field": "010",
-  "incomingIndicator1": " ",
-  "incomingIndicator2": " ",
-  "incomingRecordSubfield": "a",
-  "incomingText": "",
-  "incomingNumber": "",
-  "incomingFromDate": "",
-  "incomingToDate": "",
-  "incomingDate": "",
-  "incomingInclude": "MATCH_ON",
-  "incomingHowMuch": "COMPLETE_STRING",
-  "matchingCriteria": "EXACTLY_MATCHES",
-  "existingDataValueType": "VALUE_IN_EXISTING_RECORD",
-  "fieldMarc": "010",
-  "existingIndicator1": " ",
-  "existingIndicator2": " ",
-  "existingRecordSubfield": "a",
-  "existingText": "",
-  "existingNumber": "",
-  "existingFromDate": "",
-  "existingToDate": "",
-  "existingDate": "",
-  "existingInclude": "MATCH_ON",
-  "existingHowMuch": "COMPLETE_STRING",
-
   "deleted": false,
   "userInfo": {
     "firstName": "DIKU",
