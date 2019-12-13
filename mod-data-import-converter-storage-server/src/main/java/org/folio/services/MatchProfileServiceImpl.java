@@ -4,8 +4,10 @@ import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -30,6 +32,26 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
   @Override
   protected String getProfileId(MatchProfile profile) {
     return profile.getId();
+  }
+
+  @Override
+  protected ProfileSnapshotWrapper.ContentType getProfileContentType() {
+    return ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
+  }
+
+  @Override
+  protected void setChildProfiles(MatchProfile profile, List<ProfileSnapshotWrapper> childProfiles) {
+    profile.setChildProfiles(childProfiles);
+  }
+
+  @Override
+  protected void setParentProfiles(MatchProfile profile, List<ProfileSnapshotWrapper> parentProfiles) {
+    profile.setParentProfiles(parentProfiles);
+  }
+
+  @Override
+  protected List<MatchProfile> getProfilesList(MatchProfileCollection profilesCollection) {
+    return profilesCollection.getMatchProfiles();
   }
 
 }

@@ -84,7 +84,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(MATCH_PROFILES_PATH)
+      .get(MATCH_PROFILES_PATH + "?withRelations=true")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
@@ -496,7 +496,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
           new Field().withLabel("indicator1").withValue(StringUtils.EMPTY),
           new Field().withLabel("indicator2").withValue(StringUtils.EMPTY),
           new Field().withLabel("recordSubfield").withValue(StringUtils.EMPTY)))
-      .withQualifier(new Qualifier().withComparisonPart(NUMERICS_ONLY)))
+        .withQualifier(new Qualifier().withComparisonPart(NUMERICS_ONLY)))
       .withMatchCriterion(EXACTLY_MATCHES)
       .withExistingMatchExpression(new MatchExpression()
         .withDataValueType(VALUE_FROM_RECORD)
@@ -598,12 +598,12 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
     pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
       pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
-      pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event3 ->
-        pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event4 -> {
-          if (event4.failed()) {
-            context.fail(event4.cause());
-          }
-          async.complete();
-        }))));
+        pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event3 ->
+          pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event4 -> {
+            if (event4.failed()) {
+              context.fail(event4.cause());
+            }
+            async.complete();
+          }))));
   }
 }

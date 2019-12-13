@@ -95,11 +95,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesJobProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
-                                               Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesJobProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        jobProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
+        jobProfileService.getProfiles(showDeleted, withRelations, query, offset, limit, tenantId)
           .map(GetDataImportProfilesJobProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -202,11 +201,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMatchProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
-                                                 Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesMatchProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        matchProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
+        matchProfileService.getProfiles(showDeleted, withRelations, query, offset, limit, tenantId)
           .map(GetDataImportProfilesMatchProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -289,10 +287,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMappingProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesMappingProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        mappingProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
+        mappingProfileService.getProfiles(showDeleted, withRelations, query, offset, limit, tenantId)
           .map(GetDataImportProfilesMappingProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -411,11 +409,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesActionProfiles(boolean showDeleted, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders,
-                                                  Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesActionProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        actionProfileService.getProfiles(showDeleted, query, offset, limit, tenantId)
+        actionProfileService.getProfiles(showDeleted, withRelations, query, offset, limit, tenantId)
           .map(GetDataImportProfilesActionProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -493,17 +490,17 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void getDataImportProfilesProfileAssociations(String master, String detail, String lang, Map<String, String> okapiHeaders,
                                                        Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
-      try {
-        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        profileAssociationService.getAll(mapContentType(master), mapContentType(detail), params.getTenantId())
-          .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
-          .map(Response.class::cast)
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
-      } catch (Exception e) {
-        logger.error("Failed to get ProfileAssociations by masterType '{}' and detailType '{}", master, detail, e);
-        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
-      }
+        try {
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          profileAssociationService.getAll(mapContentType(master), mapContentType(detail), params.getTenantId())
+            .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
+            .map(Response.class::cast)
+            .otherwise(ExceptionHelper::mapExceptionToResponse)
+            .setHandler(asyncResultHandler);
+        } catch (Exception e) {
+          logger.error("Failed to get ProfileAssociations by masterType '{}' and detailType '{}", master, detail, e);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+        }
       }
     );
   }
@@ -714,8 +711,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     return profileService.isProfileExistByProfileName(profile, tenantId)
       .map(isExist -> isExist
         ? errors.withErrors(Collections.singletonList(new Error()
-          .withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName))))
-          .withTotalRecords(errors.getTotalRecords() + 1)
+        .withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName))))
+        .withTotalRecords(errors.getTotalRecords() + 1)
         : errors);
   }
 
