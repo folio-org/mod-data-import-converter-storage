@@ -21,18 +21,6 @@ public interface ProfileService<T, S> {
    * @param query  query from URL
    * @param offset starting index in a list of results
    * @param limit  limit of records for pagination
-   * @param tenantId tenant id
-   * @return future with S, a collection of T entities
-   */
-  Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId);
-
-  /**
-   * Searches for T entities
-   *
-   * @param showDeleted indicates to return T entities marked as deleted or not
-   * @param query  query from URL
-   * @param offset starting index in a list of results
-   * @param limit  limit of records for pagination
    * @param withRelations  load profile with related profiles
    * @param tenantId tenant id
    * @return future with S, a collection of T entities
