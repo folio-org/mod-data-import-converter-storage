@@ -622,7 +622,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     for (ActionProfile action : actionProfiles) {
       createdActions.add(RestAssured.given()
         .spec(spec)
-        .body(action)
+        .body(action.withName(nameForProfiles + i))
         .when()
         .post(ACTION_PROFILES_PATH)
         .then()
