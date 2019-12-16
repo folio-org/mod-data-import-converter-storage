@@ -629,7 +629,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
         .statusCode(HttpStatus.SC_CREATED).extract().body().as(ActionProfile.class));
       i++;
     }
-    for (int j = 0; j < profilesIds.size(); i++) {
+    for (int j = 0; j < profilesIds.size(); j++) {
       ProfileAssociation associationChild = new ProfileAssociation();
       ProfileAssociation associationParent = new ProfileAssociation();
       associationChild.setMasterProfileId(profilesIds.get(j));
