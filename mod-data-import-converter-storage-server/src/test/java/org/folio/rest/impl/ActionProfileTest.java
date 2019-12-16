@@ -50,15 +50,15 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
-  private static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
+  static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
     .withAction(CREATE)
     .withFolioRecord(MARC_BIBLIOGRAPHIC);
-  private static ActionProfile actionProfile_2 = new ActionProfile().withName("Boo")
+  static ActionProfile actionProfile_2 = new ActionProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
     .withAction(CREATE)
     .withFolioRecord(MARC_BIBLIOGRAPHIC);
-  private static ActionProfile actionProfile_3 = new ActionProfile().withName("Foo")
+  static ActionProfile actionProfile_3 = new ActionProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
     .withAction(CREATE)
     .withFolioRecord(MARC_BIBLIOGRAPHIC);
