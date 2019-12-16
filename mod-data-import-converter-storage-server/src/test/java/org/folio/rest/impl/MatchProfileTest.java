@@ -109,8 +109,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK).log().all()
       .body("totalRecords", is(3))
-      .body("childProfiles[0].id", is(notNullValue()))
-      .body("parentProfiles[0].id", is(notNullValue()))
+      .body("matchProfiles*.childProfiles*.id", everyItem(is(notNullValue())))
+      .body("matchProfiles*.parentProfiles*.id", everyItem(is(notNullValue())))
       .body("matchProfiles*.deleted", everyItem(is(false)));
   }
 
