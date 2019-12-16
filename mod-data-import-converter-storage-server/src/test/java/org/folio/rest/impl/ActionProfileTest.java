@@ -81,7 +81,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH)
+      .get(ACTION_PROFILES_PATH + "?withRelations=true")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
@@ -533,11 +533,11 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event2 ->
         pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 ->
           pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event4 -> {
-          if (event4.failed()) {
-            context.fail(event4.cause());
-          }
-          async.complete();
-        })))
+            if (event4.failed()) {
+              context.fail(event4.cause());
+            }
+            async.complete();
+          })))
     );
   }
 }

@@ -1,4 +1,4 @@
-INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (_id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 ('0d991835-fabb-4234-8472-3ae94bc7a1b3', '{
 	"id": "0d991835-fabb-4234-8472-3ae94bc7a1b3",
 	"name": "MARC brief instance 1",

@@ -78,7 +78,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(JOB_PROFILES_PATH)
+      .get(JOB_PROFILES_PATH + "?withRelations=true")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))

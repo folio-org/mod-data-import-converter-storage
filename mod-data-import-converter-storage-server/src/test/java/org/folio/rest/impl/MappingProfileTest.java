@@ -74,7 +74,7 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(MAPPING_PROFILES_PATH)
+      .get(MAPPING_PROFILES_PATH + "?withRelations=true")
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
