@@ -603,18 +603,21 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   private void createProfilesTree(List<String> profilesIds) {
+    String nameForProfiles = "tree";
     List<JobProfile> jobProfiles = Arrays.asList(jobProfile_1, jobProfile_1, jobProfile_1);
     List<ActionProfile> actionProfiles = Arrays.asList(actionProfile_1, actionProfile_1, actionProfile_1);
     List<JobProfile> createdJobs = new ArrayList<>();
     List<ActionProfile> createdActions = new ArrayList<>();
+    int i = 0;
     for (JobProfile profile : jobProfiles) {
       createdJobs.add(RestAssured.given()
         .spec(spec)
-        .body(profile)
+        .body(profile.withName(nameForProfiles + i))
         .when()
         .post(JOB_PROFILES_PATH)
         .then()
         .statusCode(HttpStatus.SC_CREATED).extract().body().as(JobProfile.class));
+      i++;
     }
     for (ActionProfile action : actionProfiles) {
       createdActions.add(RestAssured.given()
@@ -624,14 +627,15 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
         .post(ACTION_PROFILES_PATH)
         .then()
         .statusCode(HttpStatus.SC_CREATED).extract().body().as(ActionProfile.class));
+      i++;
     }
-    for (int i = 0; i < profilesIds.size(); i++) {
+    for (int j = 0; j < profilesIds.size(); i++) {
       ProfileAssociation associationChild = new ProfileAssociation();
       ProfileAssociation associationParent = new ProfileAssociation();
-      associationChild.setMasterProfileId(profilesIds.get(i));
-      associationChild.setDetailProfileId(createdActions.get(i).getId());
-      associationParent.setDetailProfileId(profilesIds.get(i));
-      associationParent.setMasterProfileId(createdJobs.get(i).getId());
+      associationChild.setMasterProfileId(profilesIds.get(j));
+      associationChild.setDetailProfileId(createdActions.get(j).getId());
+      associationParent.setDetailProfileId(profilesIds.get(j));
+      associationParent.setMasterProfileId(createdJobs.get(j).getId());
       RestAssured.given()
         .spec(spec)
         .queryParam("master", MATCH_PROFILE)
