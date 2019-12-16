@@ -5,8 +5,9 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import org.apache.commons.lang3.StringUtils;
-import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
-import org.z3950.zing.cql.cql2pgjson.SqlSelect;
+import org.folio.cql2pgjson.CQL2PgJSON;
+import org.folio.cql2pgjson.model.SqlSelect;
+
 
 public class SelectBuilder {
   private final StringBuilder query;

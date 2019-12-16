@@ -6,15 +6,15 @@ RETURNS TABLE(snapshot json)
   AS $$
     WITH RECURSIVE recursive_snapshot AS (
       SELECT
-        job_profile._id AS association_id,
+        job_profile.id AS association_id,
         CAST(NULL AS uuid) AS master_id,
-        job_profile._id AS detail_id,
+        job_profile.id AS detail_id,
         'JOB_PROFILE' detail_type,
         0 AS detail_order,
         json_agg(job_profile.jsonb) detail
       FROM job_profiles AS job_profile
-      WHERE job_profile._id = jobProfileId
-      GROUP BY job_profile._id
+      WHERE job_profile.id = jobProfileId
+      GROUP BY job_profile.id
         UNION ALL
       SELECT
         associations_view.association_id,
