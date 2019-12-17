@@ -47,16 +47,16 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
   public static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
   public static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
-  private static final String JOB_PROFILES_PATH = "/data-import-profiles/jobProfiles";
+  static final String JOB_PROFILES_PATH = "/data-import-profiles/jobProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
-  private static JobProfile jobProfile_1 = new JobProfile().withName("Bla")
+  static JobProfile jobProfile_1 = new JobProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
     .withDataType(MARC);
-  private static JobProfile jobProfile_2 = new JobProfile().withName("Boo")
+  static JobProfile jobProfile_2 = new JobProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
     .withDataType(MARC);
-  private static JobProfile jobProfile_3 = new JobProfile().withName("Foo")
+  static JobProfile jobProfile_3 = new JobProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
     .withDataType(MARC);
 

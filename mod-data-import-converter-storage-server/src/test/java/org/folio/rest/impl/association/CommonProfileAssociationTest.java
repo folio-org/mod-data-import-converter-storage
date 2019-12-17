@@ -59,7 +59,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   private static final String MAPPING_PROFILES_URL = "/data-import-profiles/mappingProfiles";
   private static final String MATCH_PROFILES_URL = "/data-import-profiles/matchProfiles";
 
-  private static final String ASSOCIATED_PROFILES_URL = "/data-import-profiles/profileAssociations";
+  public static final String ASSOCIATED_PROFILES_URL = "/data-import-profiles/profileAssociations";
   private static final String DETAILS_BY_MASTER_URL = "/data-import-profiles/profileAssociations/{masterId}/details";
   private static final String MASTERS_BY_DETAIL_URL = "/data-import-profiles/profileAssociations/{detailId}/masters";
 

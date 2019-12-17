@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.Field;
+import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MatchDetail;
 import org.folio.rest.jaxrs.model.MatchExpression;
 import org.folio.rest.jaxrs.model.MatchProfile;
@@ -24,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,18 +33,24 @@ import java.util.UUID;
 
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
+import static org.folio.rest.impl.ActionProfileTest.actionProfile_1;
+import static org.folio.rest.impl.JobProfileTest.JOB_PROFILES_PATH;
+import static org.folio.rest.impl.JobProfileTest.jobProfile_1;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.ASSOCIATED_PROFILES_URL;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.MatchDetail.MatchCriterion.EXACTLY_MATCHES;
 import static org.folio.rest.jaxrs.model.MatchExpression.DataValueType.VALUE_FROM_RECORD;
 import static org.folio.rest.jaxrs.model.MatchProfile.IncomingRecordType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
 import static org.folio.rest.jaxrs.model.Qualifier.ComparisonPart.NUMERICS_ONLY;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(VertxUnitRunner.class)
 public class MatchProfileTest extends AbstractRestVerticleTest {
@@ -88,6 +96,21 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
+      .body("matchProfiles*.deleted", everyItem(is(false)));
+  }
+
+  @Test
+  public void shouldReturnAllProfilesOnGetTree() {
+    createProfilesTree(createProfiles());
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(MATCH_PROFILES_PATH + "?withRelations=true")
+      .then()
+      .statusCode(HttpStatus.SC_OK).log().all()
+      .body("totalRecords", is(3))
+      .body("matchProfiles*.childProfiles*.id", everyItem(is(notNullValue())))
+      .body("matchProfiles*.parentProfiles*.id", everyItem(is(notNullValue())))
       .body("matchProfiles*.deleted", everyItem(is(false)));
   }
 
@@ -567,14 +590,71 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       is(matchDetail.getExistingMatchExpression().getQualifier().getComparisonPart()));
   }
 
-  private void createProfiles() {
+  private List<String> createProfiles() {
     List<MatchProfile> matchProfilesToPost = Arrays.asList(matchProfile_1, matchProfile_2, matchProfile_3);
+    List<String> ids = new ArrayList<>();
     for (MatchProfile profile : matchProfilesToPost) {
-      RestAssured.given()
+      ids.add(RestAssured.given()
         .spec(spec)
         .body(profile)
         .when()
         .post(MATCH_PROFILES_PATH)
+        .then()
+        .statusCode(HttpStatus.SC_CREATED).extract().body().as(MatchProfile.class).getId());
+    }
+    return ids;
+  }
+
+  private void createProfilesTree(List<String> profilesIds) {
+    String nameForProfiles = "tree";
+    List<JobProfile> jobProfiles = Arrays.asList(jobProfile_1, jobProfile_1, jobProfile_1);
+    List<ActionProfile> actionProfiles = Arrays.asList(actionProfile_1, actionProfile_1, actionProfile_1);
+    List<JobProfile> createdJobs = new ArrayList<>();
+    List<ActionProfile> createdActions = new ArrayList<>();
+    int i = 0;
+    for (JobProfile profile : jobProfiles) {
+      createdJobs.add(RestAssured.given()
+        .spec(spec)
+        .body(profile.withName(nameForProfiles + i))
+        .when()
+        .post(JOB_PROFILES_PATH)
+        .then()
+        .statusCode(HttpStatus.SC_CREATED).extract().body().as(JobProfile.class));
+      i++;
+    }
+    for (ActionProfile action : actionProfiles) {
+      createdActions.add(RestAssured.given()
+        .spec(spec)
+        .body(action.withName(nameForProfiles + i))
+        .when()
+        .post(ACTION_PROFILES_PATH)
+        .then()
+        .statusCode(HttpStatus.SC_CREATED).extract().body().as(ActionProfile.class));
+      i++;
+    }
+    for (int j = 0; j < profilesIds.size(); j++) {
+      ProfileAssociation associationChild = new ProfileAssociation();
+      ProfileAssociation associationParent = new ProfileAssociation();
+      associationChild.setMasterProfileId(profilesIds.get(j));
+      associationChild.setDetailProfileId(createdActions.get(j).getId());
+      associationParent.setDetailProfileId(profilesIds.get(j));
+      associationParent.setMasterProfileId(createdJobs.get(j).getId());
+      RestAssured.given()
+        .spec(spec)
+        .queryParam("master", MATCH_PROFILE)
+        .queryParam("detail", ACTION_PROFILE)
+        .body(associationChild)
+        .when()
+        .post(ASSOCIATED_PROFILES_URL)
+        .then()
+        .statusCode(HttpStatus.SC_CREATED);
+      RestAssured.given()
+        .spec(spec)
+        .queryParam("detail", MATCH_PROFILE)
+        .queryParam("master", JOB_PROFILE)
+        .body(associationParent)
+        .when()
+        .post(ASSOCIATED_PROFILES_URL)
         .then()
         .statusCode(HttpStatus.SC_CREATED);
     }
