@@ -14,7 +14,8 @@ import java.util.UUID;
 @RunWith(VertxUnitRunner.class)
 public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
 
-  private static final String SNAPSHOT_PATH = "/data-import-profiles/jobProfileSnapshots";
+  private static final String JOB_PROFILE_SNAPSHOT_PATH = "/data-import-profiles/jobProfileSnapshots";
+  private static final String PROFILE_SNAPSHOT_PATH = "/data-import-profiles/profileSnapshots";
 
   @Test
   public void shouldReturnNotFoundOnGetById(TestContext testContext) {
@@ -23,7 +24,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(SNAPSHOT_PATH + "/" + id)
+      .get(JOB_PROFILE_SNAPSHOT_PATH + "/" + id)
       .then()
       .statusCode(HttpStatus.SC_NOT_FOUND);
     async.complete();
@@ -36,7 +37,20 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .post(SNAPSHOT_PATH + "/" + id)
+      .post(JOB_PROFILE_SNAPSHOT_PATH + "/" + id)
+      .then()
+      .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    async.complete();
+  }
+
+  @Test
+  public void shouldBuildAndReturn500OnGetSnapshotById(TestContext testContext) {
+    Async async = testContext.async();
+    String id = UUID.randomUUID().toString();
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(PROFILE_SNAPSHOT_PATH + "/" + id)
       .then()
       .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
     async.complete();
