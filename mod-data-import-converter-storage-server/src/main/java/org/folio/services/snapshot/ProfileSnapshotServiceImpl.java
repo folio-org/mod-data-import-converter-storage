@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import org.apache.commons.collections4.CollectionUtils;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.dao.snapshot.ProfileSnapshotItem;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -47,24 +48,34 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   @Override
   public Future<ProfileSnapshotWrapper> createSnapshot(String jobProfileId, String tenantId) {
     Future<ProfileSnapshotWrapper> future = Future.future();
-    profileSnapshotDao.getSnapshotItems(jobProfileId, tenantId).setHandler(ar -> {
-      List<ProfileSnapshotItem> snapshotItems = ar.result();
-      if (snapshotItems.isEmpty()) {
-        String errorMessage = "Can not build snapshot for Job Profile, jobProfileId is wrong: " + jobProfileId;
-        LOGGER.error(errorMessage);
-        future.fail(errorMessage);
-      } else {
-        ProfileSnapshotWrapper rootWrapper = buildSnapshot(snapshotItems);
-        profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
-          if (savedAr.failed()) {
-            future.fail(savedAr.cause());
-          } else {
-            future.complete(rootWrapper);
-          }
-        });
-      }
-    });
-    return future;
+    return constructSnapshot(jobProfileId, tenantId)
+      .compose(rootWrapper -> {
+          profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
+            if (savedAr.failed()) {
+              future.fail(savedAr.cause());
+            } else {
+              future.complete(rootWrapper);
+            }
+          });
+          return future;
+        }
+      );
+  }
+
+  @Override
+  public Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, String tenantId) {
+    Future<ProfileSnapshotWrapper> future = Future.future();
+    return profileSnapshotDao.getSnapshotItems(profileId, tenantId)
+      .compose(snapshotItems -> {
+        if (CollectionUtils.isEmpty(snapshotItems)) {
+          String errorMessage = "Cannot build snapshot for Profile " + profileId;
+          LOGGER.error(errorMessage);
+          future.fail(errorMessage);
+        } else {
+          future.complete(buildSnapshot(snapshotItems));
+        }
+        return future;
+      });
   }
 
   /**

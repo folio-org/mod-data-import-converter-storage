@@ -164,6 +164,11 @@
           "methods": ["GET"],
           "pathPattern": "/data-import-profiles/entityTypes",
           "permissionsRequired": [ "converter-storage.entitytypes.get" ]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/data-import-profiles/profileSnapshots/{id}",
+          "permissionsRequired": [ "converter-storage.profileSnapshots.get" ]
         }
       ]
     },
@@ -304,6 +309,11 @@
       "description": "Post Job Profile Snapshot"
     },
     {
+      "permissionName": "converter-storage.profileSnapshots.get",
+      "displayName": "Data Import Converter Storage - get Profile Snapshot",
+      "description": "Get Profile Snapshot"
+    },
+    {
       "permissionName": "converter-storage.all",
       "displayName": "Data Import Converter Storage - all permissions",
       "description": "Entire set of permissions needed to manage Profiles",
@@ -330,7 +340,8 @@
         "converter-storage.profileassociation.delete",
         "converter-storage.jobprofilesnapshots.get",
         "converter-storage.jobprofilesnapshots.post",
-        "converter-storage.entitytypes.get"
+        "converter-storage.entitytypes.get",
+        "converter-storage.profileSnapshots.get"
       ],
       "visible": false
     }

@@ -704,6 +704,22 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     });
   }
 
+  @Override
+  public void getDataImportProfilesProfileSnapshotsById(String id, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        profileSnapshotService.constructSnapshot(id, tenantId)
+          .map(snapshot -> (Response) GetDataImportProfilesProfileSnapshotsByIdResponse
+            .respond200WithApplicationJson(snapshot))
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to construct Profile Snapshot", e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
   private <T, S> Future<Errors> validateProfile(T profile, ProfileService<T, S> profileService, String tenantId) {
     String profileTypeName = StringUtils.uncapitalise(profile.getClass().getSimpleName());
     Errors errors = new Errors()
