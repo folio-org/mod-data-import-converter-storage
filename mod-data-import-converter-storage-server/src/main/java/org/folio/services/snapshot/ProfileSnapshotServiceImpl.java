@@ -29,6 +29,7 @@ import java.util.UUID;
  * Implementation for Profile snapshot service
  */
 @Service
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileSnapshotServiceImpl.class);
