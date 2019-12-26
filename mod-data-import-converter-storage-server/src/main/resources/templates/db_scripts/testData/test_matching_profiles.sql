@@ -9,11 +9,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "ORDER",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "ORDER",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -73,11 +73,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "INSTANCE",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "INSTANCE",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -145,11 +145,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "MARC_BIB_RECORD",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "MARC_BIBLIOGRAPHIC",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "MARC_BIBLIOGRAPHIC",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -221,11 +221,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "INSTANCE",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "INSTANCE",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -291,11 +291,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "HOLDINGS",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "HOLDINGS",
       "incomingMatchExpression": {
         "dataValueType": "STATIC_VALUE",
@@ -341,11 +341,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "MARC_AUTHORITY",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "MARC_AUTHORITY",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -417,11 +417,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "MARC_BIBLIOGRAPHIC",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "MARC_BIBLIOGRAPHIC",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -503,11 +503,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "EDIFACT",
+  "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "ORDER",
   "matchDetails": [
     {
-      "incomingRecordType": "EDIFACT",
+      "incomingRecordType": "EDIFACT_INVOICE",
       "existingRecordType": "ORDER",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -555,13 +555,13 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "MARC_AUTHORITY",
 
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
-      "existingRecordType": "ORDER",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+      "existingRecordType": "MARC_AUTHORITY",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
         "fields": [
@@ -620,12 +620,12 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "EDIFACT",
+  "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "INVOICE",
 
   "matchDetails": [
     {
-      "incomingRecordType": "EDIFACT",
+      "incomingRecordType": "EDIFACT_INVOICE",
       "existingRecordType": "INVOICE",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",
@@ -673,11 +673,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     ]
   },
   "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "ITEM",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC",
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
       "existingRecordType": "ITEM",
       "incomingMatchExpression": {
         "dataValueType": "VALUE_FROM_RECORD",

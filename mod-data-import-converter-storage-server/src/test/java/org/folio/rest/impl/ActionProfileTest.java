@@ -8,8 +8,8 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.MappingProfile;
-import org.folio.rest.jaxrs.model.MappingProfile.IncomingRecordType;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import static org.folio.rest.impl.MappingProfileTest.MAPPING_PROFILES_PATH;
 import static org.folio.rest.impl.MappingProfileTest.MAPPING_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
-import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.INSTANCE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
@@ -197,7 +196,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .body(new ActionProfile()
         .withName("newProfile")
         .withAction(CREATE)
-        .withFolioRecord(INSTANCE))
+        .withFolioRecord(ActionProfile.FolioRecord.INSTANCE))
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
@@ -372,8 +371,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     createResponse = RestAssured.given()
       .spec(spec)
       .body(new MappingProfile().withName("testMapping")
-        .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
-        .withFolioRecord(MappingProfile.FolioRecord.INSTANCE))
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.INSTANCE))
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
@@ -425,7 +424,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .body(new ActionProfile()
         .withName("ProfileToDelete")
         .withAction(CREATE)
-        .withFolioRecord(INSTANCE))
+        .withFolioRecord(ActionProfile.FolioRecord.INSTANCE))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()
@@ -457,7 +456,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .body(new ActionProfile()
         .withName("ProfileToDelete")
         .withAction(CREATE)
-        .withFolioRecord(INSTANCE))
+        .withFolioRecord(ActionProfile.FolioRecord.INSTANCE))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()

@@ -9,7 +9,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "INSTANCE",
+  "existingRecordType": "INSTANCE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -35,7 +35,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "HOLDINGS",
+  "existingRecordType": "HOLDINGS",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -61,7 +61,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "ITEM",
+  "existingRecordType": "ITEM",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -87,7 +87,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "ORDER",
+  "existingRecordType": "ORDER",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -111,7 +111,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     "tagList": []
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -137,7 +137,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -163,7 +163,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "INSTANCE",
+  "existingRecordType": "INSTANCE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -189,7 +189,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "HOLDINGS",
+  "existingRecordType": "HOLDINGS",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -215,7 +215,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "ITEM",
+  "existingRecordType": "ITEM",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -241,7 +241,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "INVOICE",
+  "existingRecordType": "INVOICE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -267,7 +267,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -293,7 +293,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -319,7 +319,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "INSTANCE",
+  "existingRecordType": "INSTANCE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -345,7 +345,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "HOLDINGS",
+  "existingRecordType": "HOLDINGS",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -371,7 +371,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "ITEM",
+  "existingRecordType": "ITEM",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -397,7 +397,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "ORDER",
+  "existingRecordType": "ORDER",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -423,7 +423,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "INVOICE",
+  "existingRecordType": "INVOICE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -449,7 +449,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -475,7 +475,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "INSTANCE",
+  "existingRecordType": "INSTANCE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -501,7 +501,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -527,7 +527,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -553,7 +553,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_HOLDINGS",
-  "folioRecord": "MARC_HOLDINGS",
+  "existingRecordType": "MARC_HOLDINGS",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -577,7 +577,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     "tagList": []
   },
   "incomingRecordType": "MARC_AUTHORITY",
-  "folioRecord": "MARC_AUTHORITY",
+  "existingRecordType": "MARC_AUTHORITY",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -603,7 +603,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "MARC_BIBLIOGRAPHIC",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -629,7 +629,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "INSTANCE",
+  "existingRecordType": "INSTANCE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -655,7 +655,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "folioRecord": "HOLDINGS",
+  "existingRecordType": "HOLDINGS",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -681,7 +681,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "DELIMITED",
-  "folioRecord": "INSTANCE",
+  "existingRecordType": "INSTANCE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -707,7 +707,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "DELIMITED",
-  "folioRecord": "HOLDINGS",
+  "existingRecordType": "HOLDINGS",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -733,7 +733,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "DELIMITED",
-  "folioRecord": "ITEM",
+  "existingRecordType": "ITEM",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -759,7 +759,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "DELIMITED",
-  "folioRecord": "ORDER",
+  "existingRecordType": "ORDER",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",
@@ -785,7 +785,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ]
   },
   "incomingRecordType": "EDIFACT_INVOICE",
-  "folioRecord": "INVOICE",
+  "existingRecordType": "INVOICE",
 	"deleted": false,
   "userInfo": {
     "firstName": "DIKU",

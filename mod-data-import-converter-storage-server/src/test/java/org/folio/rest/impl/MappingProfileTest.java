@@ -8,8 +8,8 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.MappingProfile;
-import org.folio.rest.jaxrs.model.MappingProfile.IncomingRecordType;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -27,7 +27,6 @@ import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
-import static org.folio.rest.jaxrs.model.MappingProfile.FolioRecord.INSTANCE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
 import static org.hamcrest.Matchers.empty;
@@ -45,16 +44,16 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
 
   private static MappingProfile mappingProfile_1 = new MappingProfile().withName("Bla")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-    .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
-    .withFolioRecord(INSTANCE);
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.INSTANCE);
   private static MappingProfile mappingProfile_2 = new MappingProfile().withName("Boo")
     .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-    .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
-    .withFolioRecord(INSTANCE);
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.INSTANCE);
   private static MappingProfile mappingProfile_3 = new MappingProfile().withName("Foo")
     .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
-    .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
-    .withFolioRecord(INSTANCE);
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.INSTANCE);
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -187,8 +186,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new MappingProfile()
         .withName("newProfile")
-        .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
-        .withFolioRecord(INSTANCE))
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.INSTANCE))
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
@@ -351,8 +350,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new MappingProfile()
         .withName("ProfileToDelete")
-        .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
-        .withFolioRecord(INSTANCE))
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.INSTANCE))
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()
@@ -383,8 +382,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new MappingProfile()
         .withName("ProfileToDelete")
-        .withIncomingRecordType(IncomingRecordType.MARC_BIBLIOGRAPHIC)
-        .withFolioRecord(INSTANCE))
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.INSTANCE))
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()

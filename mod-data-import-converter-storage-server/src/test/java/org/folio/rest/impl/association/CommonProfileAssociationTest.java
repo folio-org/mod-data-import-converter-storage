@@ -14,6 +14,7 @@ import org.folio.rest.impl.association.wrapper.MappingProfileWrapper;
 import org.folio.rest.impl.association.wrapper.MatchProfileWrapper;
 import org.folio.rest.impl.association.wrapper.ProfileWrapper;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
@@ -31,7 +32,6 @@ import java.util.UUID;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
-import static org.folio.rest.jaxrs.model.MappingProfile.FolioRecord.INSTANCE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
@@ -77,30 +77,30 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
     .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
 
   MappingProfile mappingProfile1 = new MappingProfile().withName("testMappingProfile1").withDescription("test-description")
-    .withIncomingRecordType(MappingProfile.IncomingRecordType.MARC_BIBLIOGRAPHIC)
-    .withFolioRecord(INSTANCE);
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.INSTANCE);
   MappingProfile mappingProfile2 = new MappingProfile().withName("testMappingProfile2").withDescription("test-description")
-    .withIncomingRecordType(MappingProfile.IncomingRecordType.MARC_BIBLIOGRAPHIC)
-    .withFolioRecord(INSTANCE);
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.INSTANCE);
   MappingProfile mappingProfile3 = new MappingProfile().withName("testMappingProfile3")
-    .withIncomingRecordType(MappingProfile.IncomingRecordType.MARC_BIBLIOGRAPHIC)
-    .withFolioRecord(INSTANCE);
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.INSTANCE);
 
   MatchProfile matchProfile1 = new MatchProfile().withName("testMatchProfile1")
-    .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
-    .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
     .withDescription("test-description");
   MatchProfile matchProfile2 = new MatchProfile().withName("testMatchProfile2")
-    .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
-    .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
     .withDescription("test-description");
   MatchProfile matchProfile3 = new MatchProfile().withName("testMatchProfile3")
-    .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
-    .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC)
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
     .withDescription("test-description");
   MatchProfile matchProfile4 = new MatchProfile().withName("testMatchProfile4")
-    .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
-    .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC);
+    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC);
 
   @Test
   public void runTestShouldReturnEmptyOkResultOnGetAll(TestContext testContext) {

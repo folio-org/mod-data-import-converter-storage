@@ -8,6 +8,7 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfile;
@@ -384,8 +385,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .body(new MatchProfile()
         .withName("testMatch")
-        .withIncomingRecordType(MatchProfile.IncomingRecordType.MARC)
-        .withExistingRecordType(MatchProfile.ExistingRecordType.MARC_BIBLIOGRAPHIC))
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC))
       .when()
       .post(MATCH_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
