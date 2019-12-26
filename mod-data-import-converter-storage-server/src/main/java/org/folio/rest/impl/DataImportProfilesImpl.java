@@ -39,7 +39,6 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
-
 public class DataImportProfilesImpl implements DataImportProfiles {
 
   private static final Logger logger = LoggerFactory.getLogger(DataImportProfilesImpl.class);
@@ -668,7 +667,6 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     );
   }
 
-
   @Override
   public void deleteDataImportProfilesActionProfilesById(String id, String lang, Map<String, String> okapiHeaders,
                                                          Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
@@ -699,6 +697,22 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .setHandler(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get all entity types", e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+      }
+    });
+  }
+
+  @Override
+  public void getDataImportProfilesProfileSnapshotsByJobProfileId(String id, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+    vertxContext.runOnContext(v -> {
+      try {
+        profileSnapshotService.constructSnapshot(id, tenantId)
+          .map(snapshot -> (Response) GetDataImportProfilesProfileSnapshotsByJobProfileIdResponse
+            .respond200WithApplicationJson(snapshot))
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .setHandler(asyncResultHandler);
+      } catch (Exception e) {
+        logger.error("Failed to construct Profile Snapshot", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });

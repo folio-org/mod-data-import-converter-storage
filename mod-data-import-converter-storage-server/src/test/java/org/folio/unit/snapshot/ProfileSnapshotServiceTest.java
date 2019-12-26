@@ -18,6 +18,7 @@ import org.folio.services.snapshot.ProfileSnapshotService;
 import org.folio.services.snapshot.ProfileSnapshotServiceImpl;
 import org.folio.unit.AbstractUnitTest;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -41,6 +42,54 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
   private ProfileSnapshotDao dao;
   @Autowired
   private ProfileSnapshotService service;
+
+  private JobProfile jobProfile = new JobProfile().withId(UUID.randomUUID().toString());
+  private ProfileSnapshotItem jobProfileSnapshotItem = new ProfileSnapshotItem();
+
+  private MatchProfile matchProfile = new MatchProfile().withId(UUID.randomUUID().toString());
+  private ProfileSnapshotItem matchProfileSnapshotItem = new ProfileSnapshotItem();
+
+  private ActionProfile actionProfile = new ActionProfile().withId(UUID.randomUUID().toString());
+  private ProfileSnapshotItem actionProfileSnapshotItem = new ProfileSnapshotItem();
+
+  private MappingProfile mappingProfile = new MappingProfile().withId(UUID.randomUUID().toString());
+  private ProfileSnapshotItem mappingProfileSnapshotItem = new ProfileSnapshotItem();
+
+  private List<ProfileSnapshotItem> items;
+
+  @Before
+  public void setUp() {
+    jobProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
+    jobProfileSnapshotItem.setMasterId(null);
+    jobProfileSnapshotItem.setDetailId(jobProfile.getId());
+    jobProfileSnapshotItem.setDetailType(JOB_PROFILE);
+    jobProfileSnapshotItem.setDetail(jobProfile);
+
+    matchProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
+    matchProfileSnapshotItem.setMasterId(jobProfile.getId());
+    matchProfileSnapshotItem.setDetailId(matchProfile.getId());
+    matchProfileSnapshotItem.setDetailType(MATCH_PROFILE);
+    matchProfileSnapshotItem.setDetail(matchProfile);
+
+    actionProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
+    actionProfileSnapshotItem.setMasterId(matchProfile.getId());
+    actionProfileSnapshotItem.setDetailId(actionProfile.getId());
+    actionProfileSnapshotItem.setDetailType(ACTION_PROFILE);
+    actionProfileSnapshotItem.setDetail(actionProfile);
+
+    mappingProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
+    mappingProfileSnapshotItem.setMasterId(actionProfile.getId());
+    mappingProfileSnapshotItem.setDetailId(mappingProfile.getId());
+    mappingProfileSnapshotItem.setDetailType(MAPPING_PROFILE);
+    mappingProfileSnapshotItem.setDetail(mappingProfile);
+
+    items = new ArrayList<>(Arrays.asList(
+      jobProfileSnapshotItem,
+      actionProfileSnapshotItem,
+      matchProfileSnapshotItem,
+      mappingProfileSnapshotItem)
+    );
+  }
 
   @Test
   public void shouldSaveAndReturnWrappersOnGetById(TestContext context) {
@@ -122,50 +171,47 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
     ProfileSnapshotDao mockDao = Mockito.mock(ProfileSnapshotDaoImpl.class);
     ProfileSnapshotService service = new ProfileSnapshotServiceImpl(mockDao);
 
-    JobProfile jobProfile = new JobProfile().withId(UUID.randomUUID().toString());
-    ProfileSnapshotItem jobProfileSnapshotItem = new ProfileSnapshotItem();
-    jobProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
-    jobProfileSnapshotItem.setMasterId(null);
-    jobProfileSnapshotItem.setDetailId(jobProfile.getId());
-    jobProfileSnapshotItem.setDetailType(JOB_PROFILE);
-    jobProfileSnapshotItem.setDetail(jobProfile);
-
-    MatchProfile matchProfile = new MatchProfile().withId(UUID.randomUUID().toString());
-    ProfileSnapshotItem matchProfileSnapshotItem = new ProfileSnapshotItem();
-    matchProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
-    matchProfileSnapshotItem.setMasterId(jobProfile.getId());
-    matchProfileSnapshotItem.setDetailId(matchProfile.getId());
-    matchProfileSnapshotItem.setDetailType(MATCH_PROFILE);
-    matchProfileSnapshotItem.setDetail(matchProfile);
-
-    ActionProfile actionProfile = new ActionProfile().withId(UUID.randomUUID().toString());
-    ProfileSnapshotItem actionProfileSnapshotItem = new ProfileSnapshotItem();
-    actionProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
-    actionProfileSnapshotItem.setMasterId(matchProfile.getId());
-    actionProfileSnapshotItem.setDetailId(actionProfile.getId());
-    actionProfileSnapshotItem.setDetailType(ACTION_PROFILE);
-    actionProfileSnapshotItem.setDetail(actionProfile);
-
-    MappingProfile mappingProfile = new MappingProfile().withId(UUID.randomUUID().toString());
-    ProfileSnapshotItem mappingProfileSnapshotItem = new ProfileSnapshotItem();
-    mappingProfileSnapshotItem.setAssociationId(UUID.randomUUID().toString());
-    mappingProfileSnapshotItem.setMasterId(actionProfile.getId());
-    mappingProfileSnapshotItem.setDetailId(mappingProfile.getId());
-    mappingProfileSnapshotItem.setDetailType(MAPPING_PROFILE);
-    mappingProfileSnapshotItem.setDetail(mappingProfile);
-
-    List<ProfileSnapshotItem> items = new ArrayList<>(Arrays.asList(
-      jobProfileSnapshotItem,
-      actionProfileSnapshotItem,
-      matchProfileSnapshotItem,
-      mappingProfileSnapshotItem)
-    );
-
     Mockito.when(mockDao.getSnapshotItems(jobProfile.getId(), TENANT_ID)).thenReturn(Future.succeededFuture(items));
     Mockito.when(mockDao.save(ArgumentMatchers.any(), ArgumentMatchers.anyString())).thenReturn(Future.succeededFuture(jobProfile.getId()));
 
     // when
     service.createSnapshot(jobProfile.getId(), TENANT_ID).setHandler(ar -> {
+      // then
+      testContext.assertTrue(ar.succeeded());
+      ProfileSnapshotWrapper jobProfileWrapper = ar.result();
+      JobProfile actualJobProfile = (JobProfile) jobProfileWrapper.getContent();
+      testContext.assertEquals(jobProfile.getId(), actualJobProfile.getId());
+      testContext.assertEquals(jobProfile.getId(), jobProfileWrapper.getProfileId());
+
+      ChildSnapshotWrapper matchProfileWrapper = jobProfileWrapper.getChildSnapshotWrappers().get(0);
+      MatchProfile actualMatchProfile = (MatchProfile) matchProfileWrapper.getContent();
+      testContext.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
+      testContext.assertEquals(matchProfile.getId(), matchProfileWrapper.getProfileId());
+
+      ChildSnapshotWrapper actionProfileWrapper = matchProfileWrapper.getChildSnapshotWrappers().get(0);
+      ActionProfile actualActionProfile = (ActionProfile) actionProfileWrapper.getContent();
+      testContext.assertEquals(actionProfile.getId(), actualActionProfile.getId());
+      testContext.assertEquals(actionProfile.getId(), actionProfileWrapper.getProfileId());
+
+      ChildSnapshotWrapper mappingProfileWrapper = actionProfileWrapper.getChildSnapshotWrappers().get(0);
+      MappingProfile actualMappingProfile = (MappingProfile) mappingProfileWrapper.getContent();
+      testContext.assertEquals(mappingProfile.getId(), actualMappingProfile.getId());
+      testContext.assertEquals(mappingProfile.getId(), mappingProfileWrapper.getProfileId());
+      async.complete();
+    });
+  }
+
+  @Test
+  public void shouldConstructSnapshotForJobProfile(TestContext testContext) {
+    Async async = testContext.async();
+    // given
+    ProfileSnapshotDao mockDao = Mockito.mock(ProfileSnapshotDaoImpl.class);
+    ProfileSnapshotService service = new ProfileSnapshotServiceImpl(mockDao);
+
+    Mockito.when(mockDao.getSnapshotItems(jobProfile.getId(), TENANT_ID)).thenReturn(Future.succeededFuture(items));
+
+    // when
+    service.constructSnapshot(jobProfile.getId(), TENANT_ID).setHandler(ar -> {
       // then
       testContext.assertTrue(ar.succeeded());
       ProfileSnapshotWrapper jobProfileWrapper = ar.result();

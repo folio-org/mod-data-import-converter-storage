@@ -27,4 +27,13 @@ public interface ProfileSnapshotService {
    * @return future with snapshot {@link ProfileSnapshotWrapper}
    */
   Future<ProfileSnapshotWrapper> createSnapshot(String jobProfileId, String tenantId);
+
+  /**
+   * Constructs a snapshot wrapper for a specified Profile without saving it in the db
+   *
+   * @param profileId profile id
+   * @param tenantId tenant id
+   * @return future with snapshot {@link ProfileSnapshotWrapper}
+   */
+  Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, String tenantId);
 }

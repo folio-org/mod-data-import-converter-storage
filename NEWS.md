@@ -1,3 +1,10 @@
+## 2019-12-24 v1.7.0-SNAPSHOT
+* Created API for getting Profile Snapshot structure
+
+  | METHOD |             URL                                              | DESCRIPTION                          |
+  |--------|--------------------------------------------------------------|--------------------------------------|
+  | GET    | /data-import-profiles/profileSnapshots/{id}                  | Get Profile Snapshot structure by id |
+
 ## 2019-12-04 v1.6.0
 * Fixed security vulnerabilities
 * Applied new JVM features to manage container memory
