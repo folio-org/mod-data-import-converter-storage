@@ -442,3 +442,22 @@ resourceTypes:
           body:
             text/plain:
               example: "Internal server error"
+  /profileSnapshots/{jobProfileId}:
+    displayName: Profile Snapshot structure
+    get:
+      description: Get a profile snapshot structure for specified profile id
+      responses:
+        200:
+          body:
+            application/json:
+              type: profileSnapshotWrapper
+        400:
+          description: "Bad request"
+          body:
+            text/plain:
+              example: "Bad request"
+        500:
+          description: "Internal server error"
+          body:
+            text/plain:
+              example: "Internal server error"
