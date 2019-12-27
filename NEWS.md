@@ -1,5 +1,6 @@
 ## 2019-12-24 v1.7.0-SNAPSHOT
 * Created API for getting Profile Snapshot structure
+* Renamed mappingProfile field "folioRecord" to "existingRecordType".
 
   | METHOD |             URL                                              | DESCRIPTION                          |
   |--------|--------------------------------------------------------------|--------------------------------------|
