@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
-public abstract class AbstractProfileService<T, S> implements ProfileService<T, S> {
+public abstract class AbstractProfileService<T, S, DTO> implements ProfileService<T, S, DTO> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
@@ -77,14 +77,14 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   }
 
   @Override
-  public Future<T> saveProfile(T profile, OkapiConnectionParams params) {
+  public Future<T> saveProfile(DTO profile, OkapiConnectionParams params) {
     return setUserInfoForProfile(profile, params)
       .compose(profileWithInfo -> profileDao.saveProfile(setProfileId(profileWithInfo), params.getTenantId())
         .map(profileWithInfo));
   }
 
   @Override
-  public Future<T> updateProfile(T profile, OkapiConnectionParams params) {
+  public Future<T> updateProfile(DTO profile, OkapiConnectionParams params) {
     return setUserInfoForProfile(profile, params)
       .compose(profileWithInfo -> profileDao.updateProfile(profileWithInfo, params.getTenantId()));
   }
@@ -124,7 +124,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @param params  {@link OkapiConnectionParams}
    * @return Profile with filled userInfo field
    */
-  abstract Future<T> setUserInfoForProfile(T profile, OkapiConnectionParams params);
+  abstract Future<T> setUserInfoForProfile(DTO profile, OkapiConnectionParams params);
 
   /**
    * Returns name of specified profile
