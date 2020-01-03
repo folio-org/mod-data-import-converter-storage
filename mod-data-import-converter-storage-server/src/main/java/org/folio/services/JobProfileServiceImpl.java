@@ -4,6 +4,7 @@ import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
+import org.folio.rest.jaxrs.model.JobProfileUpdateDto;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, JobProfileCollection> {
+public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, JobProfileCollection, JobProfileUpdateDto> {
 
   @Override
   JobProfile setProfileId(JobProfile profile) {
@@ -19,9 +20,9 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
   }
 
   @Override
-  Future<JobProfile> setUserInfoForProfile(JobProfile profile, OkapiConnectionParams params) {
-    return lookupUser(profile.getMetadata().getUpdatedByUserId(), params)
-      .compose(userInfo -> Future.succeededFuture(profile.withUserInfo(userInfo)));
+  Future<JobProfile> setUserInfoForProfile(JobProfileUpdateDto profile, OkapiConnectionParams params) {
+    return lookupUser(profile.getProfile().getMetadata().getUpdatedByUserId(), params)
+      .compose(userInfo -> Future.succeededFuture(profile.getProfile().withUserInfo(userInfo)));
   }
 
   @Override

@@ -12,7 +12,7 @@ import java.util.Optional;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
-public interface ProfileService<T, S> {
+public interface ProfileService<T, S, DTO> {
 
   /**
    * Searches for T entities
@@ -44,7 +44,7 @@ public interface ProfileService<T, S> {
    * @param params  {@link OkapiConnectionParams}
    * @return future with saved entity
    */
-  Future<T> saveProfile(T profile, OkapiConnectionParams params);
+  Future<T> saveProfile(DTO profile, OkapiConnectionParams params);
 
   /**
    * Updates T with given id
@@ -53,7 +53,7 @@ public interface ProfileService<T, S> {
    * @param params  {@link OkapiConnectionParams}
    * @return future with updated entity
    */
-  Future<T> updateProfile(T profile, OkapiConnectionParams params);
+  Future<T> updateProfile(DTO profile, OkapiConnectionParams params);
 
   /**
    * Search in database profile with the same name which contains in specified profile
