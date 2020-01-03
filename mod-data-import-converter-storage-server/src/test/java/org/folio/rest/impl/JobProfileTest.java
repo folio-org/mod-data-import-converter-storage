@@ -386,7 +386,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body(new MatchProfile()
         .withName("testMatch")
         .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-        .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC))
+        .withExistingRecordType(EntityType.INSTANCE))
       .when()
       .post(MATCH_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));

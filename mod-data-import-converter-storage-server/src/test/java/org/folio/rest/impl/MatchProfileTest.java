@@ -100,11 +100,12 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
 
   @Test
   public void shouldReturnAllProfilesOnGetTree() {
-    createProfilesTree(createProfiles());
+    List<String> ids = createProfiles();
+    createProfilesTree(ids);
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(MATCH_PROFILES_PATH + "?withRelations=true")
+      .get(MATCH_PROFILES_PATH + "?withRelations=true&query=id=" + ids.get(0))
       .then()
       .statusCode(HttpStatus.SC_OK).log().all()
       .body("totalRecords", is(1))
@@ -510,7 +511,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   public void shouldCreateProfileWithMatchDetailsOnPost() {
     MatchDetail matchDetail = new MatchDetail()
       .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-      .withExistingRecordType(EntityType.INSTANCE)
+      .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
       .withIncomingMatchExpression(new MatchExpression()
         .withDataValueType(VALUE_FROM_RECORD)
         .withFields(Arrays.asList(

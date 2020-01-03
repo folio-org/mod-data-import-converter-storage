@@ -153,7 +153,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   }
 
   public <M, D> void shouldReturnProfileAssociationListOnGet(TestContext testContext, ProfileWrapper<M> masterWrapper1, ProfileWrapper<D> detailWrapper1,
-                                              String masterProfileUrl, String detailProfileUrl, ContentType masterProfileType, ContentType detailProfileType) {
+                                                             String masterProfileUrl, String detailProfileUrl, ContentType masterProfileType, ContentType detailProfileType) {
     ProfileWrapper<M> masterProfileWrapper1 = postProfile(testContext, masterWrapper1, masterProfileUrl);
     ProfileWrapper<D> detailProfileWrapper1 = postProfile(testContext, detailWrapper1, detailProfileUrl);
 
@@ -262,7 +262,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   }
 
   public <M, D> void shouldPostAndGetById(TestContext testContext, ProfileWrapper<M> masterProfileWrapper, ProfileWrapper<D> detailProfileWrapper,
-                                       String masterProfileUrl, String detailProfileUrl, ContentType masterContentType, ContentType detailContentType) {
+                                          String masterProfileUrl, String detailProfileUrl, ContentType masterContentType, ContentType detailContentType) {
     ProfileWrapper<M> masterWrapper = postProfile(testContext, masterProfileWrapper, masterProfileUrl);
     ProfileWrapper<D> detailWrapper = postProfile(testContext, detailProfileWrapper, detailProfileUrl);
 
@@ -480,53 +480,53 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       new MatchProfileWrapper(matchProfile3), MATCH_PROFILES_URL, MATCH_PROFILES_URL, MATCH_PROFILE, MATCH_PROFILE);
   }
 
-    public <M, D> void shouldUpdateProfileAssociationOnPut(TestContext testContext, ProfileWrapper<M> masterWrapper, ProfileWrapper<D> detailWrapper, ProfileWrapper<D> detailWrapper2,
-                                                           String masterProfileUrl, String detailProfileUrl, ContentType masterContentType, ContentType detailContentType) {
-      ProfileWrapper<M> masterProfileWrapper = postProfile(testContext, masterWrapper, masterProfileUrl);
+  public <M, D> void shouldUpdateProfileAssociationOnPut(TestContext testContext, ProfileWrapper<M> masterWrapper, ProfileWrapper<D> detailWrapper, ProfileWrapper<D> detailWrapper2,
+                                                         String masterProfileUrl, String detailProfileUrl, ContentType masterContentType, ContentType detailContentType) {
+    ProfileWrapper<M> masterProfileWrapper = postProfile(testContext, masterWrapper, masterProfileUrl);
     ProfileWrapper<D> detailProfileWrapper = postProfile(testContext, detailWrapper, detailProfileUrl);
 
-      ProfileAssociation profileAssociation = new ProfileAssociation()
-        .withMasterProfileId(masterProfileWrapper.getId())
-        .withDetailProfileId(detailProfileWrapper.getId())
-        .withOrder(7)
-        .withTriggered(true);
+    ProfileAssociation profileAssociation = new ProfileAssociation()
+      .withMasterProfileId(masterProfileWrapper.getId())
+      .withDetailProfileId(detailProfileWrapper.getId())
+      .withOrder(7)
+      .withTriggered(true);
 
-      Async async = testContext.async();
-      ProfileAssociation savedProfileAssociation = RestAssured.given()
-        .spec(spec)
-        .queryParam("master", masterContentType.value())
-        .queryParam("detail", detailContentType.value())
-        .body(profileAssociation)
-        .when()
-        .post(ASSOCIATED_PROFILES_URL)
-        .then()
-        .statusCode(is(HttpStatus.SC_CREATED))
-        .and()
-        .extract().body().as(ProfileAssociation.class);
-      async.complete();
+    Async async = testContext.async();
+    ProfileAssociation savedProfileAssociation = RestAssured.given()
+      .spec(spec)
+      .queryParam("master", masterContentType.value())
+      .queryParam("detail", detailContentType.value())
+      .body(profileAssociation)
+      .when()
+      .post(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(is(HttpStatus.SC_CREATED))
+      .and()
+      .extract().body().as(ProfileAssociation.class);
+    async.complete();
 
-      ProfileWrapper<D> detailProfileWrapper2 = postProfile(testContext, detailWrapper2, detailProfileUrl);
-      savedProfileAssociation.setDetailProfileId(detailProfileWrapper2.getId());
+    ProfileWrapper<D> detailProfileWrapper2 = postProfile(testContext, detailWrapper2, detailProfileUrl);
+    savedProfileAssociation.setDetailProfileId(detailProfileWrapper2.getId());
 
-      async = testContext.async();
-      RestAssured.given()
-        .spec(spec)
-        .queryParam("master", masterContentType.value())
-        .queryParam("detail", detailContentType.value())
-        .body(savedProfileAssociation)
-        .when()
-        .put(ASSOCIATED_PROFILES_URL + "/" + savedProfileAssociation.getId())
-        .then()
-        .statusCode(is(HttpStatus.SC_OK))
-        .body("id", is(savedProfileAssociation.getId()))
-        .body("masterProfileId", is(masterProfileWrapper.getId()))
-        .body("detailProfileId", is(detailProfileWrapper2.getId()))
-        .body("order", is(savedProfileAssociation.getOrder()))
-        .body("triggered", is(savedProfileAssociation.getTriggered()));
-      async.complete();
+    async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", masterContentType.value())
+      .queryParam("detail", detailContentType.value())
+      .body(savedProfileAssociation)
+      .when()
+      .put(ASSOCIATED_PROFILES_URL + "/" + savedProfileAssociation.getId())
+      .then()
+      .statusCode(is(HttpStatus.SC_OK))
+      .body("id", is(savedProfileAssociation.getId()))
+      .body("masterProfileId", is(masterProfileWrapper.getId()))
+      .body("detailProfileId", is(detailProfileWrapper2.getId()))
+      .body("order", is(savedProfileAssociation.getOrder()))
+      .body("triggered", is(savedProfileAssociation.getTriggered()));
+    async.complete();
 
-      clearTables(testContext);
-    }
+    clearTables(testContext);
+  }
 
   @Test
   public void runTestGetDetailsByMasterProfile_OK(TestContext testContext) {
@@ -975,7 +975,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .spec(spec)
       .queryParam("detailType", detailProfileType.value())
       .when()
-        .get(MASTERS_BY_DETAIL_URL, detailProfileWrapper.getId())
+      .get(MASTERS_BY_DETAIL_URL, detailProfileWrapper.getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("contentType", is(detailProfileType.value()))
@@ -1144,8 +1144,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
     pgClient.delete(tableName, new Criterion(), ar -> {
       if (ar.failed()) {
         future.fail(ar.cause());
-      }
-      else {
+      } else {
         future.complete();
       }
     });
