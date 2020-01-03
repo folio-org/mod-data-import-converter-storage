@@ -136,11 +136,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesJobProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesJobProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        jobProfileService.getProfileById(id, tenantId)
+        jobProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Job Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesJobProfilesByIdResponse::respond200WithApplicationJson)
@@ -242,11 +242,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMatchProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesMatchProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        matchProfileService.getProfileById(id, tenantId)
+        matchProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Match Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesMatchProfilesByIdResponse::respond200WithApplicationJson)
@@ -345,10 +345,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMappingProfilesById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesMappingProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        mappingProfileService.getProfileById(id, tenantId)
+        mappingProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Mapping Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesMappingProfilesByIdResponse::respond200WithApplicationJson)
@@ -450,11 +450,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesActionProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesActionProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        actionProfileService.getProfileById(id, tenantId)
+        actionProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Action Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesActionProfilesByIdResponse::respond200WithApplicationJson)

@@ -73,6 +73,14 @@ resourceTypes:
         collection-item:
           schema: jobProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/jobProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
         responses:
@@ -125,6 +133,14 @@ resourceTypes:
         collection-item:
           schema: matchProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/matchProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
         responses:
@@ -177,6 +193,14 @@ resourceTypes:
         collection-item:
           schema: mappingProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/mappingProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
         responses:
@@ -229,6 +253,14 @@ resourceTypes:
         collection-item:
           schema: actionProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/actionProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
         responses:
