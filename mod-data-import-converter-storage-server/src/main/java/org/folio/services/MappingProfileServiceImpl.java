@@ -1,10 +1,12 @@
 package org.folio.services;
 
+import io.netty.util.internal.StringUtil;
 import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,19 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   }
 
   @Override
+  protected MappingProfileUpdateDto prepareAssociations(MappingProfileUpdateDto profileDto) {
+    profileDto.getAddedRelations().forEach(association -> {
+      if (association.getMasterProfileId() == null || StringUtil.EMPTY_STRING.equals(association.getMasterProfileId())) {
+        association.setMasterProfileId(profileDto.getProfile().getId());
+      }
+      if (association.getDetailProfileId() == null || StringUtil.EMPTY_STRING.equals(association.getDetailProfileId())) {
+        association.setDetailProfileId(profileDto.getProfile().getId());
+      }
+    });
+    return profileDto;
+  }
+
+  @Override
   protected ProfileSnapshotWrapper.ContentType getProfileContentType() {
     return ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
   }
@@ -53,5 +68,20 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   @Override
   protected List<MappingProfile> getProfilesList(MappingProfileCollection profilesCollection) {
     return profilesCollection.getMappingProfiles();
+  }
+
+  @Override
+  protected List<ProfileAssociation> getProfileAssociationToAdd(MappingProfileUpdateDto dto) {
+    return dto.getAddedRelations();
+  }
+
+  @Override
+  protected List<ProfileAssociation> getProfileAssociationToDelete(MappingProfileUpdateDto dto) {
+    return dto.getDeletedRelations();
+  }
+
+  @Override
+  protected MappingProfile getProfile(MappingProfileUpdateDto dto) {
+    return dto.getProfile();
   }
 }

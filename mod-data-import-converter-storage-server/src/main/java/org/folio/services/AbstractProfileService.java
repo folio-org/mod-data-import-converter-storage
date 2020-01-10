@@ -11,9 +11,11 @@ import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.dataimport.util.RestUtil;
 import org.folio.dataimport.util.exception.ConflictException;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.services.association.CommonProfileAssociationService;
+import org.folio.services.association.ProfileAssociationService;
 import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,12 +31,14 @@ import java.util.stream.Collectors;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
-public abstract class AbstractProfileService<T, S, DTO> implements ProfileService<T, S, DTO> {
+public abstract class AbstractProfileService<T, S, D> implements ProfileService<T, S, D> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
   private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
+  @Autowired
+  private ProfileAssociationService profileAssociationService;
   private final EntityTypeCollection entityTypeCollection;
 
   protected AbstractProfileService() {
@@ -77,16 +81,62 @@ public abstract class AbstractProfileService<T, S, DTO> implements ProfileServic
   }
 
   @Override
-  public Future<T> saveProfile(DTO profile, OkapiConnectionParams params) {
+  public Future<T> saveProfile(D profile, OkapiConnectionParams params) {
     return setUserInfoForProfile(profile, params)
       .compose(profileWithInfo -> profileDao.saveProfile(setProfileId(profileWithInfo), params.getTenantId())
+        .map(prepareAssociations((profile)))
+        .compose(ar -> deleteRelatedAssociations(getProfileAssociationToDelete(profile), params.getTenantId()))
+        .compose(ar -> saveRelatedAssociations(getProfileAssociationToAdd(profile), params.getTenantId()))
         .map(profileWithInfo));
   }
 
+  private Future<Boolean> deleteRelatedAssociations(List<ProfileAssociation> profileAssociations, String tenantId) {
+    if (profileAssociations.isEmpty()) {
+      return Future.succeededFuture(true);
+    }
+    Future<Boolean> result = Future.future();
+    List<Future> futureList = new ArrayList<>();
+    profileAssociations.forEach(association -> futureList.add(profileAssociationService.delete(association.getMasterProfileId(),
+      association.getDetailProfileId(),
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
+    CompositeFuture.all(futureList).setHandler(ar -> {
+      if (ar.succeeded()) {
+        result.complete(true);
+      } else {
+        result.fail(ar.cause());
+      }
+    });
+    return result;
+  }
+
+  private Future<Boolean> saveRelatedAssociations(List<ProfileAssociation> profileAssociations, String tenantId) {
+    if (profileAssociations.isEmpty()) {
+      return Future.succeededFuture(true);
+    }
+    Future<Boolean> result = Future.future();
+    List<Future> futureList = new ArrayList<>();
+    profileAssociations.forEach(association -> futureList.add(profileAssociationService.save(association,
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
+    CompositeFuture.all(futureList).setHandler(ar -> {
+      if (ar.succeeded()) {
+        result.complete(true);
+      } else {
+        result.fail(ar.cause());
+      }
+    });
+    return result;
+  }
+
   @Override
-  public Future<T> updateProfile(DTO profile, OkapiConnectionParams params) {
+  public Future<T> updateProfile(D profile, OkapiConnectionParams params) {
     return setUserInfoForProfile(profile, params)
-      .compose(profileWithInfo -> profileDao.updateProfile(profileWithInfo, params.getTenantId()));
+      .compose(profileWithInfo -> profileDao.updateProfile(profileWithInfo, params.getTenantId()))
+      .map(prepareAssociations((profile)))
+      .compose(ar -> deleteRelatedAssociations(getProfileAssociationToDelete(profile), params.getTenantId()))
+      .compose(ar -> saveRelatedAssociations(getProfileAssociationToAdd(profile), params.getTenantId()))
+      .map(getProfile(profile));
   }
 
   public Future<Boolean> markProfileAsDeleted(String id, String tenantId) {
@@ -124,7 +174,7 @@ public abstract class AbstractProfileService<T, S, DTO> implements ProfileServic
    * @param params  {@link OkapiConnectionParams}
    * @return Profile with filled userInfo field
    */
-  abstract Future<T> setUserInfoForProfile(DTO profile, OkapiConnectionParams params);
+  abstract Future<T> setUserInfoForProfile(D profile, OkapiConnectionParams params);
 
   /**
    * Returns name of specified profile
@@ -142,6 +192,8 @@ public abstract class AbstractProfileService<T, S, DTO> implements ProfileServic
    */
   protected abstract String getProfileId(T profile);
 
+  protected abstract D prepareAssociations(D profileDto);
+
   /**
    * Returns type of profile
    *
@@ -154,6 +206,12 @@ public abstract class AbstractProfileService<T, S, DTO> implements ProfileServic
   protected abstract void setParentProfiles(T profile, List<ProfileSnapshotWrapper> parentProfiles);
 
   protected abstract List<T> getProfilesList(S profilesCollection);
+
+  protected abstract List<ProfileAssociation> getProfileAssociationToAdd(D dto);
+
+  protected abstract List<ProfileAssociation> getProfileAssociationToDelete(D dto);
+
+  protected abstract T getProfile(D dto);
 
   /**
    * Load all related child profiles for existing profile

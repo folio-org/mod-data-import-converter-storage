@@ -1,10 +1,12 @@
 package org.folio.services;
 
+import io.netty.util.internal.StringUtil;
 import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
 import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,19 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
   }
 
   @Override
+  protected ActionProfileUpdateDto prepareAssociations(ActionProfileUpdateDto profileDto) {
+    profileDto.getAddedRelations().forEach(association -> {
+      if (association.getMasterProfileId() == null || StringUtil.EMPTY_STRING.equals(association.getMasterProfileId())) {
+        association.setMasterProfileId(profileDto.getProfile().getId());
+      }
+      if (association.getDetailProfileId() == null || StringUtil.EMPTY_STRING.equals(association.getDetailProfileId())) {
+        association.setDetailProfileId(profileDto.getProfile().getId());
+      }
+    });
+    return profileDto;
+  }
+
+  @Override
   protected ProfileSnapshotWrapper.ContentType getProfileContentType() {
     return ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
   }
@@ -53,6 +68,21 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
   @Override
   protected List<ActionProfile> getProfilesList(ActionProfileCollection profilesCollection) {
     return profilesCollection.getActionProfiles();
+  }
+
+  @Override
+  protected List<ProfileAssociation> getProfileAssociationToAdd(ActionProfileUpdateDto dto) {
+    return dto.getAddedRelations();
+  }
+
+  @Override
+  protected List<ProfileAssociation> getProfileAssociationToDelete(ActionProfileUpdateDto dto) {
+    return dto.getDeletedRelations();
+  }
+
+  @Override
+  protected ActionProfile getProfile(ActionProfileUpdateDto dto) {
+    return dto.getProfile();
   }
 
 }

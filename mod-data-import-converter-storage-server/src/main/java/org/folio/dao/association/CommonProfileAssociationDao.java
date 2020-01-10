@@ -11,6 +11,7 @@ import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.persist.Criteria.Criteria;
 import org.folio.rest.persist.Criteria.Criterion;
+import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.folio.dao.util.DaoUtil.constructCriteria;
+import static org.folio.dataimport.util.DaoUtil.getCQLWrapper;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
@@ -30,20 +32,21 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATC
 
 /**
  * Generic implementation of the of the {@link ProfileAssociationDao}
- *
  */
 @Repository
 public class CommonProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
+  private static final String MASTER_ID_FIELD = "masterProfileId";
+  private static final String DETAIL_ID_FIELD = "detailProfileId";
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationDao.class);
   private static final String CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE = "Correct ProfileAssociation types: " +
-                                                                          "ACTION_PROFILE_TO_ACTION_PROFILE, " +
-                                                                          "ACTION_PROFILE_TO_MAPPING_PROFILE, " +
-                                                                          "ACTION_PROFILE_TO_MATCH_PROFILE, " +
-                                                                          "JOB_PROFILE_TO_ACTION_PROFILE, " +
-                                                                          "JOB_PROFILE_TO_MATCH_PROFILE, " +
-                                                                          "MATCH_PROFILE_TO_ACTION_PROFILE, " +
-                                                                          "MATCH_PROFILE_TO_MATCH_PROFILE";
+    "ACTION_PROFILE_TO_ACTION_PROFILE, " +
+    "ACTION_PROFILE_TO_MAPPING_PROFILE, " +
+    "ACTION_PROFILE_TO_MATCH_PROFILE, " +
+    "JOB_PROFILE_TO_ACTION_PROFILE, " +
+    "JOB_PROFILE_TO_MATCH_PROFILE, " +
+    "MATCH_PROFILE_TO_ACTION_PROFILE, " +
+    "MATCH_PROFILE_TO_MATCH_PROFILE";
   private static Map<String, String> associationTableNamesMap;
   @Autowired
   protected PostgresClientFactory pgClientFactory;
@@ -97,6 +100,21 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
   }
 
   @Override
+  public Future<Optional<ProfileAssociation>> get(String masterId, String detailId, ContentType masterType, ContentType detailType, String tenantId) {
+    Future<Results<ProfileAssociation>> future = Future.future();
+    try {
+      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId);
+      pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, filter, true, false, future.completer());
+    } catch (Exception e) {
+      LOGGER.error("Error querying {} by id", ProfileAssociation.class.getSimpleName(), e);
+      future.fail(e);
+    }
+    return future
+      .map(Results::getResults)
+      .map(profiles -> profiles.isEmpty() ? Optional.empty() : Optional.of(profiles.get(0)));
+  }
+
+  @Override
   public Future<ProfileAssociation> update(ProfileAssociation entity, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId) {
     Future<ProfileAssociation> future = Future.future();
     try {
@@ -127,8 +145,22 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
     return future.map(updateResult -> updateResult.getUpdated() == 1);
   }
 
+  @Override
+  public Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId) {
+    Future<UpdateResult> future = Future.future();
+    try {
+      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId);
+      pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, future.completer());
+    } catch (Exception e) {
+      future.fail(e);
+      return future.map(false);
+    }
+    return future.map(updateResult -> updateResult.getUpdated() == 1);
+  }
+
   /**
    * Returns association table name by masterType and detailType
+   *
    * @param masterType a master type in association
    * @param detailType a detail type in association
    * @return table name
