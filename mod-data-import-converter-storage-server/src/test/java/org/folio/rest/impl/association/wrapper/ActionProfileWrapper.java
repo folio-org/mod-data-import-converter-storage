@@ -1,52 +1,53 @@
 package org.folio.rest.impl.association.wrapper;
 
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
 import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.rest.jaxrs.model.UserInfo;
 
 /**
- * Wrapper for {@link ActionProfile} entity
+ * Wrapper for {@link ActionProfileUpdateDto} entity
  */
-public class ActionProfileWrapper implements ProfileWrapper<ActionProfile> {
+public class ActionProfileWrapper implements ProfileWrapper<ActionProfileUpdateDto> {
 
-  private ActionProfile actionProfile;
+  private ActionProfileUpdateDto actionProfile;
 
-  public ActionProfileWrapper(ActionProfile actionProfile) {
+  public ActionProfileWrapper(ActionProfileUpdateDto actionProfile) {
     this.actionProfile = actionProfile;
   }
 
   @Override
   public String getId() {
-    return actionProfile.getId();
+    return actionProfile.getProfile().getId();
   }
 
   @Override
   public String getName() {
-    return actionProfile.getName();
+    return actionProfile.getProfile().getName();
   }
 
   @Override
   public UserInfo getUserInfo() {
-    return actionProfile.getUserInfo();
+    return actionProfile.getProfile().getUserInfo();
   }
 
   @Override
   public Metadata getMetadata() {
-    return actionProfile.getMetadata();
+    return actionProfile.getProfile().getMetadata();
   }
 
   @Override
-  public ActionProfile getProfile() {
+  public ActionProfileUpdateDto getProfile() {
     return actionProfile;
   }
 
   @Override
-  public void setProfile(ActionProfile profile) {
+  public void setProfile(ActionProfileUpdateDto profile) {
     this.actionProfile = profile;
   }
 
   @Override
-  public Class<ActionProfile> getProfileType() {
-    return ActionProfile.class;
+  public Class<ActionProfileUpdateDto> getProfileType() {
+    return ActionProfileUpdateDto.class;
   }
 }

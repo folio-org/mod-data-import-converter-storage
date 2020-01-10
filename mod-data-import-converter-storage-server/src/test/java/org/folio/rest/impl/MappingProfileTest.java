@@ -8,8 +8,10 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
 import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.MappingProfile;
+import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -42,18 +44,21 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
-  private static MappingProfile mappingProfile_1 = new MappingProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE);
-  private static MappingProfile mappingProfile_2 = new MappingProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE);
-  private static MappingProfile mappingProfile_3 = new MappingProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE);
+  private static MappingProfileUpdateDto mappingProfile_1 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("Bla")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
+  private static MappingProfileUpdateDto mappingProfile_2 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("Boo")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
+  private static MappingProfileUpdateDto mappingProfile_3 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("Foo")
+      .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -141,11 +146,11 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .post(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .body("name", is(mappingProfile_1.getName()))
-      .body("tags.tagList", is(mappingProfile_1.getTags().getTagList()))
-      .body("userInfo.lastName", is("Doe"))
-      .body("userInfo.firstName", is("Jane"))
-      .body("userInfo.userName", is("@janedoe"));
+      .body("profile.name", is(mappingProfile_1.getProfile().getName()))
+      .body("profile.tags.tagList", is(mappingProfile_1.getProfile().getTags().getTagList()))
+      .body("profile.userInfo.lastName", is("Doe"))
+      .body("profile.userInfo.firstName", is("Jane"))
+      .body("profile.userInfo.userName", is("@janedoe"));
 
     RestAssured.given()
       .spec(spec)
@@ -184,21 +189,21 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
 
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(new MappingProfile()
+      .body(new MappingProfileUpdateDto().withProfile(new MappingProfile()
         .withName("newProfile")
         .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-        .withExistingRecordType(EntityType.INSTANCE))
+        .withExistingRecordType(EntityType.INSTANCE)))
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    MappingProfile createdProfile = createResponse.body().as(MappingProfile.class);
+    MappingProfileUpdateDto createdProfile = createResponse.body().as(MappingProfileUpdateDto.class);
 
-    createdProfile.setName(mappingProfile_1.getName());
+    createdProfile.getProfile().setName(mappingProfile_1.getProfile().getName());
     RestAssured.given()
       .spec(spec)
       .body(createdProfile)
       .when()
-      .put(MAPPING_PROFILES_PATH + "/" + createdProfile.getId())
+      .put(MAPPING_PROFILES_PATH + "/" + createdProfile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
@@ -211,20 +216,20 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    MappingProfile mappingProfile = createResponse.body().as(MappingProfile.class);
+    MappingProfileUpdateDto mappingProfile = createResponse.body().as(MappingProfileUpdateDto.class);
 
-    mappingProfile.setDescription("test");
+    mappingProfile.getProfile().setDescription("test");
     RestAssured.given()
       .spec(spec)
       .body(mappingProfile)
       .when()
-      .put(MAPPING_PROFILES_PATH + "/" + mappingProfile.getId())
+      .put(MAPPING_PROFILES_PATH + "/" + mappingProfile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(mappingProfile.getId()))
-      .body("name", is(mappingProfile.getName()))
+      .body("id", is(mappingProfile.getProfile().getId()))
+      .body("name", is(mappingProfile.getProfile().getName()))
       .body("description", is("test"))
-      .body("tags.tagList", is(mappingProfile.getTags().getTagList()))
+      .body("tags.tagList", is(mappingProfile.getProfile().getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -248,17 +253,17 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    MappingProfile mappingProfile = createResponse.body().as(MappingProfile.class);
+    MappingProfileUpdateDto mappingProfile = createResponse.body().as(MappingProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(MAPPING_PROFILES_PATH + "/" + mappingProfile.getId())
+      .get(MAPPING_PROFILES_PATH + "/" + mappingProfile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(mappingProfile.getId()))
-      .body("name", is(mappingProfile.getName()))
-      .body("tags.tagList", is(mappingProfile.getTags().getTagList()))
+      .body("id", is(mappingProfile.getProfile().getId()))
+      .body("name", is(mappingProfile.getProfile().getName()))
+      .body("tags.tagList", is(mappingProfile.getProfile().getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -282,26 +287,26 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    MappingProfile profileToDelete = createResponse.body().as(MappingProfile.class);
+    MappingProfileUpdateDto profileToDelete = createResponse.body().as(MappingProfileUpdateDto.class);
 
     createResponse = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile()
+      .body(new ActionProfileUpdateDto().withProfile(new ActionProfile()
         .withName("testActionProfile")
         .withAction(CREATE)
-        .withFolioRecord(MARC_BIBLIOGRAPHIC))
+        .withFolioRecord(MARC_BIBLIOGRAPHIC)))
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto actionProfile = createResponse.body().as(ActionProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .queryParam("master", ACTION_PROFILE.value())
       .queryParam("detail", MAPPING_PROFILE.value())
       .body(new ProfileAssociation()
-        .withMasterProfileId(actionProfile.getId())
-        .withDetailProfileId(profileToDelete.getId())
+        .withMasterProfileId(actionProfile.getProfile().getId())
+        .withDetailProfileId(profileToDelete.getProfile().getId())
         .withOrder(1))
       .when()
       .post(ASSOCIATED_PROFILES_PATH)
@@ -311,7 +316,7 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + profileToDelete.getId())
+      .delete(MAPPING_PROFILES_PATH + "/" + profileToDelete.getProfile().getId())
       .then()
       .log().all()
       .statusCode(HttpStatus.SC_CONFLICT);
@@ -325,19 +330,19 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    MappingProfile profile = createResponse.body().as(MappingProfile.class);
+    MappingProfileUpdateDto profile = createResponse.body().as(MappingProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + profile.getId())
+      .delete(MAPPING_PROFILES_PATH + "/" + profile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(MAPPING_PROFILES_PATH + "/" + profile.getId())
+      .get(MAPPING_PROFILES_PATH + "/" + profile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("deleted", is(true));
@@ -346,22 +351,22 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
     createProfiles();
-    MappingProfile mappingProfileToDelete = RestAssured.given()
+    MappingProfileUpdateDto mappingProfileToDelete = RestAssured.given()
       .spec(spec)
-      .body(new MappingProfile()
+      .body(new MappingProfileUpdateDto().withProfile(new MappingProfile()
         .withName("ProfileToDelete")
         .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-        .withExistingRecordType(EntityType.INSTANCE))
+        .withExistingRecordType(EntityType.INSTANCE)))
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .extract().body().as(MappingProfile.class);
+      .extract().body().as(MappingProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + mappingProfileToDelete.getId())
+      .delete(MAPPING_PROFILES_PATH + "/" + mappingProfileToDelete.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
@@ -378,22 +383,22 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed() {
     createProfiles();
-    MappingProfile mappingProfileToDelete = RestAssured.given()
+    MappingProfileUpdateDto mappingProfileToDelete = RestAssured.given()
       .spec(spec)
-      .body(new MappingProfile()
+      .body(new MappingProfileUpdateDto().withProfile(new MappingProfile()
         .withName("ProfileToDelete")
         .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-        .withExistingRecordType(EntityType.INSTANCE))
+        .withExistingRecordType(EntityType.INSTANCE)))
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .extract().body().as(MappingProfile.class);
+      .extract().body().as(MappingProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + mappingProfileToDelete.getId())
+      .delete(MAPPING_PROFILES_PATH + "/" + mappingProfileToDelete.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
@@ -408,8 +413,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   }
 
   private void createProfiles() {
-    List<MappingProfile> mappingProfilesToPost = Arrays.asList(mappingProfile_1, mappingProfile_2, mappingProfile_3);
-    for (MappingProfile profile : mappingProfilesToPost) {
+    List<MappingProfileUpdateDto> mappingProfilesToPost = Arrays.asList(mappingProfile_1, mappingProfile_2, mappingProfile_3);
+    for (MappingProfileUpdateDto profile : mappingProfilesToPost) {
       RestAssured.given()
         .spec(spec)
         .body(profile)
