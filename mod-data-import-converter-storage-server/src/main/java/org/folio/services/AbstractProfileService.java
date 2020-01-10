@@ -11,9 +11,11 @@ import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.dataimport.util.RestUtil;
 import org.folio.dataimport.util.exception.ConflictException;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
+import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.UserInfo;
 import org.folio.services.association.CommonProfileAssociationService;
+import org.folio.services.association.ProfileAssociationService;
 import org.folio.services.util.EntityTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,12 +31,15 @@ import java.util.stream.Collectors;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
-public abstract class AbstractProfileService<T, S> implements ProfileService<T, S> {
+@SuppressWarnings("squid:CallToDeprecatedMethod")
+public abstract class AbstractProfileService<T, S, D> implements ProfileService<T, S, D> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
   private static final String GET_USER_URL = "/users?query=id==";
   private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
+  @Autowired
+  private ProfileAssociationService profileAssociationService;
   private final EntityTypeCollection entityTypeCollection;
 
   protected AbstractProfileService() {
@@ -57,7 +62,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
     return profileDao.getProfiles(showDeleted, query, offset, limit, tenantId)
       .compose(profilesCollection -> {
         if (withRelations) {
-          return fetchRelations(profilesCollection, query, offset, limit, tenantId);
+          return fetchRelationsForCollection(profilesCollection, tenantId);
         } else {
           return Future.succeededFuture(profilesCollection);
         }
@@ -65,21 +70,74 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
   }
 
   @Override
-  public Future<Optional<T>> getProfileById(String id, String tenantId) {
-    return profileDao.getProfileById(id, tenantId);
+  public Future<Optional<T>> getProfileById(String id, boolean withRelations, String tenantId) {
+    return profileDao.getProfileById(id, tenantId)
+      .compose(profile -> {
+        if (withRelations && profile.isPresent()) {
+          return fetchRelations(profile.get(), tenantId).map(Optional::of);
+        } else {
+          return Future.succeededFuture(profile);
+        }
+      });
   }
 
   @Override
-  public Future<T> saveProfile(T profile, OkapiConnectionParams params) {
+  public Future<T> saveProfile(D profile, OkapiConnectionParams params) {
     return setUserInfoForProfile(profile, params)
       .compose(profileWithInfo -> profileDao.saveProfile(setProfileId(profileWithInfo), params.getTenantId())
+        .map(prepareAssociations((profile)))
+        .compose(ar -> deleteRelatedAssociations(getProfileAssociationToDelete(profile), params.getTenantId()))
+        .compose(ar -> saveRelatedAssociations(getProfileAssociationToAdd(profile), params.getTenantId()))
         .map(profileWithInfo));
   }
 
+  private Future<Boolean> deleteRelatedAssociations(List<ProfileAssociation> profileAssociations, String tenantId) {
+    if (profileAssociations.isEmpty()) {
+      return Future.succeededFuture(true);
+    }
+    Future<Boolean> result = Future.future();
+    List<Future> futureList = new ArrayList<>();
+    profileAssociations.forEach(association -> futureList.add(profileAssociationService.delete(association.getMasterProfileId(),
+      association.getDetailProfileId(),
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
+    CompositeFuture.all(futureList).setHandler(ar -> {
+      if (ar.succeeded()) {
+        result.complete(true);
+      } else {
+        result.fail(ar.cause());
+      }
+    });
+    return result;
+  }
+
+  private Future<Boolean> saveRelatedAssociations(List<ProfileAssociation> profileAssociations, String tenantId) {
+    if (profileAssociations.isEmpty()) {
+      return Future.succeededFuture(true);
+    }
+    Future<Boolean> result = Future.future();
+    List<Future> futureList = new ArrayList<>();
+    profileAssociations.forEach(association -> futureList.add(profileAssociationService.save(association,
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
+    CompositeFuture.all(futureList).setHandler(ar -> {
+      if (ar.succeeded()) {
+        result.complete(true);
+      } else {
+        result.fail(ar.cause());
+      }
+    });
+    return result;
+  }
+
   @Override
-  public Future<T> updateProfile(T profile, OkapiConnectionParams params) {
+  public Future<T> updateProfile(D profile, OkapiConnectionParams params) {
     return setUserInfoForProfile(profile, params)
-      .compose(profileWithInfo -> profileDao.updateProfile(profileWithInfo, params.getTenantId()));
+      .compose(profileWithInfo -> profileDao.updateProfile(profileWithInfo, params.getTenantId()))
+      .map(prepareAssociations((profile)))
+      .compose(ar -> deleteRelatedAssociations(getProfileAssociationToDelete(profile), params.getTenantId()))
+      .compose(ar -> saveRelatedAssociations(getProfileAssociationToAdd(profile), params.getTenantId()))
+      .map(getProfile(profile));
   }
 
   public Future<Boolean> markProfileAsDeleted(String id, String tenantId) {
@@ -117,7 +175,7 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @param params  {@link OkapiConnectionParams}
    * @return Profile with filled userInfo field
    */
-  abstract Future<T> setUserInfoForProfile(T profile, OkapiConnectionParams params);
+  abstract Future<T> setUserInfoForProfile(D profile, OkapiConnectionParams params);
 
   /**
    * Returns name of specified profile
@@ -135,6 +193,8 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    */
   protected abstract String getProfileId(T profile);
 
+  protected abstract D prepareAssociations(D profileDto);
+
   /**
    * Returns type of profile
    *
@@ -148,18 +208,21 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
 
   protected abstract List<T> getProfilesList(S profilesCollection);
 
+  protected abstract List<ProfileAssociation> getProfileAssociationToAdd(D dto);
+
+  protected abstract List<ProfileAssociation> getProfileAssociationToDelete(D dto);
+
+  protected abstract T getProfile(D dto);
+
   /**
    * Load all related child profiles for existing profile
    *
    * @param profile  - profile entity
-   * @param query    -  query from URL
-   * @param offset   - starting index in a list of results
-   * @param limit    -   limit of records for pagination
    * @param tenantId - tenant id
    * @return - List of all related child profiles
    */
-  private Future<List<ProfileSnapshotWrapper>> fetchChildProfiles(T profile, String query, int offset, int limit, String tenantId) {
-    return associationService.findDetails(getProfileId(profile), getProfileContentType(), null, query, offset, limit, tenantId)
+  private Future<List<ProfileSnapshotWrapper>> fetchChildProfiles(T profile, String tenantId) {
+    return associationService.findDetails(getProfileId(profile), getProfileContentType(), null, null, 0, 999, tenantId)
       .map(this::convertToProfileSnapshotWrapper);
   }
 
@@ -167,14 +230,11 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * Load all related parent profiles for existing profile
    *
    * @param profile  - profile entity
-   * @param query    - query from URL
-   * @param offset   - starting index in a list of results
-   * @param limit    -  limit of records for pagination
    * @param tenantId - tenant id
    * @return - List of all related parent profiles
    */
-  private Future<List<ProfileSnapshotWrapper>> fetchParentProfiles(T profile, String query, int offset, int limit, String tenantId) {
-    return associationService.findMasters(getProfileId(profile), getProfileContentType(), null, query, offset, limit, tenantId)
+  private Future<List<ProfileSnapshotWrapper>> fetchParentProfiles(T profile, String tenantId) {
+    return associationService.findMasters(getProfileId(profile), getProfileContentType(), null, null, 0, 999, tenantId)
       .map(this::convertToProfileSnapshotWrapper);
   }
 
@@ -184,24 +244,45 @@ public abstract class AbstractProfileService<T, S> implements ProfileService<T, 
    * @param profilesCollection - profile collection entity
    * @return - profile collection with fetched relations
    */
-  private Future<S> fetchRelations(S profilesCollection, String query, int offset, int limit, String tenantId) {
+  private Future<S> fetchRelationsForCollection(S profilesCollection, String tenantId) {
     List<T> profilesList = getProfilesList(profilesCollection);
     List<Future> futureList = new ArrayList<>();
     Future<S> result = Future.future();
     profilesList.forEach(profile ->
-      futureList.add(fetchChildProfiles(profile, query, offset, limit, tenantId)
-        .compose(childProfiles -> {
-          setChildProfiles(profile, childProfiles);
-          return Future.succeededFuture(profile);
-        })
-        .compose(v -> fetchParentProfiles(profile, query, offset, limit, tenantId))
-        .compose(parentProfiles -> {
-          setParentProfiles(profile, parentProfiles);
-          return Future.succeededFuture(profile);
-        })));
+      futureList.add(fetchRelations(profile, tenantId)));
     CompositeFuture.all(futureList).setHandler(ar -> {
       if (ar.succeeded()) {
         result.complete(profilesCollection);
+      } else {
+        logger.error("Error during fetching related profiles", ar.cause());
+        result.fail(ar.cause());
+      }
+    });
+    return result;
+  }
+
+  /**
+   * Fetch parent and child profiles for single profile
+   *
+   * @param profile - profile entity
+   * @return - profile collection with fetched relations
+   */
+  private Future<T> fetchRelations(T profile, String tenantId) {
+    List<Future> futureList = new ArrayList<>();
+    Future<T> result = Future.future();
+    futureList.add(fetchChildProfiles(profile, tenantId)
+      .compose(childProfiles -> {
+        setChildProfiles(profile, childProfiles);
+        return Future.succeededFuture(profile);
+      })
+      .compose(v -> fetchParentProfiles(profile, tenantId))
+      .compose(parentProfiles -> {
+        setParentProfiles(profile, parentProfiles);
+        return Future.succeededFuture(profile);
+      }));
+    CompositeFuture.all(futureList).setHandler(ar -> {
+      if (ar.succeeded()) {
+        result.complete(profile);
       } else {
         logger.error("Error during fetching related profiles", ar.cause());
         result.fail(ar.cause());

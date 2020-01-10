@@ -5,6 +5,7 @@ import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.codehaus.plexus.util.StringUtils;
@@ -12,17 +13,23 @@ import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
+import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
 import org.folio.rest.jaxrs.model.Error;
 import org.folio.rest.jaxrs.model.Errors;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
+import org.folio.rest.jaxrs.model.JobProfileUpdateDto;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileCollection;
+import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
+import org.folio.rest.jaxrs.model.MatchProfileUpdateDto;
+import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.resource.DataImportProfiles;
+import org.folio.rest.tools.utils.JwtUtils;
 import org.folio.rest.tools.utils.TenantTool;
 import org.folio.services.ProfileService;
 import org.folio.services.association.ProfileAssociationService;
@@ -35,9 +42,12 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
+import static org.folio.rest.RestVerticle.OKAPI_USERID_HEADER;
 
 public class DataImportProfilesImpl implements DataImportProfiles {
 
@@ -48,13 +58,13 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
 
   @Autowired
-  private ProfileService<JobProfile, JobProfileCollection> jobProfileService;
+  private ProfileService<JobProfile, JobProfileCollection, JobProfileUpdateDto> jobProfileService;
   @Autowired
-  private ProfileService<MatchProfile, MatchProfileCollection> matchProfileService;
+  private ProfileService<MatchProfile, MatchProfileCollection, MatchProfileUpdateDto> matchProfileService;
   @Autowired
-  private ProfileService<ActionProfile, ActionProfileCollection> actionProfileService;
+  private ProfileService<ActionProfile, ActionProfileCollection, ActionProfileUpdateDto> actionProfileService;
   @Autowired
-  private ProfileService<MappingProfile, MappingProfileCollection> mappingProfileService;
+  private ProfileService<MappingProfile, MappingProfileCollection, MappingProfileUpdateDto> mappingProfileService;
   @Autowired
   private ProfileAssociationService profileAssociationService;
   @Autowired
@@ -68,11 +78,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void postDataImportProfilesJobProfiles(String lang, JobProfile entity, Map<String, String> okapiHeaders,
+  public void postDataImportProfilesJobProfiles(String lang, JobProfileUpdateDto entity, Map<String, String> okapiHeaders,
                                                 Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, jobProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), jobProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -80,8 +91,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesJobProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
             jobProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map((Response) PostDataImportProfilesJobProfilesResponse
-                .respond201WithApplicationJson(entity, PostDataImportProfilesJobProfilesResponse.headersFor201()))
+              .map(profile -> (Response) PostDataImportProfilesJobProfilesResponse
+                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesJobProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
@@ -110,18 +121,19 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void putDataImportProfilesJobProfilesById(String id, String lang, JobProfile entity, Map<String, String> okapiHeaders,
+  public void putDataImportProfilesJobProfilesById(String id, String lang, JobProfileUpdateDto entity, Map<String, String> okapiHeaders,
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, jobProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), jobProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            entity.setId(id);
+            entity.getProfile().setId(id);
             jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -136,11 +148,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesJobProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesJobProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        jobProfileService.getProfileById(id, tenantId)
+        jobProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Job Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesJobProfilesByIdResponse::respond200WithApplicationJson)
@@ -174,11 +186,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void postDataImportProfilesMatchProfiles(String lang, MatchProfile entity, Map<String, String> okapiHeaders,
+  public void postDataImportProfilesMatchProfiles(String lang, MatchProfileUpdateDto entity, Map<String, String> okapiHeaders,
                                                   Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, matchProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), matchProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -186,8 +199,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMatchProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
             matchProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map((Response) PostDataImportProfilesMatchProfilesResponse
-                .respond201WithApplicationJson(entity, PostDataImportProfilesMatchProfilesResponse.headersFor201()))
+              .map(profile -> (Response) PostDataImportProfilesMatchProfilesResponse
+                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesMatchProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
@@ -216,18 +229,19 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void putDataImportProfilesMatchProfilesById(String id, String lang, MatchProfile entity, Map<String, String> okapiHeaders,
+  public void putDataImportProfilesMatchProfilesById(String id, String lang, MatchProfileUpdateDto entity, Map<String, String> okapiHeaders,
                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, matchProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), matchProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMatchProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            entity.setId(id);
+            entity.getProfile().setId(id);
             matchProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesMatchProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -242,11 +256,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMatchProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesMatchProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        matchProfileService.getProfileById(id, tenantId)
+        matchProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Match Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesMatchProfilesByIdResponse::respond200WithApplicationJson)
@@ -261,10 +275,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void postDataImportProfilesMappingProfiles(String lang, MappingProfile entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void postDataImportProfilesMappingProfiles(String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, mappingProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), mappingProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -272,8 +287,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMappingProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
             mappingProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map((Response) PostDataImportProfilesMappingProfilesResponse
-                .respond201WithApplicationJson(entity, PostDataImportProfilesMappingProfilesResponse.headersFor201()))
+              .map(profile -> (Response) PostDataImportProfilesMappingProfilesResponse
+                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesMappingProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
@@ -302,17 +317,18 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfile entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, mappingProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), mappingProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMappingProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            entity.setId(id);
+            entity.getProfile().setId(id);
             mappingProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesMappingProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -345,10 +361,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMappingProfilesById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesMappingProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        mappingProfileService.getProfileById(id, tenantId)
+        mappingProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Mapping Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesMappingProfilesByIdResponse::respond200WithApplicationJson)
@@ -382,11 +398,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void postDataImportProfilesActionProfiles(String lang, ActionProfile entity, Map<String, String> okapiHeaders,
+  public void postDataImportProfilesActionProfiles(String lang, ActionProfileUpdateDto entity, Map<String, String> okapiHeaders,
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, actionProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), actionProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -394,8 +411,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesActionProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
             actionProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map((Response) PostDataImportProfilesActionProfilesResponse
-                .respond201WithApplicationJson(entity, PostDataImportProfilesActionProfilesResponse.headersFor201()))
+              .map(profile -> (Response) PostDataImportProfilesActionProfilesResponse
+                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesActionProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
@@ -424,18 +441,19 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void putDataImportProfilesActionProfilesById(String id, String lang, ActionProfile entity, Map<String, String> okapiHeaders,
+  public void putDataImportProfilesActionProfilesById(String id, String lang, ActionProfileUpdateDto entity, Map<String, String> okapiHeaders,
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        validateProfile(entity, actionProfileService, tenantId).setHandler(errors -> {
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateProfile(entity.getProfile(), actionProfileService, tenantId).setHandler(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesActionProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            entity.setId(id);
+            entity.getProfile().setId(id);
             actionProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesActionProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -450,11 +468,11 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesActionProfilesById(String id, String lang, Map<String, String> okapiHeaders,
+  public void getDataImportProfilesActionProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
       try {
-        actionProfileService.getProfileById(id, tenantId)
+        actionProfileService.getProfileById(id, withRelations, tenantId)
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Action Profile with id '%s' was not found", id))))
           .map(GetDataImportProfilesActionProfilesByIdResponse::respond200WithApplicationJson)
@@ -473,7 +491,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                         Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        profileAssociationService.save(entity, mapContentType(master), mapContentType(detail), new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+        profileAssociationService.save(entity, mapContentType(master), mapContentType(detail), tenantId)
           .map((Response) PostDataImportProfilesProfileAssociationsResponse
             .respond201WithApplicationJson(entity, PostDataImportProfilesProfileAssociationsResponse.headersFor201()))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -718,7 +736,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     });
   }
 
-  private <T, S> Future<Errors> validateProfile(T profile, ProfileService<T, S> profileService, String tenantId) {
+  private <T, S, D> Future<Errors> validateProfile(T profile, ProfileService<T, S, D> profileService, String tenantId) {
     String profileTypeName = StringUtils.uncapitalise(profile.getClass().getSimpleName());
     Errors errors = new Errors()
       .withTotalRecords(0);
@@ -736,6 +754,32 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     } catch (IllegalArgumentException e) {
       String message = "The specified type: %s is wrong. It should be " + Arrays.toString(ContentType.values());
       throw new BadRequestException(format(message, contentType), e);
+    }
+  }
+
+  private Metadata getMetadata(Map<String, String> okapiHeaders) {
+    String userId = okapiHeaders.get(OKAPI_USERID_HEADER);
+    String token = okapiHeaders.get(OKAPI_HEADER_TOKEN);
+    if (userId == null && token != null) {
+      userId = userIdFromToken(token);
+    }
+    Metadata md = new Metadata();
+    md.setUpdatedDate(new Date());
+    md.setUpdatedByUserId(userId);
+    md.setCreatedDate(md.getUpdatedDate());
+    md.setCreatedByUserId(userId);
+    return md;
+  }
+
+  private static String userIdFromToken(String token) {
+    try {
+      String[] split = token.split("\\.");
+      String json = JwtUtils.getJson(split[1]);
+      JsonObject j = new JsonObject(json);
+      return j.getString("user_id");
+    } catch (Exception e) {
+      logger.warn("Invalid x-okapi-token: " + token, e);
+      return null;
     }
   }
 

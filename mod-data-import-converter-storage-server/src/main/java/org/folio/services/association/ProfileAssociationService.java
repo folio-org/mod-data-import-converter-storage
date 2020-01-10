@@ -1,13 +1,13 @@
 package org.folio.services.association;
 
-import java.util.Optional;
-
 import io.vertx.core.Future;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
+
+import java.util.Optional;
 
 /**
  * Generic Profile Association Service
@@ -19,7 +19,7 @@ public interface ProfileAssociationService { //NOSONAR
    *
    * @param masterType a master type in association
    * @param detailType a detail type in association
-   * @param tenantId tenant id
+   * @param tenantId   tenant id
    * @return future with {@link ProfileAssociationCollection}
    */
   Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId);
@@ -27,10 +27,10 @@ public interface ProfileAssociationService { //NOSONAR
   /**
    * Searches for ProfileAssociation by id
    *
-   * @param id       entity id
+   * @param id         entity id
    * @param masterType a master type in association
    * @param detailType a detail type in association
-   * @param tenantId tenant id
+   * @param tenantId   tenant id
    * @return future with optional {@link ProfileAssociation}
    */
   Future<Optional<ProfileAssociation>> getById(String id, ContentType masterType, ContentType detailType, String tenantId);
@@ -38,21 +38,21 @@ public interface ProfileAssociationService { //NOSONAR
   /**
    * Saves ProfileAssociation entity
    *
-   * @param entity ProfileAssociation to save
+   * @param entity     ProfileAssociation to save
    * @param masterType a master type in association
    * @param detailType a detail type in association
-   * @param params {@link OkapiConnectionParams}
+   * @param tenantId    tenantId
    * @return future with saved entity
    */
-  Future<ProfileAssociation> save(ProfileAssociation entity, ContentType masterType, ContentType detailType, OkapiConnectionParams params);
+  Future<ProfileAssociation> save(ProfileAssociation entity, ContentType masterType, ContentType detailType, String tenantId);
 
   /**
    * Updates ProfileAssociation with given id
    *
-   * @param entity ProfileAssociation to update
+   * @param entity     ProfileAssociation to update
    * @param masterType a master type in association
    * @param detailType a detail type in association
-   * @param params {@link OkapiConnectionParams}
+   * @param params     {@link OkapiConnectionParams}
    * @return future with updated entity
    */
   Future<ProfileAssociation> update(ProfileAssociation entity, ContentType masterType, ContentType detailType, OkapiConnectionParams params);
@@ -60,10 +60,10 @@ public interface ProfileAssociationService { //NOSONAR
   /**
    * Deletes ProfileAssociation entity by id
    *
-   * @param id       entity id
+   * @param id         entity id
    * @param masterType a master type in association
    * @param detailType a detail type in association
-   * @param tenantId tenant id
+   * @param tenantId   tenant id
    * @return future with true if succeeded
    */
   Future<Boolean> delete(String id, ContentType masterType, ContentType detailType, String tenantId);
@@ -95,4 +95,16 @@ public interface ProfileAssociationService { //NOSONAR
    * @return list of masters profiles for specified detail profile
    */
   Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, ContentType masterType, String query, int offset, int limit, String tenantId);
+
+  /**
+   * Delete ProfileAssociation  by masterId and detailId
+   *
+   * @param masterId   - UUID of masterProfile
+   * @param detailId   - UUID of detailProfile
+   * @param masterType - master Profile Type
+   * @param detailType - detail Profile Type
+   * @param tenantId   - tenant id
+   * @return - boolean result of operation
+   */
+  Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
 }

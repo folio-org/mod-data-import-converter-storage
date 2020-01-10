@@ -5,6 +5,8 @@
   | METHOD |             URL                                              | DESCRIPTION                          |
   |--------|--------------------------------------------------------------|--------------------------------------|
   | GET    | /data-import-profiles/profileSnapshots/{id}                  | Get Profile Snapshot structure by id |
+  
+* Added support of saving\updating profiles with changes in their relations in one transaction
 
 ## 2019-12-04 v1.6.0
 * Fixed security vulnerabilities

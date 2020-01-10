@@ -13,12 +13,16 @@ types:
   errors: !include raml-storage/raml-util/schemas/errors.schema
   jobProfile: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfile.json
   jobProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfileCollection.json
+  jobProfileUpdateDto: !include raml-storage/schemas/mod-data-import-converter-storage/jobProfileUpdateDto.json
   matchProfile: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfile.json
   matchProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfileCollection.json
+  matchProfileUpdateDto: !include raml-storage/schemas/mod-data-import-converter-storage/matchProfileUpdateDto.json
   mappingProfile: !include raml-storage/schemas/mod-data-import-converter-storage/mappingProfile.json
   mappingProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/mappingProfileCollection.json
+  mappingProfileUpdateDto: !include raml-storage/schemas/mod-data-import-converter-storage/mappingProfileUpdateDto.json
   actionProfile: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfile.json
   actionProfileCollection: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfileCollection.json
+  actionProfileUpdateDto: !include raml-storage/schemas/mod-data-import-converter-storage/actionProfileUpdateDto.json
   profileAssociation: !include raml-storage/schemas/mod-data-import-converter-storage/profileAssociation.json
   profileAssociationCollection: !include raml-storage/schemas/mod-data-import-converter-storage/profileAssociationCollection.json
   profileSnapshotType: !include raml-storage/schemas/mod-data-import-converter-storage/profileSnapshotType.json
@@ -47,6 +51,9 @@ resourceTypes:
         exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/jobProfile.sample
     post:
       is: [validate]
+      body:
+        application/json:
+          type: jobProfileUpdateDto
     get:
       queryParameters:
         showDeleted:
@@ -73,8 +80,19 @@ resourceTypes:
         collection-item:
           schema: jobProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/jobProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
+        body:
+          application/json:
+            type: jobProfileUpdateDto
         responses:
           200:
             body:
@@ -99,6 +117,9 @@ resourceTypes:
         exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/matchProfile.sample
     post:
       is: [validate]
+      body:
+        application/json:
+          type: matchProfileUpdateDto
     get:
       queryParameters:
         showDeleted:
@@ -125,8 +146,19 @@ resourceTypes:
         collection-item:
           schema: matchProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/matchProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
+        body:
+          application/json:
+           type: matchProfileUpdateDto
         responses:
           200:
             body:
@@ -151,6 +183,9 @@ resourceTypes:
         exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/mappingProfile.sample
     post:
       is: [validate]
+      body:
+        application/json:
+          type: mappingProfileUpdateDto
     get:
       queryParameters:
         showDeleted:
@@ -177,8 +212,19 @@ resourceTypes:
         collection-item:
           schema: mappingProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/mappingProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
+        body:
+          application/json:
+           type: mappingProfileUpdateDto
         responses:
           200:
             body:
@@ -203,6 +249,9 @@ resourceTypes:
         exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/actionProfile.sample
     post:
       is: [validate]
+      body:
+        application/json:
+          type: actionProfileUpdateDto
     get:
       queryParameters:
         showDeleted:
@@ -229,8 +278,19 @@ resourceTypes:
         collection-item:
           schema: actionProfile
           exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/actionProfile.sample
+      get:
+        queryParameters:
+          withRelations:
+            description: Load profile with related child and parent profiles
+            example: false
+            type: boolean
+            default: false
+            required: false
       put:
         is: [validate]
+        body:
+          application/json:
+           type: actionProfileUpdateDto
         responses:
           200:
             body:
