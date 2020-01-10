@@ -613,6 +613,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     List<JobProfileUpdateDto> jobProfiles = Arrays.asList(jobProfile_1, jobProfile_1, jobProfile_1);
     List<ActionProfileUpdateDto> actionProfiles = Arrays.asList(actionProfile_1, actionProfile_1, actionProfile_1);
     List<ActionProfileUpdateDto> createdActions = new ArrayList<>();
+    List<JobProfileUpdateDto> created = new ArrayList<>();
     int i = 0;
     for (ActionProfileUpdateDto action : actionProfiles) {
       createdActions.add(RestAssured.given()
@@ -627,7 +628,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     }
     i = 0;
     for (JobProfileUpdateDto profile : jobProfiles) {
-     RestAssured.given()
+      created.add(RestAssured.given()
         .spec(spec)
         .body(new JobProfileUpdateDto()
           .withProfile(profile.getProfile().withName(nameForProfiles + i))
@@ -641,7 +642,20 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
         .when()
         .post(JOB_PROFILES_PATH)
         .then()
-        .statusCode(HttpStatus.SC_CREATED).extract().body().as(JobProfileUpdateDto.class);
+        .statusCode(HttpStatus.SC_CREATED).extract().body().as(JobProfileUpdateDto.class));
+      i++;
+    }
+    for (JobProfileUpdateDto profile : created) {
+      profile.setDeletedRelations(profile.getAddedRelations());
+      profile.getDeletedRelations().forEach(profileAssociation -> profileAssociation.setMasterProfileId(profile.getProfile().getId()));
+      profile.getAddedRelations().clear();
+      RestAssured.given()
+        .spec(spec)
+        .body(profile)
+        .when()
+        .put(JOB_PROFILES_PATH + "/" + profile.getProfile().getId())
+        .then()
+        .statusCode(HttpStatus.SC_OK);
       i++;
     }
   }
