@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public abstract class AbstractProfileService<T, S, D> implements ProfileService<T, S, D> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);

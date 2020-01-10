@@ -34,6 +34,7 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATC
  * Generic implementation of the of the {@link ProfileAssociationDao}
  */
 @Repository
+@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class CommonProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
   private static final String MASTER_ID_FIELD = "masterProfileId";
@@ -91,22 +92,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
       Criteria idCrit = constructCriteria(ID_FIELD, id);
       pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, new Criterion(idCrit), true, false, future.completer());
     } catch (Exception e) {
-      LOGGER.error("Error querying {} by id", ProfileAssociation.class.getSimpleName(), e);
-      future.fail(e);
-    }
-    return future
-      .map(Results::getResults)
-      .map(profiles -> profiles.isEmpty() ? Optional.empty() : Optional.of(profiles.get(0)));
-  }
-
-  @Override
-  public Future<Optional<ProfileAssociation>> get(String masterId, String detailId, ContentType masterType, ContentType detailType, String tenantId) {
-    Future<Results<ProfileAssociation>> future = Future.future();
-    try {
-      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId);
-      pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, filter, true, false, future.completer());
-    } catch (Exception e) {
-      LOGGER.error("Error querying {} by id", ProfileAssociation.class.getSimpleName(), e);
+      LOGGER.error("Error querying {} by id", e, ProfileAssociation.class.getSimpleName());
       future.fail(e);
     }
     return future
@@ -132,7 +118,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
         }
       });
     } catch (Exception e) {
-      LOGGER.error("Error updating {} with id {}", ProfileAssociation.class, entity.getId(), e);
+      LOGGER.error("Error updating {} with id {}", e, ProfileAssociation.class, entity.getId());
       future.fail(e);
     }
     return future;
@@ -152,8 +138,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
       CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId);
       pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, future.completer());
     } catch (Exception e) {
-      future.fail(e);
-      return future.map(false);
+      return Future.failedFuture(e);
     }
     return future.map(updateResult -> updateResult.getUpdated() == 1);
   }

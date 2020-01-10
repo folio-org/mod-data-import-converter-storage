@@ -1,7 +1,7 @@
 package org.folio.services;
 
-import io.netty.util.internal.StringUtil;
 import io.vertx.core.Future;
+import org.apache.commons.lang3.StringUtils;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
@@ -40,10 +40,10 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
   @Override
   protected JobProfileUpdateDto prepareAssociations(JobProfileUpdateDto profileDto) {
     profileDto.getAddedRelations().forEach(association -> {
-      if (association.getMasterProfileId() == null || StringUtil.EMPTY_STRING.equals(association.getMasterProfileId())) {
+      if (StringUtils.isEmpty(association.getMasterProfileId())) {
         association.setMasterProfileId(profileDto.getProfile().getId());
       }
-      if (association.getDetailProfileId() == null || StringUtil.EMPTY_STRING.equals(association.getDetailProfileId())) {
+      if (StringUtils.isEmpty(association.getDetailProfileId())) {
         association.setDetailProfileId(profileDto.getProfile().getId());
       }
     });

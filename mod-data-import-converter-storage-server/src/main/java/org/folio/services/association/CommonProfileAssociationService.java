@@ -115,11 +115,6 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   }
 
   @Override
-  public Future<Optional<ProfileAssociation>> get(String masterId, String detailId, ContentType masterType, ContentType detailType, String tenantId) {
-    return profileAssociationDao.get(masterId, detailId, masterType, detailType, tenantId);
-  }
-
-  @Override
   public Future<Boolean> delete(String masterId, String detailId, ContentType masterType, ContentType detailType, String tenantId) {
     return profileAssociationDao.delete(masterId, detailId, masterType, detailType, tenantId);
   }

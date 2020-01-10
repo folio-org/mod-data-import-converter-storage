@@ -736,7 +736,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     });
   }
 
-  private <T, S, DTO> Future<Errors> validateProfile(T profile, ProfileService<T, S, DTO> profileService, String tenantId) {
+  private <T, S, D> Future<Errors> validateProfile(T profile, ProfileService<T, S, D> profileService, String tenantId) {
     String profileTypeName = StringUtils.uncapitalise(profile.getClass().getSimpleName());
     Errors errors = new Errors()
       .withTotalRecords(0);

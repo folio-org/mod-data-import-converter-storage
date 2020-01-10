@@ -38,13 +38,11 @@ import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
 import static org.folio.rest.impl.ActionProfileTest.actionProfile_1;
 import static org.folio.rest.impl.JobProfileTest.JOB_PROFILES_PATH;
 import static org.folio.rest.impl.JobProfileTest.jobProfile_1;
-import static org.folio.rest.impl.association.CommonProfileAssociationTest.ASSOCIATED_PROFILES_URL;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.MatchDetail.MatchCriterion.EXACTLY_MATCHES;
 import static org.folio.rest.jaxrs.model.MatchExpression.DataValueType.VALUE_FROM_RECORD;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
-import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
 import static org.folio.rest.jaxrs.model.Qualifier.ComparisonPart.NUMERICS_ONLY;
 import static org.hamcrest.Matchers.empty;
@@ -614,20 +612,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     String nameForProfiles = "tree";
     List<JobProfileUpdateDto> jobProfiles = Arrays.asList(jobProfile_1, jobProfile_1, jobProfile_1);
     List<ActionProfileUpdateDto> actionProfiles = Arrays.asList(actionProfile_1, actionProfile_1, actionProfile_1);
-    List<JobProfileUpdateDto> createdJobs = new ArrayList<>();
     List<ActionProfileUpdateDto> createdActions = new ArrayList<>();
     int i = 0;
-    for (JobProfileUpdateDto profile : jobProfiles) {
-      createdJobs.add(RestAssured.given()
-        .spec(spec)
-        .body(new JobProfileUpdateDto()
-          .withProfile(profile.getProfile().withName(nameForProfiles + i)))
-        .when()
-        .post(JOB_PROFILES_PATH)
-        .then()
-        .statusCode(HttpStatus.SC_CREATED).extract().body().as(JobProfileUpdateDto.class));
-      i++;
-    }
     for (ActionProfileUpdateDto action : actionProfiles) {
       createdActions.add(RestAssured.given()
         .spec(spec)
@@ -639,31 +625,24 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
         .statusCode(HttpStatus.SC_CREATED).extract().body().as(ActionProfileUpdateDto.class));
       i++;
     }
-    for (int j = 0; j < profilesIds.size(); j++) {
-      ProfileAssociation associationChild = new ProfileAssociation();
-      ProfileAssociation associationParent = new ProfileAssociation();
-      associationChild.setMasterProfileId(profilesIds.get(j));
-      associationChild.setDetailProfileId(createdActions.get(j).getProfile().getId());
-      associationParent.setDetailProfileId(profilesIds.get(j));
-      associationParent.setMasterProfileId(createdJobs.get(j).getProfile().getId());
-      RestAssured.given()
+    i = 0;
+    for (JobProfileUpdateDto profile : jobProfiles) {
+     RestAssured.given()
         .spec(spec)
-        .queryParam("master", MATCH_PROFILE)
-        .queryParam("detail", ACTION_PROFILE)
-        .body(associationChild)
+        .body(new JobProfileUpdateDto()
+          .withProfile(profile.getProfile().withName(nameForProfiles + i))
+          .withAddedRelations(Collections.singletonList(new ProfileAssociation()
+            .withDetailProfileId(createdActions.get(i).getProfile().getId())
+            .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+            .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
+            .withOrder(0)
+            .withTriggered(false).withReactTo(ProfileAssociation.ReactTo.MATCH)
+          )))
         .when()
-        .post(ASSOCIATED_PROFILES_URL)
+        .post(JOB_PROFILES_PATH)
         .then()
-        .statusCode(HttpStatus.SC_CREATED);
-      RestAssured.given()
-        .spec(spec)
-        .queryParam("detail", MATCH_PROFILE)
-        .queryParam("master", JOB_PROFILE)
-        .body(associationParent)
-        .when()
-        .post(ASSOCIATED_PROFILES_URL)
-        .then()
-        .statusCode(HttpStatus.SC_CREATED);
+        .statusCode(HttpStatus.SC_CREATED).extract().body().as(JobProfileUpdateDto.class);
+      i++;
     }
   }
 

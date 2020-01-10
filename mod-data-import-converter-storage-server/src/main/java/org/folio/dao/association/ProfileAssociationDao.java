@@ -67,18 +67,6 @@ public interface ProfileAssociationDao {
   Future<Boolean> delete(String id, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
 
   /**
-   * Method load ProfileAssociation by masterId and detailId
-   *
-   * @param masterId   - UUID of masterProfile
-   * @param detailId   - UUID of detailProfile
-   * @param masterType - master Profile Type
-   * @param detailType - detail Profile Type
-   * @param tenantId   - tenant id
-   * @return - optional of ProfileAssociation
-   */
-  Future<Optional<ProfileAssociation>> get(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
-
-  /**
    * Delete ProfileAssociation  by masterId and detailId
    *
    * @param masterId   - UUID of masterProfile
