@@ -14,10 +14,14 @@ import org.folio.rest.impl.association.wrapper.MappingProfileWrapper;
 import org.folio.rest.impl.association.wrapper.MatchProfileWrapper;
 import org.folio.rest.impl.association.wrapper.ProfileWrapper;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
 import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.JobProfile;
+import org.folio.rest.jaxrs.model.JobProfileUpdateDto;
 import org.folio.rest.jaxrs.model.MappingProfile;
+import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
 import org.folio.rest.jaxrs.model.MatchProfile;
+import org.folio.rest.jaxrs.model.MatchProfileUpdateDto;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -63,44 +67,58 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   private static final String DETAILS_BY_MASTER_URL = "/data-import-profiles/profileAssociations/{masterId}/details";
   private static final String MASTERS_BY_DETAIL_URL = "/data-import-profiles/profileAssociations/{detailId}/masters";
 
-  JobProfile jobProfile1 = new JobProfile().withName("testJobProfile1").withDataType(MARC).withDescription("test-description");
-  JobProfile jobProfile2 = new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description");
-  JobProfile jobProfile3 = new JobProfile().withName("testJobProfile3").withDataType(MARC);
+  JobProfileUpdateDto jobProfile1 = new JobProfileUpdateDto()
+    .withProfile(new JobProfile().withName("testJobProfile1").withDataType(MARC).withDescription("test-description"));
+  JobProfileUpdateDto jobProfile2 = new JobProfileUpdateDto()
+    .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description"));
+  JobProfileUpdateDto jobProfile3 = new JobProfileUpdateDto()
+    .withProfile(new JobProfile().withName("testJobProfile3").withDataType(MARC));
 
-  ActionProfile actionProfile1 = new ActionProfile().withName("testActionProfile1").withDescription("test-description")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
-  ActionProfile actionProfile2 = new ActionProfile().withName("testActionProfile2").withDescription("test-description")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
-  ActionProfile actionProfile3 = new ActionProfile().withName("testActionProfile3").withDescription("test-description")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
-  ActionProfile actionProfile4 = new ActionProfile().withName("testActionProfile4")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC);
+  ActionProfileUpdateDto actionProfile1 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withName("testActionProfile1").withDescription("test-description")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+  ActionProfileUpdateDto actionProfile2 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withName("testActionProfile2").withDescription("test-description")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+  ActionProfileUpdateDto actionProfile3 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withName("testActionProfile3").withDescription("test-description")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+  ActionProfileUpdateDto actionProfile4 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withName("testActionProfile4")
+    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
 
-  MappingProfile mappingProfile1 = new MappingProfile().withName("testMappingProfile1").withDescription("test-description")
+  MappingProfileUpdateDto mappingProfile1 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("testMappingProfile1").withDescription("test-description")
     .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE);
-  MappingProfile mappingProfile2 = new MappingProfile().withName("testMappingProfile2").withDescription("test-description")
+    .withExistingRecordType(EntityType.INSTANCE));
+  MappingProfileUpdateDto mappingProfile2 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("testMappingProfile2").withDescription("test-description")
     .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE);
-  MappingProfile mappingProfile3 = new MappingProfile().withName("testMappingProfile3")
+    .withExistingRecordType(EntityType.INSTANCE));
+  MappingProfileUpdateDto mappingProfile3 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("testMappingProfile3")
     .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE);
+    .withExistingRecordType(EntityType.INSTANCE));
 
-  MatchProfile matchProfile1 = new MatchProfile().withName("testMatchProfile1")
+  MatchProfileUpdateDto matchProfile1 = new MatchProfileUpdateDto()
+    .withProfile(new MatchProfile().withName("testMatchProfile1")
     .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
     .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withDescription("test-description");
-  MatchProfile matchProfile2 = new MatchProfile().withName("testMatchProfile2")
+    .withDescription("test-description"));
+  MatchProfileUpdateDto matchProfile2 = new MatchProfileUpdateDto()
+    .withProfile(new MatchProfile().withName("testMatchProfile2")
     .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
     .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withDescription("test-description");
-  MatchProfile matchProfile3 = new MatchProfile().withName("testMatchProfile3")
+    .withDescription("test-description"));
+  MatchProfileUpdateDto matchProfile3 = new MatchProfileUpdateDto()
+    .withProfile(new MatchProfile().withName("testMatchProfile3")
     .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
     .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withDescription("test-description");
-  MatchProfile matchProfile4 = new MatchProfile().withName("testMatchProfile4")
+    .withDescription("test-description"));
+  MatchProfileUpdateDto matchProfile4 = new MatchProfileUpdateDto()
+    .withProfile(new MatchProfile().withName("testMatchProfile4")
     .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC);
+    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC));
 
   @Test
   public void runTestShouldReturnEmptyOkResultOnGetAll(TestContext testContext) {

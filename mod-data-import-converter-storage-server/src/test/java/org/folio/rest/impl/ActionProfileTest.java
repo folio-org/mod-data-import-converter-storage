@@ -8,8 +8,10 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
+import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
 import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.MappingProfile;
+import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
@@ -50,18 +52,21 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
-  static ActionProfile actionProfile_1 = new ActionProfile().withName("Bla")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-    .withAction(CREATE)
-    .withFolioRecord(MARC_BIBLIOGRAPHIC);
-  static ActionProfile actionProfile_2 = new ActionProfile().withName("Boo")
-    .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-    .withAction(CREATE)
-    .withFolioRecord(MARC_BIBLIOGRAPHIC);
-  static ActionProfile actionProfile_3 = new ActionProfile().withName("Foo")
-    .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
-    .withAction(CREATE)
-    .withFolioRecord(MARC_BIBLIOGRAPHIC);
+  static ActionProfileUpdateDto actionProfile_1 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withName("Bla")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+      .withAction(CREATE)
+      .withFolioRecord(MARC_BIBLIOGRAPHIC));
+  static ActionProfileUpdateDto actionProfile_2 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withName("Boo")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+      .withAction(CREATE)
+      .withFolioRecord(MARC_BIBLIOGRAPHIC));
+  static ActionProfileUpdateDto actionProfile_3 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withName("Foo")
+      .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withAction(CREATE)
+      .withFolioRecord(MARC_BIBLIOGRAPHIC));
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -151,11 +156,11 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .post(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .body("name", is(actionProfile_1.getName()))
-      .body("tags.tagList", is(actionProfile_1.getTags().getTagList()))
-      .body("userInfo.lastName", is("Doe"))
-      .body("userInfo.firstName", is("Jane"))
-      .body("userInfo.userName", is("@janedoe"));
+      .body("profile.name", is(actionProfile_1.getProfile().getName()))
+      .body("profile.tags.tagList", is(actionProfile_1.getProfile().getTags().getTagList()))
+      .body("profile.userInfo.lastName", is("Doe"))
+      .body("profile.userInfo.firstName", is("Jane"))
+      .body("profile.userInfo.userName", is("@janedoe"));
 
     RestAssured.given()
       .spec(spec)
@@ -194,21 +199,21 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
     Response createResponse = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile()
+      .body(new ActionProfileUpdateDto().withProfile(new ActionProfile()
         .withName("newProfile")
         .withAction(CREATE)
-        .withFolioRecord(INSTANCE))
+        .withFolioRecord(INSTANCE)))
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile createdProfile = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto createdProfile = createResponse.body().as(ActionProfileUpdateDto.class);
 
-    createdProfile.setName(actionProfile_1.getName());
+    createdProfile.getProfile().setName(actionProfile_1.getProfile().getName());
     RestAssured.given()
       .spec(spec)
       .body(createdProfile)
       .when()
-      .put(ACTION_PROFILES_PATH + "/" + createdProfile.getId())
+      .put(ACTION_PROFILES_PATH + "/" + createdProfile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
   }
@@ -221,20 +226,20 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto actionProfile = createResponse.body().as(ActionProfileUpdateDto.class);
 
-    actionProfile.setDescription("test");
+    actionProfile.getProfile().setDescription("test");
     RestAssured.given()
       .spec(spec)
       .body(actionProfile)
       .when()
-      .put(ACTION_PROFILES_PATH + "/" + actionProfile.getId())
+      .put(ACTION_PROFILES_PATH + "/" + actionProfile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(actionProfile.getId()))
+      .body("id", is(actionProfile.getProfile().getId()))
       .body("description", is("test"))
-      .body("name", is(actionProfile.getName()))
-      .body("tags.tagList", is(actionProfile.getTags().getTagList()))
+      .body("name", is(actionProfile.getProfile().getName()))
+      .body("tags.tagList", is(actionProfile.getProfile().getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -258,17 +263,17 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile actionProfile = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto actionProfile = createResponse.body().as(ActionProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "/" + actionProfile.getId())
+      .get(ACTION_PROFILES_PATH + "/" + actionProfile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("id", is(actionProfile.getId()))
-      .body("name", is(actionProfile.getName()))
-      .body("tags.tagList", is(actionProfile.getTags().getTagList()))
+      .body("id", is(actionProfile.getProfile().getId()))
+      .body("name", is(actionProfile.getProfile().getName()))
+      .body("tags.tagList", is(actionProfile.getProfile().getTags().getTagList()))
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"));
@@ -292,7 +297,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile profileToDelete = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto profileToDelete = createResponse.body().as(ActionProfileUpdateDto.class);
 
     createResponse = RestAssured.given()
       .spec(spec)
@@ -300,15 +305,15 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile associatedActionProfile = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto associatedActionProfile = createResponse.body().as(ActionProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .queryParam("master", ACTION_PROFILE.value())
       .queryParam("detail", ACTION_PROFILE.value())
       .body(new ProfileAssociation()
-        .withMasterProfileId(associatedActionProfile.getId())
-        .withDetailProfileId(profileToDelete.getId())
+        .withMasterProfileId(associatedActionProfile.getProfile().getId())
+        .withDetailProfileId(profileToDelete.getProfile().getId())
         .withOrder(1))
       .when()
       .post(ASSOCIATED_PROFILES_PATH)
@@ -318,7 +323,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getProfile().getId())
       .then()
       .log().all()
       .statusCode(HttpStatus.SC_CONFLICT);
@@ -332,19 +337,19 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile profile = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto profile = createResponse.body().as(ActionProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(ACTION_PROFILES_PATH + "/" + profile.getId())
+      .delete(ACTION_PROFILES_PATH + "/" + profile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .get(ACTION_PROFILES_PATH + "/" + profile.getId())
+      .get(ACTION_PROFILES_PATH + "/" + profile.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("deleted", is(true));
@@ -358,7 +363,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile profileToDelete = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto profileToDelete = createResponse.body().as(ActionProfileUpdateDto.class);
 
     // creation detail-profiles
     createResponse = RestAssured.given()
@@ -367,33 +372,33 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .when()
       .post(ACTION_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    ActionProfile associatedActionProfile = createResponse.body().as(ActionProfile.class);
+    ActionProfileUpdateDto associatedActionProfile = createResponse.body().as(ActionProfileUpdateDto.class);
 
     createResponse = RestAssured.given()
       .spec(spec)
-      .body(new MappingProfile().withName("testMapping")
+      .body(new MappingProfileUpdateDto().withProfile(new MappingProfile().withName("testMapping")
         .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-        .withExistingRecordType(EntityType.INSTANCE))
+        .withExistingRecordType(EntityType.INSTANCE)))
       .when()
       .post(MAPPING_PROFILES_PATH);
     Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
-    MappingProfile associatedMappingProfile = createResponse.body().as(MappingProfile.class);
+    MappingProfileUpdateDto associatedMappingProfile = createResponse.body().as(MappingProfileUpdateDto.class);
 
     // creation associations
     ProfileAssociation profileAssociation = new ProfileAssociation()
-      .withMasterProfileId(profileToDelete.getId())
+      .withMasterProfileId(profileToDelete.getProfile().getId())
       .withOrder(1);
 
-    ProfileAssociation actionToActionAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedActionProfile.getId()),
+    ProfileAssociation actionToActionAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedActionProfile.getProfile().getId()),
       ACTION_PROFILE, ACTION_PROFILE);
-    ProfileAssociation actionToMappingAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedMappingProfile.getId()),
+    ProfileAssociation actionToMappingAssociation = postProfileAssociation(profileAssociation.withDetailProfileId(associatedMappingProfile.getProfile().getId()),
       ACTION_PROFILE, MAPPING_PROFILE);
 
     // deleting action profile
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
@@ -420,22 +425,22 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
     createProfiles();
-    ActionProfile profileToDelete = RestAssured.given()
+    ActionProfileUpdateDto profileToDelete = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile()
+      .body(new ActionProfileUpdateDto().withProfile(new ActionProfile()
         .withName("ProfileToDelete")
         .withAction(CREATE)
-        .withFolioRecord(INSTANCE))
+        .withFolioRecord(INSTANCE)))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .extract().body().as(ActionProfile.class);
+      .extract().body().as(ActionProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
@@ -452,22 +457,22 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed() {
     createProfiles();
-    ActionProfile profileToDelete = RestAssured.given()
+    ActionProfileUpdateDto profileToDelete = RestAssured.given()
       .spec(spec)
-      .body(new ActionProfile()
+      .body(new ActionProfileUpdateDto().withProfile(new ActionProfile()
         .withName("ProfileToDelete")
         .withAction(CREATE)
-        .withFolioRecord(INSTANCE))
+        .withFolioRecord(INSTANCE)))
       .when()
       .post(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_CREATED)
-      .extract().body().as(ActionProfile.class);
+      .extract().body().as(ActionProfileUpdateDto.class);
 
     RestAssured.given()
       .spec(spec)
       .when()
-      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getId())
+      .delete(ACTION_PROFILES_PATH + "/" + profileToDelete.getProfile().getId())
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
@@ -501,8 +506,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   }
 
   private void createProfiles() {
-    List<ActionProfile> actionProfilesToPost = Arrays.asList(actionProfile_1, actionProfile_2, actionProfile_3);
-    for (ActionProfile profile : actionProfilesToPost) {
+    List<ActionProfileUpdateDto> actionProfilesToPost = Arrays.asList(actionProfile_1, actionProfile_2, actionProfile_3);
+    for (ActionProfileUpdateDto profile : actionProfilesToPost) {
       RestAssured.given()
         .spec(spec)
         .body(profile)
