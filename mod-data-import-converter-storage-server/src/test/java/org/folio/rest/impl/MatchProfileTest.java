@@ -118,6 +118,21 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldReturnAllProfilesOnGetByIdTree() {
+    List<String> ids = createProfiles();
+    createProfilesTree(ids);
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(MATCH_PROFILES_PATH + "/" + ids.get(0) + "?withRelations=true")
+      .then().log().all()
+      .statusCode(HttpStatus.SC_OK).log().all()
+      .body("childProfiles*.id", everyItem(is(notNullValue())))
+      .body("parentProfiles*.id", everyItem(is(notNullValue())))
+      .body("deleted", is(false));
+  }
+
+  @Test
   public void shouldReturnCommittedProfilesOnGetWithQueryByLastName() {
     createProfiles();
     RestAssured.given()
@@ -612,20 +627,9 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
     String nameForProfiles = "tree";
     List<JobProfileUpdateDto> jobProfiles = Arrays.asList(jobProfile_1, jobProfile_1, jobProfile_1);
     List<ActionProfileUpdateDto> actionProfiles = Arrays.asList(actionProfile_1, actionProfile_1, actionProfile_1);
-    List<ActionProfileUpdateDto> createdActions = new ArrayList<>();
     List<JobProfileUpdateDto> created = new ArrayList<>();
+    List<ActionProfileUpdateDto> createdActions = new ArrayList<>();
     int i = 0;
-    for (ActionProfileUpdateDto action : actionProfiles) {
-      createdActions.add(RestAssured.given()
-        .spec(spec)
-        .body(new ActionProfileUpdateDto()
-          .withProfile(action.getProfile().withName(nameForProfiles + i)))
-        .when()
-        .post(ACTION_PROFILES_PATH)
-        .then()
-        .statusCode(HttpStatus.SC_CREATED).extract().body().as(ActionProfileUpdateDto.class));
-      i++;
-    }
     i = 0;
     for (JobProfileUpdateDto profile : jobProfiles) {
       created.add(RestAssured.given()
@@ -633,8 +637,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
         .body(new JobProfileUpdateDto()
           .withProfile(profile.getProfile().withName(nameForProfiles + i))
           .withAddedRelations(Collections.singletonList(new ProfileAssociation()
-            .withDetailProfileId(createdActions.get(i).getProfile().getId())
-            .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+            .withDetailProfileId(profilesIds.get(i))
+            .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
             .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
             .withOrder(0)
             .withTriggered(false).withReactTo(ProfileAssociation.ReactTo.MATCH)
@@ -645,17 +649,61 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
         .statusCode(HttpStatus.SC_CREATED).extract().body().as(JobProfileUpdateDto.class));
       i++;
     }
+    i = 0;
     for (JobProfileUpdateDto profile : created) {
-      profile.setDeletedRelations(profile.getAddedRelations());
-      profile.getDeletedRelations().forEach(profileAssociation -> profileAssociation.setMasterProfileId(profile.getProfile().getId()));
+      profile.setDeletedRelations(Collections.singletonList(new ProfileAssociation()
+        .withDetailProfileId(profilesIds.get(i))
+        .withMasterProfileId(profile.getProfile().getId())
+        .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+        .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
+        .withOrder(0)
+        .withTriggered(false).withReactTo(ProfileAssociation.ReactTo.MATCH)));
       profile.getAddedRelations().clear();
       RestAssured.given()
         .spec(spec)
         .body(profile)
-        .when()
+        .when().log().all()
         .put(JOB_PROFILES_PATH + "/" + profile.getProfile().getId())
         .then()
         .statusCode(HttpStatus.SC_OK);
+      i++;
+    }
+    i = 0;
+    for (JobProfileUpdateDto profile : created) {
+      profile.setAddedRelations(Collections.singletonList(new ProfileAssociation()
+        .withDetailProfileId(profilesIds.get(i))
+        .withMasterProfileId(profile.getProfile().getId())
+        .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+        .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
+        .withOrder(0)
+        .withTriggered(false).withReactTo(ProfileAssociation.ReactTo.MATCH)));
+      profile.setDeletedRelations(Collections.emptyList());
+      RestAssured.given()
+        .spec(spec)
+        .body(profile)
+        .when().log().all()
+        .put(JOB_PROFILES_PATH + "/" + profile.getProfile().getId())
+        .then()
+        .statusCode(HttpStatus.SC_OK);
+      i++;
+    }
+    i = 0;
+    for (ActionProfileUpdateDto action : actionProfiles) {
+      createdActions.add(RestAssured.given()
+        .spec(spec)
+        .body(new ActionProfileUpdateDto()
+          .withProfile(action.getProfile()
+            .withName(nameForProfiles + i))
+          .withAddedRelations(Collections.singletonList(new ProfileAssociation()
+            .withMasterProfileId(profilesIds.get(i))
+            .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+            .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+            .withOrder(0)
+            .withTriggered(false).withReactTo(ProfileAssociation.ReactTo.MATCH))))
+        .when()
+        .post(ACTION_PROFILES_PATH)
+        .then()
+        .statusCode(HttpStatus.SC_CREATED).extract().body().as(ActionProfileUpdateDto.class));
       i++;
     }
   }
