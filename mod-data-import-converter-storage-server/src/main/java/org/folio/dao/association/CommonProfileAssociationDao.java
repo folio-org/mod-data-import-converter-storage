@@ -135,7 +135,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
   public Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId) {
     Future<UpdateResult> future = Future.future();
     try {
-      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId);
+      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId+")");
       pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, future.completer());
     } catch (Exception e) {
       return Future.failedFuture(e);
