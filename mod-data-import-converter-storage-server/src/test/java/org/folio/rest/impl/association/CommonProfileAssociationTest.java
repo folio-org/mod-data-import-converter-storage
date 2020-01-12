@@ -45,18 +45,18 @@ import static org.hamcrest.Matchers.is;
 @RunWith(VertxUnitRunner.class)
 public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
 
-  private static final String ACTION_TO_ACTION_PROFILES = "action_to_action_profiles";
-  private static final String ACTION_TO_MAPPING_PROFILES = "action_to_mapping_profiles";
-  private static final String ACTION_TO_MATCH_PROFILES = "action_to_match_profiles";
-  private static final String JOB_TO_ACTION_PROFILES = "job_to_action_profiles";
-  private static final String JOB_TO_MATCH_PROFILES = "job_to_match_profiles";
-  private static final String MATCH_TO_ACTION_PROFILES = "match_to_action_profiles";
-  private static final String MATCH_TO_MATCH_PROFILES = "match_to_match_profiles";
+  public static final String ACTION_TO_ACTION_PROFILES = "action_to_action_profiles";
+  public static final String ACTION_TO_MAPPING_PROFILES = "action_to_mapping_profiles";
+  public static final String ACTION_TO_MATCH_PROFILES = "action_to_match_profiles";
+  public static final String JOB_TO_ACTION_PROFILES = "job_to_action_profiles";
+  public static final String JOB_TO_MATCH_PROFILES = "job_to_match_profiles";
+  public static final String MATCH_TO_ACTION_PROFILES = "match_to_action_profiles";
+  public static final String MATCH_TO_MATCH_PROFILES = "match_to_match_profiles";
 
-  private static final String JOB_PROFILES_TABLE = "job_profiles";
-  private static final String ACTION_PROFILES_TABLE = "action_profiles";
-  private static final String MAPPING_PROFILES_TABLE = "mapping_profiles";
-  private static final String MATCH_PROFILES_TABLE = "match_profiles";
+  public static final String JOB_PROFILES_TABLE = "job_profiles";
+  public static final String ACTION_PROFILES_TABLE = "action_profiles";
+  public static final String MAPPING_PROFILES_TABLE = "mapping_profiles";
+  public static final String MATCH_PROFILES_TABLE = "match_profiles";
 
   private static final String JOB_PROFILES_URL = "/data-import-profiles/jobProfiles";
   private static final String ACTION_PROFILES_URL = "/data-import-profiles/actionProfiles";

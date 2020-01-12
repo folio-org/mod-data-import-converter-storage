@@ -2,6 +2,7 @@ package org.folio.rest.impl;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -34,10 +35,20 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
-import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
 import static org.folio.rest.impl.ActionProfileTest.actionProfile_1;
 import static org.folio.rest.impl.JobProfileTest.JOB_PROFILES_PATH;
 import static org.folio.rest.impl.JobProfileTest.jobProfile_1;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.ACTION_PROFILES_TABLE;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.ACTION_TO_ACTION_PROFILES;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.ACTION_TO_MAPPING_PROFILES;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.ACTION_TO_MATCH_PROFILES;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.JOB_PROFILES_TABLE;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.JOB_TO_ACTION_PROFILES;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.JOB_TO_MATCH_PROFILES;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.MAPPING_PROFILES_TABLE;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.MATCH_PROFILES_TABLE;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.MATCH_TO_ACTION_PROFILES;
+import static org.folio.rest.impl.association.CommonProfileAssociationTest.MATCH_TO_MATCH_PROFILES;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.MatchDetail.MatchCriterion.EXACTLY_MATCHES;
@@ -102,7 +113,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnAllProfilesOnGetTree() {
+  public void shouldReturnAllProfilesOnGetTree(TestContext context) {
+    clearTables(context);
     List<String> ids = createProfiles();
     createProfilesTree(ids);
     RestAssured.given()
@@ -133,7 +145,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnCommittedProfilesOnGetWithQueryByLastName() {
+  public void shouldReturnCommittedProfilesOnGetWithQueryByLastName(TestContext context) {
+    clearTables(context);
     createProfiles();
     RestAssured.given()
       .spec(spec)
@@ -161,7 +174,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnLimitedCollectionOnGetWithLimit() {
+  public void shouldReturnLimitedCollectionOnGetWithLimit(TestContext context) {
+    clearTables(context);
     createProfiles();
     RestAssured.given()
       .spec(spec)
@@ -174,7 +188,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnPost() {
+  public void shouldReturnBadRequestOnPost(TestContext context) {
+    clearTables(context);
     createProfiles();
     RestAssured.given()
       .spec(spec)
@@ -232,7 +247,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnUnprocessableEntityOnPutProfileWithExistingName() {
+  public void shouldReturnUnprocessableEntityOnPutProfileWithExistingName(TestContext context) {
+    clearTables(context);
     createProfiles();
 
     Response createResponse = RestAssured.given()
@@ -257,7 +273,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldUpdateProfileOnPut() {
+  public void shouldUpdateProfileOnPut(TestContext context) {
+    clearTables(context);
     Response createResponse = RestAssured.given()
       .spec(spec)
       .body(matchProfile_2)
@@ -462,7 +479,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue() {
+  public void shouldReturnMarkedAndUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsTrue(TestContext context) {
+    clearTables(context);
     createProfiles();
     MatchProfileUpdateDto matchProfileToDelete = RestAssured.given()
       .spec(spec)
@@ -494,7 +512,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed() {
+  public void shouldReturnOnlyUnmarkedAsDeletedProfilesOnGetWhenParameterDeletedIsNotPassed(TestContext context) {
+    clearTables(context);
     createProfiles();
     MatchProfileUpdateDto matchProfileToDelete = RestAssured.given()
       .spec(spec)
@@ -723,15 +742,36 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
+    deleteTable(ACTION_TO_ACTION_PROFILES)
+      .compose(e -> deleteTable(ACTION_TO_MAPPING_PROFILES))
+      .compose(e -> deleteTable(ACTION_TO_MATCH_PROFILES))
+      .compose(e -> deleteTable(JOB_TO_ACTION_PROFILES))
+      .compose(e -> deleteTable(JOB_TO_MATCH_PROFILES))
+      .compose(e -> deleteTable(MATCH_TO_ACTION_PROFILES))
+      .compose(e -> deleteTable(MATCH_TO_MATCH_PROFILES))
+      .compose(e -> deleteTable(ACTION_PROFILES_TABLE))
+      .compose(e -> deleteTable(JOB_PROFILES_TABLE))
+      .compose(e -> deleteTable(MAPPING_PROFILES_TABLE))
+      .compose(e -> deleteTable(MATCH_PROFILES_TABLE))
+      .setHandler(clearAr -> {
+        if (clearAr.failed()) {
+          context.fail(clearAr.cause());
+        }
+        async.complete();
+      });
+    async.awaitSuccess();
+  }
+
+  private Future<Void> deleteTable(String tableName) {
+    Future<Void> future = Future.future();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
-      pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
-        pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event3 ->
-          pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event4 -> {
-            if (event4.failed()) {
-              context.fail(event4.cause());
-            }
-            async.complete();
-          }))));
+    pgClient.delete(tableName, new Criterion(), ar -> {
+      if (ar.failed()) {
+        future.fail(ar.cause());
+      } else {
+        future.complete();
+      }
+    });
+    return future;
   }
 }
