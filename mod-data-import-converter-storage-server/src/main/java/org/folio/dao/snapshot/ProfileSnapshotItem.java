@@ -28,6 +28,16 @@ public class ProfileSnapshotItem {
    */
   private Object detail;
 
+  private ProfileSnapshotWrapper.ReactTo reactTo;
+
+  public ProfileSnapshotWrapper.ReactTo getReactTo() {
+    return reactTo;
+  }
+
+  public void setReactTo(ProfileSnapshotWrapper.ReactTo reactTo) {
+    this.reactTo = reactTo;
+  }
+
   public String getAssociationId() {
     return associationId;
   }

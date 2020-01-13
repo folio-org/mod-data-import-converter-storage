@@ -104,14 +104,17 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
           .withId(UUID.randomUUID().toString())
           .withContentType(ProfileSnapshotWrapper.ContentType.MATCH_PROFILE)
           .withContent(new MatchProfile())
+          .withReactTo(ChildSnapshotWrapper.ReactTo.MATCH)
           .withChildSnapshotWrappers(Collections.singletonList(
             new ChildSnapshotWrapper()
               .withId(UUID.randomUUID().toString())
               .withContentType(ProfileSnapshotWrapper.ContentType.ACTION_PROFILE)
               .withContent(new ActionProfile())
+              .withReactTo(ChildSnapshotWrapper.ReactTo.MATCH)
               .withChildSnapshotWrappers(Collections.singletonList(
                 new ChildSnapshotWrapper()
                   .withId(UUID.randomUUID().toString())
+                  .withReactTo(ChildSnapshotWrapper.ReactTo.MATCH)
                   .withContentType(ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE)
                   .withContent(new MappingProfile())
               ))

@@ -57,6 +57,7 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
     ProfileAssociation jobToAction1Association = new ProfileAssociation()
       .withId(UUID.randomUUID().toString())
       .withOrder(0)
+      .withReactTo(ProfileAssociation.ReactTo.MATCH)
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile.getId());
     // when
