@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.ResultSet;
+import org.apache.commons.lang3.StringUtils;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
@@ -68,6 +69,9 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
           snapshotItem.setDetailId(jsonItem.getString("detail_id"));
           snapshotItem.setDetailType(ContentType.fromValue(jsonItem.getString("detail_type")));
           snapshotItem.setDetail(jsonItem.getJsonArray("detail").getList().get(0));
+          if(!StringUtils.isEmpty(jsonItem.getString("react_to"))){
+            snapshotItem.setReactTo(ProfileSnapshotWrapper.ReactTo.fromValue(jsonItem.getString("react_to")));
+          }
           return snapshotItem;
         })
         .collect(Collectors.toList()));

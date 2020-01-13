@@ -11,7 +11,8 @@ RETURNS TABLE(snapshot json)
         job_profile.id AS detail_id,
         'JOB_PROFILE' detail_type,
         0 AS detail_order,
-        json_agg(job_profile.jsonb) detail
+        json_agg(job_profile.jsonb) detail,
+        null AS react_to
       FROM job_profiles AS job_profile
       WHERE job_profile.id = jobProfileId
       GROUP BY job_profile.id
@@ -22,7 +23,8 @@ RETURNS TABLE(snapshot json)
         associations_view.detail_id AS detail_id,
         associations_view.detail_type AS detail_type,
         associations_view.detail_order AS detail_order,
-        associations_view.detail AS detail
+        associations_view.detail AS detail,
+        associations_view.react_to AS react_to
       FROM associations_view INNER JOIN recursive_snapshot ON associations_view.master_id = recursive_snapshot.detail_id)
     SELECT row_to_json(row) FROM recursive_snapshot row ORDER BY row.detail_order ASC
     $$

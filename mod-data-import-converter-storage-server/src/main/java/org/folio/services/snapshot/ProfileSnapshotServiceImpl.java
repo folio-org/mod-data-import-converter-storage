@@ -93,6 +93,9 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     if (optionalRootItem.isPresent()) {
       ProfileSnapshotItem rootItem = optionalRootItem.get();
       ProfileSnapshotWrapper rootWrapper = new ProfileSnapshotWrapper();
+      if (rootItem.getReactTo() != null) {
+        rootWrapper.setReactTo(ProfileSnapshotWrapper.ReactTo.fromValue(rootItem.getReactTo().name()));
+      }
       rootWrapper.setId(UUID.randomUUID().toString());
       rootWrapper.setProfileId(rootItem.getDetailId());
       rootWrapper.setContentType(rootItem.getDetailType());
@@ -121,6 +124,9 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
         childWrapper.setProfileId(snapshotItem.getDetailId());
         childWrapper.setContentType(snapshotItem.getDetailType());
         childWrapper.setContent(convertContentByType(snapshotItem.getDetail(), snapshotItem.getDetailType()));
+        if (snapshotItem.getReactTo() != null) {
+          childWrapper.setReactTo(ChildSnapshotWrapper.ReactTo.fromValue(snapshotItem.getReactTo().name()));
+        }
         childWrappers.add(childWrapper);
         fillChildSnapshotWrappers(childWrapper.getProfileId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
       }
