@@ -92,7 +92,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else {
             jobProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(profile -> (Response) PostDataImportProfilesJobProfilesResponse
-                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesJobProfilesResponse.headersFor201()))
+                .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesJobProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
@@ -200,7 +200,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else {
             matchProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(profile -> (Response) PostDataImportProfilesMatchProfilesResponse
-                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesMatchProfilesResponse.headersFor201()))
+                .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesMatchProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
@@ -288,7 +288,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else {
             mappingProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(profile -> (Response) PostDataImportProfilesMappingProfilesResponse
-                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesMappingProfilesResponse.headersFor201()))
+                .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesMappingProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
@@ -412,7 +412,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else {
             actionProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(profile -> (Response) PostDataImportProfilesActionProfilesResponse
-                .respond201WithApplicationJson(entity.withProfile(profile), PostDataImportProfilesActionProfilesResponse.headersFor201()))
+                .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesActionProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
               .setHandler(asyncResultHandler);
           }
