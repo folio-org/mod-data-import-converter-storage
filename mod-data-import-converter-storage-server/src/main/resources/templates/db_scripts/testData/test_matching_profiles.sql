@@ -42,7 +42,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
         "fields": [
           {
             "label": "field",
-            "value": "PO_LINE_NUMBER"
+            "value": "po_line.poLineNumber"
           }
         ]
       }
@@ -110,7 +110,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
         "fields": [
           {
             "label": "field",
-            "value": "ISBN"
+            "value": "instance.identifiers[].value"
           }
         ],
          "qualifier": {
@@ -257,7 +257,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
         "fields": [
           {
             "label": "field",
-            "value": "INSTANCE_HRID"
+            "value": "instance.hrid"
           }
         ],
         "qualifier": {
@@ -310,7 +310,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
         "fields": [
           {
             "label": "field",
-            "value": "LOCATION_CODE"
+            "value": "holdingsrecord.permanentLocationId"
           }
         ]
       }
@@ -524,7 +524,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
         "fields": [
           {
             "label": "field",
-            "value": "PO_LINE_NUMBER"
+            "value": "po_line.poLineNumber"
           }
         ]
       }
@@ -541,71 +541,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     "createdByUserId": "",
     "createdByUsername": "",
     "updatedDate": "2018-12-01T15:21:28.000",
-    "updatedByUserId": "",
-    "updatedByUsername": ""
-  }
-}'),
-('01bf0774-65dd-417f-8c76-4a417086ee20', '{
-  "id": "01bf0774-65dd-417f-8c76-4a417086ee20",
-  "name": "MARC 010 second",
-  "description": "LCCN match",
-  "tags": {
-    "tagList": [
-      "lccn"
-    ]
-  },
-  "entityType": "INVENTORY_ITEM",
-  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-  "existingRecordType": "MARC_AUTHORITY",
-
-  "matchDetails": [
-    {
-      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
-      "existingRecordType": "MARC_AUTHORITY",
-      "incomingMatchExpression": {
-        "dataValueType": "VALUE_FROM_RECORD",
-        "fields": [
-          {
-            "label": "field",
-            "value": "990"
-          },
-          {
-            "label": "indicator1",
-            "value": " "
-          },
-          {
-            "label": "indicator2",
-            "value": " "
-          },
-          {
-            "label": "recordSubfield",
-            "value": "p"
-          }
-        ]
-      },
-      "matchCriterion": "EXACTLY_MATCHES",
-      "existingMatchExpression": {
-        "dataValueType": "VALUE_FROM_RECORD",
-        "fields": [
-          {
-            "label": "field",
-            "value": "PO_LINE_NUMBER"
-          }
-        ]
-      }
-    }
-  ],
-  "deleted": false,
-  "userInfo": {
-    "firstName": "DIKU",
-    "lastName": "ADMINISTRATOR",
-    "userName": "diku_admin"
-  },
-  "metadata": {
-    "createdDate": "2018-11-02T10:20:32.000",
-    "createdByUserId": "",
-    "createdByUsername": "",
-    "updatedDate": "2018-12-02T10:45:21.000",
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
@@ -642,7 +577,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
         "fields": [
           {
             "label": "field",
-            "value": "VENDOR_INVOICE_NUMBER"
+            "value": "invoice.vendorInvoiceNo"
           }
         ]
       }
@@ -706,7 +641,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
         "fields": [
           {
             "label": "field",
-            "value": "ITEM_BARCODE"
+            "value": "item.barcode"
           }
         ]
       }
