@@ -8,7 +8,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.dao.snapshot.ProfileSnapshotItem;
 import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
@@ -116,16 +115,16 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    * @param childWrappers collection of child snapshot wrappers linked to given parent id
    * @param snapshotItems collection of snapshot items
    */
-  private void fillChildSnapshotWrappers(String parentId, List<ChildSnapshotWrapper> childWrappers, List<ProfileSnapshotItem> snapshotItems) {
+  private void fillChildSnapshotWrappers(String parentId, List<ProfileSnapshotWrapper> childWrappers, List<ProfileSnapshotItem> snapshotItems) {
     for (ProfileSnapshotItem snapshotItem : snapshotItems) {
       if (parentId.equals(snapshotItem.getMasterId())) {
-        ChildSnapshotWrapper childWrapper = new ChildSnapshotWrapper();
+        ProfileSnapshotWrapper childWrapper = new ProfileSnapshotWrapper();
         childWrapper.setId(UUID.randomUUID().toString());
         childWrapper.setProfileId(snapshotItem.getDetailId());
         childWrapper.setContentType(snapshotItem.getDetailType());
         childWrapper.setContent(convertContentByType(snapshotItem.getDetail(), snapshotItem.getDetailType()));
         if (snapshotItem.getReactTo() != null) {
-          childWrapper.setReactTo(ChildSnapshotWrapper.ReactTo.fromValue(snapshotItem.getReactTo().name()));
+          childWrapper.setReactTo(ProfileSnapshotWrapper.ReactTo.fromValue(snapshotItem.getReactTo().name()));
         }
         childWrappers.add(childWrapper);
         fillChildSnapshotWrappers(childWrapper.getProfileId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
@@ -158,7 +157,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    */
   private ProfileSnapshotWrapper convertRootSnapshotContent(@NotNull ProfileSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
-    for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
+    for (ProfileSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
       convertChildSnapshotsContent(child);
     }
     return wrapper;
@@ -170,9 +169,9 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    * @param wrapper given child wrapper
    * @return ChildSnapshotWrapper with properly converted 'content' field
    */
-  private ChildSnapshotWrapper convertChildSnapshotsContent(ChildSnapshotWrapper wrapper) {
+  private ProfileSnapshotWrapper convertChildSnapshotsContent(ProfileSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
-    for (ChildSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
+    for (ProfileSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
       convertChildSnapshotsContent(child);
     }
     return wrapper;

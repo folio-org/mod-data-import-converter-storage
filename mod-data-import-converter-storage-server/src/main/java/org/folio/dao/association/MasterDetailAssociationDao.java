@@ -1,7 +1,6 @@
 package org.folio.dao.association;
 
 import io.vertx.core.Future;
-import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public interface MasterDetailAssociationDao {
    * @param tenantId   tenant id
    * @return a list of details for a master id
    */
-  Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, ProfileSnapshotWrapper.ContentType detailType, String query, int offset, int limit, String tenantId);
+  Future<List<ProfileSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, ProfileSnapshotWrapper.ContentType detailType, String query, int offset, int limit, String tenantId);
 
   /**
    * Returns master profiles linked to detail profile id
@@ -35,5 +34,5 @@ public interface MasterDetailAssociationDao {
    * @param tenantId   tenant id
    * @return a list of masters for a detail id
    */
-  Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, ProfileSnapshotWrapper.ContentType masterType, String query, int offset, int limit, String tenantId);
+  Future<List<ProfileSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, ProfileSnapshotWrapper.ContentType masterType, String query, int offset, int limit, String tenantId);
 }

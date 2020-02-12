@@ -11,7 +11,6 @@ import org.folio.dao.association.ProfileAssociationDao;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
-import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.MappingProfile;
@@ -88,7 +87,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
           LOGGER.error("Could not get details profiles by master id '{}', for the tenant '{}'", masterId, tenantId);
           result.fail(ar.cause());
         }
-        List<ChildSnapshotWrapper> details = ar.result();
+        List<ProfileSnapshotWrapper> details = ar.result();
         ProfileSnapshotWrapper wrapper = getProfileWrapper(masterId, masterType, details);
         fillProfile(tenantId, result, wrapper);
       });
@@ -151,7 +150,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
    * @param children    a list of children
    * @return profile wrapper
    */
-  private ProfileSnapshotWrapper getProfileWrapper(String profileId, ContentType profileType, List<ChildSnapshotWrapper> children) {
+  private ProfileSnapshotWrapper getProfileWrapper(String profileId, ContentType profileType, List<ProfileSnapshotWrapper> children) {
     ProfileSnapshotWrapper wrapper = new ProfileSnapshotWrapper();
     wrapper.setChildSnapshotWrappers(children);
     wrapper.setId(profileId);

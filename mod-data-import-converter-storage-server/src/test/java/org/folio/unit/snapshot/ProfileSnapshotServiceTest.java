@@ -7,7 +7,6 @@ import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.dao.snapshot.ProfileSnapshotDaoImpl;
 import org.folio.dao.snapshot.ProfileSnapshotItem;
 import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
@@ -100,21 +99,21 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
       .withContentType(JOB_PROFILE)
       .withContent(new JobProfile())
       .withChildSnapshotWrappers(Collections.singletonList(
-        new ChildSnapshotWrapper()
+        new ProfileSnapshotWrapper()
           .withId(UUID.randomUUID().toString())
           .withContentType(ProfileSnapshotWrapper.ContentType.MATCH_PROFILE)
           .withContent(new MatchProfile())
-          .withReactTo(ChildSnapshotWrapper.ReactTo.MATCH)
+          .withReactTo(ProfileSnapshotWrapper.ReactTo.MATCH)
           .withChildSnapshotWrappers(Collections.singletonList(
-            new ChildSnapshotWrapper()
+            new ProfileSnapshotWrapper()
               .withId(UUID.randomUUID().toString())
               .withContentType(ProfileSnapshotWrapper.ContentType.ACTION_PROFILE)
               .withContent(new ActionProfile())
-              .withReactTo(ChildSnapshotWrapper.ReactTo.MATCH)
+              .withReactTo(ProfileSnapshotWrapper.ReactTo.MATCH)
               .withChildSnapshotWrappers(Collections.singletonList(
-                new ChildSnapshotWrapper()
+                new ProfileSnapshotWrapper()
                   .withId(UUID.randomUUID().toString())
-                  .withReactTo(ChildSnapshotWrapper.ReactTo.MATCH)
+                  .withReactTo(ProfileSnapshotWrapper.ReactTo.MATCH)
                   .withContentType(ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE)
                   .withContent(new MappingProfile())
               ))
@@ -130,16 +129,16 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
         context.assertEquals(expectedJobProfileWrapper.getContentType(), actualJobProfileWrapper.getContentType());
         context.assertEquals(expectedJobProfileWrapper.getContent().getClass(), actualJobProfileWrapper.getContent().getClass());
 
-        ChildSnapshotWrapper expectedMatchProfileWrapper = expectedJobProfileWrapper.getChildSnapshotWrappers().get(0);
-        ChildSnapshotWrapper actualMatchProfileWrapper = actualJobProfileWrapper.getChildSnapshotWrappers().get(0);
+        ProfileSnapshotWrapper expectedMatchProfileWrapper = expectedJobProfileWrapper.getChildSnapshotWrappers().get(0);
+        ProfileSnapshotWrapper actualMatchProfileWrapper = actualJobProfileWrapper.getChildSnapshotWrappers().get(0);
         assertExpectedChildOnActualChild(expectedMatchProfileWrapper, actualMatchProfileWrapper, context);
 
-        ChildSnapshotWrapper expectedActionProfileWrapper = expectedMatchProfileWrapper.getChildSnapshotWrappers().get(0);
-        ChildSnapshotWrapper actualActionProfileWrapper = actualMatchProfileWrapper.getChildSnapshotWrappers().get(0);
+        ProfileSnapshotWrapper expectedActionProfileWrapper = expectedMatchProfileWrapper.getChildSnapshotWrappers().get(0);
+        ProfileSnapshotWrapper actualActionProfileWrapper = actualMatchProfileWrapper.getChildSnapshotWrappers().get(0);
         assertExpectedChildOnActualChild(expectedActionProfileWrapper, actualActionProfileWrapper, context);
 
-        ChildSnapshotWrapper expectedMappingProfileWrapper = expectedActionProfileWrapper.getChildSnapshotWrappers().get(0);
-        ChildSnapshotWrapper actualMappingProfileWrapper = actualActionProfileWrapper.getChildSnapshotWrappers().get(0);
+        ProfileSnapshotWrapper expectedMappingProfileWrapper = expectedActionProfileWrapper.getChildSnapshotWrappers().get(0);
+        ProfileSnapshotWrapper actualMappingProfileWrapper = actualActionProfileWrapper.getChildSnapshotWrappers().get(0);
         assertExpectedChildOnActualChild(expectedMappingProfileWrapper, actualMappingProfileWrapper, context);
 
         async.complete();
@@ -186,17 +185,17 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
       testContext.assertEquals(jobProfile.getId(), actualJobProfile.getId());
       testContext.assertEquals(jobProfile.getId(), jobProfileWrapper.getProfileId());
 
-      ChildSnapshotWrapper matchProfileWrapper = jobProfileWrapper.getChildSnapshotWrappers().get(0);
+      ProfileSnapshotWrapper matchProfileWrapper = jobProfileWrapper.getChildSnapshotWrappers().get(0);
       MatchProfile actualMatchProfile = (MatchProfile) matchProfileWrapper.getContent();
       testContext.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
       testContext.assertEquals(matchProfile.getId(), matchProfileWrapper.getProfileId());
 
-      ChildSnapshotWrapper actionProfileWrapper = matchProfileWrapper.getChildSnapshotWrappers().get(0);
+      ProfileSnapshotWrapper actionProfileWrapper = matchProfileWrapper.getChildSnapshotWrappers().get(0);
       ActionProfile actualActionProfile = (ActionProfile) actionProfileWrapper.getContent();
       testContext.assertEquals(actionProfile.getId(), actualActionProfile.getId());
       testContext.assertEquals(actionProfile.getId(), actionProfileWrapper.getProfileId());
 
-      ChildSnapshotWrapper mappingProfileWrapper = actionProfileWrapper.getChildSnapshotWrappers().get(0);
+      ProfileSnapshotWrapper mappingProfileWrapper = actionProfileWrapper.getChildSnapshotWrappers().get(0);
       MappingProfile actualMappingProfile = (MappingProfile) mappingProfileWrapper.getContent();
       testContext.assertEquals(mappingProfile.getId(), actualMappingProfile.getId());
       testContext.assertEquals(mappingProfile.getId(), mappingProfileWrapper.getProfileId());
@@ -222,17 +221,17 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
       testContext.assertEquals(jobProfile.getId(), actualJobProfile.getId());
       testContext.assertEquals(jobProfile.getId(), jobProfileWrapper.getProfileId());
 
-      ChildSnapshotWrapper matchProfileWrapper = jobProfileWrapper.getChildSnapshotWrappers().get(0);
+      ProfileSnapshotWrapper matchProfileWrapper = jobProfileWrapper.getChildSnapshotWrappers().get(0);
       MatchProfile actualMatchProfile = (MatchProfile) matchProfileWrapper.getContent();
       testContext.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
       testContext.assertEquals(matchProfile.getId(), matchProfileWrapper.getProfileId());
 
-      ChildSnapshotWrapper actionProfileWrapper = matchProfileWrapper.getChildSnapshotWrappers().get(0);
+      ProfileSnapshotWrapper actionProfileWrapper = matchProfileWrapper.getChildSnapshotWrappers().get(0);
       ActionProfile actualActionProfile = (ActionProfile) actionProfileWrapper.getContent();
       testContext.assertEquals(actionProfile.getId(), actualActionProfile.getId());
       testContext.assertEquals(actionProfile.getId(), actionProfileWrapper.getProfileId());
 
-      ChildSnapshotWrapper mappingProfileWrapper = actionProfileWrapper.getChildSnapshotWrappers().get(0);
+      ProfileSnapshotWrapper mappingProfileWrapper = actionProfileWrapper.getChildSnapshotWrappers().get(0);
       MappingProfile actualMappingProfile = (MappingProfile) mappingProfileWrapper.getContent();
       testContext.assertEquals(mappingProfile.getId(), actualMappingProfile.getId());
       testContext.assertEquals(mappingProfile.getId(), mappingProfileWrapper.getProfileId());
@@ -240,7 +239,7 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
     });
   }
 
-  private void assertExpectedChildOnActualChild(ChildSnapshotWrapper expected, ChildSnapshotWrapper actual, TestContext context) {
+  private void assertExpectedChildOnActualChild(ProfileSnapshotWrapper expected, ProfileSnapshotWrapper actual, TestContext context) {
     context.assertEquals(expected.getId(), actual.getId());
     context.assertEquals(expected.getContentType(), actual.getContentType());
     context.assertEquals(expected.getContent().getClass(), actual.getContent().getClass());
