@@ -42,7 +42,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
     return profileSnapshotDao.getById(id, tenantId)
       .map(optionalWrapper ->
-        optionalWrapper.isPresent() ? Optional.of(convertRootSnapshotContent(optionalWrapper.get())) : optionalWrapper);
+        optionalWrapper.isPresent() ? Optional.of(convertProfileSnapshotWrapperContent(optionalWrapper.get())) : optionalWrapper);
   }
 
   @Override
@@ -149,30 +149,16 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   }
 
   /**
-   * Converts 'content' field of the given root wrapper (ProfileSnapshotWrapper) and it's child wrappers
+   * Method converts an Object 'content' field to concrete Profile class doing the same for all the child wrappers.
    * to concrete Profile class. The class resolution happens by 'content type' field.
    *
-   * @param wrapper the given root ProfileSnapshotWrapper
+   * @param wrapper the given ProfileSnapshotWrapper
    * @return ProfileSnapshotWrapper with converted 'content' field
    */
-  private ProfileSnapshotWrapper convertRootSnapshotContent(@NotNull ProfileSnapshotWrapper wrapper) {
+  private ProfileSnapshotWrapper convertProfileSnapshotWrapperContent(@NotNull ProfileSnapshotWrapper wrapper) {
     wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
     for (ProfileSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
-      convertChildSnapshotsContent(child);
-    }
-    return wrapper;
-  }
-
-  /**
-   * Method converts an Object 'content' field to concrete Profile class doing the same for all the child wrappers.
-   *
-   * @param wrapper given child wrapper
-   * @return ChildSnapshotWrapper with properly converted 'content' field
-   */
-  private ProfileSnapshotWrapper convertChildSnapshotsContent(ProfileSnapshotWrapper wrapper) {
-    wrapper.setContent(convertContentByType(wrapper.getContent(), wrapper.getContentType()));
-    for (ProfileSnapshotWrapper child : wrapper.getChildSnapshotWrappers()) {
-      convertChildSnapshotsContent(child);
+      convertProfileSnapshotWrapperContent(child);
     }
     return wrapper;
   }
