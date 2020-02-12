@@ -9,10 +9,10 @@ import io.vertx.ext.sql.ResultSet;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.dao.sql.SelectBuilder;
 import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.ChildSnapshotWrapper;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -49,7 +49,7 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
   protected PostgresClientFactory pgClientFactory;
 
   @Override
-  public Future<List<ChildSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, ContentType detailType, String query, int offset, int limit, String tenantId) {
+  public Future<List<ProfileSnapshotWrapper>> getDetailProfilesByMasterId(String masterId, ContentType detailType, String query, int offset, int limit, String tenantId) {
 
     SelectBuilder selectBuilder = new SelectBuilder(RETRIEVES_DETAILS_SQL)
       .where()
@@ -74,12 +74,12 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
    * @param resultSet a result of a sql query.
    * @return a list of entities.
    */
-  private List<ChildSnapshotWrapper> mapToDetails(ResultSet resultSet) {
+  private List<ProfileSnapshotWrapper> mapToDetails(ResultSet resultSet) {
     return resultSet.getRows().stream()
       .map(it -> {
         ContentType detailType = ContentType.fromValue(it.getString(DETAIL_TYPE_FIELD));
         JsonObject detail = new JsonArray(it.getString(DETAIL_FIELD)).getJsonObject(0);
-        ChildSnapshotWrapper wrapper = new ChildSnapshotWrapper();
+        ProfileSnapshotWrapper wrapper = new ProfileSnapshotWrapper();
         wrapper.setId(it.getString(DETAIL_ID_FIELD));
         wrapper.setContentType(detailType);
         wrapper.setContent(mapProfile(detail, detailType));
@@ -111,7 +111,7 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
 
 
   @Override
-  public Future<List<ChildSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, ContentType masterType, String query, int offset, int limit, String tenantId) {
+  public Future<List<ProfileSnapshotWrapper>> getMasterProfilesByDetailId(String detailId, ContentType masterType, String query, int offset, int limit, String tenantId) {
 
     SelectBuilder selectBuilder = new SelectBuilder(RETRIEVES_MASTERS_SQL)
       .where()
@@ -136,12 +136,12 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
    * @param resultSet a result of a sql query.
    * @return a list of entities.
    */
-  private List<ChildSnapshotWrapper> mapToMasters(ResultSet resultSet) {
+  private List<ProfileSnapshotWrapper> mapToMasters(ResultSet resultSet) {
     return resultSet.getRows().stream()
       .map(object -> {
         ContentType masterType = ContentType.fromValue(object.getString(MASTER_TYPE_FIELD));
         JsonObject master = new JsonArray(object.getString(MASTER_FIELD)).getJsonObject(0);
-        ChildSnapshotWrapper wrapper = new ChildSnapshotWrapper();
+        ProfileSnapshotWrapper wrapper = new ProfileSnapshotWrapper();
         wrapper.setId(object.getString(MASTER_ID_FIELD));
         wrapper.setContentType(masterType);
         wrapper.setContent(mapProfile(master, masterType));
