@@ -1,10 +1,16 @@
 ## 2019-12-24 v1.7.0-SNAPSHOT
 * Created API for getting Profile Snapshot structure
 * Renamed mappingProfile field "folioRecord" to "existingRecordType".
+* Implemented CRUD endpoints for FormConfig entity.
 
   | METHOD |             URL                                              | DESCRIPTION                          |
   |--------|--------------------------------------------------------------|--------------------------------------|
   | GET    | /data-import-profiles/profileSnapshots/{id}                  | Get Profile Snapshot structure by id |
+  | GET    | /converter-storage/forms/configs                             | Get all forms configs                |
+  | POST   | /converter-storage/forms/configs                             | Create form config                   |
+  | GET    | /converter-storage/forms/configs/{formName}                  | Get form config by formName          |
+  | PUT    | /converter-storage/forms/configs/{formName}                  | Update form config by formName       |
+  | DELETE | /converter-storage/forms/configs/{formName}                  | Delete form config by formName       |
   
 * Added support of saving\updating profiles with changes in their relations in one transaction
 

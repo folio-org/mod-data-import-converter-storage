@@ -1,0 +1,54 @@
+#%RAML 1.0
+
+title: FlexibleForms Configs Storage
+version: v1.0
+protocols: [ HTTP, HTTPS ]
+baseUri: http://localhost
+
+documentation:
+  - title: Forms Configs Storage API
+    content: API for accessing flexible forms configs
+
+types:
+  errors: !include raml-storage/raml-util/schemas/errors.schema
+  formConfig: !include raml-storage/schemas/common/formConfig.json
+  formConfigCollection: !include raml-storage/schemas/common/formConfigCollection.json
+
+traits:
+  validate: !include raml-storage/raml-util/traits/validation.raml
+  language: !include raml-storage/raml-util/traits/language.raml
+  pageable:  !include raml-storage/raml-util/traits/pageable.raml
+  searchable: !include raml-storage/raml-util/traits/searchable.raml
+
+resourceTypes:
+  collection: !include raml-storage/raml-util/rtypes/collection.raml
+  collection-item: !include raml-storage/raml-util/rtypes/item-collection.raml
+
+/converter-storage/forms/configs:
+  description: API for managing form configs
+  type:
+    collection:
+      schemaCollection: formConfigCollection
+      schemaItem: formConfig
+      exampleCollection: !include raml-storage/examples/mod-source-record-storage/snapshotCollection.sample
+      exampleItem: !include raml-storage/examples/mod-source-record-storage/snapshot.sample
+  post:
+    description: "Create new form config"
+  get:
+  /{formName}:
+    displayName: "Forms configs"
+    description: "Get, Delete or Update a specific form config by form name"
+    type:
+      collection-item:
+        schema: formConfig
+        exampleItem: !include raml-storage/examples/mod-source-record-storage/snapshot.sample
+    put:
+      is: [validate]
+      responses:
+        200:
+          body:
+            application/json:
+              type: formConfig
+    delete:
+      responses:
+        204:

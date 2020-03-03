@@ -143,6 +143,17 @@
       "tableName": "profile_snapshots",
       "fromModuleVersion": "mod-data-import-converter-storage-1.1.0",
       "withMetadata": false
+    },
+    {
+      "tableName": "forms_configs",
+      "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
+      "withMetadata": false,
+      "uniqueIndex": [
+        {
+          "fieldName": "formName",
+          "tOps": "ADD"
+        }
+      ]
     }
   ],
   "scripts": [
