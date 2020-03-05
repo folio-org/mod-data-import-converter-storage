@@ -95,6 +95,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
       if (rootItem.getReactTo() != null) {
         rootWrapper.setReactTo(ProfileSnapshotWrapper.ReactTo.fromValue(rootItem.getReactTo().name()));
       }
+      rootWrapper.setOrder(rootItem.getOrder());
       rootWrapper.setId(UUID.randomUUID().toString());
       rootWrapper.setProfileId(rootItem.getDetailId());
       rootWrapper.setContentType(rootItem.getDetailType());
@@ -126,6 +127,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
         if (snapshotItem.getReactTo() != null) {
           childWrapper.setReactTo(ProfileSnapshotWrapper.ReactTo.fromValue(snapshotItem.getReactTo().name()));
         }
+        childWrapper.setOrder(snapshotItem.getOrder());
         childWrappers.add(childWrapper);
         fillChildSnapshotWrappers(childWrapper.getProfileId(), childWrapper.getChildSnapshotWrappers(), snapshotItems);
       }

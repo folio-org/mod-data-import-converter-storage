@@ -58,6 +58,7 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
       .withId(UUID.randomUUID().toString())
       .withOrder(0)
       .withReactTo(ProfileAssociation.ReactTo.MATCH)
+      .withOrder(1)
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile.getId());
     // when

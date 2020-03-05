@@ -28,6 +28,11 @@ public class ProfileSnapshotItem {
    */
   private Object detail;
 
+  /**
+   * The execution order of the 'detail' profile. Job, Action and Matching profiles have an execution order, but this field is always 0 for Mapping profiles because of o2o relationship
+   */
+  private Integer order;
+
   private ProfileSnapshotWrapper.ReactTo reactTo;
 
   public ProfileSnapshotWrapper.ReactTo getReactTo() {
@@ -76,5 +81,13 @@ public class ProfileSnapshotItem {
 
   public void setDetail(Object detail) {
     this.detail = detail;
+  }
+
+  public Integer getOrder() {
+    return order;
+  }
+
+  public void setOrder(Integer order) {
+    this.order = order;
   }
 }
