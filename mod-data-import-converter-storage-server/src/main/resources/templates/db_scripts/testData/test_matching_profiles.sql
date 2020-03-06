@@ -8,7 +8,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "pol"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "ORDER",
   "matchDetails": [
@@ -72,7 +71,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "isbn"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "INSTANCE",
   "matchDetails": [
@@ -144,7 +142,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "kb"
     ]
   },
-  "entityType": "MARC_BIB_RECORD",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "MARC_BIBLIOGRAPHIC",
   "matchDetails": [
@@ -220,7 +217,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "hrid"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "INSTANCE",
   "matchDetails": [
@@ -290,7 +286,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "location", "submatch"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "HOLDINGS",
   "matchDetails": [
@@ -340,7 +335,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "lccn"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "MARC_AUTHORITY",
   "matchDetails": [
@@ -416,7 +410,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "oclc"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "MARC_BIBLIOGRAPHIC",
   "matchDetails": [
@@ -502,7 +495,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "pol"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "ORDER",
   "matchDetails": [
@@ -554,7 +546,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "invoice", "submatch"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "INVOICE",
 
@@ -607,7 +598,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "barcode", "item"
     ]
   },
-  "entityType": "INVENTORY_ITEM",
   "incomingRecordType": "MARC_BIBLIOGRAPHIC",
   "existingRecordType": "ITEM",
   "matchDetails": [
