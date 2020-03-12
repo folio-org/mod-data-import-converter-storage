@@ -292,7 +292,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "masterProfileId": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
   "detailProfileId": "ba8d822f-97db-4794-8393-562a0b2cf755",
   "reactTo": "NON_MATCH",
-  "order": 1,
+  "order": 0,
   "triggered": "false"
 }'),
 ('f65dbb76-39f1-45d3-bcb9-1b959e46b34e', '{
