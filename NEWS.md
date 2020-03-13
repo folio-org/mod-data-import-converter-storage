@@ -1,7 +1,8 @@
-## 2019-12-24 v1.7.0-SNAPSHOT
+## 2020-03-13 v1.7.0
 * Created API for getting Profile Snapshot structure
-* Renamed mappingProfile field "folioRecord" to "existingRecordType".
-* Implemented CRUD endpoints for FormConfig entity.
+* Renamed mappingProfile field "folioRecord" to "existingRecordType"
+* Added support of saving\updating profiles with changes in their relations in one transaction
+* Implemented CRUD endpoints for FormConfig entity
 
   | METHOD |             URL                                              | DESCRIPTION                          |
   |--------|--------------------------------------------------------------|--------------------------------------|
@@ -12,8 +13,6 @@
   | PUT    | /converter-storage/forms/configs/{formName}                  | Update form config by formName       |
   | DELETE | /converter-storage/forms/configs/{formName}                  | Delete form config by formName       |
   
-* Added support of saving\updating profiles with changes in their relations in one transaction
-
 ## 2019-12-04 v1.6.0
 * Fixed security vulnerabilities
 * Applied new JVM features to manage container memory
