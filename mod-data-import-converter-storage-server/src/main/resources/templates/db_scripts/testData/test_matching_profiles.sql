@@ -286,11 +286,11 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
       "location", "submatch"
     ]
   },
-  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+  "incomingRecordType": "STATIC_VALUE",
   "existingRecordType": "HOLDINGS",
   "matchDetails": [
     {
-      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+      "incomingRecordType": "STATIC_VALUE",
       "existingRecordType": "HOLDINGS",
       "incomingMatchExpression": {
         "dataValueType": "STATIC_VALUE",
