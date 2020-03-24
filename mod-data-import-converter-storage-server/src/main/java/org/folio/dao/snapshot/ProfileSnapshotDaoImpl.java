@@ -1,6 +1,7 @@
 package org.folio.dao.snapshot;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -20,11 +21,10 @@ import java.util.stream.Collectors;
  * Implementation for Profile snapshot DAO
  */
 @Repository
-@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
   private static final Logger logger = LoggerFactory.getLogger(ProfileSnapshotDaoImpl.class);
   private static final String TABLE_NAME = "profile_snapshots";
-  private static final String GET_JOB_PROFILE_SNAPSHOT = "select get_job_profile_snapshot('%s');";
+  private static final String GET_PROFILE_SNAPSHOT = "select get_profile_snapshot('%s', '%s', '%s');";
   protected PostgresClientFactory pgClientFactory;
 
   public ProfileSnapshotDaoImpl(@Autowired PostgresClientFactory pgClientFactory) {
@@ -33,33 +33,34 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
 
   @Override
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
-    Future<ProfileSnapshotWrapper> future = Future.future();
+    Promise<ProfileSnapshotWrapper> promise = Promise.promise();
     try {
-      pgClientFactory.createInstance(tenantId).getById(TABLE_NAME, id, ProfileSnapshotWrapper.class, future);
+      pgClientFactory.createInstance(tenantId).getById(TABLE_NAME, id, ProfileSnapshotWrapper.class, promise);
     } catch (Exception e) {
       logger.error("Error querying {} by id", ProfileSnapshotWrapper.class.getSimpleName(), e);
-      future.fail(e);
+      promise.fail(e);
     }
-    return future
+    return promise.future()
       .map(wrapper -> wrapper == null ? Optional.empty() : Optional.of(wrapper));
   }
 
   @Override
   public Future<String> save(ProfileSnapshotWrapper entity, String tenantId) {
-    Future<String> future = Future.future();
-    pgClientFactory.createInstance(tenantId).save(TABLE_NAME, entity.getId(), entity, future.completer());
-    return future;
+    Promise<String> promise = Promise.promise();
+    pgClientFactory.createInstance(tenantId).save(TABLE_NAME, entity.getId(), entity, promise);
+    return promise.future();
   }
 
-  public Future<List<ProfileSnapshotItem>> getSnapshotItems(String jobProfileId, String tenantId) {
-    Future<ResultSet> future = Future.future();
+  public Future<List<ProfileSnapshotItem>> getSnapshotItems(String profileId, ContentType profileType, String tenantId) {
+    Promise<ResultSet> promise = Promise.promise();
     try {
-      String createSnapshotQuery = String.format(GET_JOB_PROFILE_SNAPSHOT, jobProfileId);
-      pgClientFactory.createInstance(tenantId).select(createSnapshotQuery, future.completer());
+      SnapshotProfileType snapshotProfileType = SnapshotProfileType.valueOf(profileType.value());
+      String createSnapshotQuery = String.format(GET_PROFILE_SNAPSHOT, profileId, profileType.value(), snapshotProfileType.getTableName());
+      pgClientFactory.createInstance(tenantId).select(createSnapshotQuery, promise);
     } catch (Exception e) {
-      future.fail(e);
+      promise.fail(e);
     }
-    return future
+    return promise.future()
       .map(results -> results.getResults().stream()
         .map(arrayItem -> {
           JsonObject jsonItem = new JsonObject(arrayItem.getString(0));

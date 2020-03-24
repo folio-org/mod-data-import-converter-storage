@@ -2,6 +2,7 @@ package org.folio.services.snapshot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,11 +25,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
+
 /**
  * Implementation for Profile snapshot service
  */
 @Service
-@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileSnapshotServiceImpl.class);
@@ -47,34 +49,33 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
   @Override
   public Future<ProfileSnapshotWrapper> createSnapshot(String jobProfileId, String tenantId) {
-    Future<ProfileSnapshotWrapper> future = Future.future();
-    return constructSnapshot(jobProfileId, tenantId)
+    Promise<ProfileSnapshotWrapper> promise = Promise.promise();
+    return constructSnapshot(jobProfileId, JOB_PROFILE, tenantId)
       .compose(rootWrapper -> {
-          profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
-            if (savedAr.failed()) {
-              future.fail(savedAr.cause());
-            } else {
-              future.complete(rootWrapper);
-            }
-          });
-          return future;
-        }
-      );
+        profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
+          if (savedAr.failed()) {
+            promise.fail(savedAr.cause());
+          } else {
+            promise.complete(rootWrapper);
+          }
+        });
+        return promise.future();
+      });
   }
 
   @Override
-  public Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, String tenantId) {
-    Future<ProfileSnapshotWrapper> future = Future.future();
-    return profileSnapshotDao.getSnapshotItems(profileId, tenantId)
+  public Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, ProfileSnapshotWrapper.ContentType profileType, String tenantId) {
+    Promise<ProfileSnapshotWrapper> promise = Promise.promise();
+    return profileSnapshotDao.getSnapshotItems(profileId, profileType, tenantId)
       .compose(snapshotItems -> {
         if (CollectionUtils.isEmpty(snapshotItems)) {
           String errorMessage = "Cannot build snapshot for Profile " + profileId;
           LOGGER.error(errorMessage);
-          future.fail(errorMessage);
+          promise.fail(errorMessage);
         } else {
-          future.complete(buildSnapshot(snapshotItems));
+          promise.complete(buildSnapshot(snapshotItems));
         }
-        return future;
+        return promise.future();
       });
   }
 
