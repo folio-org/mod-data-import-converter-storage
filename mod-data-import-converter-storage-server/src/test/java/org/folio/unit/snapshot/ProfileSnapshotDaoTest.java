@@ -41,7 +41,7 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
 
   @Test
   public void shouldReturnEmptySnapshotItemsIfNoItemsExist(TestContext context) {
-    dao.getSnapshotItems(UUID.randomUUID().toString(), TENANT_ID).setHandler(ar -> {
+    dao.getSnapshotItems(UUID.randomUUID().toString(), JOB_PROFILE, TENANT_ID).setHandler(ar -> {
       context.assertTrue(ar.succeeded());
       List<ProfileSnapshotItem> items = ar.result();
       context.assertTrue(items.isEmpty());
@@ -68,7 +68,7 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
         context.assertTrue(savedActionProfileAr.succeeded());
         profileAssociationDao.save(jobToAction1Association, JOB_PROFILE, ACTION_PROFILE, TENANT_ID).setHandler(savedAssociationAr -> {
           context.assertTrue(savedAssociationAr.succeeded());
-          dao.getSnapshotItems(jobProfile.getId(), TENANT_ID).setHandler(itemsAr -> {
+          dao.getSnapshotItems(jobProfile.getId(), JOB_PROFILE, TENANT_ID).setHandler(itemsAr -> {
             // then
             context.assertTrue(itemsAr.succeeded());
             List<ProfileSnapshotItem> profileSnapshotItems = itemsAr.result();

@@ -167,7 +167,7 @@
         },
         {
           "methods": ["GET"],
-          "pathPattern": "/data-import-profiles/profileSnapshots/{jobProfileId}",
+          "pathPattern": "/data-import-profiles/profileSnapshots/{profileId}",
           "permissionsRequired": [ "converter-storage.profileSnapshots.get" ]
         }
       ]

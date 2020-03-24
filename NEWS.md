@@ -1,3 +1,10 @@
+## 2020-03-24 v1.8.0-SNAPSHOT
+* Provided API for getting Profile Snapshot structure for any profile type.
+  
+  | METHOD |             URL                                                | DESCRIPTION                          |
+  |--------|----------------------------------------------------------------|--------------------------------------|
+  | GET    | /data-import-profiles/profileSnapshots/{id}?profileType={type} | Get Profile Snapshot structure by profile id and type (JOB_PROFILE, MATCH_PROFILE, ACTION_PROFILE, MAPPING_PROFILE) |
+
 ## 2020-03-13 v1.7.0
 * Created API for getting Profile Snapshot structure
 * Renamed mappingProfile field "folioRecord" to "existingRecordType"
