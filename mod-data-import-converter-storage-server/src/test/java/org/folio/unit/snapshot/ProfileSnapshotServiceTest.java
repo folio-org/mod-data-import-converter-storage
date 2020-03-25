@@ -159,7 +159,7 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
     ProfileSnapshotService service = new ProfileSnapshotServiceImpl(dao);
 
     String jobProfileId = UUID.randomUUID().toString();
-    Mockito.when(mockDao.getSnapshotItems(jobProfileId, TENANT_ID)).thenReturn(Future.succeededFuture(new ArrayList<>()));
+    Mockito.when(mockDao.getSnapshotItems(jobProfileId, JOB_PROFILE, TENANT_ID)).thenReturn(Future.succeededFuture(new ArrayList<>()));
 
     // when
     service.createSnapshot(jobProfileId, TENANT_ID).setHandler(ar -> {
@@ -176,7 +176,7 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
     ProfileSnapshotDao mockDao = Mockito.mock(ProfileSnapshotDaoImpl.class);
     ProfileSnapshotService service = new ProfileSnapshotServiceImpl(mockDao);
 
-    Mockito.when(mockDao.getSnapshotItems(jobProfile.getId(), TENANT_ID)).thenReturn(Future.succeededFuture(items));
+    Mockito.when(mockDao.getSnapshotItems(jobProfile.getId(), JOB_PROFILE, TENANT_ID)).thenReturn(Future.succeededFuture(items));
     Mockito.when(mockDao.save(ArgumentMatchers.any(), ArgumentMatchers.anyString())).thenReturn(Future.succeededFuture(jobProfile.getId()));
 
     // when
@@ -213,10 +213,10 @@ public class ProfileSnapshotServiceTest extends AbstractUnitTest {
     ProfileSnapshotDao mockDao = Mockito.mock(ProfileSnapshotDaoImpl.class);
     ProfileSnapshotService service = new ProfileSnapshotServiceImpl(mockDao);
 
-    Mockito.when(mockDao.getSnapshotItems(jobProfile.getId(), TENANT_ID)).thenReturn(Future.succeededFuture(items));
+    Mockito.when(mockDao.getSnapshotItems(jobProfile.getId(), JOB_PROFILE, TENANT_ID)).thenReturn(Future.succeededFuture(items));
 
     // when
-    service.constructSnapshot(jobProfile.getId(), TENANT_ID).setHandler(ar -> {
+    service.constructSnapshot(jobProfile.getId(), JOB_PROFILE, TENANT_ID).setHandler(ar -> {
       // then
       testContext.assertTrue(ar.succeeded());
       ProfileSnapshotWrapper jobProfileWrapper = ar.result();

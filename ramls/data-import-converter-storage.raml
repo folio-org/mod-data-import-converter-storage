@@ -502,10 +502,17 @@ resourceTypes:
           body:
             text/plain:
               example: "Internal server error"
-  /profileSnapshots/{jobProfileId}:
+  /profileSnapshots/{profileId}:
     displayName: Profile Snapshot structure
     get:
-      description: Get a profile snapshot structure for specified profile id
+      description: Get a profile snapshot structure for specified profile id and type.
+        Acceptable profileType values are JOB_PROFILE, ACTION_PROFILE, MATCH_PROFILE, MAPPING_PROFILE.
+      queryParameters:
+        profileType:
+          description: Indicates profile type
+          required: true
+          type: string
+          example: "JOB_PROFILE"
       responses:
         200:
           body:
