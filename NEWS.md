@@ -1,5 +1,7 @@
-## 2020-03-24 v1.8.0-SNAPSHOT
-* Provided API for getting Profile Snapshot structure for any profile type.
+## 2020-03-27 v1.7.1
+* Adjusted staticValueDetail schema
+* Allowed for matchDetails static values contain decimal numbers
+* Provided API for getting Profile Snapshot structure for any profile type
   
   | METHOD |             URL                                                | DESCRIPTION                          |
   |--------|----------------------------------------------------------------|--------------------------------------|
