@@ -1140,7 +1140,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "permanentLocationId",
         "enabled": "true",
         "path": "holdings.permanentLocationId",
-        "value": "980$d",
+        "value": "\"53cf956f-c1df-410b-8bea-27f712cca7c0\"",
         "subfields": []
       },
       {
