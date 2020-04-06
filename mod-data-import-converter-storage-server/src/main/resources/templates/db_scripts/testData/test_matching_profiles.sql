@@ -651,4 +651,66 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
+}'),
+('727c67ff-6015-4279-8d5f-8b775f736114', '{
+  "id": "727c67ff-6015-4279-8d5f-8b775f736114",
+  "name": "Demo Match Profile",
+  "description": "",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "INSTANCE",
+  "matchDetails": [
+    {
+      "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+      "existingRecordType": "INSTANCE",
+      "incomingMatchExpression": {
+        "dataValueType": "VALUE_FROM_RECORD",
+        "fields": [
+          {
+            "label": "field",
+            "value": "022"
+          },
+          {
+            "label": "indicator1",
+            "value": ""
+          },
+          {
+            "label": "indicator2",
+            "value": ""
+          },
+          {
+            "label": "recordSubfield",
+            "value": "a"
+          }
+        ],
+        "qualifier": {
+          "comparisonPart": "NUMERICS_ONLY"
+        }
+      },
+      "matchCriterion": "EXACTLY_MATCHES",
+      "existingMatchExpression": {
+        "dataValueType": "VALUE_FROM_RECORD",
+        "fields": [
+          {
+            "label": "field",
+            "value": "instance.hrid"
+          }
+        ],
+        "qualifier": {
+          "comparisonPart": "NUMERICS_ONLY"
+        }
+      }
+    }
+  ],
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2020-04-06T13:16:37.198+0000",
+    "createdByUserId": "",
+    "updatedDate": "2020-04-06T13:16:37.198+0000",
+    "updatedByUserId": ""
+  }
 }') ON CONFLICT DO NOTHING;
