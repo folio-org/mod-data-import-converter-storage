@@ -862,4 +862,64 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
-}') ON CONFLICT DO NOTHING;
+}'),
+('10694275-2341-4b2d-be25-7aa78d5bca41', '{
+  "id": "10694275-2341-4b2d-be25-7aa78d5bca41",
+  "name": "Demo Create Instance",
+  "description": "",
+  "action": "CREATE",
+  "folioRecord": "INSTANCE",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "parentProfiles": [],
+  "childProfiles": [],
+  "metadata": {
+    "createdDate": "2020-04-06T13:18:36.795+0000",
+    "createdByUserId": "",
+    "updatedDate": "2020-04-06T13:43:15.969+0000",
+    "updatedByUserId": ""
+  }
+}'),
+('4fc313a1-51af-4f47-a618-6fa8375fb54f', '{
+  "id": "4fc313a1-51af-4f47-a618-6fa8375fb54f",
+  "name": "Demo Create Holdings",
+  "description": "",
+  "action": "CREATE",
+  "folioRecord": "HOLDINGS",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2020-04-06T14:51:00.575+0000",
+    "createdByUserId": "",
+    "updatedDate": "2020-04-06T14:51:00.575+0000",
+    "updatedByUserId": ""
+  }
+}'),
+('0cc8fcbf-b447-4dd3-8fd3-8387de90b3bd', '{
+  "id": "0cc8fcbf-b447-4dd3-8fd3-8387de90b3bd",
+  "name": "Demo Create Item",
+  "description": "",
+  "action": "CREATE",
+  "folioRecord": "ITEM",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "metadata": {
+    "createdDate": "2020-04-06T14:52:13.928+0000",
+    "createdByUserId": "",
+    "updatedDate": "2020-04-06T14:52:13.928+0000",
+    "updatedByUserId": ""
+  }
+}'
+)ON CONFLICT DO NOTHING;

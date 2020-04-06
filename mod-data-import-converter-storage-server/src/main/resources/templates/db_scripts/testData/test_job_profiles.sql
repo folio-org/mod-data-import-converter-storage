@@ -271,4 +271,23 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": "diku_admin"
   }
-}') ON CONFLICT DO NOTHING;
+}'),
+('b81d36ae-eda0-4633-a135-bde3a999a4f7', '{
+    "id" : "b81d36ae-eda0-4633-a135-bde3a999a4f7",
+    "name" : "Demo Job Profile",
+    "description" : "",
+    "dataType" : "MARC",
+    "deleted" : false,
+    "userInfo" : {
+      "firstName" : "DIKU",
+      "lastName" : "ADMINISTRATOR",
+      "userName" : "diku_admin"
+    },
+    "metadata" : {
+      "createdDate" : "2020-04-06T13:10:36.195+0000",
+      "createdByUserId" : "",
+      "updatedDate" : "2020-04-06T14:54:45.094+0000",
+      "updatedByUserId" : ""
+    }
+  }'
+)ON CONFLICT DO NOTHING;

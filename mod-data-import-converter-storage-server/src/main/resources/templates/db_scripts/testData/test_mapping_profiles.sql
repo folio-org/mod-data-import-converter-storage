@@ -800,4 +800,791 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     "updatedByUserId": "",
     "updatedByUsername": ""
   }
+}'),
+('13bee67e-9529-497b-8fe7-daad8765a6ed', '{
+  "id": "13bee67e-9529-497b-8fe7-daad8765a6ed",
+  "name": "Demo Create Instance",
+  "description": "",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "INSTANCE",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "parentProfiles": [],
+  "childProfiles": [],
+  "mappingDetails": {
+    "name": "instance",
+    "recordType": "INSTANCE",
+    "mappingFields": [
+      {
+        "name": "discoverySuppress",
+        "enabled": "true",
+        "path": "instance.discoverySuppress",
+        "value": "",
+        "booleanFieldAction": "AS_IS",
+        "subfields": []
+      },
+      {
+        "name": "staffSuppress",
+        "enabled": "true",
+        "path": "instance.staffSuppress",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "previouslyHeld",
+        "enabled": "true",
+        "path": "instance.previouslyHeld",
+        "value": "",
+        "booleanFieldAction": "AS_IS",
+        "subfields": []
+      },
+      {
+        "name": "hrid",
+        "enabled": "false",
+        "path": "instance.hrid",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "source",
+        "enabled": "false",
+        "path": "instance.source",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "catalogedDate",
+        "enabled": "true",
+        "path": "instance.catalogedDate",
+        "value": "\"2020-04-03\"",
+        "subfields": []
+      },
+      {
+        "name": "statusId",
+        "enabled": "true",
+        "path": "instance.statusId",
+        "value": "\"9634a5ab-9228-4703-baf2-4d12ebc77d56\"",
+        "subfields": []
+      },
+      {
+        "name": "modeOfIssuanceId",
+        "enabled": "false",
+        "path": "instance.modeOfIssuanceId",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "statisticalCodeIds",
+        "enabled": "true",
+        "path": "instance.statisticalCodeIds",
+        "value": "",
+        "subfields": [
+          {
+            "order": 0,
+            "path": "instance.statisticalCodeIds[]",
+            "fields": [
+              {
+                "name": "statisticalCodeId",
+                "enabled": "true",
+                "path": "instance.statisticalCodeIds[].statistcalCodeId",
+                "value": "\"b5968c9e-cddc-4576-99e3-8e60aed8b0dd\"",
+                "subfields": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "title",
+        "enabled": "false",
+        "path": "instance.title",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "alternativeTitles",
+        "enabled": "false",
+        "path": "instance.alternativeTitles",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "indexTitle",
+        "enabled": "false",
+        "path": "instance.indexTitle",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "series",
+        "enabled": "false",
+        "path": "instance.series",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "precedingTitles",
+        "enabled": "true",
+        "path": "instance.precedingTitles",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "succeedingTitles",
+        "enabled": "true",
+        "path": "instance.succeedingTitles",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "identifiers",
+        "enabled": "false",
+        "path": "instance.identifiers",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "contributors",
+        "enabled": "false",
+        "path": "instance.contributors",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "publication",
+        "enabled": "false",
+        "path": "instance.publication",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "editions",
+        "enabled": "false",
+        "path": "instance.editions",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "physicalDescriptions",
+        "enabled": "false",
+        "path": "instance.physicalDescriptions",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "instanceTypeId",
+        "enabled": "false",
+        "path": "instance.instanceTypeId",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "natureOfContentTermsIds",
+        "enabled": "true",
+        "path": "instance.natureOfContentTermIds",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "instanceFormatIds",
+        "enabled": "false",
+        "path": "instance.instanceFormatIds",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "languages",
+        "enabled": "false",
+        "path": "instance.languages",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "publicationFrequency",
+        "enabled": "false",
+        "path": "instance.publicationFrequency",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "publicationRange",
+        "enabled": "false",
+        "path": "instance.publicationRange",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "notes",
+        "enabled": "false",
+        "path": "instance.notes",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "electronicAccess",
+        "enabled": "false",
+        "path": "instance.electronicAccess",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "subjects",
+        "enabled": "false",
+        "path": "instance.subjects",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "classifications",
+        "enabled": "false",
+        "path": "instance.classifications",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "parentInstances",
+        "enabled": "true",
+        "path": "instance.parentInstances",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "childInstances",
+        "enabled": "true",
+        "path": "instance.childInstances",
+        "value": "",
+        "subfields": []
+      }
+    ]
+  },
+  "metadata": {
+    "createdDate": "2020-04-06T13:41:50.192+0000",
+    "createdByUserId": "",
+    "updatedDate": "2020-04-06T13:42:44.764+0000",
+    "updatedByUserId": ""
+  }
+}'),
+('380bcf13-4370-4a4f-86cd-49d5c36d12a0', '{
+  "id": "380bcf13-4370-4a4f-86cd-49d5c36d12a0",
+  "name": "Demo Create Holdings",
+  "description": "",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "HOLDINGS",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "parentProfiles": [],
+  "childProfiles": [],
+  "mappingDetails": {
+    "name": "holdings",
+    "recordType": "HOLDINGS",
+    "mappingFields": [
+      {
+        "name": "discoverySuppress",
+        "enabled": "true",
+        "path": "holdings.discoverySuppress",
+        "value": "",
+        "booleanFieldAction": "AS_IS",
+        "subfields": []
+      },
+      {
+        "name": "hrid",
+        "enabled": "false",
+        "path": "holdings.discoverySuppress",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "formerIds",
+        "enabled": "true",
+        "path": "holdings.formerIds",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "holdingsTypeId",
+        "enabled": "false",
+        "path": "holdings.holdingsTypeId",
+        "value": "\"03c9c400-b9e3-4a07-ac0e-05ab470233ed\"",
+        "subfields": []
+      },
+      {
+        "name": "statisticalCodeIds",
+        "enabled": "true",
+        "path": "holdings.statisticalCodeIds",
+        "value": "",
+        "subfields": [
+          {
+            "order": 0,
+            "path": "holdings.statisticalCodeIds[]",
+            "fields": [
+              {
+                "name": "statisticalCodeId",
+                "enabled": "true",
+                "path": "holdings.statisticalCodeIds[].statisticalCodeId",
+                "value": "\"b5968c9e-cddc-4576-99e3-8e60aed8b0dd\"",
+                "subfields": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "permanentLocationId",
+        "enabled": "true",
+        "path": "holdings.permanentLocationId",
+        "value": "980$d",
+        "subfields": []
+      },
+      {
+        "name": "temporaryLocationId",
+        "enabled": "true",
+        "path": "holdings.temporaryLocationId",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "shelvingOrder",
+        "enabled": "true",
+        "path": "holdings.shelvingOrder",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "shelvingTitle",
+        "enabled": "true",
+        "path": "holdings.shelvingTitle",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "copyNumber",
+        "enabled": "true",
+        "path": "holdings.copyNumber",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "callNumberTypeId",
+        "enabled": "true",
+        "path": "holdings.callNumberTypeId",
+        "value": "\"95467209-6d7b-468b-94df-0f5d7ad2747d\"",
+        "subfields": []
+      },
+      {
+        "name": "callNumberPrefix",
+        "enabled": "true",
+        "path": "holdings.callNumberPrefix",
+        "subfields": []
+      },
+      {
+        "name": "callNumber",
+        "enabled": "true",
+        "path": "holdings.callNumber",
+        "value": "090$a \" \" 090$b; else 050$a \" \" 050$b",
+        "subfields": []
+      },
+      {
+        "name": "callNumberSuffix",
+        "enabled": "true",
+        "path": "holdings.callNumberSuffix",
+        "value": "090$p",
+        "subfields": []
+      },
+      {
+        "name": "numberOfItems",
+        "enabled": "true",
+        "path": "holdings.numberOfItems",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "holdingStatements",
+        "enabled": "true",
+        "path": "holdings.holdingStatements",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "holdingStatementsForSupplements",
+        "enabled": "true",
+        "path": "holdings.holdingStatementsForSupplements",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "holdingStatementsForIndexes",
+        "enabled": "true",
+        "path": "holdings.holdingStatementsForIndexes",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "illPolicyId",
+        "enabled": "true",
+        "path": "holdings.illPolicyId",
+        "value": "\"46970b40-918e-47a4-a45d-b1677a2d3d46\"",
+        "subfields": []
+      },
+      {
+        "name": "digitalizationPolicy",
+        "enabled": "true",
+        "path": "holdings.digitalizationPolicy",
+        "subfields": []
+      },
+      {
+        "name": "retentionPolicy",
+        "enabled": "true",
+        "path": "holdings.retentionPolicy",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "notes",
+        "enabled": "true",
+        "path": "holdings.notes",
+        "value": "",
+        "subfields": [
+          {
+            "order": 0,
+            "path": "holdings.notes[]",
+            "fields": [
+              {
+                "name": "noteType",
+                "enabled": "true",
+                "path": "holdings.notes[].noteType",
+                "value": "\"88914775-f677-4759-b57b-1a33b90b24e0\"",
+                "subfields": []
+              },
+              {
+                "name": "note",
+                "enabled": "true",
+                "path": "holdings.notes[].note",
+                "value": "\"Smith fund\"",
+                "subfields": []
+              },
+              {
+                "name": "staffOnly",
+                "enabled": "true",
+                "path": "holdings.notes[].staffOnly",
+                "booleanFieldAction": "AS_IS",
+                "subfields": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "electronicAccess",
+        "enabled": "true",
+        "path": "holdings.electronicAccess",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "acquisitionMethod",
+        "enabled": "true",
+        "path": "holdings.acquisitionMethod",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "acquisitionFormat",
+        "enabled": "true",
+        "path": "holdings.acquisitionFormat",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "receiptStatus",
+        "enabled": "true",
+        "path": "holdings.receiptStatus",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "receivingHistory.entries",
+        "enabled": "true",
+        "path": "holdings.receivingHistory.entries",
+        "value": "",
+        "subfields": []
+      }
+    ]
+  },
+  "metadata": {
+    "createdDate": "2020-04-06T14:05:34.222+0000",
+    "createdByUserId": "",
+    "updatedDate": "2020-04-06T14:05:34.222+0000",
+    "updatedByUserId": ""
+  }
+}'),
+('d16be1b4-d4cb-4133-8cc9-cf37f936dec2', '{
+  "id": "d16be1b4-d4cb-4133-8cc9-cf37f936dec2",
+  "name": "Demo Create Item",
+  "description": "",
+  "incomingRecordType": "MARC_BIBLIOGRAPHIC",
+  "existingRecordType": "ITEM",
+  "deleted": false,
+  "userInfo": {
+    "firstName": "DIKU",
+    "lastName": "ADMINISTRATOR",
+    "userName": "diku_admin"
+  },
+  "parentProfiles": [],
+  "childProfiles": [],
+  "mappingDetails": {
+    "name": "item",
+    "recordType": "ITEM",
+    "mappingFields": [
+      {
+        "name": "discoverySuppress",
+        "enabled": "true",
+        "path": "item.discoverySuppress",
+        "booleanFieldAction": "AS_IS",
+        "subfields": []
+      },
+      {
+        "name": "hrid",
+        "enabled": "true",
+        "path": "item.hrid",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "barcode",
+        "enabled": "true",
+        "path": "item.barcode",
+        "value": "949$a",
+        "subfields": []
+      },
+      {
+        "name": "accessionNumber",
+        "enabled": "true",
+        "path": "item.accessionNumber",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "itemIdentifier",
+        "enabled": "true",
+        "path": "item.itemIdentifier",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "formerIds",
+        "enabled": "true",
+        "path": "item.formerIds",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "statisticalCodeIds",
+        "enabled": "true",
+        "path": "item.statisticalCodeIds",
+        "value": "",
+        "subfields": [
+          {
+            "order": 0,
+            "path": "item.statisticalCodeIds[]",
+            "fields": [
+              {
+                "name": "statisticalCodeId",
+                "enabled": "true",
+                "path": "item.statisticalCodeIds[].statisticalCodeId",
+                "value": "\"b5968c9e-cddc-4576-99e3-8e60aed8b0dd\"",
+                "subfields": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "materialType.id",
+        "enabled": "true",
+        "path": "item.materialType.id",
+        "value": "\"1a54b431-2e4f-452d-9cae-9cee66c9a892\"",
+        "subfields": []
+      },
+      {
+        "name": "copyNumber",
+        "enabled": "true",
+        "path": "item.copyNumber",
+        "subfields": []
+      },
+      {
+        "name": "itemLevelCallNumberTypeId",
+        "enabled": "true",
+        "path": "item.itemLevelCallNumberTypeId",
+        "value": "\"95467209-6d7b-468b-94df-0f5d7ad2747d\"",
+        "subfields": []
+      },
+      {
+        "name": "itemLevelCallNumberPrefix",
+        "enabled": "true",
+        "path": "item.itemLevelCallNumberPrefix",
+        "subfields": []
+      },
+      {
+        "name": "itemLevelCallNumber",
+        "enabled": "true",
+        "path": "item.itemLevelCallNumber",
+        "value": "090$a \" \" 090$b; else 050$a \" \" 050$b",
+        "subfields": []
+      },
+      {
+        "name": "itemLevelCallNumberSuffix",
+        "enabled": "true",
+        "path": "item.itemLevelCallNumberSuffix",
+        "value": "090$p",
+        "subfields": []
+      },
+      {
+        "name": "numberOfPieces",
+        "enabled": "true",
+        "path": "item.numberOfPieces",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "descriptionOfPieces",
+        "enabled": "true",
+        "path": "item.descriptionOfPieces",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "enumeration",
+        "enabled": "true",
+        "path": "item.enumeration",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "chronology",
+        "enabled": "true",
+        "path": "item.chronology",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "volume",
+        "enabled": "true",
+        "path": "item.volume",
+        "value": "993$a",
+        "subfields": []
+      },
+      {
+        "name": "yearCaption",
+        "enabled": "true",
+        "path": "item.yearCaption",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "numberOfMissingPieces",
+        "enabled": "true",
+        "path": "item.numberOfMissingPieces",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "missingPieces",
+        "enabled": "true",
+        "path": "item.missingPieces",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "missingPiecesDate",
+        "enabled": "true",
+        "path": "item.missingPiecesDate",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "itemDamagedStatusId",
+        "enabled": "true",
+        "path": "item.itemDamagedStatusId",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "itemDamagedStatusDate",
+        "enabled": "true",
+        "path": "item.itemDamagedStatusDate",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "notes",
+        "enabled": "true",
+        "path": "item.notes",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "permanentLoanType.id",
+        "enabled": "true",
+        "path": "item.permanentLoanType.id",
+        "value": "\"2b94c631-fca9-4892-a730-03ee529ffe27\"",
+        "subfields": []
+      },
+      {
+        "name": "temporaryLoanType.id",
+        "enabled": "true",
+        "path": "item.temporaryLoanType.id",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "status.name",
+        "enabled": "true",
+        "path": "item.status.name",
+        "value": "\"Available\"",
+        "subfields": []
+      },
+      {
+        "name": "circulationNotes",
+        "enabled": "true",
+        "path": "item.circulationNotes",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "permanentLocation.id",
+        "enabled": "true",
+        "path": "item.permanentLocation.id",
+        "value": "980$d",
+        "subfields": []
+      },
+      {
+        "name": "temporaryLocation.id",
+        "enabled": "true",
+        "path": "item.temporaryLocation.id",
+        "value": "",
+        "subfields": []
+      },
+      {
+        "name": "electronicAccess",
+        "enabled": "true",
+        "path": "item.electronicAccess",
+        "value": "",
+        "subfields": []
+      }
+    ]
+  },
+  "metadata": {
+    "createdDate": "2020-04-06T14:46:10.490+0000",
+    "createdByUserId": "",
+    "updatedDate": "2020-04-06T14:46:10.490+0000",
+    "updatedByUserId": ""
+  }
 }') ON CONFLICT DO NOTHING;
