@@ -1,3 +1,6 @@
+## 2020-04-15 v1.7.2-SNAPSHOT
+* [MODDICONV-112](https://issues.folio.org/browse/MODDICONV-112) Added migration script to support RMB version update 
+
 ## 2020-03-27 v1.7.1
 * Adjusted staticValueDetail schema
 * Allowed for matchDetails static values contain decimal numbers
@@ -8,6 +11,7 @@
   | GET    | /data-import-profiles/profileSnapshots/{id}?profileType={type} | Get Profile Snapshot structure by profile id and type (JOB_PROFILE, MATCH_PROFILE, ACTION_PROFILE, MAPPING_PROFILE) |
 
 ## 2020-03-13 v1.7.0
+* Incremented RMB version
 * Created API for getting Profile Snapshot structure
 * Renamed mappingProfile field "folioRecord" to "existingRecordType"
 * Added support of saving\updating profiles with changes in their relations in one transaction
