@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
   private static final Logger logger = LoggerFactory.getLogger(ProfileSnapshotDaoImpl.class);
   private static final String TABLE_NAME = "profile_snapshots";
-  private static final String GET_PROFILE_SNAPSHOT = "select get_profile_snapshot('%s', '%s', '%s');";
+  private static final String GET_PROFILE_SNAPSHOT = "select get_profile_snapshot('%s', '%s', '%s', '%s');";
   protected PostgresClientFactory pgClientFactory;
 
   public ProfileSnapshotDaoImpl(@Autowired PostgresClientFactory pgClientFactory) {
@@ -51,11 +51,11 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
     return promise.future();
   }
 
-  public Future<List<ProfileSnapshotItem>> getSnapshotItems(String profileId, ContentType profileType, String tenantId) {
+  public Future<List<ProfileSnapshotItem>> getSnapshotItems(String profileId, ContentType profileType, String jobProfileId, String tenantId) {
     Promise<ResultSet> promise = Promise.promise();
     try {
       SnapshotProfileType snapshotProfileType = SnapshotProfileType.valueOf(profileType.value());
-      String createSnapshotQuery = String.format(GET_PROFILE_SNAPSHOT, profileId, profileType.value(), snapshotProfileType.getTableName());
+      String createSnapshotQuery = String.format(GET_PROFILE_SNAPSHOT, profileId, profileType.value(), snapshotProfileType.getTableName(), jobProfileId);
       pgClientFactory.createInstance(tenantId).select(createSnapshotQuery, promise);
     } catch (Exception e) {
       promise.fail(e);

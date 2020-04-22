@@ -721,10 +721,10 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesProfileSnapshotsByProfileId(String id, String profileType, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesProfileSnapshotsByProfileId(String id, String profileType, String jobProfileId, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        profileSnapshotService.constructSnapshot(id, mapContentType(profileType), tenantId)
+        profileSnapshotService.constructSnapshot(id, mapContentType(profileType), jobProfileId, tenantId)
           .map(snapshot -> (Response) GetDataImportProfilesProfileSnapshotsByProfileIdResponse
             .respond200WithApplicationJson(snapshot))
           .otherwise(ExceptionHelper::mapExceptionToResponse)

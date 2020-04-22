@@ -1,3 +1,6 @@
+## 2020-04-15 v1.7.3-SNAPSHOT
+* [MODDICONV-115](https://issues.folio.org/browse/MODDICONV-115) Added pass-through JobProfiles identifiers in profile associations
+
 ## 2020-04-15 v1.7.2-SNAPSHOT
 * [MODDICONV-112](https://issues.folio.org/browse/MODDICONV-112) Added migration script to support RMB version update 
 
