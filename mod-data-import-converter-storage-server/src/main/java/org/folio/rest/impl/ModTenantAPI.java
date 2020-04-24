@@ -40,16 +40,16 @@ public class ModTenantAPI extends TenantAPI {
       if (ar.failed()) {
         handlers.handle(ar);
       } else {
+        Future<List<String>> sampleData = setupTestData(DEFAULT_JOB_PROFILE_SQL, headers, context);
         if (!isLoadSample(entity)) {
           LOGGER.debug("Test data will not be initialized.");
-          handlers.handle(ar);
+          sampleData.setHandler(event -> handlers.handle(ar));
         } else {
-          setupTestData(TEST_JOB_PROFILES_SQL, headers, context)
+          sampleData.compose(event -> setupTestData(TEST_JOB_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_MATCHING_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_ACTION_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_MAPPING_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_PROFILE_ASSOCIATIONS_SQL, headers, context))
-            .compose(event -> setupTestData(DEFAULT_JOB_PROFILE_SQL, headers, context))
             .setHandler(event -> handlers.handle(ar));
         }
       }
