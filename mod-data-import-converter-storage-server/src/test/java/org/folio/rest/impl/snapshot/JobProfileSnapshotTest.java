@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -267,33 +268,30 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnSnapshotWrapperOnGetByProfileIdForJobProfile2(TestContext testContext) {
     Async async = testContext.async();
-    JobProfileUpdateDto jobProfile2 = new JobProfileUpdateDto()
-      .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description"));
 
     ActionProfileUpdateDto actionProfile2 = new ActionProfileUpdateDto()
       .withProfile(new ActionProfile().withName("testActionProfile2").withDescription("test-description")
         .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
 
-    jobProfile2 = postProfile(testContext, jobProfile2, JOB_PROFILES_PATH).body().as(JobProfileUpdateDto.class);
     actionProfile2 = postProfile(testContext, actionProfile2, ACTION_PROFILES_PATH).body().as(ActionProfileUpdateDto.class);
 
-    jobProfile2.withAddedRelations(Collections.singletonList(new ProfileAssociation()
-      .withMasterProfileId(jobProfile2.getId())
-      .withDetailProfileId(matchProfile.getId())
-      .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
-      .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
-      .withOrder(0)));
+    JobProfileUpdateDto jobProfile2 = new JobProfileUpdateDto()
+      .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description"))
+      .withAddedRelations(Arrays.asList(
+        new ProfileAssociation()
+          .withDetailProfileId(matchProfile.getId())
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withOrder(0),
+        new ProfileAssociation()
+          .withMasterProfileId(matchProfile.getId())
+          .withDetailProfileId(actionProfile2.getId())
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+          .withReactTo(MATCH)
+          .withOrder(0)));
 
-    matchProfile.withAddedRelations(Collections.singletonList(new ProfileAssociation()
-      .withMasterProfileId(matchProfile.getId())
-      .withDetailProfileId(actionProfile2.getId())
-      .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
-      .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
-      .withReactTo(MATCH)
-      .withJobProfileId(jobProfile2.getId())
-      .withOrder(0)));
-    updateProfile(testContext, jobProfile2, jobProfile2.getId(), JOB_PROFILES_PATH);
-    updateProfile(testContext, matchProfile, matchProfile.getId(), MATCH_PROFILES_PATH);
+    jobProfile2 = postProfile(testContext, jobProfile2, JOB_PROFILES_PATH).body().as(JobProfileUpdateDto.class);
 
     ProfileSnapshotWrapper jobProfileSnapshot = RestAssured.given()
       .spec(spec)
