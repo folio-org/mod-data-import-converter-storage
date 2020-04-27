@@ -31,10 +31,11 @@ public interface ProfileSnapshotService {
   /**
    * Constructs a snapshot wrapper for a specified Profile without saving it in the db
    *
-   * @param profileId   profile id
-   * @param profileType profile type
-   * @param tenantId    tenant id
+   * @param profileId     profile id
+   * @param profileType   profile type
+   * @param jobProfileId  job profile id
+   * @param tenantId      tenant id
    * @return future with snapshot {@link ProfileSnapshotWrapper}
    */
-  Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, ProfileSnapshotWrapper.ContentType profileType, String tenantId);
+  Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, ProfileSnapshotWrapper.ContentType profileType, String jobProfileId, String tenantId);
 }

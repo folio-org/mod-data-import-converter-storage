@@ -50,7 +50,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   @Override
   public Future<ProfileSnapshotWrapper> createSnapshot(String jobProfileId, String tenantId) {
     Promise<ProfileSnapshotWrapper> promise = Promise.promise();
-    return constructSnapshot(jobProfileId, JOB_PROFILE, tenantId)
+    return constructSnapshot(jobProfileId, JOB_PROFILE, jobProfileId, tenantId)
       .compose(rootWrapper -> {
         profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
           if (savedAr.failed()) {
@@ -64,9 +64,9 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   }
 
   @Override
-  public Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, ProfileSnapshotWrapper.ContentType profileType, String tenantId) {
+  public Future<ProfileSnapshotWrapper> constructSnapshot(String profileId, ProfileSnapshotWrapper.ContentType profileType, String jobProfileId, String tenantId) {
     Promise<ProfileSnapshotWrapper> promise = Promise.promise();
-    return profileSnapshotDao.getSnapshotItems(profileId, profileType, tenantId)
+    return profileSnapshotDao.getSnapshotItems(profileId, profileType, jobProfileId, tenantId)
       .compose(snapshotItems -> {
         if (CollectionUtils.isEmpty(snapshotItems)) {
           String errorMessage = "Cannot build snapshot for Profile " + profileId;

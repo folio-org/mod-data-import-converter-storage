@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 
+import static org.folio.rest.jaxrs.model.ProfileAssociation.MasterProfileType.MATCH_PROFILE;
+
 @Component
 public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, JobProfileCollection, JobProfileUpdateDto> {
 
@@ -45,6 +47,9 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
       }
       if (StringUtils.isEmpty(association.getDetailProfileId())) {
         association.setDetailProfileId(profileDto.getProfile().getId());
+      }
+      if (association.getMasterProfileType() == MATCH_PROFILE) {
+        association.setJobProfileId(profileDto.getProfile().getId());
       }
     });
     return profileDto;

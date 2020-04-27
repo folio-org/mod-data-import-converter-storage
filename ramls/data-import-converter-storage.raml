@@ -513,6 +513,10 @@ resourceTypes:
           required: true
           type: string
           example: "JOB_PROFILE"
+        jobProfileId:
+          description: Indicates job profile id, should be specified when {profileType} parameter has value JOB_PROFILE or MATCH_PROFILE
+          required: false
+          type: string
       responses:
         200:
           body:

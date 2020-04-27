@@ -3,25 +3,25 @@
 
 CREATE OR REPLACE VIEW associations_view
   AS
-    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail, react_to
+    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail, react_to, job_profile_id
     FROM get_profile_association_snapshot('job_to_match_profiles', 'job_profiles', 'JOB_PROFILE', 'match_profiles', 'MATCH_PROFILE')
       UNION ALL
-    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to
+    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to, job_profile_id
     FROM get_profile_association_snapshot('job_to_action_profiles', 'job_profiles', 'JOB_PROFILE', 'action_profiles', 'ACTION_PROFILE')
       UNION ALL
-    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to
+    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to, job_profile_id
     FROM get_profile_association_snapshot('match_to_match_profiles', 'match_profiles', 'MATCH_PROFILE', 'match_profiles', 'MATCH_PROFILE')
      UNION ALL
-    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to
+    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to, job_profile_id
     FROM get_profile_association_snapshot('match_to_action_profiles', 'match_profiles','MATCH_PROFILE', 'action_profiles', 'ACTION_PROFILE')
      UNION ALL
-    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to
+    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to, job_profile_id
     FROM get_profile_association_snapshot('action_to_match_profiles', 'action_profiles', 'ACTION_PROFILE', 'match_profiles', 'MATCH_PROFILE')
       UNION ALL
-    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to
+    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to, job_profile_id
     FROM get_profile_association_snapshot('action_to_action_profiles', 'action_profiles', 'ACTION_PROFILE', 'action_profiles', 'ACTION_PROFILE')
       UNION ALL
-    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to
+    SELECT association_id, master_id, master, master_type, detail_id, detail_type, detail_order, detail,  react_to, job_profile_id
     FROM get_profile_association_snapshot('action_to_mapping_profiles', 'action_profiles', 'ACTION_PROFILE', 'mapping_profiles', 'MAPPING_PROFILE');
 
 

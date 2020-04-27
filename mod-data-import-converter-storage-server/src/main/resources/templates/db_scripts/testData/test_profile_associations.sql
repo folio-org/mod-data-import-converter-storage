@@ -154,6 +154,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "1520d04c-2647-4129-880f-3ed984e41d54",
   "masterProfileId": "cdf0ca3a-b515-4abd-82b6-48ce65374963",
   "detailProfileId": "3d1d7155-02ad-46d3-8704-eb6eda2bd19a",
+  "jobProfileId": "295e28b4-aea2-4458-9073-385a31e1da05",
   "reactTo": "MATCH",
   "order": 0,
   "triggered": "false"
@@ -162,6 +163,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "0b701517-0993-4b7e-9437-eb7b2423436c",
   "masterProfileId": "cdf0ca3a-b515-4abd-82b6-48ce65374963",
   "detailProfileId": "5db3d727-1269-4ae3-99da-418b01b8da47",
+  "jobProfileId": "295e28b4-aea2-4458-9073-385a31e1da05",
   "reactTo": "MATCH",
   "order": 1,
   "triggered": "false"
@@ -170,6 +172,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "ede7ae28-df7e-401c-8860-6c532253d29d",
   "masterProfileId": "cdf0ca3a-b515-4abd-82b6-48ce65374963",
   "detailProfileId": "8d73d518-6b64-4bcd-a10c-cd9d87b3931d",
+  "jobProfileId": "295e28b4-aea2-4458-9073-385a31e1da05",
   "reactTo": "MATCH",
   "order": 2,
   "triggered": "false"
@@ -178,6 +181,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "48fee989-1f2f-4aa3-91e0-c314d5e71a50",
   "masterProfileId": "cdf0ca3a-b515-4abd-82b6-48ce65374963",
   "detailProfileId": "96db6b49-607a-4544-b7e1-60115145b69d",
+  "jobProfileId": "295e28b4-aea2-4458-9073-385a31e1da05",
   "reactTo": "MATCH",
   "order": 3,
   "triggered": "false"
@@ -186,6 +190,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "f7ec383f-ddbb-4e47-9b3f-4bc986836407",
   "masterProfileId": "cdf0ca3a-b515-4abd-82b6-48ce65374963",
   "detailProfileId": "3bb0b2b3-b683-4cfb-b52c-175355d7f30c",
+  "jobProfileId": "295e28b4-aea2-4458-9073-385a31e1da05",
   "reactTo": "MATCH",
   "order": 4,
   "triggered": "false"
@@ -194,6 +199,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "c6b7cd4f-d5aa-492a-80df-ba80f8024caa",
   "masterProfileId": "a3510db6-5b3a-48ed-96c0-99a03df87b79",
   "detailProfileId": "c9573d66-c5e3-4bf7-a6a0-00a80e92cad5",
+  "jobProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "reactTo": "MATCH",
   "order": 0,
   "triggered": "false"
@@ -202,6 +208,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "a278791e-ad04-4ded-a1ac-597538baf837",
   "masterProfileId": "a3510db6-5b3a-48ed-96c0-99a03df87b79",
   "detailProfileId": "7bbc68b6-fcfc-4b7c-9d8d-e1ec8a831142",
+  "jobProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "reactTo": "NON_MATCH",
   "order": 1,
   "triggered": "false"
@@ -210,6 +217,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "5a08c107-2487-418e-b856-f435a6154bc6",
   "masterProfileId": "a3510db6-5b3a-48ed-96c0-99a03df87b79",
   "detailProfileId": "36d26d5d-720d-4ab0-954f-6b75dde517cb",
+  "jobProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "reactTo": "NON_MATCH",
   "order": 2,
   "triggered": "false"
@@ -218,6 +226,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "4ad13dda-9e82-4dce-9039-33320785265f",
   "masterProfileId": "a3510db6-5b3a-48ed-96c0-99a03df87b79",
   "detailProfileId": "28d5e15c-d357-424e-838c-01c40a5b14e6",
+  "jobProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "reactTo": "NON_MATCH",
   "order": 3,
   "triggered": "false"
@@ -226,6 +235,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "9b420a3c-b1c3-4eb8-b721-58bf9532de81",
   "masterProfileId": "a3510db6-5b3a-48ed-96c0-99a03df87b79",
   "detailProfileId": "70a3fe3a-7704-480d-8a93-8f0b6a72fcb0",
+  "jobProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "reactTo": "NON_MATCH",
   "order": 4,
   "triggered": "false"
@@ -234,6 +244,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "081ae765-b6e6-499f-8916-08253ce19ce3",
   "masterProfileId": "a3510db6-5b3a-48ed-96c0-99a03df87b79",
   "detailProfileId": "bed8da3b-22d0-4b41-94b5-03a709bebf59",
+  "jobProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "reactTo": "NON_MATCH",
   "order": 5,
   "triggered": "false"
@@ -242,6 +253,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "200eefad-6e94-4c23-ae54-d126ff8798d7",
   "masterProfileId": "a3510db6-5b3a-48ed-96c0-99a03df87b79",
   "detailProfileId": "ebfeecce-9ac2-447c-86d7-9509f1eac227",
+  "jobProfileId": "bb689511-5365-4050-8084-a03d94728d88",
   "reactTo": "NON_MATCH",
   "order": 6,
   "triggered": "false"
@@ -250,6 +262,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "8e9feb53-7060-4528-8b95-7ca889cb95a7",
   "masterProfileId": "ab32efdb-43c2-4cb5-b7dc-49dd45c02106",
   "detailProfileId": "0f8843e9-9282-4175-af88-6a0afbf875f3",
+  "jobProfileId": "3e705998-9169-4f31-b048-90ffdcbd24c1",
   "reactTo": "MATCH",
   "order": 0,
   "triggered": "false"
@@ -258,6 +271,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "9850b9fa-8349-405c-af8e-3f037ce5076e",
   "masterProfileId": "ab32efdb-43c2-4cb5-b7dc-49dd45c02106",
   "detailProfileId": "a2277721-0063-49aa-8643-3c7dbfd15c52",
+  "jobProfileId": "3e705998-9169-4f31-b048-90ffdcbd24c1",
   "reactTo": "MATCH",
   "order": 1,
   "triggered": "false"
@@ -266,6 +280,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "3168e6df-539c-4704-ad00-988f5eed0461",
   "masterProfileId": "88bb7c9f-79f2-4a97-b600-535f1d913378",
   "detailProfileId": "ae000c19-cac7-441f-bcc1-60d3b3f04ba7",
+  "jobProfileId": "15426802-bb0d-4dfb-8eee-90f64fed0cf1",
   "reactTo": "MATCH",
   "order": 0,
   "triggered": "false"
@@ -274,6 +289,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "fc65f21a-9a26-46e6-9f66-569ad26298b7",
   "masterProfileId": "88bb7c9f-79f2-4a97-b600-535f1d913378",
   "detailProfileId": "f8c44c83-3101-4b8f-ada0-f7f0e5fd986f",
+  "jobProfileId": "15426802-bb0d-4dfb-8eee-90f64fed0cf1",
   "reactTo": "MATCH",
   "order": 1,
   "triggered": "false"
@@ -282,6 +298,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "99e4d4ab-af9d-4cf3-bfad-ad00de5ddc42",
   "masterProfileId": "ab05c370-7b9d-400f-962b-cb7953b940dd",
   "detailProfileId": "f76e1b9c-b312-4fb5-9d6c-b1f855dced9a",
+  "jobProfileId": "15426802-bb0d-4dfb-8eee-90f64fed0cf1",
   "reactTo": "MATCH",
   "order": 0,
   "triggered": "false"
@@ -290,6 +307,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "99f3eefa-b7c4-45f5-aa4d-9235b542e3ab",
   "masterProfileId": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
   "detailProfileId": "8eeabfcc-4c11-4ec7-b273-9c04dc0013bb",
+  "jobProfileId": "87e4ad58-d677-43dd-8b04-9795741b2103",
   "reactTo": "MATCH",
   "order": 0,
   "triggered": "false"
@@ -298,6 +316,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "68020957-a8b8-4be5-a9b4-63a0af0c51cf",
   "masterProfileId": "afe7eb12-ea47-4970-8d0e-981b988aed0c",
   "detailProfileId": "ba8d822f-97db-4794-8393-562a0b2cf755",
+  "jobProfileId": "87e4ad58-d677-43dd-8b04-9795741b2103",
   "reactTo": "NON_MATCH",
   "order": 0,
   "triggered": "false"
@@ -306,6 +325,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "f65dbb76-39f1-45d3-bcb9-1b959e46b34e",
   "masterProfileId": "23cec3f0-092c-4201-9ffc-643f61da03d8",
   "detailProfileId": "320b0d15-77a1-4723-9f85-e2c1a2db379b",
+  "jobProfileId": "72af7eb7-d7e2-4d16-93ac-682b9a58a94c",
   "reactTo": "NON_MATCH",
   "order": 0,
   "triggered": "false"
@@ -314,6 +334,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "1b50889d-9557-43e3-bbee-91fc976a84b0",
   "masterProfileId": "23cec3f0-092c-4201-9ffc-643f61da03d8",
   "detailProfileId": "13cd54b7-47cb-4b47-8103-1c98b761f80d",
+  "jobProfileId": "72af7eb7-d7e2-4d16-93ac-682b9a58a94c",
   "reactTo": "NON_MATCH",
   "order": 1,
   "triggered": "false"
@@ -322,6 +343,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "bced0aa4-8b24-4b71-add5-8cc185d18b2a",
   "masterProfileId": "23cec3f0-092c-4201-9ffc-643f61da03d8",
   "detailProfileId": "51c8b6ac-0424-4c8d-9a53-7a810be50ff7",
+  "jobProfileId": "72af7eb7-d7e2-4d16-93ac-682b9a58a94c",
   "reactTo": "NON_MATCH",
   "order": 2,
   "triggered": "false"
@@ -330,6 +352,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "61199eee-1641-4315-9585-d62729347588",
   "masterProfileId": "054a185d-f90b-409d-9203-4cc389e20d13",
   "detailProfileId": "83d59d03-8692-4304-a530-30892c98c554",
+  "jobProfileId": "b32e79bc-01d9-4d31-bc08-a3621fcfc1aa",
   "reactTo": "MATCH",
   "order": 0,
   "triggered": "false"
@@ -338,6 +361,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "04a36461-a25e-49e2-910c-809bbeede541",
   "masterProfileId": "727c67ff-6015-4279-8d5f-8b775f736114",
   "detailProfileId": "10694275-2341-4b2d-be25-7aa78d5bca41",
+  "jobProfileId": "b81d36ae-eda0-4633-a135-bde3a999a4f7",
   "reactTo": "NON_MATCH",
   "order": 0,
   "triggered": "false"
@@ -346,6 +370,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "3020cc03-2792-4ae4-ab0c-b1b9a723f1da",
   "masterProfileId": "727c67ff-6015-4279-8d5f-8b775f736114",
   "detailProfileId": "4fc313a1-51af-4f47-a618-6fa8375fb54f",
+  "jobProfileId": "b81d36ae-eda0-4633-a135-bde3a999a4f7",
   "reactTo": "NON_MATCH",
   "order": 1,
   "triggered": "false"
@@ -354,6 +379,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_action_profiles (id, jsonb) val
   "id": "26b91b0e-ba3a-4fc7-8410-3353c6d5341a",
   "masterProfileId": "727c67ff-6015-4279-8d5f-8b775f736114",
   "detailProfileId": "0cc8fcbf-b447-4dd3-8fd3-8387de90b3bd",
+  "jobProfileId": "b81d36ae-eda0-4633-a135-bde3a999a4f7",
   "reactTo": "NON_MATCH",
   "order": 2,
   "triggered": "false"
@@ -364,6 +390,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_to_match_profiles (id, jsonb) valu
   "id": "95d29ddc-7e0e-459e-840e-36576a37c97b",
   "masterProfileId": "88bb7c9f-79f2-4a97-b600-535f1d913378",
   "detailProfileId": "ab05c370-7b9d-400f-962b-cb7953b940dd",
+  "jobProfileId": "15426802-bb0d-4dfb-8eee-90f64fed0cf1",
   "reactTo": "MATCH",
   "order": 2,
   "triggered": "false"
