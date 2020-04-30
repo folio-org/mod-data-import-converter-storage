@@ -29,7 +29,8 @@ RETURNS TABLE(snapshot json)
                 associations_view.detail AS detail,
                 associations_view.react_to AS react_to
               FROM associations_view INNER JOIN recursive_snapshot ON associations_view.master_id = recursive_snapshot.detail_id
-                AND CASE WHEN associations_view.master_type = ''MATCH_PROFILE'' AND ''%s'' != ''null'' THEN associations_view.job_profile_id = NULLIF(''%s'',''null'')::uuid ELSE associations_view.job_profile_id IS NULL END)
+                AND CASE WHEN associations_view.master_type = ''MATCH_PROFILE'' AND ''%s'' != ''null'' THEN associations_view.job_profile_id = NULLIF(''%s'',''null'')::uuid
+                         ELSE associations_view.job_profile_id IS NULL END)
           SELECT row_to_json(row) FROM recursive_snapshot row ORDER BY row.detail_order ASC',
           profile_type, profile_table, profileId, jobProfileId, jobProfileId);
     END $$
