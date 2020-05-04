@@ -165,7 +165,7 @@
     {
       "run": "before",
       "snippetPath": "remove_deprecated_indexes.sql",
-      "fromModuleVersion": "mod-data-import-converter-storage-1.7.3"
+      "fromModuleVersion": "mod-data-import-converter-storage-1.8.0"
     },
     {
       "run": "after",
