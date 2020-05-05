@@ -101,14 +101,14 @@ public class SelectBuilder {
    * <br>
    * Do nothing if a select statement is empty or a value is blank.
    *
-   * @param filed a table field.
+   * @param field a table field.
    * @param value a value
    * @return a select statement with equality condition of field:value
    */
-  public SelectBuilder equals(String filed, String value) {
+  public SelectBuilder equals(String field, String value) {
     if (isNotEmpty(query)) {
       query.append(SPACE);
-      query.append(filed);
+      query.append(field);
       query.append("=");
       query.append(value);
     }

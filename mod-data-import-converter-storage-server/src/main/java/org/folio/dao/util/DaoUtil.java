@@ -48,6 +48,9 @@ public class DaoUtil {
    * @return - Criteria object
    */
   public static Criteria constructCriteria(String jsonbField, String value) {
+    if ("'id'".equals(jsonbField)) {
+      return new Criteria().addField("id").setJSONB(false).setOperation("=").setVal(value);
+    }
     Criteria criteria = new Criteria();
     criteria.addField(jsonbField);
     criteria.setOperation("=");

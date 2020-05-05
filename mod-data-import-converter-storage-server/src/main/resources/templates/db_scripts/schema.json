@@ -3,87 +3,27 @@
     {
       "tableName": "job_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
-      "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ]
+      "withMetadata": true
     },
     {
       "tableName": "match_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
-      "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ]
+      "withMetadata": true
     },
     {
       "tableName": "action_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
-      "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ]
+      "withMetadata": true
     },
     {
       "tableName": "mapping_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
-      "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ]
+      "withMetadata": true
     },
     {
       "tableName": "job_to_match_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
       "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
       "foreignKeys": [
         {
           "fieldName": "masterProfileId",
@@ -101,18 +41,6 @@
       "tableName": "job_to_action_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
       "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
       "foreignKeys": [
         {
           "fieldName": "masterProfileId",
@@ -130,18 +58,6 @@
       "tableName": "match_to_match_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
       "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
       "foreignKeys": [
         {
           "fieldName": "masterProfileId",
@@ -159,18 +75,6 @@
       "tableName": "match_to_action_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
       "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
       "foreignKeys": [
         {
           "fieldName": "masterProfileId",
@@ -188,18 +92,6 @@
       "tableName": "action_to_action_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
       "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
       "foreignKeys": [
         {
           "fieldName": "masterProfileId",
@@ -217,18 +109,6 @@
       "tableName": "action_to_match_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
       "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
       "foreignKeys": [
         {
           "fieldName": "masterProfileId",
@@ -246,18 +126,6 @@
       "tableName": "action_to_mapping_profiles",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.0",
       "withMetadata": true,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
-      "uniqueIndex": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ],
       "foreignKeys": [
         {
           "fieldName": "masterProfileId",
@@ -274,13 +142,7 @@
     {
       "tableName": "profile_snapshots",
       "fromModuleVersion": "mod-data-import-converter-storage-1.1.0",
-      "withMetadata": false,
-      "index": [
-        {
-          "fieldName": "id",
-          "tOps": "ADD"
-        }
-      ]
+      "withMetadata": false
     },
     {
       "tableName": "forms_configs",
@@ -299,6 +161,11 @@
       "run": "before",
       "snippetPath": "upgrade_rmb_25.0-29.1.sql",
       "fromModuleVersion": "mod-data-import-converter-storage-1.7.2"
+    },
+    {
+      "run": "before",
+      "snippetPath": "remove_deprecated_indexes.sql",
+      "fromModuleVersion": "mod-data-import-converter-storage-1.8.0"
     },
     {
       "run": "after",
