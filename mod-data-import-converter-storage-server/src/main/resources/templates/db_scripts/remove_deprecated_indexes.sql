@@ -1,0 +1,24 @@
+DROP INDEX IF EXISTS job_profiles_id_idx;
+DROP INDEX IF EXISTS job_profiles_id_idx_unique;
+DROP INDEX IF EXISTS action_profiles_id_idx;
+DROP INDEX IF EXISTS action_profiles_id_idx_unique;
+DROP INDEX IF EXISTS match_profiles_id_idx;
+DROP INDEX IF EXISTS match_profiles_id_idx_unique;
+DROP INDEX IF EXISTS mapping_profiles_id_idx;
+DROP INDEX IF EXISTS mapping_profiles_id_idx_unique;
+DROP INDEX IF EXISTS job_to_match_profiles_id_idx;
+DROP INDEX IF EXISTS job_to_match_profiles_id_idx_unique;
+DROP INDEX IF EXISTS job_to_action_profiles_id_idx;
+DROP INDEX IF EXISTS job_to_action_profiles_id_idx_unique;
+DROP INDEX IF EXISTS match_to_action_profiles_id_idx;
+DROP INDEX IF EXISTS match_to_action_profiles_id_idx_unique;
+DROP INDEX IF EXISTS match_to_match_profiles_id_idx;
+DROP INDEX IF EXISTS match_to_match_profiles_id_idx_unique;
+DROP INDEX IF EXISTS action_to_mapping_profiles_id_idx;
+DROP INDEX IF EXISTS action_to_mapping_profiles_id_idx_unique;
+DROP INDEX IF EXISTS action_to_action_profiles_id_idx;
+DROP INDEX IF EXISTS action_to_action_profiles_id_idx_unique;
+DROP INDEX IF EXISTS action_to_match_profiles_id_idx;
+DROP INDEX IF EXISTS action_to_match_profiles_id_idx_unique;
+DROP INDEX IF EXISTS profile_snapshots_id_idx;
+

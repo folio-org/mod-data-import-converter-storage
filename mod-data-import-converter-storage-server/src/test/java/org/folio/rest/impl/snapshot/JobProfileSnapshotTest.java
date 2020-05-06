@@ -30,12 +30,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
+import static org.folio.rest.jaxrs.model.ProfileAssociation.ReactTo.MATCH;
 import static org.folio.rest.jaxrs.model.ProfileAssociation.ReactTo.NON_MATCH;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
@@ -46,11 +48,12 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
 
   private static final String JOB_PROFILE_SNAPSHOT_PATH = "/data-import-profiles/jobProfileSnapshots";
   private static final String PROFILE_SNAPSHOT_PATH = "/data-import-profiles/profileSnapshots";
-  private static final String PROFILE_TYPE_PARAM = "profileType";
   private static final String JOB_PROFILES_PATH = "/data-import-profiles/jobProfiles";
   private static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
   private static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
   private static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
+  private static final String PROFILE_TYPE_PARAM = "profileType";
+  private static final String JOB_PROFILE_ID_PARAM = "jobProfileId";
 
   private static final String JOB_TO_MATCH_PROFILES = "job_to_match_profiles";
   private static final String MATCH_TO_ACTION_PROFILES = "match_to_action_profiles";
@@ -99,6 +102,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
       .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
       .withReactTo(NON_MATCH)
+      .withJobProfileId(jobProfile.getId())
       .withOrder(0)));
     actionProfile.withAddedRelations(Collections.singletonList(new ProfileAssociation()
       .withMasterProfileId(actionProfile.getId())
@@ -185,6 +189,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .spec(spec)
       .when()
       .queryParam(PROFILE_TYPE_PARAM, JOB_PROFILE.value())
+      .queryParam(JOB_PROFILE_ID_PARAM, jobProfile.getId())
       .get(PROFILE_SNAPSHOT_PATH + "/" + jobProfile.getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
@@ -218,6 +223,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .spec(spec)
       .when()
       .queryParam(PROFILE_TYPE_PARAM, MATCH_PROFILE.value())
+      .queryParam(JOB_PROFILE_ID_PARAM, jobProfile.getId())
       .get(PROFILE_SNAPSHOT_PATH + "/" + matchProfile.getId())
       .then()
       .statusCode(HttpStatus.SC_OK)
@@ -256,6 +262,83 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
     MappingProfile mappingActionProfile = Json.mapper.convertValue(mappingProfileSnapshot.getContent(), MappingProfile.class);
     Assert.assertEquals(mappingProfile.getId(), mappingActionProfile.getId());
     Assert.assertEquals(0, mappingProfileSnapshot.getChildSnapshotWrappers().size());
+    async.complete();
+  }
+
+  @Test
+  public void shouldReturnSnapshotWrapperOnGetByProfileIdForJobProfile2(TestContext testContext) {
+    Async async = testContext.async();
+
+    ActionProfileUpdateDto actionProfile2 = new ActionProfileUpdateDto()
+      .withProfile(new ActionProfile().withName("testActionProfile2").withDescription("test-description")
+        .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+
+    actionProfile2 = postProfile(testContext, actionProfile2, ACTION_PROFILES_PATH).body().as(ActionProfileUpdateDto.class);
+
+    JobProfileUpdateDto jobProfile2 = new JobProfileUpdateDto()
+      .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description"))
+      .withAddedRelations(Arrays.asList(
+        new ProfileAssociation()
+          .withDetailProfileId(matchProfile.getId())
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withOrder(0),
+        new ProfileAssociation()
+          .withMasterProfileId(matchProfile.getId())
+          .withDetailProfileId(actionProfile2.getId())
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+          .withReactTo(MATCH)
+          .withOrder(0)));
+
+    jobProfile2 = postProfile(testContext, jobProfile2, JOB_PROFILES_PATH).body().as(JobProfileUpdateDto.class);
+
+    ProfileSnapshotWrapper jobProfileSnapshot = RestAssured.given()
+      .spec(spec)
+      .when()
+      .queryParam(PROFILE_TYPE_PARAM, JOB_PROFILE.value())
+      .queryParam(JOB_PROFILE_ID_PARAM, jobProfile2.getId())
+      .get(PROFILE_SNAPSHOT_PATH + "/" + jobProfile2.getId())
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract().body().as(ProfileSnapshotWrapper.class);
+
+    JobProfile actualJobProfile = Json.mapper.convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
+    Assert.assertEquals(jobProfile2.getId(), actualJobProfile.getId());
+    Assert.assertEquals(1, jobProfileSnapshot.getChildSnapshotWrappers().size());
+
+    ProfileSnapshotWrapper matchProfileSnapshot = jobProfileSnapshot.getChildSnapshotWrappers().get(0);
+    MatchProfile actualMatchProfile = Json.mapper.convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
+    Assert.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
+    Assert.assertEquals(1, matchProfileSnapshot.getChildSnapshotWrappers().size());
+
+    ProfileSnapshotWrapper actionProfileSnapshot = matchProfileSnapshot.getChildSnapshotWrappers().get(0);
+    ActionProfile actualActionProfile = Json.mapper.convertValue(actionProfileSnapshot.getContent(), ActionProfile.class);
+    Assert.assertEquals(actionProfile2.getId(), actualActionProfile.getId());
+    Assert.assertEquals(0, actionProfileSnapshot.getChildSnapshotWrappers().size());
+    async.complete();
+  }
+
+  @Test
+  public void shouldReturnSnapshotWrapperForJobProfileWithoutMatchProfileChildWrappersWhenJobProfileIdParamIsMissed(TestContext testContext) {
+    Async async = testContext.async();
+    ProfileSnapshotWrapper jobProfileSnapshot = RestAssured.given()
+      .spec(spec)
+      .when()
+      .queryParam(PROFILE_TYPE_PARAM, JOB_PROFILE.value())
+      .get(PROFILE_SNAPSHOT_PATH + "/" + jobProfile.getId())
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract().body().as(ProfileSnapshotWrapper.class);
+
+    JobProfile actualJobProfile = Json.mapper.convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
+    Assert.assertEquals(jobProfile.getId(), actualJobProfile.getId());
+    Assert.assertEquals(1, jobProfileSnapshot.getChildSnapshotWrappers().size());
+
+    ProfileSnapshotWrapper matchProfileSnapshot = jobProfileSnapshot.getChildSnapshotWrappers().get(0);
+    MatchProfile actualMatchProfile = Json.mapper.convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
+    Assert.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
+    Assert.assertEquals(0, matchProfileSnapshot.getChildSnapshotWrappers().size());
     async.complete();
   }
 

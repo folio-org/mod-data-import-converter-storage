@@ -34,7 +34,6 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
   private static final String ID_FIELD = "'id'";
-  public static final String MASTER_PROFILE_ID_FIELD = "'masterId'";
 
   @Autowired
   protected PostgresClientFactory pgClientFactory;
@@ -47,7 +46,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       String[] fieldList = {"*"};
       String notDeletedProfilesFilter = null;
       if (!showDeleted) {
-        notDeletedProfilesFilter = "deleted=false";
+        notDeletedProfilesFilter = "deleted==false";
       }
       CQLWrapper cql = getCQLWrapper(getTableName(), query, limit, offset);
       cql.addWrapper(getCQLWrapper(getTableName(), notDeletedProfilesFilter));
@@ -139,7 +138,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   protected Future<T> updateProfile(AsyncResult<SQLConnection> tx, String profileId, T profile, String tenantId) {
     Future<UpdateResult> future = Future.future();
     try {
-      CQLWrapper updateFilter = new CQLWrapper(new CQL2PgJSON(getTableName() + ".jsonb"), "id==" + profileId);
+      CQLWrapper updateFilter = new CQLWrapper(new CQL2PgJSON(getTableName()), "id==" + profileId);
       pgClientFactory.createInstance(tenantId).update(tx, getTableName(), profile, updateFilter, true, future.completer());
     } catch (FieldException e) {
       logger.error("Error during updating {} by ID ", getProfileType(), e);
@@ -159,7 +158,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       .append(" WHERE trim(both ' ' from lower(jsonb ->> 'name')) ='")
       .append(profileName.toLowerCase().trim())
       .append("' AND jsonb ->>").append(ID_FIELD).append("!= '").append(profileId)
-      .append("' AND jsonb ->> 'deleted' ='false' ")
+      .append("' AND jsonb ->> 'deleted' = 'false' ")
       .append(" LIMIT 1;");
     client.select(selectQuery.toString(), reply -> {
       if (reply.succeeded()) {
