@@ -189,18 +189,8 @@
     },
     {
       "run": "after",
-      "snippetPath": "data-migration/update_match_profile_schema.sql",
+      "snippetPath": "data-migration/update_profiles_sample_data.sql",
       "fromModuleVersion": "mod-data-import-converter-storage-1.8.0"
-    },
-    {
-      "run": "after",
-      "snippetPath": "data-migration/update_mapping_profile_schema.sql",
-      "fromModuleVersion": "data-migration/mod-data-import-converter-storage-1.8.0"
-    },
-    {
-      "run": "after",
-      "snippetPath": "data-migration/update_profile_association_schema.sql",
-      "fromModuleVersion": "data-migration/mod-data-import-converter-storage-1.8.0"
     }
   ]
 }
