@@ -1,5 +1,6 @@
 ## 2020-05-04 v1.8.0-SNAPSHOT
 * [MODDICONV-117](https://issues.folio.org/browse/MODDICONV-117) Added migration script to remove outdated indexes
+* [MODDICONV-123](https://issues.folio.org/browse/MODDICONV-123) Added migration script for profiles sample data
 
 ## 2020-04-23 v1.7.3-SNAPSHOT
 * [MODDICONV-115](https://issues.folio.org/browse/MODDICONV-115) Added pass-through JobProfiles identifiers in profile associations
