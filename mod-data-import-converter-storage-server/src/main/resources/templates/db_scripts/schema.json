@@ -189,7 +189,7 @@
     },
     {
       "run": "after",
-      "snippetPath": "data-migration/update_profiles_sample_data.sql",
+      "snippetPath": "data-migration/remove_deprecated_data.sql",
       "fromModuleVersion": "mod-data-import-converter-storage-1.8.0"
     }
   ]
