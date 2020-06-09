@@ -92,7 +92,8 @@ WHERE id IN ('0d991835-fabb-4234-8472-3ae94bc7a1b3', '5b546bd4-ac38-44a8-aea1-30
 
 -- rename field "folioRecord" to "existingRecordType"
 UPDATE ${myuniversity}_${mymodule}.mapping_profiles
-SET jsonb = jsonb - 'folioRecord' || jsonb_build_object('existingRecordType', jsonb ->> 'folioRecord');
+SET jsonb = jsonb - 'folioRecord' || jsonb_build_object('existingRecordType', jsonb ->> 'folioRecord')
+WHERE jsonb ? 'folioRecord';
 
 -- action_profiles:
 -- delete deprecated actionProfiles
