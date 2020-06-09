@@ -5,7 +5,8 @@ import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.sql.ResultSet;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowSet;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
@@ -13,9 +14,9 @@ import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Implementation for Profile snapshot DAO
@@ -52,7 +53,7 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
   }
 
   public Future<List<ProfileSnapshotItem>> getSnapshotItems(String profileId, ContentType profileType, String jobProfileId, String tenantId) {
-    Promise<ResultSet> promise = Promise.promise();
+    Promise<RowSet<Row>> promise = Promise.promise();
     try {
       SnapshotProfileType snapshotProfileType = SnapshotProfileType.valueOf(profileType.value());
       String createSnapshotQuery = String.format(GET_PROFILE_SNAPSHOT, profileId, profileType.value(), snapshotProfileType.getTableName(), jobProfileId);
@@ -61,9 +62,10 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
       promise.fail(e);
     }
     return promise.future()
-      .map(results -> results.getResults().stream()
-        .map(arrayItem -> {
-          JsonObject jsonItem = new JsonObject(arrayItem.getString(0));
+      .map(rows -> {
+        List<ProfileSnapshotItem> snapshotItems = new ArrayList<>();
+        rows.forEach(row -> {
+          JsonObject jsonItem = row.get(JsonObject.class, 0);
           ProfileSnapshotItem snapshotItem = new ProfileSnapshotItem();
           snapshotItem.setAssociationId(jsonItem.getString("association_id"));
           snapshotItem.setMasterId(jsonItem.getString("master_id"));
@@ -71,11 +73,12 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
           snapshotItem.setDetailType(ContentType.fromValue(jsonItem.getString("detail_type")));
           snapshotItem.setDetail(jsonItem.getJsonArray("detail").getList().get(0));
           snapshotItem.setOrder(jsonItem.getInteger("detail_order"));
-          if(!StringUtils.isEmpty(jsonItem.getString("react_to"))){
+          if (StringUtils.isNotEmpty(jsonItem.getString("react_to"))) {
             snapshotItem.setReactTo(ProfileSnapshotWrapper.ReactTo.fromValue(jsonItem.getString("react_to")));
           }
-          return snapshotItem;
-        })
-        .collect(Collectors.toList()));
+          snapshotItems.add(snapshotItem);
+        });
+        return snapshotItems;
+      });
   }
 }

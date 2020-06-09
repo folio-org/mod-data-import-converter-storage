@@ -3,6 +3,7 @@ package org.folio.rest.impl.association;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -1147,7 +1148,7 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .compose(e -> deleteTable(JOB_PROFILES_TABLE))
       .compose(e -> deleteTable(MAPPING_PROFILES_TABLE))
       .compose(e -> deleteTable(MATCH_PROFILES_TABLE))
-      .setHandler(clearAr -> {
+      .onComplete(clearAr -> {
         if (clearAr.failed()) {
           context.fail(clearAr.cause());
         }
@@ -1157,15 +1158,15 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   }
 
   private Future<Void> deleteTable(String tableName) {
-    Future<Void> future = Future.future();
+    Promise<Void> promise = Promise.promise();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
     pgClient.delete(tableName, new Criterion(), ar -> {
       if (ar.failed()) {
-        future.fail(ar.cause());
+        promise.fail(ar.cause());
       } else {
-        future.complete();
+        promise.complete();
       }
     });
-    return future;
+    return promise.future();
   }
 }

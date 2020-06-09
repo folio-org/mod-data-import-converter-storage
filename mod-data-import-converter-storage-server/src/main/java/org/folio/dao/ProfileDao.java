@@ -17,10 +17,10 @@ public interface ProfileDao<T, S> {
    * Searches for T entities in database
    *
    * @param showDeleted indicates to return T entities marked as deleted or not
-   * @param query    query from URL
-   * @param offset   starting index in a list of results
-   * @param limit    limit of records for pagination
-   * @param tenantId tenant id
+   * @param query       query from URL
+   * @param offset      starting index in a list of results
+   * @param limit       limit of records for pagination
+   * @param tenantId    tenant id
    * @return future with S, a collection of T entities
    */
   Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId);
@@ -55,10 +55,10 @@ public interface ProfileDao<T, S> {
   /**
    * Updates T entity in database with row blocking
    *
-   * @param profileId       Profile id
-   * @param profileMutator  callback for change Profile entity before save
-   * @param tenantId        tenant id
-   * @return  future with updated entity
+   * @param profileId      Profile id
+   * @param profileMutator callback for change Profile entity before save
+   * @param tenantId       tenant id
+   * @return future with updated entity
    */
   Future<T> updateBlocking(String profileId, Function<T, Future<T>> profileMutator, String tenantId);
 
@@ -66,7 +66,7 @@ public interface ProfileDao<T, S> {
    * Search in database profile with the same name
    *
    * @param profileName - profile name
-   * @param profileId - profile name
+   * @param profileId   - profile name
    * @param tenantId    - tenant id from request
    * @return - boolean value. True if job profile with the same name already exist
    */
@@ -76,7 +76,7 @@ public interface ProfileDao<T, S> {
    * Checks is profile by specified id associated as detail with other profiles
    *
    * @param profileId - profile id
-   * @param tenantId - tenant id
+   * @param tenantId  - tenant id
    * @return - future with boolean value.
    * True if profile with specified profileId associated as detail with other profiles
    */
@@ -86,7 +86,7 @@ public interface ProfileDao<T, S> {
    * Marks profile as deleted by its id and deletes all associations of this profile with other detail-profiles.
    *
    * @param profileId profile id
-   * @param tenantId tenant id
+   * @param tenantId  tenant id
    * @return future with true if succeeded
    */
   Future<Boolean> markProfileAsDeleted(String profileId, String tenantId);

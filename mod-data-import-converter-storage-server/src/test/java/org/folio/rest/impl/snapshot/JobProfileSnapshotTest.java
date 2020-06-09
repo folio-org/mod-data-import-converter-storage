@@ -6,10 +6,12 @@ import io.restassured.response.Response;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.json.Json;
-import io.vertx.ext.sql.UpdateResult;
+import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowSet;
 import org.apache.http.HttpStatus;
 import org.folio.rest.impl.AbstractRestVerticleTest;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -195,22 +197,22 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(ProfileSnapshotWrapper.class);
 
-    JobProfile actualJobProfile = Json.mapper.convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
+    JobProfile actualJobProfile = DatabindCodec.mapper().convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
     Assert.assertEquals(jobProfile.getId(), actualJobProfile.getId());
     Assert.assertEquals(1, jobProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper matchProfileSnapshot = jobProfileSnapshot.getChildSnapshotWrappers().get(0);
-    MatchProfile actualMatchProfile = Json.mapper.convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
+    MatchProfile actualMatchProfile = DatabindCodec.mapper().convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
     Assert.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
     Assert.assertEquals(1, matchProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper actionProfileSnapshot = matchProfileSnapshot.getChildSnapshotWrappers().get(0);
-    ActionProfile actualActionProfile = Json.mapper.convertValue(actionProfileSnapshot.getContent(), ActionProfile.class);
+    ActionProfile actualActionProfile = DatabindCodec.mapper().convertValue(actionProfileSnapshot.getContent(), ActionProfile.class);
     Assert.assertEquals(actionProfile.getId(), actualActionProfile.getId());
     Assert.assertEquals(1, actionProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper mappingProfileSnapshot = actionProfileSnapshot.getChildSnapshotWrappers().get(0);
-    MappingProfile mappingActionProfile = Json.mapper.convertValue(mappingProfileSnapshot.getContent(), MappingProfile.class);
+    MappingProfile mappingActionProfile = DatabindCodec.mapper().convertValue(mappingProfileSnapshot.getContent(), MappingProfile.class);
     Assert.assertEquals(mappingProfile.getId(), mappingActionProfile.getId());
     Assert.assertEquals(0, mappingProfileSnapshot.getChildSnapshotWrappers().size());
     async.complete();
@@ -229,18 +231,18 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(ProfileSnapshotWrapper.class);
 
-    MatchProfile actualMatchProfile = Json.mapper.convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
+    MatchProfile actualMatchProfile = DatabindCodec.mapper().convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
     Assert.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
     Assert.assertEquals(1, matchProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper actionProfileSnapshot = matchProfileSnapshot.getChildSnapshotWrappers().get(0);
     Assert.assertEquals(ProfileSnapshotWrapper.ReactTo.NON_MATCH, actionProfileSnapshot.getReactTo());
-    ActionProfile actualActionProfile = Json.mapper.convertValue(actionProfileSnapshot.getContent(), ActionProfile.class);
+    ActionProfile actualActionProfile = DatabindCodec.mapper().convertValue(actionProfileSnapshot.getContent(), ActionProfile.class);
     Assert.assertEquals(actionProfile.getId(), actualActionProfile.getId());
     Assert.assertEquals(1, actionProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper mappingProfileSnapshot = actionProfileSnapshot.getChildSnapshotWrappers().get(0);
-    MappingProfile mappingActionProfile = Json.mapper.convertValue(mappingProfileSnapshot.getContent(), MappingProfile.class);
+    MappingProfile mappingActionProfile = DatabindCodec.mapper().convertValue(mappingProfileSnapshot.getContent(), MappingProfile.class);
     Assert.assertEquals(mappingProfile.getId(), mappingActionProfile.getId());
     Assert.assertEquals(0, mappingProfileSnapshot.getChildSnapshotWrappers().size());
     async.complete();
@@ -259,7 +261,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .extract().body().as(ProfileSnapshotWrapper.class);
 
     ProfileSnapshotWrapper mappingProfileSnapshot = actionProfileSnapshot.getChildSnapshotWrappers().get(0);
-    MappingProfile mappingActionProfile = Json.mapper.convertValue(mappingProfileSnapshot.getContent(), MappingProfile.class);
+    MappingProfile mappingActionProfile = DatabindCodec.mapper().convertValue(mappingProfileSnapshot.getContent(), MappingProfile.class);
     Assert.assertEquals(mappingProfile.getId(), mappingActionProfile.getId());
     Assert.assertEquals(0, mappingProfileSnapshot.getChildSnapshotWrappers().size());
     async.complete();
@@ -303,17 +305,17 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(ProfileSnapshotWrapper.class);
 
-    JobProfile actualJobProfile = Json.mapper.convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
+    JobProfile actualJobProfile = DatabindCodec.mapper().convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
     Assert.assertEquals(jobProfile2.getId(), actualJobProfile.getId());
     Assert.assertEquals(1, jobProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper matchProfileSnapshot = jobProfileSnapshot.getChildSnapshotWrappers().get(0);
-    MatchProfile actualMatchProfile = Json.mapper.convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
+    MatchProfile actualMatchProfile = DatabindCodec.mapper().convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
     Assert.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
     Assert.assertEquals(1, matchProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper actionProfileSnapshot = matchProfileSnapshot.getChildSnapshotWrappers().get(0);
-    ActionProfile actualActionProfile = Json.mapper.convertValue(actionProfileSnapshot.getContent(), ActionProfile.class);
+    ActionProfile actualActionProfile = DatabindCodec.mapper().convertValue(actionProfileSnapshot.getContent(), ActionProfile.class);
     Assert.assertEquals(actionProfile2.getId(), actualActionProfile.getId());
     Assert.assertEquals(0, actionProfileSnapshot.getChildSnapshotWrappers().size());
     async.complete();
@@ -331,12 +333,12 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(ProfileSnapshotWrapper.class);
 
-    JobProfile actualJobProfile = Json.mapper.convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
+    JobProfile actualJobProfile = DatabindCodec.mapper().convertValue(jobProfileSnapshot.getContent(), JobProfile.class);
     Assert.assertEquals(jobProfile.getId(), actualJobProfile.getId());
     Assert.assertEquals(1, jobProfileSnapshot.getChildSnapshotWrappers().size());
 
     ProfileSnapshotWrapper matchProfileSnapshot = jobProfileSnapshot.getChildSnapshotWrappers().get(0);
-    MatchProfile actualMatchProfile = Json.mapper.convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
+    MatchProfile actualMatchProfile = DatabindCodec.mapper().convertValue(matchProfileSnapshot.getContent(), MatchProfile.class);
     Assert.assertEquals(matchProfile.getId(), actualMatchProfile.getId());
     Assert.assertEquals(0, matchProfileSnapshot.getChildSnapshotWrappers().size());
     async.complete();
@@ -380,7 +382,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       .compose(e -> deleteTable(MATCH_PROFILES_TABLE))
       .compose(e -> deleteTable(ACTION_PROFILES_TABLE))
       .compose(e -> deleteTable(MAPPING_PROFILES_TABLE))
-      .setHandler(clearAr -> {
+      .onComplete(clearAr -> {
         if (clearAr.failed()) {
           context.fail(clearAr.cause());
         }
@@ -388,8 +390,8 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
       });
   }
 
-  private Future<UpdateResult> deleteTable(String tableName) {
-    Promise<UpdateResult> promise = Promise.promise();
+  private Future<RowSet<Row>> deleteTable(String tableName) {
+    Promise<RowSet<Row>> promise = Promise.promise();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
     pgClient.delete(tableName, new Criterion(), promise);
     return promise.future();

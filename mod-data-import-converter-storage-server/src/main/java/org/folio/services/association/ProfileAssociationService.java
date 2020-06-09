@@ -41,7 +41,7 @@ public interface ProfileAssociationService { //NOSONAR
    * @param entity     ProfileAssociation to save
    * @param masterType a master type in association
    * @param detailType a detail type in association
-   * @param tenantId    tenantId
+   * @param tenantId   tenantId
    * @return future with saved entity
    */
   Future<ProfileAssociation> save(ProfileAssociation entity, ContentType masterType, ContentType detailType, String tenantId);
