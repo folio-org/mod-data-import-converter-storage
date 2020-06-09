@@ -14,9 +14,9 @@ public class InitAPIImpl implements InitAPI {
   @Override
   public void init(Vertx vertx, Context context, Handler<AsyncResult<Boolean>> handler) {
     vertx.executeBlocking(
-      future -> {
+      promise -> {
         SpringContextUtil.init(vertx, context, ApplicationConfig.class);
-        future.complete();
+        promise.complete();
       },
       result -> {
         if (result.succeeded()) {

@@ -4,6 +4,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.apache.commons.io.IOUtils;
@@ -43,14 +44,14 @@ public class ModTenantAPI extends TenantAPI {
         Future<List<String>> sampleData = setupTestData(DEFAULT_JOB_PROFILE_SQL, headers, context);
         if (!isLoadSample(entity)) {
           LOGGER.debug("Test data will not be initialized.");
-          sampleData.setHandler(event -> handlers.handle(ar));
+          sampleData.onComplete(event -> handlers.handle(ar));
         } else {
           sampleData.compose(event -> setupTestData(TEST_JOB_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_MATCHING_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_ACTION_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_MAPPING_PROFILES_SQL, headers, context))
             .compose(event -> setupTestData(TEST_PROFILE_ASSOCIATIONS_SQL, headers, context))
-            .setHandler(event -> handlers.handle(ar));
+            .onComplete(event -> handlers.handle(ar));
         }
       }
     }, context);
@@ -75,12 +76,12 @@ public class ModTenantAPI extends TenantAPI {
 
       sqlScript = sqlScript.replace(TENANT_PLACEHOLDER, tenantId).replace(MODULE_PLACEHOLDER, moduleName);
 
-      Future<List<String>> future = Future.future();
-      PostgresClient.getInstance(context.owner()).runSQLFile(sqlScript, false, future);
+      Promise<List<String>> promise = Promise.promise();
+      PostgresClient.getInstance(context.owner()).runSQLFile(sqlScript, false, promise);
 
       LOGGER.info("Module is being deployed in test mode, test data will be initialized. Check the server log for details.");
 
-      return future;
+      return promise.future();
     } catch (IOException e) {
       return Future.failedFuture(e);
     }

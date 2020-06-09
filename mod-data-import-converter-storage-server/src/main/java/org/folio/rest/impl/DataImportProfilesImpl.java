@@ -83,7 +83,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), jobProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -94,7 +94,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               .map(profile -> (Response) PostDataImportProfilesJobProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesJobProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -112,7 +112,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesJobProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Job Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -126,7 +126,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), jobProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -137,7 +137,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -158,7 +158,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesJobProfilesByIdResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Job Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -177,7 +177,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             format("Job Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to delete Job Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -191,7 +191,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), matchProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -202,7 +202,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               .map(profile -> (Response) PostDataImportProfilesMatchProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesMatchProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -220,7 +220,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesMatchProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Match Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -234,7 +234,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), matchProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -245,7 +245,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             matchProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesMatchProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -266,7 +266,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesMatchProfilesByIdResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Match Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -279,7 +279,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), mappingProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -290,7 +290,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               .map(profile -> (Response) PostDataImportProfilesMappingProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesMappingProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -308,7 +308,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesMappingProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Mapping Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -321,7 +321,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), mappingProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -332,7 +332,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             mappingProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesMappingProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -352,7 +352,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             format("Mapping Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to delete Mapping Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -370,7 +370,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesMappingProfilesByIdResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Mapping Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -389,7 +389,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             format("Match Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to delete Match Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -403,7 +403,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), actionProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -414,7 +414,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               .map(profile -> (Response) PostDataImportProfilesActionProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesActionProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -432,7 +432,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesActionProfilesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Action Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -446,7 +446,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), actionProfileService, tenantId).setHandler(errors -> {
+        validateProfile(entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -457,7 +457,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             actionProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
               .map(updatedEntity -> (Response) PutDataImportProfilesActionProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .setHandler(asyncResultHandler);
+              .onComplete(asyncResultHandler);
           }
         });
       } catch (Exception e) {
@@ -478,7 +478,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesActionProfilesByIdResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Action Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -495,7 +495,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map((Response) PostDataImportProfilesProfileAssociationsResponse
             .respond201WithApplicationJson(entity, PostDataImportProfilesProfileAssociationsResponse.headersFor201()))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to create Profile association", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -513,7 +513,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
             .otherwise(ExceptionHelper::mapExceptionToResponse)
-            .setHandler(asyncResultHandler);
+            .onComplete(asyncResultHandler);
         } catch (Exception e) {
           logger.error("Failed to get ProfileAssociations by masterType '{}' and detailType '{}", master, detail, e);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -531,7 +531,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         profileAssociationService.update(entity, mapContentType(master), mapContentType(detail), new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
           .map(updatedEntity -> (Response) PutDataImportProfilesProfileAssociationsByIdResponse.respond200WithApplicationJson(updatedEntity))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to update Profile association with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -553,7 +553,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               format("Profile association with id '%s' was not found", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to delete Profile association with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -580,7 +580,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesProfileAssociationsByIdResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Profile association by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -598,7 +598,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesJobProfileSnapshotsByIdResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get Profile snapshot by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -614,7 +614,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(snapshot -> (Response) PostDataImportProfilesProfileAssociationsResponse
             .respond201WithApplicationJson(snapshot, PostDataImportProfilesProfileAssociationsResponse.headersFor201()))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to create Profile association", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -641,7 +641,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .map(GetDataImportProfilesProfileAssociationsDetailsByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
             .otherwise(ExceptionHelper::mapExceptionToResponse)
-            .setHandler(asyncResultHandler);
+            .onComplete(asyncResultHandler);
         } catch (Exception e) {
           logger.error("Failed to retrieve details by master profile with id {}", id, e);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -676,7 +676,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .map(GetDataImportProfilesProfileAssociationsMastersByIdResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
             .otherwise(ExceptionHelper::mapExceptionToResponse)
-            .setHandler(asyncResultHandler);
+            .onComplete(asyncResultHandler);
         } catch (Exception e) {
           logger.error("Failed to retrieve masters by detail profile with id {}", id, e);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -696,7 +696,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             format("Action Profile with id '%s' was successfully deleted", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to delete Action Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -712,7 +712,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(GetDataImportProfilesEntityTypesResponse::respond200WithApplicationJson)
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to get all entity types", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -728,7 +728,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(snapshot -> (Response) GetDataImportProfilesProfileSnapshotsByProfileIdResponse
             .respond200WithApplicationJson(snapshot))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .setHandler(asyncResultHandler);
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
         logger.error("Failed to construct Profile Snapshot", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));

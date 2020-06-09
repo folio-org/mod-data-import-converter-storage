@@ -41,7 +41,7 @@ public interface FormConfigDao {
    * Updates formConfig entity by formName in database
    *
    * @param formConfig entity to update
-   * @param tenantId tenant id
+   * @param tenantId   tenant id
    * @return future with updated formConfig
    */
   Future<FormConfig> updateByFormName(FormConfig formConfig, String tenantId);

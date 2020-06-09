@@ -1,9 +1,11 @@
 package org.folio.dao.association;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.sql.UpdateResult;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowSet;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
@@ -34,7 +36,6 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATC
  * Generic implementation of the of the {@link ProfileAssociationDao}
  */
 @Repository
-@SuppressWarnings("squid:CallToDeprecatedMethod")
 public class CommonProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
   private static final String MASTER_ID_FIELD = "masterProfileId";
@@ -65,82 +66,82 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
 
   @Override
   public Future<String> save(ProfileAssociation entity, ContentType masterType, ContentType detailType, String tenantId) {
-    Future<String> future = Future.future();
-    pgClientFactory.createInstance(tenantId).save(getAssociationTableName(masterType, detailType), entity.getId(), entity, future.completer());
-    return future;
+    Promise<String> promise = Promise.promise();
+    pgClientFactory.createInstance(tenantId).save(getAssociationTableName(masterType, detailType), entity.getId(), entity, promise);
+    return promise.future();
   }
 
   @Override
   public Future<ProfileAssociationCollection> getAll(ContentType masterType, ContentType detailType, String tenantId) {
-    Future<Results<ProfileAssociation>> future = Future.future();
+    Promise<Results<ProfileAssociation>> promise = Promise.promise();
     try {
       String[] fieldList = {"*"};
-      pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, fieldList, null, true, future.completer());
+      pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, fieldList, null, true, promise);
     } catch (Exception e) {
       LOGGER.error("Error while searching for ProfileAssociations", e);
-      future.fail(e);
+      promise.fail(e);
     }
-    return future.map(profileAssociationResults -> new ProfileAssociationCollection()
+    return promise.future().map(profileAssociationResults -> new ProfileAssociationCollection()
       .withProfileAssociations(profileAssociationResults.getResults())
       .withTotalRecords(profileAssociationResults.getResultInfo().getTotalRecords()));
   }
 
   @Override
   public Future<Optional<ProfileAssociation>> getById(String id, ContentType masterType, ContentType detailType, String tenantId) {
-    Future<Results<ProfileAssociation>> future = Future.future();
+    Promise<Results<ProfileAssociation>> promise = Promise.promise();
     try {
       Criteria idCrit = constructCriteria(ID_FIELD, id);
-      pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, new Criterion(idCrit), true, false, future.completer());
+      pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, new Criterion(idCrit), true, false, promise);
     } catch (Exception e) {
       LOGGER.error("Error querying {} by id", e, ProfileAssociation.class.getSimpleName());
-      future.fail(e);
+      promise.fail(e);
     }
-    return future
+    return promise.future()
       .map(Results::getResults)
       .map(profiles -> profiles.isEmpty() ? Optional.empty() : Optional.of(profiles.get(0)));
   }
 
   @Override
   public Future<ProfileAssociation> update(ProfileAssociation entity, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId) {
-    Future<ProfileAssociation> future = Future.future();
+    Promise<ProfileAssociation> promise = Promise.promise();
     try {
       Criteria idCrit = constructCriteria(ID_FIELD, entity.getId());
       pgClientFactory.createInstance(tenantId).update(getAssociationTableName(masterType, detailType), entity, new Criterion(idCrit), true, updateResult -> {
         if (updateResult.failed()) {
           LOGGER.error("Could not update {} with id {}", ProfileAssociation.class, entity.getId(), updateResult.cause());
-          future.fail(updateResult.cause());
-        } else if (updateResult.result().getUpdated() != 1) {
+          promise.fail(updateResult.cause());
+        } else if (updateResult.result().rowCount() != 1) {
           String errorMessage = format("%s with id '%s' was not found", ProfileAssociation.class, entity.getId());
           LOGGER.error(errorMessage);
-          future.fail(new NotFoundException(errorMessage));
+          promise.fail(new NotFoundException(errorMessage));
         } else {
-          future.complete(entity);
+          promise.complete(entity);
         }
       });
     } catch (Exception e) {
       LOGGER.error("Error updating {} with id {}", e, ProfileAssociation.class, entity.getId());
-      future.fail(e);
+      promise.fail(e);
     }
-    return future;
+    return promise.future();
   }
 
   @Override
   public Future<Boolean> delete(String id, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId) {
-    Future<UpdateResult> future = Future.future();
-    pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), id, future.completer());
-    return future.map(updateResult -> updateResult.getUpdated() == 1);
+    Promise<RowSet<Row>> promise = Promise.promise();
+    pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), id, promise);
+    return promise.future().map(updateResult -> updateResult.rowCount() == 1);
   }
 
   @Override
   public Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId) {
-    Future<UpdateResult> future = Future.future();
+    Promise<RowSet<Row>> promise = Promise.promise();
     try {
-      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId+")");
-      pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, future.completer());
+      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId + ")");
+      pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, promise);
     } catch (Exception e) {
       return Future.failedFuture(e);
     }
-    return future.map(updateResult -> updateResult.getUpdated() == 1);
+    return promise.future().map(updateResult -> updateResult.rowCount() == 1);
   }
 
   /**

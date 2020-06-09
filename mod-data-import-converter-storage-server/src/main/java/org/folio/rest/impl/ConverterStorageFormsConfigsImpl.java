@@ -39,7 +39,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
       formConfigService.save(entity, tenantId)
         .map(formConfig -> (Response) PostConverterStorageFormsConfigsResponse.respond201WithApplicationJson(formConfig, PostConverterStorageFormsConfigsResponse.headersFor201()))
         .otherwise(ExceptionHelper::mapExceptionToResponse)
-        .setHandler(asyncResultHandler);
+        .onComplete(asyncResultHandler);
     } catch (Exception e) {
       LOGGER.error("Failed to create FormConfig", e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -53,7 +53,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
         .map(GetConverterStorageFormsConfigsResponse::respond200WithApplicationJson)
         .map(Response.class::cast)
         .otherwise(ExceptionHelper::mapExceptionToResponse)
-        .setHandler(asyncResultHandler);
+        .onComplete(asyncResultHandler);
     } catch (Exception e) {
       LOGGER.error("Failed to get all form configs", e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -66,7 +66,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
       formConfigService.getByFormName(formName, tenantId)
         .map(formConfig -> (Response) GetConverterStorageFormsConfigsByFormNameResponse.respond200WithApplicationJson(formConfig))
         .otherwise(ExceptionHelper::mapExceptionToResponse)
-        .setHandler(asyncResultHandler);
+        .onComplete(asyncResultHandler);
     } catch (Exception e) {
       LOGGER.error("Failed to get FormConfig by formId {}", e, formName);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -80,7 +80,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
       formConfigService.update(entity, tenantId)
         .map(formConfig -> (Response) PutConverterStorageFormsConfigsByFormNameResponse.respond200WithApplicationJson(formConfig))
         .otherwise(ExceptionHelper::mapExceptionToResponse)
-        .setHandler(asyncResultHandler);
+        .onComplete(asyncResultHandler);
     } catch (Exception e) {
       LOGGER.error("Failed to update FormConfig by formId {}", e, formName);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -96,7 +96,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
           : DeleteConverterStorageFormsConfigsByFormNameResponse.respond404WithTextPlain(format("FormConfig with formName '%s' was not found", formName)))
         .map(Response.class::cast)
         .otherwise(ExceptionHelper::mapExceptionToResponse)
-        .setHandler(asyncResultHandler);
+        .onComplete(asyncResultHandler);
     } catch (Exception e) {
       LOGGER.error("Failed to delete FormConfig by formName {}", e, formName);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));

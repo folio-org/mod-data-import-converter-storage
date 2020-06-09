@@ -2,6 +2,7 @@ package org.folio.services;
 
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
  * @param <T> type of the entity
  * @param <S> type of the collection of T entities
  */
-@SuppressWarnings("squid:CallToDeprecatedMethod")
 public abstract class AbstractProfileService<T, S, D> implements ProfileService<T, S, D> {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
@@ -95,39 +95,39 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
     if (profileAssociations.isEmpty()) {
       return Future.succeededFuture(true);
     }
-    Future<Boolean> result = Future.future();
+    Promise<Boolean> result = Promise.promise();
     List<Future> futureList = new ArrayList<>();
     profileAssociations.forEach(association -> futureList.add(profileAssociationService.delete(association.getMasterProfileId(),
       association.getDetailProfileId(),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
-    CompositeFuture.all(futureList).setHandler(ar -> {
+    CompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(true);
       } else {
         result.fail(ar.cause());
       }
     });
-    return result;
+    return result.future();
   }
 
   private Future<Boolean> saveRelatedAssociations(List<ProfileAssociation> profileAssociations, String tenantId) {
     if (profileAssociations.isEmpty()) {
       return Future.succeededFuture(true);
     }
-    Future<Boolean> result = Future.future();
+    Promise<Boolean> result = Promise.promise();
     List<Future> futureList = new ArrayList<>();
     profileAssociations.forEach(association -> futureList.add(profileAssociationService.save(association,
       ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
-    CompositeFuture.all(futureList).setHandler(ar -> {
+    CompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(true);
       } else {
         result.fail(ar.cause());
       }
     });
-    return result;
+    return result.future();
   }
 
   @Override
@@ -247,10 +247,10 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
   private Future<S> fetchRelationsForCollection(S profilesCollection, String tenantId) {
     List<T> profilesList = getProfilesList(profilesCollection);
     List<Future> futureList = new ArrayList<>();
-    Future<S> result = Future.future();
+    Promise<S> result = Promise.promise();
     profilesList.forEach(profile ->
       futureList.add(fetchRelations(profile, tenantId)));
-    CompositeFuture.all(futureList).setHandler(ar -> {
+    CompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(profilesCollection);
       } else {
@@ -258,7 +258,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
         result.fail(ar.cause());
       }
     });
-    return result;
+    return result.future();
   }
 
   /**
@@ -269,7 +269,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
    */
   private Future<T> fetchRelations(T profile, String tenantId) {
     List<Future> futureList = new ArrayList<>();
-    Future<T> result = Future.future();
+    Promise<T> result = Promise.promise();
     futureList.add(fetchChildProfiles(profile, tenantId)
       .compose(childProfiles -> {
         setChildProfiles(profile, childProfiles);
@@ -280,7 +280,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
         setParentProfiles(profile, parentProfiles);
         return Future.succeededFuture(profile);
       }));
-    CompositeFuture.all(futureList).setHandler(ar -> {
+    CompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(profile);
       } else {
@@ -288,7 +288,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
         result.fail(ar.cause());
       }
     });
-    return result;
+    return result.future();
   }
 
   private List<ProfileSnapshotWrapper> convertToProfileSnapshotWrapper(Optional<ProfileSnapshotWrapper> rootWrapper) {
@@ -309,23 +309,23 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
    * @return Future with found UserInfo
    */
   Future<UserInfo> lookupUser(String userId, OkapiConnectionParams params) {
-    Future<UserInfo> future = Future.future();
+    Promise<UserInfo> promise = Promise.promise();
     RestUtil.doRequest(params, GET_USER_URL + userId, HttpMethod.GET, null)
-      .setHandler(getUserResult -> {
-        if (RestUtil.validateAsyncResult(getUserResult, future)) {
+      .onComplete(getUserResult -> {
+        if (RestUtil.validateAsyncResult(getUserResult, promise)) {
           JsonObject response = getUserResult.result().getJson();
           if (!response.containsKey("totalRecords") || !response.containsKey("users")) {
-            future.fail("Error, missing field(s) 'totalRecords' and/or 'users' in user response object");
+            promise.fail("Error, missing field(s) 'totalRecords' and/or 'users' in user response object");
           } else {
             int recordCount = response.getInteger("totalRecords");
             if (recordCount > 1) {
               String errorMessage = "There are more then one user by requested user id : " + userId;
               logger.error(errorMessage);
-              future.fail(errorMessage);
+              promise.fail(errorMessage);
             } else if (recordCount == 0) {
               String errorMessage = "No user found by user id :" + userId;
               logger.error(errorMessage);
-              future.fail(errorMessage);
+              promise.fail(errorMessage);
             } else {
               JsonObject jsonUser = response.getJsonArray("users").getJsonObject(0);
               JsonObject userPersonalInfo = jsonUser.getJsonObject("personal");
@@ -333,12 +333,12 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
                 .withFirstName(userPersonalInfo.getString("firstName"))
                 .withLastName(userPersonalInfo.getString("lastName"))
                 .withUserName(jsonUser.getString("username"));
-              future.complete(userInfo);
+              promise.complete(userInfo);
             }
           }
         }
       });
-    return future;
+    return promise.future();
   }
 
 }
