@@ -139,7 +139,7 @@ SET jsonb = CASE jsonb ->> 'incomingRecordType'
 
 -- delete "entityType" field
 UPDATE ${myuniversity}_${mymodule}.match_profiles
-SET jsonb = jsonb - 'entityType';
+SET jsonb = jsonb - 'entityType' WHERE jsonb ? 'entityType';
 
 -- job_profiles:
 -- delete deprecated jobProfiles
