@@ -52,7 +52,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     Promise<ProfileSnapshotWrapper> promise = Promise.promise();
     return constructSnapshot(jobProfileId, JOB_PROFILE, jobProfileId, tenantId)
       .compose(rootWrapper -> {
-        profileSnapshotDao.save(rootWrapper, tenantId).setHandler(savedAr -> {
+        profileSnapshotDao.save(rootWrapper, tenantId).onComplete(savedAr -> {
           if (savedAr.failed()) {
             promise.fail(savedAr.cause());
           } else {

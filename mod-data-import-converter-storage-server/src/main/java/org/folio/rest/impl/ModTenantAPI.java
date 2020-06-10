@@ -4,6 +4,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.apache.commons.io.IOUtils;
@@ -59,10 +60,10 @@ public class ModTenantAPI extends TenantAPI {
 
       sqlScript = sqlScript.replace(TENANT_PLACEHOLDER, tenantId).replace(MODULE_PLACEHOLDER, moduleName);
 
-      Future<List<String>> future = Future.future();
-      PostgresClient.getInstance(context.owner()).runSQLFile(sqlScript, false, future);
-
-      return future;
+      Promise<List<String>> promise = Promise.promise();
+      PostgresClient.getInstance(context.owner()).runSQLFile(sqlScript, false, promise);
+      
+      return promise.future();
     } catch (IOException e) {
       LOGGER.error("Failed to initialize default data", e);
       return Future.failedFuture(e);

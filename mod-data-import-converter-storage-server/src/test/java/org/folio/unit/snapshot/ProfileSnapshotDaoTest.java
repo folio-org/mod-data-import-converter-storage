@@ -42,7 +42,7 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
   @Test
   public void shouldReturnEmptySnapshotItemsIfNoItemsExist(TestContext context) {
     String jobProfileId = UUID.randomUUID().toString();
-    dao.getSnapshotItems(jobProfileId, JOB_PROFILE, jobProfileId, TENANT_ID).setHandler(ar -> {
+    dao.getSnapshotItems(jobProfileId, JOB_PROFILE, jobProfileId, TENANT_ID).onComplete(ar -> {
       context.assertTrue(ar.succeeded());
       List<ProfileSnapshotItem> items = ar.result();
       context.assertTrue(items.isEmpty());
@@ -63,13 +63,13 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
       .withMasterProfileId(jobProfile.getId())
       .withDetailProfileId(actionProfile.getId());
     // when
-    jobProfileDao.saveProfile(jobProfile, TENANT_ID).setHandler(savedJobProfileAr -> {
+    jobProfileDao.saveProfile(jobProfile, TENANT_ID).onComplete(savedJobProfileAr -> {
       context.assertTrue(savedJobProfileAr.succeeded());
-      actionProfileDao.saveProfile(actionProfile, TENANT_ID).setHandler(savedActionProfileAr -> {
+      actionProfileDao.saveProfile(actionProfile, TENANT_ID).onComplete(savedActionProfileAr -> {
         context.assertTrue(savedActionProfileAr.succeeded());
-        profileAssociationDao.save(jobToAction1Association, JOB_PROFILE, ACTION_PROFILE, TENANT_ID).setHandler(savedAssociationAr -> {
+        profileAssociationDao.save(jobToAction1Association, JOB_PROFILE, ACTION_PROFILE, TENANT_ID).onComplete(savedAssociationAr -> {
           context.assertTrue(savedAssociationAr.succeeded());
-          dao.getSnapshotItems(jobProfile.getId(), JOB_PROFILE, jobProfile.getId(), TENANT_ID).setHandler(itemsAr -> {
+          dao.getSnapshotItems(jobProfile.getId(), JOB_PROFILE, jobProfile.getId(), TENANT_ID).onComplete(itemsAr -> {
             // then
             context.assertTrue(itemsAr.succeeded());
             List<ProfileSnapshotItem> profileSnapshotItems = itemsAr.result();
