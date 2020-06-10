@@ -3,9 +3,8 @@
 * [MODDICONV-123](https://issues.folio.org/browse/MODDICONV-123) Added migration script for profiles sample data
 * [MODDICONV-118](https://issues.folio.org/browse/MODDICONV-118) Defined MARC mapping details schema
 * [MODDICONV-125](https://issues.folio.org/browse/MODDICONV-125) Updated RMB version to 30.0.2
-
-## 2020-04-23 v1.7.3-SNAPSHOT
 * [MODDICONV-115](https://issues.folio.org/browse/MODDICONV-115) Added pass-through JobProfiles identifiers in profile associations
+* [MODDICONV-124](https://issues.folio.org/browse/MODDICONV-124) Remove sample profile data from Settings/Data import
 
 ## 2020-04-23 v1.7.2
 * [MODDICONV-112](https://issues.folio.org/browse/MODDICONV-112) Added migration script to support RMB version update 
