@@ -1,3 +1,6 @@
+## 2020-06-16 v1.8.1-SNAPSHOT
+* [MODDICONV-129](https://issues.folio.org/browse/MODDICONV-129) Fixed creation of the rule to delete profiles 
+
 ## 2020-06-11 v1.8.0
 * [MODDICONV-117](https://issues.folio.org/browse/MODDICONV-117) Added migration script to remove outdated indexes
 * [MODDICONV-123](https://issues.folio.org/browse/MODDICONV-123) Added migration script for profiles sample data
