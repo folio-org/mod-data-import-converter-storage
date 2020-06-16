@@ -1,4 +1,4 @@
-## 2020-06-16 v1.8.1-SNAPSHOT
+## 2020-06-16 v1.8.1
 * [MODDICONV-129](https://issues.folio.org/browse/MODDICONV-129) Fixed creation of the rule to delete profiles 
 
 ## 2020-06-11 v1.8.0
