@@ -190,7 +190,7 @@
     {
       "run": "after",
       "snippetPath": "data-migration/remove_deprecated_data.sql",
-      "fromModuleVersion": "mod-data-import-converter-storage-1.8.0"
+      "fromModuleVersion": "mod-data-import-converter-storage-1.8.2"
     }
   ]
 }
