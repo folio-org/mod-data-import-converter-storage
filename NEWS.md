@@ -1,10 +1,16 @@
-## 2020-05-04 v1.8.0-SNAPSHOT
+## 2020-06-16 v1.8.2-SNAPSHOT 
+* [MODDICONV-132](https://issues.folio.org/browse/MODDICONV-132) Fixed script to delete sample data
+
+## 2020-06-16 v1.8.1
+* [MODDICONV-129](https://issues.folio.org/browse/MODDICONV-129) Fixed creation of the rule to delete profiles 
+
+## 2020-06-11 v1.8.0
 * [MODDICONV-117](https://issues.folio.org/browse/MODDICONV-117) Added migration script to remove outdated indexes
 * [MODDICONV-123](https://issues.folio.org/browse/MODDICONV-123) Added migration script for profiles sample data
 * [MODDICONV-118](https://issues.folio.org/browse/MODDICONV-118) Defined MARC mapping details schema
-
-## 2020-04-23 v1.7.3-SNAPSHOT
+* [MODDICONV-125](https://issues.folio.org/browse/MODDICONV-125) Updated RMB version to 30.0.2
 * [MODDICONV-115](https://issues.folio.org/browse/MODDICONV-115) Added pass-through JobProfiles identifiers in profile associations
+* [MODDICONV-124](https://issues.folio.org/browse/MODDICONV-124) Remove sample profile data from Settings/Data import
 
 ## 2020-04-23 v1.7.2
 * [MODDICONV-112](https://issues.folio.org/browse/MODDICONV-112) Added migration script to support RMB version update 

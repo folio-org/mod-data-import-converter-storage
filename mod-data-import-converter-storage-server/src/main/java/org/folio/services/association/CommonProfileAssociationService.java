@@ -3,6 +3,7 @@ package org.folio.services.association;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.ProfileDao;
@@ -78,11 +79,10 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
 
   @Override
   public Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, ContentType detailType, String query, int offset, int limit, String tenantId) {
-
-    Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
+    Promise<Optional<ProfileSnapshotWrapper>> result = Promise.promise();
 
     masterDetailAssociationDao.getDetailProfilesByMasterId(masterId, detailType, query, offset, limit, tenantId)
-      .setHandler(ar -> {
+      .onComplete(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get details profiles by master id '{}', for the tenant '{}'", masterId, tenantId);
           result.fail(ar.cause());
@@ -92,16 +92,15 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
         fillProfile(tenantId, result, wrapper);
       });
 
-    return result;
+    return result.future();
   }
 
   @Override
   public Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, ContentType masterType, String query, int offset, int limit, String tenantId) {
-
-    Future<Optional<ProfileSnapshotWrapper>> result = Future.future();
+    Promise<Optional<ProfileSnapshotWrapper>> result = Promise.promise();
 
     masterDetailAssociationDao.getMasterProfilesByDetailId(detailId, masterType, query, offset, limit, tenantId)
-      .setHandler(ar -> {
+      .onComplete(ar -> {
         if (ar.failed()) {
           LOGGER.error("Could not get master profiles by detail id '{}', for the tenant '{}'", detailId, tenantId);
           result.fail(ar.cause());
@@ -110,7 +109,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
         fillProfile(tenantId, result, wrapper);
       });
 
-    return result;
+    return result.future();
   }
 
   @Override
@@ -125,18 +124,18 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
    * @param result   a result future.
    * @param wrapper  a profile wrapper.
    */
-  private void fillProfile(String tenantId, Future<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
+  private void fillProfile(String tenantId, Promise<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
     String profileId = wrapper.getId();
     ContentType profileType = wrapper.getContentType();
 
     if (profileType == ContentType.JOB_PROFILE) {
-      jobProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
+      jobProfileDao.getProfileById(profileId, tenantId).onComplete(fillWrapperContent(result, wrapper));
     } else if (profileType == ContentType.ACTION_PROFILE) {
-      actionProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
+      actionProfileDao.getProfileById(profileId, tenantId).onComplete(fillWrapperContent(result, wrapper));
     } else if (profileType == ContentType.MAPPING_PROFILE) {
-      mappingProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
+      mappingProfileDao.getProfileById(profileId, tenantId).onComplete(fillWrapperContent(result, wrapper));
     } else if (profileType == ContentType.MATCH_PROFILE) {
-      matchProfileDao.getProfileById(profileId, tenantId).setHandler(fillWrapperContent(result, wrapper));
+      matchProfileDao.getProfileById(profileId, tenantId).onComplete(fillWrapperContent(result, wrapper));
     } else {
       result.complete(Optional.empty());
     }
@@ -166,7 +165,7 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
    * @param <T>     a profile type.
    * @return the handler.
    */
-  private <T> Handler<AsyncResult<Optional<T>>> fillWrapperContent(Future<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
+  private <T> Handler<AsyncResult<Optional<T>>> fillWrapperContent(Promise<Optional<ProfileSnapshotWrapper>> result, ProfileSnapshotWrapper wrapper) {
     return asyncResult -> {
       if (asyncResult.failed()) {
         LOGGER.error("Could not get a profile", asyncResult.cause());
@@ -182,6 +181,5 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
       }
     };
   }
-
 
 }
