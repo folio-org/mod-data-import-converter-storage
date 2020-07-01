@@ -59,6 +59,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String PROFILE_VALIDATE_ERROR_MESSAGE = "Failed to validate %s";
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
+  private static final String INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE = "Invalid repeatableFieldAction for empty subfields: %s";
 
   @Autowired
   private ProfileService<JobProfile, JobProfileCollection, JobProfileUpdateDto> jobProfileService;
@@ -759,8 +760,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     if (mappingProfile.getMappingDetails() != null && mappingProfile.getMappingDetails().getMappingFields() != null) {
       List<MappingRule> mappingFields = entity.getProfile().getMappingDetails().getMappingFields();
       for (MappingRule rule : mappingFields) {
-        if (rule.getRepeatableFieldAction() != null && rule.getSubfields().isEmpty() && !rule.getRepeatableFieldAction().toString().equalsIgnoreCase("DELETE_EXISTING")) {
-          Errors errors = new Errors().withErrors(Collections.singletonList(new Error().withMessage(format("Invalid repeatableFieldAction for empty subfields: %s", rule.getRepeatableFieldAction())))).withTotalRecords(1);
+        if (rule.getRepeatableFieldAction() != null && rule.getSubfields().isEmpty() && !rule.getRepeatableFieldAction().equals(MappingRule.RepeatableFieldAction.DELETE_EXISTING)) {
+          Errors errors = new Errors().withErrors(Collections.singletonList(new Error().withMessage(format(INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE, rule.getRepeatableFieldAction())))).withTotalRecords(1);
           asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMappingProfilesResponse.respond422WithApplicationJson(errors)));
         }
       }
