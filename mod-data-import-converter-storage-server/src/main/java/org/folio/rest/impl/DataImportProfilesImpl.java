@@ -22,6 +22,7 @@ import org.folio.rest.jaxrs.model.JobProfileUpdateDto;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
+import org.folio.rest.jaxrs.model.MappingRule;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfileUpdateDto;
@@ -40,9 +41,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -278,7 +281,9 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void postDataImportProfilesMappingProfiles(String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        MappingProfile mappingProfile = entity.getProfile();
+        mappingProfile.setMetadata(getMetadata(okapiHeaders));
+        validateRepeatableFields(entity, asyncResultHandler, mappingProfile);
         validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
@@ -320,6 +325,9 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
+        MappingProfile mappingProfile = entity.getProfile();
+        mappingProfile.setMetadata(getMetadata(okapiHeaders));
+        validateRepeatableFields(entity, asyncResultHandler, mappingProfile);
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
         validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
@@ -746,6 +754,18 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         .withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName))))
         .withTotalRecords(errors.getTotalRecords() + 1)
         : errors);
+  }
+
+  private void validateRepeatableFields(MappingProfileUpdateDto entity, Handler<AsyncResult<Response>> asyncResultHandler, MappingProfile mappingProfile) {
+    if (mappingProfile.getMappingDetails() != null && mappingProfile.getMappingDetails().getMappingFields() != null) {
+      List<MappingRule> mappingFields = entity.getProfile().getMappingDetails().getMappingFields();
+      for (MappingRule rule : mappingFields) {
+        if (rule.getRepeatableFieldAction() != null && rule.getSubfields().isEmpty() && !rule.getRepeatableFieldAction().toString().equalsIgnoreCase("DELETE_EXISTING")) {
+          Errors errors = new Errors().withErrors(Collections.singletonList(new Error().withMessage(format("Invalid repeatableFieldAction for empty subfields: %s", rule.getRepeatableFieldAction())))).withTotalRecords(1);
+          asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMappingProfilesResponse.respond422WithApplicationJson(errors)));
+        }
+      }
+    }
   }
 
   private ContentType mapContentType(String contentType) {
