@@ -328,7 +328,6 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         MappingProfile mappingProfile = entity.getProfile();
         mappingProfile.setMetadata(getMetadata(okapiHeaders));
         validateRepeatableFields(entity, asyncResultHandler, mappingProfile);
-        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
         validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
