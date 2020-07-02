@@ -282,9 +282,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void postDataImportProfilesMappingProfiles(String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        MappingProfile mappingProfile = entity.getProfile();
-        mappingProfile.setMetadata(getMetadata(okapiHeaders));
-        validateRepeatableFields(entity, asyncResultHandler, mappingProfile);
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateRepeatableFields(entity, asyncResultHandler);
         validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
@@ -326,9 +325,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        MappingProfile mappingProfile = entity.getProfile();
-        mappingProfile.setMetadata(getMetadata(okapiHeaders));
-        validateRepeatableFields(entity, asyncResultHandler, mappingProfile);
+        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+        validateRepeatableFields(entity, asyncResultHandler);
         validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
@@ -756,7 +754,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         : errors);
   }
 
-  private void validateRepeatableFields(MappingProfileUpdateDto entity, Handler<AsyncResult<Response>> asyncResultHandler, MappingProfile mappingProfile) {
+  private void validateRepeatableFields(MappingProfileUpdateDto entity, Handler<AsyncResult<Response>> asyncResultHandler) {
+    MappingProfile mappingProfile = entity.getProfile();
     if (mappingProfile.getMappingDetails() != null && mappingProfile.getMappingDetails().getMappingFields() != null) {
       List<MappingRule> mappingFields = entity.getProfile().getMappingDetails().getMappingFields();
       for (MappingRule rule : mappingFields) {
