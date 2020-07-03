@@ -285,7 +285,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateMappingProfile(entity, mappingProfileService, tenantId).onComplete(errors -> {
+        validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -327,7 +327,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateMappingProfile(entity, mappingProfileService, tenantId).onComplete(errors -> {
+        validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -754,37 +754,27 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         : errors);
   }
 
-  private <T, S, D> Future<Errors> validateMappingProfile(MappingProfileUpdateDto mappingProfileDto, ProfileService<T, S, D> profileService, String tenantId) {
-    String profileTypeName = StringUtils.uncapitalise(mappingProfileDto.getProfile().getClass().getSimpleName());
-    Errors errors = validateRepeatableFields(mappingProfileDto);
-    return profileService.isProfileExistByProfileName((T) mappingProfileDto.getProfile(), tenantId)
-      .map(isExist -> isExist
-        ? errors.withErrors(updateErrorList(new Error()
-        .withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName)), errors))
-        .withTotalRecords(errors.getTotalRecords() + 1)
-        : errors);
+  private Future<Errors> validateMappingProfile(MappingProfile mappingProfile, String tenantId) {
+    return validateProfile(mappingProfile, mappingProfileService, tenantId)
+      .map(errors -> {
+        List<Error> fieldsValidationErrors = validateRepeatableFields(mappingProfile);
+        errors.withTotalRecords(errors.getTotalRecords() + fieldsValidationErrors.size())
+          .getErrors().addAll(fieldsValidationErrors);
+        return errors;
+      });
   }
 
-  private Errors validateRepeatableFields(MappingProfileUpdateDto entity) {
-    MappingProfile mappingProfile = entity.getProfile();
-    Errors errors = new Errors().withTotalRecords(0);
+  private List<Error> validateRepeatableFields(MappingProfile mappingProfile) {
     List<Error> errorList = new ArrayList<>();
     if (mappingProfile.getMappingDetails() != null && mappingProfile.getMappingDetails().getMappingFields() != null) {
-      List<MappingRule> mappingFields = entity.getProfile().getMappingDetails().getMappingFields();
+      List<MappingRule> mappingFields = mappingProfile.getMappingDetails().getMappingFields();
       for (MappingRule rule : mappingFields) {
         if (rule.getRepeatableFieldAction() != null && rule.getSubfields().isEmpty() && !rule.getRepeatableFieldAction().equals(MappingRule.RepeatableFieldAction.DELETE_EXISTING)) {
           errorList.add(new Error().withMessage(format(INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE, rule.getRepeatableFieldAction())));
         }
       }
     }
-    errors.withErrors(errorList).withTotalRecords(errorList.size());
-    return errors;
-  }
-
-  private List<Error> updateErrorList(Error newError, Errors errors) {
-    List<Error> errorsList = errors.getErrors();
-    errorsList.add(newError);
-    return errorsList;
+    return errorList;
   }
 
   private ContentType mapContentType(String contentType) {
