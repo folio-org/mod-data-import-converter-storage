@@ -8,6 +8,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
@@ -42,6 +43,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -283,8 +285,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateRepeatableFields(entity, asyncResultHandler);
-        validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
+        validateMappingProfile(entity, mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -326,8 +327,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateRepeatableFields(entity, asyncResultHandler);
-        validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
+        validateMappingProfile(entity, mappingProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -754,17 +754,37 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         : errors);
   }
 
-  private void validateRepeatableFields(MappingProfileUpdateDto entity, Handler<AsyncResult<Response>> asyncResultHandler) {
+  private <T, S, D> Future<Errors> validateMappingProfile(MappingProfileUpdateDto mappingProfileDto, ProfileService<T, S, D> profileService, String tenantId) {
+    String profileTypeName = StringUtils.uncapitalise(mappingProfileDto.getProfile().getClass().getSimpleName());
+    Errors errors = validateRepeatableFields(mappingProfileDto);
+    return profileService.isProfileExistByProfileName((T) mappingProfileDto.getProfile(), tenantId)
+      .map(isExist -> isExist
+        ? errors.withErrors(updateErrorList(new Error()
+        .withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName)), errors))
+        .withTotalRecords(errors.getTotalRecords() + 1)
+        : errors);
+  }
+
+  private Errors validateRepeatableFields(MappingProfileUpdateDto entity) {
     MappingProfile mappingProfile = entity.getProfile();
+    Errors errors = new Errors().withTotalRecords(0);
+    List<Error> errorList = new ArrayList<>();
     if (mappingProfile.getMappingDetails() != null && mappingProfile.getMappingDetails().getMappingFields() != null) {
       List<MappingRule> mappingFields = entity.getProfile().getMappingDetails().getMappingFields();
       for (MappingRule rule : mappingFields) {
         if (rule.getRepeatableFieldAction() != null && rule.getSubfields().isEmpty() && !rule.getRepeatableFieldAction().equals(MappingRule.RepeatableFieldAction.DELETE_EXISTING)) {
-          Errors errors = new Errors().withErrors(Collections.singletonList(new Error().withMessage(format(INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE, rule.getRepeatableFieldAction())))).withTotalRecords(1);
-          asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMappingProfilesResponse.respond422WithApplicationJson(errors)));
+          errorList.add(new Error().withMessage(format(INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE, rule.getRepeatableFieldAction())));
         }
       }
     }
+    errors.withErrors(errorList).withTotalRecords(errorList.size());
+    return errors;
+  }
+
+  private List<Error> updateErrorList(Error newError, Errors errors) {
+    List<Error> errorsList = errors.getErrors();
+    errorsList.add(newError);
+    return errorsList;
   }
 
   private ContentType mapContentType(String contentType) {
