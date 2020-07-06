@@ -1,4 +1,5 @@
 ## 2020-06-16 v1.8.2-SNAPSHOT 
+* [MODDICONV-135](https://issues.folio.org/browse/MODDICONV-135) Field mappings: Repeatable fields dropdown action without subfields support - validation for mod-data-import converter storage
 * [MODDICONV-132](https://issues.folio.org/browse/MODDICONV-132) Fixed script to delete sample data
 
 ## 2020-06-16 v1.8.1

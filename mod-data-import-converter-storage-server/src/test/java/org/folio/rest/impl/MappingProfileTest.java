@@ -10,8 +10,10 @@ import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
 import org.folio.rest.jaxrs.model.EntityType;
+import org.folio.rest.jaxrs.model.MappingDetail;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
+import org.folio.rest.jaxrs.model.MappingRule;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -36,6 +38,8 @@ import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
+import com.google.common.collect.Lists;
+
 @RunWith(VertxUnitRunner.class)
 public class MappingProfileTest extends AbstractRestVerticleTest {
 
@@ -59,6 +63,51 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
       .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
       .withExistingRecordType(EntityType.INSTANCE));
+
+  private static final List<MappingRule> fields = Lists.newArrayList(new MappingRule()
+    .withName("repeatableField")
+    .withPath("instance.repeatableField[]")
+    .withValue("")
+    .withEnabled("true")
+    .withRepeatableFieldAction(MappingRule.RepeatableFieldAction.DELETE_EXISTING)
+    .withSubfields(Collections.emptyList()));
+
+  private static final MappingProfileUpdateDto mappingProfileWithEmptySubfieldsAndDeleteExistingAction = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("Fooooo")
+      .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE)
+      .withMappingDetails(new MappingDetail().withMappingFields(fields)));
+
+  private static final List<MappingRule> fields2 = Lists.newArrayList(new MappingRule()
+    .withName("repeatableField")
+    .withPath("instance.repeatableField[]")
+    .withValue("")
+    .withEnabled("true")
+    .withRepeatableFieldAction(null)
+    .withSubfields(Collections.emptyList()));
+
+  private static final MappingProfileUpdateDto mappingProfileWithEmptySubfieldsAndEmptyAction = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("Fooooo")
+      .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE)
+      .withMappingDetails(new MappingDetail().withMappingFields(fields2)));
+
+  private static final List<MappingRule> fields3 = Lists.newArrayList(new MappingRule()
+    .withName("repeatableField")
+    .withPath("instance.repeatableField[]")
+    .withValue("")
+    .withEnabled("true")
+    .withRepeatableFieldAction(MappingRule.RepeatableFieldAction.EXTEND_EXISTING)
+    .withSubfields(Collections.emptyList()));
+
+  private static final MappingProfileUpdateDto mappingProfileWithEmptySubfieldsAndNotDeleteExistingAction = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("Fooooo")
+      .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE)
+      .withMappingDetails(new MappingDetail().withMappingFields(fields3)));
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -155,6 +204,43 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .body(mappingProfile_1)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldCreateProfileOnPostWithoutRepeatableSubfieldsAndDeleteExistingAction() {
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfileWithEmptySubfieldsAndDeleteExistingAction)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is(mappingProfileWithEmptySubfieldsAndDeleteExistingAction.getProfile().getName()))
+      .body("profile.tags.tagList", is(mappingProfileWithEmptySubfieldsAndDeleteExistingAction.getProfile().getTags().getTagList()));
+  }
+
+  @Test
+  public void shouldCreateProfileOnPostWithoutRepeatableSubfieldsAndEmptyAction() {
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfileWithEmptySubfieldsAndEmptyAction)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is(mappingProfileWithEmptySubfieldsAndEmptyAction.getProfile().getName()))
+      .body("profile.tags.tagList", is(mappingProfileWithEmptySubfieldsAndEmptyAction.getProfile().getTags().getTagList()));
+  }
+
+  @Test
+  public void shouldNotCreateProfileOnPostWithoutRepeatableSubfieldsAndWithoutDeleteExistingAction() {
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfileWithEmptySubfieldsAndNotDeleteExistingAction)
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()
