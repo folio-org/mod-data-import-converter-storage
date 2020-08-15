@@ -1,8 +1,6 @@
 package org.folio.services.fieldprotectionsettings;
 
 import io.vertx.core.Future;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.fieldprotectionsettings.MarcFieldProtectionSettingsDao;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
