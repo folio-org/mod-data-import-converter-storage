@@ -78,7 +78,7 @@ public class MarcFieldProtectionSettingsDaoImpl implements MarcFieldProtectionSe
       Criteria idCrit = constructCriteria(ID_FIELD, marcFieldProtectionSetting.getId());
       pgClientFactory.createInstance(tenantId).update(MARC_FIELDS_PROTECTION_SETTINGS_TABLE, marcFieldProtectionSetting, new Criterion(idCrit), true, updateResult -> {
         if (updateResult.failed()) {
-          LOGGER.error("Could not update MARC field protectio setting with id {}", marcFieldProtectionSetting.getId(), updateResult.cause());
+          LOGGER.error("Could not update MARC field protection setting with id {}", marcFieldProtectionSetting.getId(), updateResult.cause());
           promise.fail(updateResult.cause());
         } else if (updateResult.result().rowCount() != 1) {
           String errorMessage = String.format("MARC field protection setting with id '%s' was not found", marcFieldProtectionSetting.getId());

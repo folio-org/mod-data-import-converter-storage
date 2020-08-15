@@ -4,7 +4,6 @@ import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.dao.fieldprotectionsettings.MarcFieldProtectionSettingsDao;
-import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import java.util.UUID;
 
 @Service
 public class MarcFieldProtectionSettingsServiceImpl implements MarcFieldProtectionSettingsService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(MarcFieldProtectionSettingsServiceImpl.class);
 
   @Autowired
   private MarcFieldProtectionSettingsDao fieldProtectionSettingsDao;

@@ -1,7 +1,6 @@
 package org.folio.services.fieldprotectionsettings;
 
 import io.vertx.core.Future;
-import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
 
