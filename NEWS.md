@@ -1,5 +1,6 @@
 ## 2020-08-13 v1.9.0-SNAPSHOT
 * [MODDICONV-138](https://issues.folio.org/browse/MODDICONV-138) Store MARC field protection settings
+* [MODDICONV-139](https://issues.folio.org/browse/MODDICONV-139) Implement API for managing MARC field protection settings
 
 ## 2020-07-08 v1.8.3
 * [MODDICONV-135](https://issues.folio.org/browse/MODDICONV-135) Field mappings: Repeatable fields dropdown action without subfields support - validation for mod-data-import converter storage
