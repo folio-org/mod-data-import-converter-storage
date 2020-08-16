@@ -1,0 +1,66 @@
+#%RAML 1.0
+
+title: Field Protection Settings
+version: v1.0
+protocols: [ HTTP, HTTPS ]
+baseUri: http://localhost
+
+documentation:
+  - title: Field Protection Settings API
+    content: API for managing field protection settings
+
+types:
+  errors: !include raml-storage/raml-util/schemas/errors.schema
+  marcFieldProtectionSetting: !include raml-storage/schemas/mod-data-import-converter-storage/marc-field-protection/marcFieldProtectionSetting.json
+  marcFieldProtectionSettingsCollection: !include raml-storage/schemas/mod-data-import-converter-storage/marc-field-protection/marcFieldProtectionSettingsCollection.json
+
+traits:
+  validate: !include raml-storage/raml-util/traits/validation.raml
+  language: !include raml-storage/raml-util/traits/language.raml
+  pageable:  !include raml-storage/raml-util/traits/pageable.raml
+  searchable: !include raml-storage/raml-util/traits/searchable.raml
+
+resourceTypes:
+  collection: !include raml-storage/raml-util/rtypes/collection.raml
+  collection-item: !include raml-storage/raml-util/rtypes/item-collection.raml
+
+/field-protection-settings:
+  /marc:
+    displayName: MARC field protection settings
+    description: API for managing MARC field protection settings
+    type:
+      collection:
+        schemaCollection: marcFieldProtectionSettingsCollection
+        schemaItem: marcFieldProtectionSetting
+        exampleCollection: !include raml-storage/examples/mod-data-import-converter-storage/marc-field-protection/marcFieldProtectionSettingsCollection.sample
+        exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/marc-field-protection/marcFieldProtectionSetting.sample
+    get:
+      is: [
+        searchable: {
+          description:
+            "with valid searchable fields: for example source=SYSTEM",
+          example:
+            "source=SYSTEM"
+        },
+        pageable,
+        validate
+      ]
+    post:
+      is: [validate]
+    /{id}:
+      displayName: MARC field protection setting
+      description: Get, Delete or Update specific MARC field protection setting
+      type:
+        collection-item:
+          schema: marcFieldProtectionSetting
+          exampleItem: !include raml-storage/examples/mod-data-import-converter-storage/marc-field-protection/marcFieldProtectionSetting.sample
+      put:
+        is: [validate]
+        responses:
+          200:
+            body:
+              application/json:
+                type: marcFieldProtectionSetting
+      delete:
+        responses:
+          204:
