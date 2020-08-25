@@ -8,6 +8,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
@@ -22,6 +23,7 @@ import org.folio.rest.jaxrs.model.JobProfileUpdateDto;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
+import org.folio.rest.jaxrs.model.MappingRule;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.MatchProfileCollection;
 import org.folio.rest.jaxrs.model.MatchProfileUpdateDto;
@@ -40,9 +42,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -56,6 +61,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String PROFILE_VALIDATE_ERROR_MESSAGE = "Failed to validate %s";
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
+  private static final String INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE = "Invalid repeatableFieldAction for empty subfields: %s";
 
   @Autowired
   private ProfileService<JobProfile, JobProfileCollection, JobProfileUpdateDto> jobProfileService;
@@ -279,7 +285,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
+        validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -321,7 +327,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), mappingProfileService, tenantId).onComplete(errors -> {
+        validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -746,6 +752,29 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         .withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName))))
         .withTotalRecords(errors.getTotalRecords() + 1)
         : errors);
+  }
+
+  private Future<Errors> validateMappingProfile(MappingProfile mappingProfile, String tenantId) {
+    return validateProfile(mappingProfile, mappingProfileService, tenantId)
+      .map(errors -> {
+        List<Error> fieldsValidationErrors = validateRepeatableFields(mappingProfile);
+        errors.withTotalRecords(errors.getTotalRecords() + fieldsValidationErrors.size())
+          .getErrors().addAll(fieldsValidationErrors);
+        return errors;
+      });
+  }
+
+  private List<Error> validateRepeatableFields(MappingProfile mappingProfile) {
+    List<Error> errorList = new ArrayList<>();
+    if (mappingProfile.getMappingDetails() != null && mappingProfile.getMappingDetails().getMappingFields() != null) {
+      List<MappingRule> mappingFields = mappingProfile.getMappingDetails().getMappingFields();
+      for (MappingRule rule : mappingFields) {
+        if (rule.getRepeatableFieldAction() != null && rule.getSubfields().isEmpty() && !rule.getRepeatableFieldAction().equals(MappingRule.RepeatableFieldAction.DELETE_EXISTING)) {
+          errorList.add(new Error().withMessage(format(INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE, rule.getRepeatableFieldAction())));
+        }
+      }
+    }
+    return errorList;
   }
 
   private ContentType mapContentType(String contentType) {

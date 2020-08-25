@@ -204,6 +204,37 @@
       ]
     },
     {
+      "id": "field-protection-settings",
+      "version": "1.0",
+      "handlers": [
+        {
+          "methods": ["GET"],
+          "pathPattern": "/field-protection-settings/marc",
+          "permissionsRequired" : [ "converter-storage.field-protection-settings.get" ]
+        },
+        {
+          "methods": ["POST"],
+          "pathPattern": "/field-protection-settings/marc",
+          "permissionsRequired" : [ "converter-storage.field-protection-settings.post" ]
+        },
+        {
+          "methods": ["GET"],
+          "pathPattern": "/field-protection-settings/marc/{id}",
+          "permissionsRequired" : [ "converter-storage.field-protection-settings.get" ]
+        },
+        {
+          "methods": ["PUT"],
+          "pathPattern": "/field-protection-settings/marc/{id}",
+          "permissionsRequired" : [ "converter-storage.field-protection-settings.put" ]
+        },
+        {
+          "methods": ["DELETE"],
+          "pathPattern": "/field-protection-settings/marc/{id}",
+          "permissionsRequired" : [ "converter-storage.field-protection-settings.delete" ]
+        }
+      ]
+    },
+    {
       "id": "_tenant",
       "version": "1.2",
       "interfaceType": "system",
@@ -365,6 +396,26 @@
       "description": "Delete Form Config"
     },
     {
+      "permissionName": "converter-storage.field-protection-settings.get",
+      "displayName": "Data Import Converter Storage - get field protection settings",
+      "description": "Get Field Protection Settings"
+    },
+    {
+      "permissionName": "converter-storage.field-protection-settings.post",
+      "displayName": "Data Import Converter Storage - save field protection setting",
+      "description": "Post Field Protection Setting"
+    },
+    {
+      "permissionName": "converter-storage.field-protection-settings.put",
+      "displayName": "Data Import Converter Storage - update field protection setting",
+      "description": "Put Field Protection Setting"
+    },
+    {
+      "permissionName": "converter-storage.field-protection-settings.delete",
+      "displayName": "Data Import Converter Storage - delete field protection setting",
+      "description": "Delete Field Protection Setting"
+    },
+    {
       "permissionName": "converter-storage.all",
       "displayName": "Data Import Converter Storage - all permissions",
       "description": "Entire set of permissions needed to manage Profiles",
@@ -396,7 +447,11 @@
         "converter-storage.forms-configs.get",
         "converter-storage.forms-configs.post",
         "converter-storage.forms-configs.put",
-        "converter-storage.forms-configs.delete"
+        "converter-storage.forms-configs.delete",
+        "converter-storage.field-protection-settings.get",
+        "converter-storage.field-protection-settings.post",
+        "converter-storage.field-protection-settings.put",
+        "converter-storage.field-protection-settings.delete"
       ],
       "visible": false
     }
