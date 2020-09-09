@@ -13,7 +13,6 @@ import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MatchProfile;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
-import org.folio.rest.tools.utils.ObjectMapperTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -175,7 +174,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    * @return concrete class of the Profile
    */
   private <T> T convertContentByType(Object content, ProfileSnapshotWrapper.ContentType contentType) {
-    ObjectMapper mapper = ObjectMapperTool.getMapper();
+    ObjectMapper mapper = new ObjectMapper();
     switch (contentType) {
       case JOB_PROFILE:
         return (T) mapper.convertValue(content, JobProfile.class);
