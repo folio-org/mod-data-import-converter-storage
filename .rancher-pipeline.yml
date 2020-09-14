@@ -16,7 +16,7 @@ stages:
   steps:
   - applyAppConfig:
       catalogTemplate: p-mf42h:folijet-helmcharts-mod-data-import-converter-storage
-      version: 0.1.9
+      version: 0.1.26
       answers:
         image.repository: docker.dev.folio.org/mod-data-import-converter-storage
         image.tag: folijet-latest
