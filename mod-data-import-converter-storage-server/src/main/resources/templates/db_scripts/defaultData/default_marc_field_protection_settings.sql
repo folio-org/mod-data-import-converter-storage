@@ -7,6 +7,7 @@ INSERT INTO ${myuniversity}_${mymodule}.marc_field_protection_settings (id, json
   "subfield": "",
   "data": "*",
   "source": "SYSTEM",
+  "override": false,
   "metadata":{
     "createdDate":"2020-08-13T14:44:00.000",
     "createdByUserId":"00000000-0000-0000-0000-000000000000",
@@ -24,6 +25,7 @@ INSERT INTO ${myuniversity}_${mymodule}.marc_field_protection_settings (id, json
   "subfield": "*",
   "data": "*",
   "source": "SYSTEM",
+  "override": false,
   "metadata":{
     "createdDate":"2020-08-13T14:44:00.000",
     "createdByUserId":"00000000-0000-0000-0000-000000000000",
