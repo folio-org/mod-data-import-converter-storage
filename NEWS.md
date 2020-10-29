@@ -1,5 +1,7 @@
-## 2020-10-09 v1.9.1-SNAPSHOT
-* [MODDICONV-150](https://issues.folio.org/browse/MODDICONV-150) New user gets an error when creating any data-import profile 
+## 2020-10-29 v1.10.0-SNAPSHOT
+
+## 2020-10-27 v1.9.1
+* [MODDICONV-150](https://issues.folio.org/browse/MODDICONV-150) Fix error on creating data-import profile by a user with limited permissions
 
 ## 2020-10-09 v1.9.0
 * [MODDICONV-138](https://issues.folio.org/browse/MODDICONV-138) Store MARC field protection settings
