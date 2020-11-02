@@ -16,7 +16,7 @@
           "methods": ["POST"],
           "pathPattern": "/data-import-profiles/jobProfiles",
           "permissionsRequired" : [ "converter-storage.jobprofile.post" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["GET"],
@@ -27,7 +27,7 @@
           "methods": ["PUT"],
           "pathPattern": "/data-import-profiles/jobProfiles/{id}",
           "permissionsRequired": [ "converter-storage.jobprofile.put" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["DELETE"],
@@ -43,7 +43,7 @@
           "methods": ["POST"],
           "pathPattern": "/data-import-profiles/matchProfiles",
           "permissionsRequired" : [ "converter-storage.matchprofile.post" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["GET"],
@@ -54,7 +54,7 @@
           "methods": ["PUT"],
           "pathPattern": "/data-import-profiles/matchProfiles/{id}",
           "permissionsRequired": [ "converter-storage.matchprofile.put" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["DELETE"],
@@ -70,7 +70,7 @@
           "methods": ["POST"],
           "pathPattern": "/data-import-profiles/actionProfiles",
           "permissionsRequired" : [ "converter-storage.actionprofile.post" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["GET"],
@@ -81,7 +81,7 @@
           "methods": ["PUT"],
           "pathPattern": "/data-import-profiles/actionProfiles/{id}",
           "permissionsRequired": [ "converter-storage.actionprofile.put" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["DELETE"],
@@ -97,7 +97,7 @@
           "methods": ["POST"],
           "pathPattern": "/data-import-profiles/mappingProfiles",
           "permissionsRequired" : [ "converter-storage.mappingprofile.post" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["GET"],
@@ -108,7 +108,7 @@
           "methods": ["PUT"],
           "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
           "permissionsRequired": [ "converter-storage.mappingprofile.put" ],
-          "modulePermissions": ["users.item.get"]
+          "modulePermissions": ["users.collection.get"]
         },
         {
           "methods": ["DELETE"],
