@@ -8,7 +8,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-
 import org.codehaus.plexus.util.StringUtils;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
@@ -31,7 +30,6 @@ import org.folio.rest.jaxrs.model.Metadata;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.resource.DataImportProfiles;
-import org.folio.rest.tools.utils.JwtUtils;
 import org.folio.rest.tools.utils.TenantTool;
 import org.folio.services.ProfileService;
 import org.folio.services.association.ProfileAssociationService;
@@ -42,9 +40,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -696,7 +695,6 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                          Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
         actionProfileService.markProfileAsDeleted(id, tenantId)
           .map(DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
             format("Action Profile with id '%s' was successfully deleted", id)))
@@ -803,13 +801,18 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static String userIdFromToken(String token) {
     try {
       String[] split = token.split("\\.");
-      String json = JwtUtils.getJson(split[1]);
+      String json = getJson(split[1]);
       JsonObject j = new JsonObject(json);
       return j.getString("user_id");
     } catch (Exception e) {
       logger.warn("Invalid x-okapi-token: " + token, e);
       return null;
     }
+  }
+
+  private static String getJson(String strEncoded) {
+    byte[] decodedBytes = Base64.getDecoder().decode(strEncoded);
+    return new String(decodedBytes, StandardCharsets.UTF_8);
   }
 
 }
