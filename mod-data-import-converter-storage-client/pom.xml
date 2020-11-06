@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.folio</groupId>
     <artifactId>mod-data-import-converter-storage</artifactId>
-    <version>1.9.2</version>
+    <version>1.9.3-SNAPSHOT</version>
   </parent>
 
   <properties>
