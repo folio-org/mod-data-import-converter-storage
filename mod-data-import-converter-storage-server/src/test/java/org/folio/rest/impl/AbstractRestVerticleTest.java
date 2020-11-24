@@ -90,7 +90,6 @@ public abstract class AbstractRestVerticleTest {
       try {
         TenantAttributes tenantAttributes = new TenantAttributes();
         tenantAttributes.setModuleTo(PomReader.INSTANCE.getModuleName());
-        tenantAttributes.setAdditionalProperty("testing-context", "true");
       } catch (Exception e) {
         e.printStackTrace();
       }
