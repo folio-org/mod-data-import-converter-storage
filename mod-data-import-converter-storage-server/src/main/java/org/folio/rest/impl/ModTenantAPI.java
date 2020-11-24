@@ -7,6 +7,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.rest.annotations.Validate;
@@ -15,6 +16,7 @@ import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.tools.utils.TenantTool;
 
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +31,7 @@ public class ModTenantAPI extends TenantAPI {
   private static final String DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL = "templates/db_scripts/defaultData/default_marc_field_protection_settings.sql";
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
+  private static final String TESTING_CONTEXT_PARAM = "testing-context";
 
   @Validate
   @Override
@@ -37,10 +40,14 @@ public class ModTenantAPI extends TenantAPI {
       if (ar.failed()) {
         handlers.handle(ar);
       } else {
-        setupDefaultData(DEFAULT_JOB_PROFILE_SQL, headers, context)
-          .compose(r -> setupDefaultData(DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL, headers, context))
-          .compose(d -> setupDefaultData(DEFAULT_OCLC_JOB_PROFILE_SQL, headers, context))
-          .onComplete(event -> handlers.handle(ar));
+        if (entity.getAdditionalProperties() == null || entity.getAdditionalProperties().get(TESTING_CONTEXT_PARAM) == null
+          || !entity.getAdditionalProperties().get(TESTING_CONTEXT_PARAM).equals("true")) {
+          setupDefaultData(DEFAULT_JOB_PROFILE_SQL, headers, context)
+            .compose(r -> setupDefaultData(DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL, headers, context))
+            .compose(d -> setupDefaultData(DEFAULT_OCLC_JOB_PROFILE_SQL, headers, context))
+            .onComplete(event -> handlers.handle(ar));
+        }
+        handlers.handle(ar);
       }
     }, context);
   }
