@@ -47,6 +47,10 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   private static final String ACTION_TO_MAPPING_PROFILES_TABLE = "action_to_mapping_profiles";
   static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
+  private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
+  public static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
+  public static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
+  static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
 
   private static MappingProfileUpdateDto mappingProfile_1 = new MappingProfileUpdateDto()
     .withProfile(new MappingProfile().withName("Bla")
@@ -515,13 +519,17 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   public void clearTables(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event ->
-      pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event2 ->
-        pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 -> {
-          if (event3.failed()) {
-            context.fail(event3.cause());
-          }
-          async.complete();
-        })));
+    pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
+      pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
+        pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event3 ->
+          pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event4 ->
+            pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event5 ->
+              pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event6 ->
+                pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event7 -> {
+                  if (event7.failed()) {
+                  context.fail(event7.cause());
+                }
+                async.complete();
+              })))))));
   }
 }
