@@ -40,19 +40,26 @@ public class ModTenantAPI extends TenantAPI {
       if (ar.failed()) {
         handlers.handle(ar);
       } else {
+        Future<List<String>> defaultDataFuture = setupDefaultData(DEFAULT_JOB_PROFILE_SQL, headers, context)
+          .compose(r -> setupDefaultData(DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL, headers, context));
+
         if (entity.getAdditionalProperties() == null || entity.getAdditionalProperties().get(TESTING_CONTEXT_PARAM) == null
           || !entity.getAdditionalProperties().get(TESTING_CONTEXT_PARAM).equals("true")) {
-          setupDefaultData(DEFAULT_JOB_PROFILE_SQL, headers, context)
-            .compose(r -> setupDefaultData(DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL, headers, context))
+          defaultDataFuture
             .compose(d -> setupDefaultData(DEFAULT_OCLC_JOB_PROFILE_SQL, headers, context))
             .onComplete(event -> handlers.handle(ar));
         }
-        handlers.handle(ar);
+        defaultDataFuture.onComplete(event -> handlers.handle(ar));
       }
     }, context);
   }
 
   private Future<List<String>> setupDefaultData(String script, Map<String, String> headers, Context context) {
+    if (script.equals(DEFAULT_OCLC_JOB_PROFILE_SQL)) {
+      Promise<List<String>> promise = Promise.promise();
+      return promise.future();
+    }
+
     try {
       InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(script);
 
