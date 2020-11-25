@@ -3,15 +3,11 @@ package org.folio.rest.impl.snapshot;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.vertx.core.Future;
-import io.vertx.core.Promise;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.sqlclient.Row;
-import io.vertx.sqlclient.RowSet;
+
 import org.apache.http.HttpStatus;
 import org.folio.rest.impl.AbstractRestVerticleTest;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -57,13 +53,14 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
   private static final String PROFILE_TYPE_PARAM = "profileType";
   private static final String JOB_PROFILE_ID_PARAM = "jobProfileId";
 
-  private static final String JOB_TO_MATCH_PROFILES = "job_to_match_profiles";
-  private static final String MATCH_TO_ACTION_PROFILES = "match_to_action_profiles";
-  private static final String ACTION_TO_MAPPING_PROFILES = "action_to_mapping_profiles";
-  private static final String JOB_PROFILES_TABLE = "job_profiles";
-  private static final String ACTION_PROFILES_TABLE = "action_profiles";
-  private static final String MAPPING_PROFILES_TABLE = "mapping_profiles";
-  private static final String MATCH_PROFILES_TABLE = "match_profiles";
+  private static final String JOB_TO_MATCH_PROFILES_TABLE_NAME = "job_to_match_profiles";
+  private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
+  private static final String ACTION_TO_MAPPING_PROFILES_TABLE_NAME = "action_to_mapping_profiles";
+  private static final String JOB_TO_ACTION_PROFILES_TABLE_NAME = "job_to_action_profiles";
+  private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
+  private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
+  private static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
+  private static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
 
 
   private JobProfileUpdateDto jobProfile = new JobProfileUpdateDto()
@@ -375,25 +372,19 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
   @Override
   public void clearTables(TestContext context) {
     Async async = context.async();
-    deleteTable(JOB_TO_MATCH_PROFILES)
-      .compose(e -> deleteTable(MATCH_TO_ACTION_PROFILES))
-      .compose(e -> deleteTable(ACTION_TO_MAPPING_PROFILES))
-      .compose(e -> deleteTable(JOB_PROFILES_TABLE))
-      .compose(e -> deleteTable(MATCH_PROFILES_TABLE))
-      .compose(e -> deleteTable(ACTION_PROFILES_TABLE))
-      .compose(e -> deleteTable(MAPPING_PROFILES_TABLE))
-      .onComplete(clearAr -> {
-        if (clearAr.failed()) {
-          context.fail(clearAr.cause());
-        }
-        async.complete();
-      });
-  }
-
-  private Future<RowSet<Row>> deleteTable(String tableName) {
-    Promise<RowSet<Row>> promise = Promise.promise();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(tableName, new Criterion(), promise);
-    return promise.future();
+    pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event ->
+      pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE_NAME, new Criterion(), event2 ->
+        pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE_NAME, new Criterion(), event3 ->
+          pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event4 ->
+            pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event5 ->
+              pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event6 ->
+                pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event7 ->
+                  pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event8 -> {
+                    if (event8.failed()) {
+                      context.fail(event8.cause());
+                    }
+                    async.complete();
+                  }))))))));
   }
 }
