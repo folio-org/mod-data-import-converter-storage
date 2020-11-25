@@ -30,7 +30,6 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
   private static final String SNAPSHOTS_TABLE_NAME = "profile_snapshots";
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
   private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
-  private static final String ASSOCIATION_TABLE_NAME = "job_to_action_profiles";
   private static final String JOB_TO_MATCH_PROFILES_TABLE_NAME = "job_to_match_profiles";
   private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
   private static final String ACTION_TO_MAPPING_PROFILES_TABLE_NAME = "action_to_mapping_profiles";
@@ -92,7 +91,6 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
   public void afterTest(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(ASSOCIATION_TABLE_NAME, new Criterion(), event ->
       pgClient.delete(SNAPSHOTS_TABLE_NAME, new Criterion(), event2 ->
         pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 ->
           pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE_NAME, new Criterion(), event4 ->
@@ -106,6 +104,6 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
                           context.fail(event10.cause());
                         }
                         async.complete();
-                      }))))))))));
+                      })))))))));
   }
 }

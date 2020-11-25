@@ -1,7 +1,9 @@
-## 2020-10-29 v1.10.0-SNAPSHOT
+## 2020-11-25 v1.10.0-SNAPSHOT 
+* [MODDICONV-148](https://issues.folio.org/browse/MODDICONV-148) Create default OCLC Create Instance profile
+
+## 2020-11-06 v1.9.2
 * [MODDICONV-152](https://issues.folio.org/browse/MODDICONV-150) Upgrade to RMB v31.1.5
-* [MODDICONV-156](https://issues.folio.org/browse/MODDICONV-156) Disable CQL2PgJSON & CQLWrapper extra logging in mod-data-import-converter-storage.
-* [MODDICONV-148](https://issues.folio.org/browse/MODDICONV-148) Create default OCLC Create Instance profile.
+* [MODDICONV-156](https://issues.folio.org/browse/MODDICONV-156) Disable CQL2PgJSON & CQLWrapper extra logging in mod-data-import-converter-storage
 
 ## 2020-10-27 v1.9.1
 * [MODDICONV-150](https://issues.folio.org/browse/MODDICONV-150) Fix error on creating data-import profile by a user with limited permissions

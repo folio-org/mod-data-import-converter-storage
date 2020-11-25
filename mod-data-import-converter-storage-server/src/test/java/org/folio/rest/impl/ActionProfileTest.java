@@ -54,7 +54,6 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public static final String JOB_TO_MATCH_PROFILES_TABLE_NAME = "job_to_match_profiles";
   static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
   static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
-  private static final String ASSOCIATION_TABLE_NAME = "job_to_action_profiles";
   private static final String SNAPSHOTS_TABLE_NAME = "profile_snapshots";
   private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
 
@@ -542,7 +541,6 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public void clearTables(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(ASSOCIATION_TABLE_NAME, new Criterion(), event ->
       pgClient.delete(SNAPSHOTS_TABLE_NAME, new Criterion(), event2 ->
         pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 ->
           pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE_NAME, new Criterion(), event4 ->
@@ -557,6 +555,6 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
                           context.fail(event11.cause());
                         }
                         async.complete();
-                      })))))))))));
+                      }))))))))));
   }
 }
