@@ -2,6 +2,7 @@ package org.folio.unit.snapshot;
 
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+
 import org.folio.dao.ProfileDao;
 import org.folio.dao.association.ProfileAssociationDao;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
@@ -30,6 +31,12 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
   private static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
   private static final String ASSOCIATION_TABLE_NAME = "job_to_action_profiles";
+  private static final String JOB_TO_MATCH_PROFILES_TABLE_NAME = "job_to_match_profiles";
+  private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
+  private static final String ACTION_TO_MAPPING_PROFILES_TABLE_NAME = "action_to_mapping_profiles";
+  private static final String JOB_TO_ACTION_PROFILES_TABLE_NAME = "job_to_action_profiles";
+  private static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
+  private static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
   @Autowired
   private ProfileDao<JobProfile, JobProfileCollection> jobProfileDao;
   @Autowired
@@ -85,26 +92,20 @@ public class ProfileSnapshotDaoTest extends AbstractUnitTest {
   public void afterTest(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(SNAPSHOTS_TABLE_NAME, new Criterion(), snapshotTableDeleteEvent -> {
-      if (snapshotTableDeleteEvent.failed()) {
-        context.fail(snapshotTableDeleteEvent.cause());
-      }
-      pgClient.delete(ASSOCIATION_TABLE_NAME, new Criterion(), associationTableDeleteEvent -> {
-        if (associationTableDeleteEvent.failed()) {
-          context.fail(associationTableDeleteEvent.cause());
-        }
-        pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), jobProfilesTableDeleteEvent -> {
-          if (jobProfilesTableDeleteEvent.failed()) {
-            context.fail(jobProfilesTableDeleteEvent.cause());
-          }
-          pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), actionProfilesTableDeleteEvent -> {
-            if (actionProfilesTableDeleteEvent.failed()) {
-              context.fail(actionProfilesTableDeleteEvent.cause());
-            }
-            async.complete();
-          });
-        });
-      });
-    });
+    pgClient.delete(ASSOCIATION_TABLE_NAME, new Criterion(), event ->
+      pgClient.delete(SNAPSHOTS_TABLE_NAME, new Criterion(), event2 ->
+        pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 ->
+          pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE_NAME, new Criterion(), event4 ->
+            pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE_NAME, new Criterion(), event5 ->
+              pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event6 ->
+                pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event7 ->
+                  pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event8 ->
+                    pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event9 ->
+                      pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event10 -> {
+                        if (event10.failed()) {
+                          context.fail(event10.cause());
+                        }
+                        async.complete();
+                      }))))))))));
   }
 }
