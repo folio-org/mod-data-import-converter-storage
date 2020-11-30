@@ -8,6 +8,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +63,17 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
   private static final String INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE = "Invalid repeatableFieldAction for empty subfields: %s";
+  private static final String OCLC_CREATE_INSTANCE_JOB_PROFILE_ID = "d0ebb7b0-2f0f-11eb-adc1-0242ac120002";
+  private static final String OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID = "91f9b8d6-d80e-4727-9783-73fb53e3c786";
+  private static final String OCLC_MARC_MARC_MATCH_PROFILE_ID = "d27d71ce-8a1e-44c6-acea-96961b5592c6";
+  private static final String OCLC_INSTANCE_UUID_MATCH_PROFILE_ID = "31dbb554-0826-48ec-a0a4-3c55293d4dee";
+  private static final String OCLC_CREATE_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
+  private static final String OCLC_UPDATE_MAPPING_PROFILE_ID = "862000b9-84ea-4cae-a223-5fc0552f2b42";
+  private static final String OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID = "f90864ef-8030-480f-a43f-8cdd21233252";
+  private static final String OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID = "d0ebba8a-2f0f-11eb-adc1-0242ac120002";
+  private static final String OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID = "cddff0e1-233c-47ba-8be5-553c632709d9";
+  private static final String OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID = "6aa8e98b-0d9f-41dd-b26f-15658d07eb52";
+
 
   @Autowired
   private ProfileService<JobProfile, JobProfileCollection, JobProfileUpdateDto> jobProfileService;
@@ -130,21 +143,26 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
-          if (errors.failed()) {
-            logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
-            asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
-          } else if (errors.result().getTotalRecords() > 0) {
-            asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
-          } else {
-            entity.getProfile().setId(id);
-            jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
-              .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .onComplete(asyncResultHandler);
-          }
-        });
+        if (id.equals(OCLC_CREATE_INSTANCE_JOB_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID)) {
+          logger.error("Can`t update default OCLC Job Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with"))));
+        } else {
+          entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+          validateProfile(entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
+            if (errors.failed()) {
+              logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
+              asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
+            } else if (errors.result().getTotalRecords() > 0) {
+              asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
+            } else {
+              entity.getProfile().setId(id);
+              jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+                .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
+                .otherwise(ExceptionHelper::mapExceptionToResponse)
+                .onComplete(asyncResultHandler);
+            }
+          });
+        }
       } catch (Exception e) {
         logger.error("Failed to update Job Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -176,13 +194,18 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        jobProfileService.markProfileAsDeleted(id, params.getTenantId())
-          .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
-            format("Job Profile with id '%s' was successfully deleted", id)))
-          .map(Response.class::cast)
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .onComplete(asyncResultHandler);
+        if (id.equals(OCLC_CREATE_INSTANCE_JOB_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID)) {
+          logger.error("Can`t delete default OCLC Job Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Job Profile with"))));
+        } else {
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          jobProfileService.markProfileAsDeleted(id, params.getTenantId())
+            .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
+              format("Job Profile with id '%s' was successfully deleted", id)))
+            .map(Response.class::cast)
+            .otherwise(ExceptionHelper::mapExceptionToResponse)
+            .onComplete(asyncResultHandler);
+        }
       } catch (Exception e) {
         logger.error("Failed to delete Job Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -238,21 +261,26 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
-          if (errors.failed()) {
-            logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
-            asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
-          } else if (errors.result().getTotalRecords() > 0) {
-            asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMatchProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
-          } else {
-            entity.getProfile().setId(id);
-            matchProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map(updatedEntity -> (Response) PutDataImportProfilesMatchProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
-              .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .onComplete(asyncResultHandler);
-          }
-        });
+        if (id.equals(OCLC_MARC_MARC_MATCH_PROFILE_ID) || id.equals(OCLC_INSTANCE_UUID_MATCH_PROFILE_ID)) {
+          logger.error("Can`t update default OCLC Match Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with"))));
+        } else {
+          entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+          validateProfile(entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
+            if (errors.failed()) {
+              logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
+              asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
+            } else if (errors.result().getTotalRecords() > 0) {
+              asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMatchProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
+            } else {
+              entity.getProfile().setId(id);
+              matchProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+                .map(updatedEntity -> (Response) PutDataImportProfilesMatchProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
+                .otherwise(ExceptionHelper::mapExceptionToResponse)
+                .onComplete(asyncResultHandler);
+            }
+          });
+        }
       } catch (Exception e) {
         logger.error("Failed to update Match Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -325,21 +353,26 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
-          if (errors.failed()) {
-            logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
-            asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
-          } else if (errors.result().getTotalRecords() > 0) {
-            asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMappingProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
-          } else {
-            entity.getProfile().setId(id);
-            mappingProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map(updatedEntity -> (Response) PutDataImportProfilesMappingProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
-              .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .onComplete(asyncResultHandler);
-          }
-        });
+        if (id.equals(OCLC_CREATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID)) {
+          logger.error("Can`t update default OCLC Mapping Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Mapping Profile"))));
+        } else {
+          entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+          validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
+            if (errors.failed()) {
+              logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
+              asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
+            } else if (errors.result().getTotalRecords() > 0) {
+              asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMappingProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
+            } else {
+              entity.getProfile().setId(id);
+              mappingProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+                .map(updatedEntity -> (Response) PutDataImportProfilesMappingProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
+                .otherwise(ExceptionHelper::mapExceptionToResponse)
+                .onComplete(asyncResultHandler);
+            }
+          });
+        }
       } catch (Exception e) {
         logger.error("Failed to update Mapping Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -351,13 +384,18 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void deleteDataImportProfilesMappingProfilesById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        mappingProfileService.markProfileAsDeleted(id, params.getTenantId())
-          .map(DeleteDataImportProfilesMappingProfilesByIdResponse.respond204WithTextPlain(
-            format("Mapping Profile with id '%s' was successfully deleted", id)))
-          .map(Response.class::cast)
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .onComplete(asyncResultHandler);
+        if (id.equals(OCLC_CREATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID)) {
+          logger.error("Can`t delete default OCLC Mapping Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Mapping Profile"))));
+        } else {
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          mappingProfileService.markProfileAsDeleted(id, params.getTenantId())
+            .map(DeleteDataImportProfilesMappingProfilesByIdResponse.respond204WithTextPlain(
+              format("Mapping Profile with id '%s' was successfully deleted", id)))
+            .map(Response.class::cast)
+            .otherwise(ExceptionHelper::mapExceptionToResponse)
+            .onComplete(asyncResultHandler);
+        }
       } catch (Exception e) {
         logger.error("Failed to delete Mapping Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -388,13 +426,18 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                         Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
-        matchProfileService.markProfileAsDeleted(id, params.getTenantId())
-          .map(DeleteDataImportProfilesMatchProfilesByIdResponse.respond204WithTextPlain(
-            format("Match Profile with id '%s' was successfully deleted", id)))
-          .map(Response.class::cast)
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .onComplete(asyncResultHandler);
+        if (id.equals(OCLC_MARC_MARC_MATCH_PROFILE_ID) || id.equals(OCLC_INSTANCE_UUID_MATCH_PROFILE_ID)) {
+          logger.error("Can`t delete default OCLC Match Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Match Profile"))));
+        } else {
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          matchProfileService.markProfileAsDeleted(id, params.getTenantId())
+            .map(DeleteDataImportProfilesMatchProfilesByIdResponse.respond204WithTextPlain(
+              format("Match Profile with id '%s' was successfully deleted", id)))
+            .map(Response.class::cast)
+            .otherwise(ExceptionHelper::mapExceptionToResponse)
+            .onComplete(asyncResultHandler);
+        }
       } catch (Exception e) {
         logger.error("Failed to delete Match Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -450,21 +493,26 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
-          if (errors.failed()) {
-            logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
-            asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
-          } else if (errors.result().getTotalRecords() > 0) {
-            asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesActionProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
-          } else {
-            entity.getProfile().setId(id);
-            actionProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
-              .map(updatedEntity -> (Response) PutDataImportProfilesActionProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
-              .otherwise(ExceptionHelper::mapExceptionToResponse)
-              .onComplete(asyncResultHandler);
-          }
-        });
+        if (id.equals(OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID)) {
+          logger.error("Can`t update default OCLC Action Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Action Profile"))));
+        } else {
+          entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+          validateProfile(entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
+            if (errors.failed()) {
+              logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
+              asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
+            } else if (errors.result().getTotalRecords() > 0) {
+              asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesActionProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
+            } else {
+              entity.getProfile().setId(id);
+              actionProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+                .map(updatedEntity -> (Response) PutDataImportProfilesActionProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
+                .otherwise(ExceptionHelper::mapExceptionToResponse)
+                .onComplete(asyncResultHandler);
+            }
+          });
+        }
       } catch (Exception e) {
         logger.error("Failed to update Action Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
@@ -695,12 +743,17 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                          Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        actionProfileService.markProfileAsDeleted(id, tenantId)
-          .map(DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
-            format("Action Profile with id '%s' was successfully deleted", id)))
-          .map(Response.class::cast)
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .onComplete(asyncResultHandler);
+        if (id.equals(OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID)) {
+          logger.error("Can`t delete default OCLC Action Profile with id {}", id);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Action Profile"))));
+        } else {
+          actionProfileService.markProfileAsDeleted(id, tenantId)
+            .map(DeleteDataImportProfilesActionProfilesByIdResponse.respond204WithTextPlain(
+              format("Action Profile with id '%s' was successfully deleted", id)))
+            .map(Response.class::cast)
+            .otherwise(ExceptionHelper::mapExceptionToResponse)
+            .onComplete(asyncResultHandler);
+        }
       } catch (Exception e) {
         logger.error("Failed to delete Action Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
