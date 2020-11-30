@@ -45,10 +45,17 @@ import static org.hamcrest.Matchers.is;
 public class ActionProfileTest extends AbstractRestVerticleTest {
 
   static final String ACTION_PROFILES_TABLE_NAME = "action_profiles";
-  private static final String ACTION_TO_ACTION_PROFILES_TABLE = "action_to_action_profiles";
-  private static final String ACTION_TO_MAPPING_PROFILES_TABLE = "action_to_mapping_profiles";
+  private static final String ACTION_TO_ACTION_PROFILES_TABLE_NAME = "action_to_action_profiles";
+  private static final String ACTION_TO_MAPPING_PROFILES_TABLE_NAME = "action_to_mapping_profiles";
   static final String ACTION_PROFILES_PATH = "/data-import-profiles/actionProfiles";
   private static final String ENTITY_TYPES_PATH = " /data-import-profiles/entityTypes";
+  private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
+  public static final String JOB_TO_ACTION_PROFILES_TABLE_NAME = "job_to_action_profiles";
+  public static final String JOB_TO_MATCH_PROFILES_TABLE_NAME = "job_to_match_profiles";
+  static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
+  static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
+  private static final String SNAPSHOTS_TABLE_NAME = "profile_snapshots";
+  private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
 
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
@@ -534,15 +541,20 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   public void clearTables(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(ACTION_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
-      pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event2 ->
-        pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 ->
-          pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event4 -> {
-            if (event4.failed()) {
-              context.fail(event4.cause());
-            }
-            async.complete();
-          })))
-    );
+      pgClient.delete(SNAPSHOTS_TABLE_NAME, new Criterion(), event2 ->
+        pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event3 ->
+          pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE_NAME, new Criterion(), event4 ->
+            pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE_NAME, new Criterion(), event5 ->
+              pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event6 ->
+                pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event7 ->
+                  pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event8 ->
+                    pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event9 ->
+                      pgClient.delete(ACTION_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event10 ->
+                        pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event11 -> {
+                        if (event11.failed()) {
+                          context.fail(event11.cause());
+                        }
+                        async.complete();
+                      }))))))))));
   }
 }
