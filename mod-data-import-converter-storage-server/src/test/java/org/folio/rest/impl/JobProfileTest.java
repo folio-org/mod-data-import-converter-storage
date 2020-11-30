@@ -190,7 +190,6 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     createProfiles();
     RestAssured.given()
       .spec(spec)
-      .body(new JsonObject().toString())
       .when()
       .delete(JOB_PROFILES_PATH + "/" + OCLC_DEFAULT_JOB_PROFILE_ID)
       .then()

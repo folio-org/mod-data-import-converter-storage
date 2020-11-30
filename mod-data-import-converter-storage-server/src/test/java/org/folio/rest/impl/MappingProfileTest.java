@@ -52,6 +52,9 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   public static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
   static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
 
+  private static final String OCLC_DEFAULT_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
+
+
   private static MappingProfileUpdateDto mappingProfile_1 = new MappingProfileUpdateDto()
     .withProfile(new MappingProfile().withName("Bla")
       .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
@@ -188,6 +191,29 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .post(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_1)
+      .when()
+      .put(MAPPING_PROFILES_PATH + "/" + OCLC_DEFAULT_MAPPING_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MAPPING_PROFILES_PATH + "/" + OCLC_DEFAULT_MAPPING_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
   }
 
   @Test

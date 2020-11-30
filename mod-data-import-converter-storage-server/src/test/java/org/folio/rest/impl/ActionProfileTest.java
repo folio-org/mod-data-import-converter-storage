@@ -60,6 +60,9 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
 
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
+  private static final String OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID = "d0ebba8a-2f0f-11eb-adc1-0242ac120002";
+
+
   static ActionProfileUpdateDto actionProfile_1 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("Bla")
       .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
@@ -188,6 +191,29 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .put(ACTION_PROFILES_PATH + "/" + UUID.randomUUID().toString())
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_1)
+      .when()
+      .put(ACTION_PROFILES_PATH + "/" + OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(ACTION_PROFILES_PATH + "/" + OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
   }
 
   @Test
