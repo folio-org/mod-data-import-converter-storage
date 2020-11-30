@@ -56,6 +56,10 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
   private static final String ACTION_TO_MAPPING_PROFILES_TABLE = "action_to_mapping_profiles";
   static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
+  private static final String SNAPSHOTS_TABLE_NAME = "profile_snapshots";
+  private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
+  private static final String ACTION_TO_ACTION_PROFILES_TABLE_NAME = "action_to_action_profiles";
+  private static final String MATCH_TO_MATCH_PROFILES_TABLE_NAME = "match_to_match_profiles";
 
   static JobProfileUpdateDto jobProfile_1 = new JobProfileUpdateDto()
     .withProfile(new JobProfile().withName("Bla")
@@ -69,6 +73,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     .withProfile(new JobProfile().withName("Foo")
       .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
       .withDataType(MARC));
+
+  private static final String OCLC_DEFAULT_JOB_PROFILE_ID = "d0ebb7b0-2f0f-11eb-adc1-0242ac120002";
 
   @Test
   public void shouldReturnEmptyListOnGet() {
@@ -165,6 +171,30 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .post(JOB_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfile_1)
+      .when()
+      .put(JOB_PROFILES_PATH + "/" + OCLC_DEFAULT_JOB_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .body(new JsonObject().toString())
+      .when()
+      .delete(JOB_PROFILES_PATH + "/" + OCLC_DEFAULT_JOB_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
   }
 
   @Test
@@ -598,17 +628,21 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void clearTables(TestContext context) {
     Async async = context.async();
     PostgresClient pgClient = PostgresClient.getInstance(vertx, TENANT_ID);
-    pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
-      pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
-        pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event3 ->
-          pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event4 ->
-            pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event5 ->
-              pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event6 ->
-                pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event7 -> {
-                  if (event7.failed()) {
-                    context.fail(event7.cause());
-                  }
-                  async.complete();
-                })))))));
+    pgClient.delete(SNAPSHOTS_TABLE_NAME, new Criterion(), event2 ->
+      pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE, new Criterion(), event3 ->
+        pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE, new Criterion(), event4 ->
+          pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event5 ->
+            pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event6 ->
+              pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event7 ->
+                pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event8 ->
+                  pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event9 ->
+                    pgClient.delete(ACTION_TO_ACTION_PROFILES_TABLE_NAME, new Criterion(), event10 ->
+                      pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event11 ->
+                        pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE_NAME, new Criterion(), event12 -> {
+                          if (event12.failed()) {
+                            context.fail(event12.cause());
+                          }
+                          async.complete();
+                        })))))))))));
   }
 }
