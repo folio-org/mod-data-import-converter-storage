@@ -2,6 +2,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ('91f9b8d6-d80e-4727-9783-73fb53e3c786', '{
 	"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
 	"name": "Default OCLC update Instance",
+	"description": "Import the OCLC record, update the instance, and create or update the SRS MARC",
 	"deleted": false,
 	"dataType": "MARC",
 	"metadata": {
@@ -11,9 +12,9 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 		"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 	},
 	"userInfo": {
-		"lastName": "ADMINISTRATOR",
-		"userName": "diku_admin",
-		"firstName": "DIKU"
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
 	},
 	"description": "",
 	"childProfiles": [],
@@ -35,9 +36,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 		"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 	},
 	"userInfo": {
-		"lastName": "ADMINISTRATOR",
-		"userName": "diku_admin",
-		"firstName": "DIKU"
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
 	},
 	"description": "",
 	"folioRecord": "INSTANCE",
@@ -55,9 +56,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"childProfiles": [],
@@ -291,9 +292,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"matchDetails": [{
@@ -342,9 +343,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"folioRecord": "INSTANCE",
@@ -369,9 +370,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -428,9 +429,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"matchDetails": [{
@@ -479,9 +480,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"folioRecord": "INSTANCE",
@@ -506,9 +507,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"matchDetails": [{
@@ -580,9 +581,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -608,9 +609,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"childProfiles": [],
@@ -651,9 +652,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 		"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 	},
 	"userInfo": {
-		"lastName": "ADMINISTRATOR",
-		"userName": "diku_admin",
-		"firstName": "DIKU"
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
 	},
 	"description": "",
 	"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -671,9 +672,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"childProfiles": [],
@@ -707,9 +708,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"matchDetails": [{
@@ -766,9 +767,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -817,9 +818,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"folioRecord": "INSTANCE",
@@ -844,9 +845,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"matchDetails": [{
@@ -918,9 +919,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -946,9 +947,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"childProfiles": [],
@@ -977,9 +978,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"matchDetails": [{
@@ -1036,9 +1037,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -1087,9 +1088,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"folioRecord": "INSTANCE",
@@ -1114,9 +1115,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"matchDetails": [{
@@ -1188,9 +1189,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -1216,9 +1217,9 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"childProfiles": [],
@@ -1252,9 +1253,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 		"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 	},
 	"userInfo": {
-		"lastName": "ADMINISTRATOR",
-		"userName": "diku_admin",
-		"firstName": "DIKU"
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
 	},
 	"description": "",
 	"matchDetails": [{
@@ -1311,9 +1312,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"matchDetails": [{
@@ -1362,9 +1363,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"folioRecord": "INSTANCE",
@@ -1389,9 +1390,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -1463,9 +1464,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -1491,9 +1492,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"childProfiles": [],
@@ -1521,9 +1522,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 		"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 	},
 	"userInfo": {
-		"lastName": "ADMINISTRATOR",
-		"userName": "diku_admin",
-		"firstName": "DIKU"
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
 	},
 	"description": "",
 	"matchDetails": [{
@@ -1572,9 +1573,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"folioRecord": "INSTANCE",
@@ -1599,9 +1600,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"matchDetails": [{
@@ -1658,9 +1659,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -1709,9 +1710,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"folioRecord": "INSTANCE",
@@ -1736,9 +1737,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"matchDetails": [{
@@ -1810,9 +1811,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -1838,9 +1839,9 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"childProfiles": [],
@@ -1875,9 +1876,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 		"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 	},
 	"userInfo": {
-		"lastName": "ADMINISTRATOR",
-		"userName": "diku_admin",
-		"firstName": "DIKU"
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
 	},
 	"description": "",
 	"childProfiles": [],
@@ -2103,9 +2104,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"folioRecord": "INSTANCE",
@@ -2123,9 +2124,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"childProfiles": [],
@@ -2359,9 +2360,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -2410,9 +2411,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"folioRecord": "INSTANCE",
@@ -2437,9 +2438,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"matchDetails": [{
@@ -2496,9 +2497,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"matchDetails": [{
@@ -2547,9 +2548,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 																	"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 																},
 																"userInfo": {
-																	"lastName": "ADMINISTRATOR",
-																	"userName": "diku_admin",
-																	"firstName": "DIKU"
+																	"lastName": "System",
+																	"userName": "System",
+																	"firstName": "System"
 																},
 																"description": "",
 																"folioRecord": "INSTANCE",
@@ -2574,9 +2575,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 																	"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 																},
 																"userInfo": {
-																	"lastName": "ADMINISTRATOR",
-																	"userName": "diku_admin",
-																	"firstName": "DIKU"
+																	"lastName": "System",
+																	"userName": "System",
+																	"firstName": "System"
 																},
 																"description": "",
 																"matchDetails": [{
@@ -2648,9 +2649,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -2676,9 +2677,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"childProfiles": [],
@@ -2726,9 +2727,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 		"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 	},
 	"userInfo": {
-		"lastName": "ADMINISTRATOR",
-		"userName": "diku_admin",
-		"firstName": "DIKU"
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
 	},
 	"description": "",
 	"childProfiles": [],
@@ -2754,9 +2755,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 					"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 				},
 				"userInfo": {
-					"lastName": "ADMINISTRATOR",
-					"userName": "diku_admin",
-					"firstName": "DIKU"
+					"lastName": "System",
+					"userName": "System",
+					"firstName": "System"
 				},
 				"description": "",
 				"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -2774,9 +2775,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"childProfiles": [],
@@ -2810,9 +2811,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -2869,9 +2870,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"matchDetails": [{
@@ -2920,9 +2921,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"folioRecord": "INSTANCE",
@@ -2947,9 +2948,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"matchDetails": [{
@@ -3021,9 +3022,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -3049,9 +3050,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"childProfiles": [],
@@ -3080,9 +3081,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 							},
 							"userInfo": {
-								"lastName": "ADMINISTRATOR",
-								"userName": "diku_admin",
-								"firstName": "DIKU"
+								"lastName": "System",
+								"userName": "System",
+								"firstName": "System"
 							},
 							"description": "",
 							"matchDetails": [{
@@ -3139,9 +3140,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"matchDetails": [{
@@ -3190,9 +3191,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"folioRecord": "INSTANCE",
@@ -3217,9 +3218,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 													},
 													"userInfo": {
-														"lastName": "ADMINISTRATOR",
-														"userName": "diku_admin",
-														"firstName": "DIKU"
+														"lastName": "System",
+														"userName": "System",
+														"firstName": "System"
 													},
 													"description": "",
 													"matchDetails": [{
@@ -3291,9 +3292,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"folioRecord": "MARC_BIBLIOGRAPHIC",
@@ -3319,9 +3320,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"updatedByUserId": "6a010e5b-5421-5b1c-9b52-568b37038575"
 										},
 										"userInfo": {
-											"lastName": "ADMINISTRATOR",
-											"userName": "diku_admin",
-											"firstName": "DIKU"
+											"lastName": "System",
+											"userName": "System",
+											"firstName": "System"
 										},
 										"description": "",
 										"childProfiles": [],
