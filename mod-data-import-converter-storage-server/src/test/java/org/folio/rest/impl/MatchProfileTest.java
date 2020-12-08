@@ -71,6 +71,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   public static final String MATCH_TO_ACTION_PROFILES_TABLE = "match_to_action_profiles";
   static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
+  private static final String OCLC_DEFAULT_MATCH_PROFILE_ID = "d27d71ce-8a1e-44c6-acea-96961b5592c6";
+
 
   private static MatchProfileUpdateDto matchProfile_1 = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("Bla")
@@ -199,6 +201,29 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .post(MATCH_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_1)
+      .when()
+      .put(MATCH_PROFILES_PATH + "/" + OCLC_DEFAULT_MATCH_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(MATCH_PROFILES_PATH + "/" + OCLC_DEFAULT_MATCH_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
   }
 
   @Test
