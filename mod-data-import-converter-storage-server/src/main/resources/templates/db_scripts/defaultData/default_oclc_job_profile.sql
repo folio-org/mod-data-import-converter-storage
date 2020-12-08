@@ -1,8 +1,8 @@
 INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ('d0ebb7b0-2f0f-11eb-adc1-0242ac120002', '{
   "id": "d0ebb7b0-2f0f-11eb-adc1-0242ac120002",
-  "name": "OCLC Create Instance",
-  "description": "Load OCLC single record",
+  "name": "OCLC - Default Create Instance",
+  "description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to create an Instance and MARC record",
   "dataType": "MARC",
   "tags": {
     "tagList": []
