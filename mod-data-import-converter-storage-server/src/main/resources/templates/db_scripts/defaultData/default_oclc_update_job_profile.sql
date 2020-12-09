@@ -1,8 +1,8 @@
 INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ('91f9b8d6-d80e-4727-9783-73fb53e3c786', '{
 	"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-	"name": "Default OCLC update Instance",
-	"description": "Import the OCLC record, update the instance, and create or update the SRS MARC",
+	"name": "OCLC - Default Update Instance",
+	"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 	"deleted": false,
 	"dataType": "MARC",
 	"metadata": {
@@ -16,7 +16,6 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
 	"childProfiles": [],
 	"parentProfiles": []
 }
@@ -599,7 +598,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 									"order": 0,
 									"content": {
 										"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-										"name": "Default OCLC update Instance",
+										"name": "OCLC - Default Update Instance",
+										"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 										"deleted": false,
 										"dataType": "MARC",
 										"metadata": {
@@ -613,7 +613,6 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 											"userName": "System",
 											"firstName": "System"
 										},
-										"description": "",
 										"childProfiles": [],
 										"parentProfiles": []
 									},
@@ -937,7 +936,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 						"order": 0,
 						"content": {
 							"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-							"name": "Default OCLC update Instance",
+							"name": "OCLC - Default Update Instance",
+							"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 							"deleted": false,
 							"dataType": "MARC",
 							"metadata": {
@@ -951,7 +951,6 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"userName": "System",
 								"firstName": "System"
 							},
-							"description": "",
 							"childProfiles": [],
 							"parentProfiles": []
 						},
@@ -1207,7 +1206,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 						"order": 0,
 						"content": {
 							"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-							"name": "Default OCLC update Instance",
+							"name": "OCLC - Default Update Instance",
+							"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 							"deleted": false,
 							"dataType": "MARC",
 							"metadata": {
@@ -1221,7 +1221,6 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"userName": "System",
 								"firstName": "System"
 							},
-							"description": "",
 							"childProfiles": [],
 							"parentProfiles": []
 						},
@@ -1482,7 +1481,8 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 			"order": 0,
 			"content": {
 				"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-				"name": "Default OCLC update Instance",
+				"name": "OCLC - Default Update Instance",
+				"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 				"deleted": false,
 				"dataType": "MARC",
 				"metadata": {
@@ -1496,7 +1496,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 					"userName": "System",
 					"firstName": "System"
 				},
-				"description": "",
 				"childProfiles": [],
 				"parentProfiles": []
 			},
@@ -1829,7 +1828,8 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 						"order": 0,
 						"content": {
 							"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-							"name": "Default OCLC update Instance",
+							"name": "OCLC - Default Update Instance",
+							"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 							"deleted": false,
 							"dataType": "MARC",
 							"metadata": {
@@ -1843,7 +1843,6 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 								"userName": "System",
 								"firstName": "System"
 							},
-							"description": "",
 							"childProfiles": [],
 							"parentProfiles": []
 						},
@@ -2667,7 +2666,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 												"order": 0,
 												"content": {
 													"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-													"name": "Default OCLC update Instance",
+													"name": "OCLC - Default Update Instance",
+													"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 													"deleted": false,
 													"dataType": "MARC",
 													"metadata": {
@@ -2681,7 +2681,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 														"userName": "System",
 														"firstName": "System"
 													},
-													"description": "",
 													"childProfiles": [],
 													"parentProfiles": []
 												},
@@ -3040,7 +3039,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 									"order": 0,
 									"content": {
 										"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-										"name": "Default OCLC update Instance",
+										"name": "OCLC - Default Update Instance",
+										"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 										"deleted": false,
 										"dataType": "MARC",
 										"metadata": {
@@ -3054,7 +3054,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"userName": "System",
 											"firstName": "System"
 										},
-										"description": "",
 										"childProfiles": [],
 										"parentProfiles": []
 									},
@@ -3310,7 +3309,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 									"order": 0,
 									"content": {
 										"id": "91f9b8d6-d80e-4727-9783-73fb53e3c786",
-										"name": "Default OCLC update Instance",
+										"name": "OCLC - Default Update Instance",
+										"description": "Triggered by an action in Inventory, this job profile imports a single record from OCLC, to update an existing Instance, and either create a new MARC record or update an existing MARC record",
 										"deleted": false,
 										"dataType": "MARC",
 										"metadata": {
@@ -3324,7 +3324,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"userName": "System",
 											"firstName": "System"
 										},
-										"description": "",
 										"childProfiles": [],
 										"parentProfiles": []
 									},
