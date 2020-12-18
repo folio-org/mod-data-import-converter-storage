@@ -6,7 +6,7 @@ public enum SnapshotProfileType {
   ACTION_PROFILE("action_profiles"),
   MAPPING_PROFILE("mapping_profiles");
 
-  private String tableName;
+  private final String tableName;
 
   SnapshotProfileType(String tableName) {
     this.tableName = tableName;

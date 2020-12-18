@@ -3,10 +3,10 @@ package org.folio.dao;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.cql2pgjson.CQL2PgJSON;
 import org.folio.cql2pgjson.exception.FieldException;
 import org.folio.rest.persist.Criteria.Criteria;
@@ -33,7 +33,7 @@ import static org.folio.dao.util.DaoUtil.getCQLWrapper;
  */
 public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
 
-  private static final Logger logger = LoggerFactory.getLogger(AbstractProfileDao.class);
+  private static final Logger logger = LogManager.getLogger();
   private static final String ID_FIELD = "'id'";
 
   @Autowired
@@ -122,7 +122,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       .compose(profileList -> profileList.getResults().isEmpty()
         ? Future.failedFuture(new NotFoundException(format("%s with id '%s' was not found", getProfileType().getSimpleName(), profileId)))
         : Future.succeededFuture(profileList.getResults().get(0)))
-      .compose(profileMutator::apply)
+      .compose(profileMutator)
       .compose(mutatedProfile -> updateProfile(tx.future(), profileId, mutatedProfile, tenantId))
       .onComplete(updateAr -> {
         if (updateAr.succeeded()) {
@@ -248,7 +248,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
     String deleteQuery = String.format("DELETE FROM associations_view WHERE master_id = '%s'", profileId);
     pgClient.execute(txConnection, deleteQuery, deleteAr -> {
       if (deleteAr.failed()) {
-        logger.error("Error during delete associations of profile with other detail-profiles by its id '{}'", deleteAr.cause(), profileId);
+        logger.error("Error during delete associations of profile with other detail-profiles by its id '{}'", profileId, deleteAr.cause());
         promise.fail(deleteAr.cause());
       } else {
         promise.complete(true);

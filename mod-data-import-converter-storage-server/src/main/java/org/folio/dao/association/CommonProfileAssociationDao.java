@@ -2,10 +2,10 @@ package org.folio.dao.association;
 
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
@@ -40,7 +40,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
   private static final String MASTER_ID_FIELD = "masterProfileId";
   private static final String DETAIL_ID_FIELD = "detailProfileId";
-  private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationDao.class);
+  private static final Logger LOGGER = LogManager.getLogger();
   private static final String CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE = "Correct ProfileAssociation types: " +
     "ACTION_PROFILE_TO_ACTION_PROFILE, " +
     "ACTION_PROFILE_TO_MAPPING_PROFILE, " +
@@ -49,7 +49,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
     "JOB_PROFILE_TO_MATCH_PROFILE, " +
     "MATCH_PROFILE_TO_ACTION_PROFILE, " +
     "MATCH_PROFILE_TO_MATCH_PROFILE";
-  private static Map<String, String> associationTableNamesMap;
+  private static final Map<String, String> associationTableNamesMap;
   @Autowired
   protected PostgresClientFactory pgClientFactory;
 
@@ -93,7 +93,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
       Criteria idCrit = constructCriteria(ID_FIELD, id);
       pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, new Criterion(idCrit), true, false, promise);
     } catch (Exception e) {
-      LOGGER.error("Error querying {} by id", e, ProfileAssociation.class.getSimpleName());
+      LOGGER.error("Error querying {} by id", ProfileAssociation.class.getSimpleName(), e);
       promise.fail(e);
     }
     return promise.future()
@@ -119,7 +119,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
         }
       });
     } catch (Exception e) {
-      LOGGER.error("Error updating {} with id {}", e, ProfileAssociation.class, entity.getId());
+      LOGGER.error("Error updating {} with id {}", ProfileAssociation.class, entity.getId(), e);
       promise.fail(e);
     }
     return promise.future();

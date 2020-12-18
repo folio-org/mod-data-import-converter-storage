@@ -1,16 +1,16 @@
 package org.folio.services;
 
-import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dao.ProfileDao;
 import org.folio.dataimport.util.OkapiConnectionParams;
 import org.folio.dataimport.util.RestUtil;
 import org.folio.dataimport.util.exception.ConflictException;
+import org.folio.okapi.common.GenericCompositeFuture;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractProfileService<T, S, D> implements ProfileService<T, S, D> {
 
-  private static final Logger logger = LoggerFactory.getLogger(AbstractProfileService.class);
+  private static final Logger logger = LogManager.getLogger();
   private static final String GET_USER_URL = "/users?query=id==";
   private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
@@ -96,12 +96,12 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
       return Future.succeededFuture(true);
     }
     Promise<Boolean> result = Promise.promise();
-    List<Future> futureList = new ArrayList<>();
+    List<Future<Boolean>> futureList = new ArrayList<>();
     profileAssociations.forEach(association -> futureList.add(profileAssociationService.delete(association.getMasterProfileId(),
       association.getDetailProfileId(),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
-    CompositeFuture.all(futureList).onComplete(ar -> {
+    GenericCompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(true);
       } else {
@@ -116,11 +116,11 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
       return Future.succeededFuture(true);
     }
     Promise<Boolean> result = Promise.promise();
-    List<Future> futureList = new ArrayList<>();
+    List<Future<ProfileAssociation>> futureList = new ArrayList<>();
     profileAssociations.forEach(association -> futureList.add(profileAssociationService.save(association,
       ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
-    CompositeFuture.all(futureList).onComplete(ar -> {
+    GenericCompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(true);
       } else {
@@ -246,11 +246,11 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
    */
   private Future<S> fetchRelationsForCollection(S profilesCollection, String tenantId) {
     List<T> profilesList = getProfilesList(profilesCollection);
-    List<Future> futureList = new ArrayList<>();
+    List<Future<T>> futureList = new ArrayList<>();
     Promise<S> result = Promise.promise();
     profilesList.forEach(profile ->
       futureList.add(fetchRelations(profile, tenantId)));
-    CompositeFuture.all(futureList).onComplete(ar -> {
+    GenericCompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(profilesCollection);
       } else {
@@ -268,7 +268,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
    * @return - profile collection with fetched relations
    */
   private Future<T> fetchRelations(T profile, String tenantId) {
-    List<Future> futureList = new ArrayList<>();
+    List<Future<T>> futureList = new ArrayList<>();
     Promise<T> result = Promise.promise();
     futureList.add(fetchChildProfiles(profile, tenantId)
       .compose(childProfiles -> {
@@ -280,7 +280,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
         setParentProfiles(profile, parentProfiles);
         return Future.succeededFuture(profile);
       }));
-    CompositeFuture.all(futureList).onComplete(ar -> {
+    GenericCompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(profile);
       } else {

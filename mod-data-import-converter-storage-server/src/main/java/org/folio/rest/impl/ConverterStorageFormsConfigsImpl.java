@@ -5,8 +5,8 @@ import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.rest.jaxrs.model.FormConfig;
 import org.folio.rest.jaxrs.resource.ConverterStorageFormsConfigs;
@@ -22,11 +22,11 @@ import static java.lang.String.format;
 
 public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsConfigs {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ConverterStorageFormsConfigsImpl.class);
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Autowired
   private FormConfigService formConfigService;
-  private String tenantId;
+  private final String tenantId;
 
   public ConverterStorageFormsConfigsImpl(Vertx vertx, String tenantId) { //NOSONAR
     SpringContextUtil.autowireDependencies(this, Vertx.currentContext());
@@ -68,7 +68,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to get FormConfig by formId {}", e, formName);
+      LOGGER.error("Failed to get FormConfig by formId {}", formName, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -82,7 +82,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to update FormConfig by formId {}", e, formName);
+      LOGGER.error("Failed to update FormConfig by formId {}", formName, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -98,7 +98,7 @@ public class ConverterStorageFormsConfigsImpl implements ConverterStorageFormsCo
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to delete FormConfig by formName {}", e, formName);
+      LOGGER.error("Failed to delete FormConfig by formName {}", formName, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }

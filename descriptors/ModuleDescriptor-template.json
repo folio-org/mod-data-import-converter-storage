@@ -8,167 +8,307 @@
       "version": "1.2",
       "handlers": [
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/jobProfiles",
-          "permissionsRequired" : [ "converter-storage.jobprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.jobprofile.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/data-import-profiles/jobProfiles",
-          "permissionsRequired" : [ "converter-storage.jobprofile.post" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.jobprofile.post"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/jobProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.jobprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.jobprofile.get"
+          ]
         },
         {
-          "methods": ["PUT"],
+          "methods": [
+            "PUT"
+          ],
           "pathPattern": "/data-import-profiles/jobProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.jobprofile.put" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.jobprofile.put"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["DELETE"],
+          "methods": [
+            "DELETE"
+          ],
           "pathPattern": "/data-import-profiles/jobProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.jobprofile.delete" ]
+          "permissionsRequired": [
+            "converter-storage.jobprofile.delete"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/matchProfiles",
-          "permissionsRequired" : [ "converter-storage.matchprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.matchprofile.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/data-import-profiles/matchProfiles",
-          "permissionsRequired" : [ "converter-storage.matchprofile.post" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.matchprofile.post"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/matchProfiles/{id}",
-          "permissionsRequired" : [ "converter-storage.matchprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.matchprofile.get"
+          ]
         },
         {
-          "methods": ["PUT"],
+          "methods": [
+            "PUT"
+          ],
           "pathPattern": "/data-import-profiles/matchProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.matchprofile.put" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.matchprofile.put"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["DELETE"],
+          "methods": [
+            "DELETE"
+          ],
           "pathPattern": "/data-import-profiles/matchProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.matchprofile.delete" ]
+          "permissionsRequired": [
+            "converter-storage.matchprofile.delete"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/actionProfiles",
-          "permissionsRequired" : [ "converter-storage.actionprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.actionprofile.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/data-import-profiles/actionProfiles",
-          "permissionsRequired" : [ "converter-storage.actionprofile.post" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.actionprofile.post"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/actionProfiles/{id}",
-          "permissionsRequired" : [ "converter-storage.actionprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.actionprofile.get"
+          ]
         },
         {
-          "methods": ["PUT"],
+          "methods": [
+            "PUT"
+          ],
           "pathPattern": "/data-import-profiles/actionProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.actionprofile.put" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.actionprofile.put"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["DELETE"],
+          "methods": [
+            "DELETE"
+          ],
           "pathPattern": "/data-import-profiles/actionProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.actionprofile.delete" ]
+          "permissionsRequired": [
+            "converter-storage.actionprofile.delete"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/mappingProfiles",
-          "permissionsRequired" : [ "converter-storage.mappingprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.mappingprofile.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/data-import-profiles/mappingProfiles",
-          "permissionsRequired" : [ "converter-storage.mappingprofile.post" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.mappingprofile.post"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
-          "permissionsRequired" : [ "converter-storage.mappingprofile.get" ]
+          "permissionsRequired": [
+            "converter-storage.mappingprofile.get"
+          ]
         },
         {
-          "methods": ["PUT"],
+          "methods": [
+            "PUT"
+          ],
           "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.mappingprofile.put" ],
-          "modulePermissions": ["users.collection.get"]
+          "permissionsRequired": [
+            "converter-storage.mappingprofile.put"
+          ],
+          "modulePermissions": [
+            "users.collection.get"
+          ]
         },
         {
-          "methods": ["DELETE"],
+          "methods": [
+            "DELETE"
+          ],
           "pathPattern": "/data-import-profiles/mappingProfiles/{id}",
-          "permissionsRequired": [ "converter-storage.mappingprofile.delete" ]
+          "permissionsRequired": [
+            "converter-storage.mappingprofile.delete"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/profileAssociations",
-          "permissionsRequired": [ "converter-storage.profileassociation.get" ]
+          "permissionsRequired": [
+            "converter-storage.profileassociation.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/data-import-profiles/profileAssociations",
-          "permissionsRequired": [ "converter-storage.profileassociation.post" ]
+          "permissionsRequired": [
+            "converter-storage.profileassociation.post"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/profileAssociations/{id}",
-          "permissionsRequired": [ "converter-storage.profileassociation.get" ]
+          "permissionsRequired": [
+            "converter-storage.profileassociation.get"
+          ]
         },
         {
-          "methods": ["PUT"],
+          "methods": [
+            "PUT"
+          ],
           "pathPattern": "/data-import-profiles/profileAssociations/{id}",
-          "permissionsRequired": [ "converter-storage.profileassociation.put" ]
+          "permissionsRequired": [
+            "converter-storage.profileassociation.put"
+          ]
         },
         {
-          "methods": ["DELETE"],
+          "methods": [
+            "DELETE"
+          ],
           "pathPattern": "/data-import-profiles/profileAssociations/{id}",
-          "permissionsRequired": [ "converter-storage.profileassociation.delete" ]
+          "permissionsRequired": [
+            "converter-storage.profileassociation.delete"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/profileAssociations/{masterId}/details",
-          "permissionsRequired": [ "converter-storage.profileassociation.get" ]
+          "permissionsRequired": [
+            "converter-storage.profileassociation.get"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/profileAssociations/{detailId}/masters",
-          "permissionsRequired": [ "converter-storage.profileassociation.get" ]
+          "permissionsRequired": [
+            "converter-storage.profileassociation.get"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/jobProfileSnapshots/{id}",
-          "permissionsRequired": [ "converter-storage.jobprofilesnapshots.get" ]
+          "permissionsRequired": [
+            "converter-storage.jobprofilesnapshots.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/data-import-profiles/jobProfileSnapshots/{id}",
-          "permissionsRequired": [ "converter-storage.jobprofilesnapshots.post" ]
+          "permissionsRequired": [
+            "converter-storage.jobprofilesnapshots.post"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/entityTypes",
-          "permissionsRequired": [ "converter-storage.entitytypes.get" ]
+          "permissionsRequired": [
+            "converter-storage.entitytypes.get"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/data-import-profiles/profileSnapshots/{profileId}",
-          "permissionsRequired": [ "converter-storage.profileSnapshots.get" ]
+          "permissionsRequired": [
+            "converter-storage.profileSnapshots.get"
+          ]
         }
       ]
     },
@@ -177,29 +317,49 @@
       "version": "1.0",
       "handlers": [
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/converter-storage/forms/configs",
-          "permissionsRequired" : [ "converter-storage.forms-configs.get" ]
+          "permissionsRequired": [
+            "converter-storage.forms-configs.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/converter-storage/forms/configs",
-          "permissionsRequired" : [ "converter-storage.forms-configs.post" ]
+          "permissionsRequired": [
+            "converter-storage.forms-configs.post"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/converter-storage/forms/configs/{formName}",
-          "permissionsRequired" : [ "converter-storage.forms-configs.get" ]
+          "permissionsRequired": [
+            "converter-storage.forms-configs.get"
+          ]
         },
         {
-          "methods": ["PUT"],
+          "methods": [
+            "PUT"
+          ],
           "pathPattern": "/converter-storage/forms/configs/{formName}",
-          "permissionsRequired" : [ "converter-storage.forms-configs.put" ]
+          "permissionsRequired": [
+            "converter-storage.forms-configs.put"
+          ]
         },
         {
-          "methods": ["DELETE"],
+          "methods": [
+            "DELETE"
+          ],
           "pathPattern": "/converter-storage/forms/configs/{formName}",
-          "permissionsRequired" : [ "converter-storage.forms-configs.delete" ]
+          "permissionsRequired": [
+            "converter-storage.forms-configs.delete"
+          ]
         }
       ]
     },
@@ -208,35 +368,55 @@
       "version": "1.0",
       "handlers": [
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/field-protection-settings/marc",
-          "permissionsRequired" : [ "converter-storage.field-protection-settings.get" ]
+          "permissionsRequired": [
+            "converter-storage.field-protection-settings.get"
+          ]
         },
         {
-          "methods": ["POST"],
+          "methods": [
+            "POST"
+          ],
           "pathPattern": "/field-protection-settings/marc",
-          "permissionsRequired" : [ "converter-storage.field-protection-settings.post" ]
+          "permissionsRequired": [
+            "converter-storage.field-protection-settings.post"
+          ]
         },
         {
-          "methods": ["GET"],
+          "methods": [
+            "GET"
+          ],
           "pathPattern": "/field-protection-settings/marc/{id}",
-          "permissionsRequired" : [ "converter-storage.field-protection-settings.get" ]
+          "permissionsRequired": [
+            "converter-storage.field-protection-settings.get"
+          ]
         },
         {
-          "methods": ["PUT"],
+          "methods": [
+            "PUT"
+          ],
           "pathPattern": "/field-protection-settings/marc/{id}",
-          "permissionsRequired" : [ "converter-storage.field-protection-settings.put" ]
+          "permissionsRequired": [
+            "converter-storage.field-protection-settings.put"
+          ]
         },
         {
-          "methods": ["DELETE"],
+          "methods": [
+            "DELETE"
+          ],
           "pathPattern": "/field-protection-settings/marc/{id}",
-          "permissionsRequired" : [ "converter-storage.field-protection-settings.delete" ]
+          "permissionsRequired": [
+            "converter-storage.field-protection-settings.delete"
+          ]
         }
       ]
     },
     {
       "id": "_tenant",
-      "version": "1.2",
+      "version": "2.0",
       "interfaceType": "system",
       "handlers": [
         {
@@ -247,9 +427,10 @@
         },
         {
           "methods": [
-            "DELETE"
+            "DELETE",
+            "GET"
           ],
-          "pathPattern": "/_/tenant"
+          "pathPattern": "/_/tenant/{id}"
         }
       ]
     }
@@ -462,21 +643,52 @@
     "dockerArgs": {
       "HostConfig": {
         "Memory": 357913941,
-        "PortBindings": { "8081/tcp": [ { "HostPort": "%p" } ] }
+        "PortBindings": {
+          "8081/tcp": [
+            {
+              "HostPort": "%p"
+            }
+          ]
+        }
       }
     },
     "env": [
-      { "name": "JAVA_OPTIONS",
+      {
+        "name": "JAVA_OPTIONS",
         "value": "-XX:MaxRAMPercentage=66.0 -Djava.util.logging.config.file=vertx-default-jul-logging.properties"
       },
-      { "name": "DB_HOST", "value": "postgres" },
-      { "name": "DB_PORT", "value": "5432" },
-      { "name": "DB_USERNAME", "value": "folio_admin" },
-      { "name": "DB_PASSWORD", "value": "folio_admin" },
-      { "name": "DB_DATABASE", "value": "okapi_modules" },
-      { "name": "DB_QUERYTIMEOUT", "value": "60000" },
-      { "name": "DB_CHARSET", "value": "UTF-8" },
-      { "name": "DB_MAXPOOLSIZE", "value": "5" }
+      {
+        "name": "DB_HOST",
+        "value": "postgres"
+      },
+      {
+        "name": "DB_PORT",
+        "value": "5432"
+      },
+      {
+        "name": "DB_USERNAME",
+        "value": "folio_admin"
+      },
+      {
+        "name": "DB_PASSWORD",
+        "value": "folio_admin"
+      },
+      {
+        "name": "DB_DATABASE",
+        "value": "okapi_modules"
+      },
+      {
+        "name": "DB_QUERYTIMEOUT",
+        "value": "60000"
+      },
+      {
+        "name": "DB_CHARSET",
+        "value": "UTF-8"
+      },
+      {
+        "name": "DB_MAXPOOLSIZE",
+        "value": "5"
+      }
     ]
   }
 }

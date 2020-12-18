@@ -3,11 +3,11 @@ package org.folio.dao.snapshot;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 @Repository
 public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
-  private static final Logger logger = LoggerFactory.getLogger(ProfileSnapshotDaoImpl.class);
+  private static final Logger logger = LogManager.getLogger();
   private static final String TABLE_NAME = "profile_snapshots";
   private static final String GET_PROFILE_SNAPSHOT = "select get_profile_snapshot('%s', '%s', '%s', '%s');";
   protected PostgresClientFactory pgClientFactory;

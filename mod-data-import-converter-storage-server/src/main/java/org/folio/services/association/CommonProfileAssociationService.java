@@ -4,8 +4,8 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dao.ProfileDao;
 import org.folio.dao.association.MasterDetailAssociationDao;
 import org.folio.dao.association.ProfileAssociationDao;
@@ -35,7 +35,7 @@ import java.util.UUID;
  */
 @Service
 public class CommonProfileAssociationService implements ProfileAssociationService {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CommonProfileAssociationService.class);
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Autowired
   private ProfileDao<JobProfile, JobProfileCollection> jobProfileDao;

@@ -6,9 +6,9 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.folio.dataimport.util.ExceptionHelper;
 import org.folio.dataimport.util.OkapiConnectionParams;
@@ -57,12 +57,13 @@ import static org.folio.rest.RestVerticle.OKAPI_USERID_HEADER;
 
 public class DataImportProfilesImpl implements DataImportProfiles {
 
-  private static final Logger logger = LoggerFactory.getLogger(DataImportProfilesImpl.class);
+  private static final Logger logger = LogManager.getLogger();
   private static final String DUPLICATE_PROFILE_ERROR_CODE = "%s.duplication.invalid";
   private static final String PROFILE_VALIDATE_ERROR_MESSAGE = "Failed to validate %s";
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
   private static final String INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE = "Invalid repeatableFieldAction for empty subfields: %s";
+
   private static final String OCLC_CREATE_INSTANCE_JOB_PROFILE_ID = "d0ebb7b0-2f0f-11eb-adc1-0242ac120002";
   private static final String OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID = "91f9b8d6-d80e-4727-9783-73fb53e3c786";
   private static final String OCLC_MARC_MARC_MATCH_PROFILE_ID = "d27d71ce-8a1e-44c6-acea-96961b5592c6";
