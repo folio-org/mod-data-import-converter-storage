@@ -6,12 +6,12 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
-import org.folio.dataimport.util.ExceptionHelper;
-import org.folio.dataimport.util.OkapiConnectionParams;
+import org.folio.rest.impl.util.ExceptionHelper;
+import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
 import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
@@ -57,12 +57,13 @@ import static org.folio.rest.RestVerticle.OKAPI_USERID_HEADER;
 
 public class DataImportProfilesImpl implements DataImportProfiles {
 
-  private static final Logger logger = LoggerFactory.getLogger(DataImportProfilesImpl.class);
+  private static final Logger logger = LogManager.getLogger();
   private static final String DUPLICATE_PROFILE_ERROR_CODE = "%s.duplication.invalid";
   private static final String PROFILE_VALIDATE_ERROR_MESSAGE = "Failed to validate %s";
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
   private static final String INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE = "Invalid repeatableFieldAction for empty subfields: %s";
+
   private static final String OCLC_CREATE_INSTANCE_JOB_PROFILE_ID = "d0ebb7b0-2f0f-11eb-adc1-0242ac120002";
   private static final String OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID = "91f9b8d6-d80e-4727-9783-73fb53e3c786";
   private static final String OCLC_MARC_MARC_MATCH_PROFILE_ID = "d27d71ce-8a1e-44c6-acea-96961b5592c6";
@@ -108,7 +109,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesJobProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            jobProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+            jobProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders))
               .map(profile -> (Response) PostDataImportProfilesJobProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesJobProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -156,7 +157,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
             } else {
               entity.getProfile().setId(id);
-              jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+              jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
                 .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
                 .otherwise(ExceptionHelper::mapExceptionToResponse)
                 .onComplete(asyncResultHandler);
@@ -198,7 +199,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           logger.error("Can`t delete default OCLC Job Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Job Profile with"))));
         } else {
-          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
           jobProfileService.markProfileAsDeleted(id, params.getTenantId())
             .map(DeleteDataImportProfilesJobProfilesByIdResponse.respond204WithTextPlain(
               format("Job Profile with id '%s' was successfully deleted", id)))
@@ -226,7 +227,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMatchProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            matchProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+            matchProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders))
               .map(profile -> (Response) PostDataImportProfilesMatchProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesMatchProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -274,7 +275,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMatchProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
             } else {
               entity.getProfile().setId(id);
-              matchProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+              matchProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
                 .map(updatedEntity -> (Response) PutDataImportProfilesMatchProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
                 .otherwise(ExceptionHelper::mapExceptionToResponse)
                 .onComplete(asyncResultHandler);
@@ -319,7 +320,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMappingProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            mappingProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+            mappingProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders))
               .map(profile -> (Response) PostDataImportProfilesMappingProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesMappingProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -366,7 +367,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesMappingProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
             } else {
               entity.getProfile().setId(id);
-              mappingProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+              mappingProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
                 .map(updatedEntity -> (Response) PutDataImportProfilesMappingProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
                 .otherwise(ExceptionHelper::mapExceptionToResponse)
                 .onComplete(asyncResultHandler);
@@ -388,7 +389,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           logger.error("Can`t delete default OCLC Mapping Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Mapping Profile"))));
         } else {
-          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
           mappingProfileService.markProfileAsDeleted(id, params.getTenantId())
             .map(DeleteDataImportProfilesMappingProfilesByIdResponse.respond204WithTextPlain(
               format("Mapping Profile with id '%s' was successfully deleted", id)))
@@ -430,7 +431,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           logger.error("Can`t delete default OCLC Match Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Match Profile"))));
         } else {
-          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
           matchProfileService.markProfileAsDeleted(id, params.getTenantId())
             .map(DeleteDataImportProfilesMatchProfilesByIdResponse.respond204WithTextPlain(
               format("Match Profile with id '%s' was successfully deleted", id)))
@@ -458,7 +459,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesActionProfilesResponse.respond422WithApplicationJson(errors.result())));
           } else {
-            actionProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+            actionProfileService.saveProfile(entity, new OkapiConnectionParams(okapiHeaders))
               .map(profile -> (Response) PostDataImportProfilesActionProfilesResponse
                 .respond201WithApplicationJson(entity.withProfile(profile).withId(profile.getId()), PostDataImportProfilesActionProfilesResponse.headersFor201()))
               .otherwise(ExceptionHelper::mapExceptionToResponse)
@@ -506,7 +507,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
               asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesActionProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
             } else {
               entity.getProfile().setId(id);
-              actionProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+              actionProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
                 .map(updatedEntity -> (Response) PutDataImportProfilesActionProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
                 .otherwise(ExceptionHelper::mapExceptionToResponse)
                 .onComplete(asyncResultHandler);
@@ -561,7 +562,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                        Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
         try {
-          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+          OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
           profileAssociationService.getAll(mapContentType(master), mapContentType(detail), params.getTenantId())
             .map(GetDataImportProfilesProfileAssociationsResponse::respond200WithApplicationJson)
             .map(Response.class::cast)
@@ -581,7 +582,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.setId(id);
-        profileAssociationService.update(entity, mapContentType(master), mapContentType(detail), new OkapiConnectionParams(okapiHeaders, vertxContext.owner()))
+        profileAssociationService.update(entity, mapContentType(master), mapContentType(detail), new OkapiConnectionParams(okapiHeaders))
           .map(updatedEntity -> (Response) PutDataImportProfilesProfileAssociationsByIdResponse.respond200WithApplicationJson(updatedEntity))
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
@@ -626,7 +627,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
     vertxContext.runOnContext(c -> {
       try {
-        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders, vertxContext.owner());
+        OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
         profileAssociationService.getById(id, mapContentType(master), mapContentType(detail), params.getTenantId())
           .map(optionalProfile -> optionalProfile.orElseThrow(() ->
             new NotFoundException(format("Profile association with id '%s' was not found", id))))

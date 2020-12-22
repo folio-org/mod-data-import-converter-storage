@@ -5,9 +5,9 @@ import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-import org.folio.dataimport.util.ExceptionHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.folio.rest.impl.util.ExceptionHelper;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.jaxrs.resource.FieldProtectionSettings;
 import org.folio.rest.tools.utils.TenantTool;
@@ -23,11 +23,11 @@ import static java.lang.String.format;
 
 public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(FieldProtectionSettingsImpl.class);
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Autowired
   private MarcFieldProtectionSettingsService marcFieldProtectionSettingsService;
-  private String tenantId;
+  private final String tenantId;
 
   public FieldProtectionSettingsImpl(Vertx vertx, String tenantId) { //NOSONAR
     SpringContextUtil.autowireDependencies(this, Vertx.currentContext());
@@ -70,7 +70,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to update MARC field protection setting by id {}", e, id);
+      LOGGER.error("Failed to update MARC field protection setting by id {}", id, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -86,7 +86,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to delete MARC field protection setting by id {}", e, id);
+      LOGGER.error("Failed to delete MARC field protection setting by id {}", id, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -102,7 +102,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to get MARC field protection setting by id {}", e, id);
+      LOGGER.error("Failed to get MARC field protection setting by id {}", id, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }

@@ -19,8 +19,8 @@
   </modules>
 
   <properties>
-    <raml-module-builder.version>31.1.5</raml-module-builder.version>
-    <vertx.version>3.9.4</vertx.version>
+    <raml-module-builder.version>32.0.0</raml-module-builder.version>
+    <vertx.version>4.0.0</vertx.version>
     <junit.version>4.13</junit.version>
     <rest-assured.version>4.0.0</rest-assured.version>
     <main.basedir>${project.basedir}</main.basedir>
@@ -28,6 +28,28 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.exclusions>**/ModTenantAPI.java</sonar.exclusions>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-stack-depchain</artifactId>
+        <version>${vertx.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-sql-client</artifactId>
+        <version>${vertx.version}-FOLIO</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-pg-client</artifactId>
+        <version>${vertx.version}-FOLIO</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <resources>
@@ -60,7 +82,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>git submodule update</id>
@@ -84,7 +106,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>filter-descriptor-inputs</id>

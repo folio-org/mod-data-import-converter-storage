@@ -17,7 +17,8 @@ import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.folio.dataimport.util.DaoUtil.constructCriteria;
+import static org.folio.dao.util.DaoUtil.constructCriteria;
+
 
 @Repository
 public class FormConfigDaoImpl implements FormConfigDao {

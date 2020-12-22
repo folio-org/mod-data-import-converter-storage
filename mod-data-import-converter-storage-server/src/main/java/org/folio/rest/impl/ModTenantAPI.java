@@ -5,18 +5,16 @@ import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.annotations.Validate;
 import org.folio.rest.jaxrs.model.TenantAttributes;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.tools.utils.TenantTool;
 
 import javax.ws.rs.core.Response;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +23,7 @@ import java.util.Map;
 
 public class ModTenantAPI extends TenantAPI {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ModTenantAPI.class);
+  private static final Logger LOGGER = LogManager.getLogger();
   private static final String DEFAULT_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_job_profile.sql";
   private static final String DEFAULT_OCLC_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_oclc_job_profile.sql";
   private static final String DEFAULT_OCLC_UPDATE_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_oclc_update_job_profile.sql";
@@ -36,7 +34,7 @@ public class ModTenantAPI extends TenantAPI {
   @Validate
   @Override
   public void postTenant(TenantAttributes entity, Map<String, String> headers, Handler<AsyncResult<Response>> handlers, Context context) {
-    super.postTenant(entity, headers, ar -> {
+    super.postTenantSync(entity, headers, ar -> {
       if (ar.failed()) {
         handlers.handle(ar);
       } else {

@@ -4,10 +4,10 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.dao.sql.SelectBuilder;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -29,7 +29,7 @@ import static org.folio.dao.sql.SelectBuilder.putInQuotes;
 @Repository
 public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDao {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MasterDetailAssociationDaoImpl.class);
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * This query selects detail profiles by master profile id.
@@ -163,7 +163,7 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
     try {
       pgClientFactory.createInstance(tenantId).select(sql, promise);
     } catch (Exception e) {
-      LOGGER.debug("Could not perform the sql query %s for the tenant %s", sql, tenantId);
+      LOGGER.debug("Could not perform the sql query {} for the tenant {}", sql, tenantId, e);
       promise.fail(e);
     }
     return promise.future();

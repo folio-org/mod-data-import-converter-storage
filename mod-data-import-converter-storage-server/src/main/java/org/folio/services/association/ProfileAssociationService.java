@@ -1,7 +1,7 @@
 package org.folio.services.association;
 
 import io.vertx.core.Future;
-import org.folio.dataimport.util.OkapiConnectionParams;
+import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileAssociationCollection;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;

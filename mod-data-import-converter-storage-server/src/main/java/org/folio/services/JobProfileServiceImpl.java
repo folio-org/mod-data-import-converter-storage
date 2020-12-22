@@ -2,7 +2,7 @@ package org.folio.services;
 
 import io.vertx.core.Future;
 import org.apache.commons.lang3.StringUtils;
-import org.folio.dataimport.util.OkapiConnectionParams;
+import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.JobProfile;
 import org.folio.rest.jaxrs.model.JobProfileCollection;
 import org.folio.rest.jaxrs.model.JobProfileUpdateDto;

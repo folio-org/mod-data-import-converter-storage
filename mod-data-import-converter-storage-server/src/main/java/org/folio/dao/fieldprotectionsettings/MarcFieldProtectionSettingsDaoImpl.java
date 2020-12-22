@@ -2,10 +2,10 @@ package org.folio.dao.fieldprotectionsettings;
 
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dao.PostgresClientFactory;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSettingsCollection;
@@ -19,13 +19,13 @@ import org.springframework.stereotype.Repository;
 import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 
-import static org.folio.dataimport.util.DaoUtil.constructCriteria;
-import static org.folio.dataimport.util.DaoUtil.getCQLWrapper;
+import static org.folio.dao.util.DaoUtil.constructCriteria;
+import static org.folio.dao.util.DaoUtil.getCQLWrapper;
 
 @Repository
 public class MarcFieldProtectionSettingsDaoImpl implements MarcFieldProtectionSettingsDao {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MarcFieldProtectionSettingsDaoImpl.class);
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private static final String MARC_FIELDS_PROTECTION_SETTINGS_TABLE = "marc_field_protection_settings";
   private static final String ID_FIELD = "'id'";
