@@ -7,7 +7,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.folio.dataimport.util.ExceptionHelper;
+import org.folio.rest.impl.util.ExceptionHelper;
 import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.jaxrs.resource.FieldProtectionSettings;
 import org.folio.rest.tools.utils.TenantTool;

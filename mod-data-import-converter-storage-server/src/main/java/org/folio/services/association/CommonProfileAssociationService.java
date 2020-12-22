@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.folio.dao.ProfileDao;
 import org.folio.dao.association.MasterDetailAssociationDao;
 import org.folio.dao.association.ProfileAssociationDao;
-import org.folio.dataimport.util.OkapiConnectionParams;
+import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileCollection;
 import org.folio.rest.jaxrs.model.JobProfile;

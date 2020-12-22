@@ -1,7 +1,7 @@
 package org.folio.services;
 
 import io.vertx.core.Future;
-import org.folio.dataimport.util.OkapiConnectionParams;
+import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.EntityTypeCollection;
 
 import java.util.Optional;

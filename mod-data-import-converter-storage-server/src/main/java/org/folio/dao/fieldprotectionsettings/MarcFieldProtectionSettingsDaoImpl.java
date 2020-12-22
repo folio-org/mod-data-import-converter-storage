@@ -19,8 +19,8 @@ import org.springframework.stereotype.Repository;
 import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 
-import static org.folio.dataimport.util.DaoUtil.constructCriteria;
-import static org.folio.dataimport.util.DaoUtil.getCQLWrapper;
+import static org.folio.dao.util.DaoUtil.constructCriteria;
+import static org.folio.dao.util.DaoUtil.getCQLWrapper;
 
 @Repository
 public class MarcFieldProtectionSettingsDaoImpl implements MarcFieldProtectionSettingsDao {
