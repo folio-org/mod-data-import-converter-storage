@@ -25,7 +25,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 ('cddff0e1-233c-47ba-8be5-553c632709d9',
 '{
 	"id": "cddff0e1-233c-47ba-8be5-553c632709d9",
-	"name": "OCLC Update instance",
+	"name": "OCLC - Default Update Instance",
 	"action": "UPDATE",
 	"deleted": false,
 	"metadata": {
@@ -39,7 +39,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Updates existing Inventory Instances based on OCLC single record imports",
 	"folioRecord": "INSTANCE",
 	"childProfiles": [{
 			"id": "862000b9-84ea-4cae-a223-5fc0552f2b42",
@@ -282,7 +282,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 			"order": 0,
 			"content": {
 				"id": "31dbb554-0826-48ec-a0a4-3c55293d4dee",
-				"name": "OCLC Match Profile by Instance UUID",
+				"name": "OCLC - Default Instance UUID match for no SRS record",
 				"deleted": false,
 				"metadata": {
 					"createdDate": 1606727217367,
@@ -295,7 +295,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"userName": "System",
 					"firstName": "System"
 				},
-				"description": "",
+				"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the UUID of the existing Instance record",
 				"matchDetails": [{
 						"matchCriterion": "EXACTLY_MATCHES",
 						"existingRecordType": "INSTANCE",
@@ -360,7 +360,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 						"order": 0,
 						"content": {
 							"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-							"name": "OCLC matching on Instance UUID MARC-MARC ",
+							"name": "OCLC - Default Instance UUID match for existing SRS record",
 							"deleted": false,
 							"metadata": {
 								"createdDate": 1606727161520,
@@ -373,7 +373,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 								"userName": "System",
 								"firstName": "System"
 							},
-							"description": "",
+							"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 							"matchDetails": [{
 									"matchCriterion": "EXACTLY_MATCHES",
 									"existingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -641,7 +641,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 ('6aa8e98b-0d9f-41dd-b26f-15658d07eb52',
 '{
 	"id": "6aa8e98b-0d9f-41dd-b26f-15658d07eb52",
-	"name": "OCLC Update MARC Bib",
+	"name": "OCLC - Default Update MARC Bib",
 	"action": "UPDATE",
 	"deleted": false,
 	"metadata": {
@@ -655,7 +655,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Updates existing SRS MARC Bib records based on OCLC single record imports",
 	"folioRecord": "MARC_BIBLIOGRAPHIC",
 	"childProfiles": [{
 			"id": "f90864ef-8030-480f-a43f-8cdd21233252",
@@ -698,7 +698,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 			"order": 0,
 			"content": {
 				"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-				"name": "OCLC matching on Instance UUID MARC-MARC ",
+				"name": "OCLC - Default Instance UUID match for existing SRS record",
 				"deleted": false,
 				"metadata": {
 					"createdDate": 1606727161520,
@@ -711,7 +711,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"userName": "System",
 					"firstName": "System"
 				},
-				"description": "",
+				"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 				"matchDetails": [{
 						"matchCriterion": "EXACTLY_MATCHES",
 						"existingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -968,7 +968,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 			"order": 0,
 			"content": {
 				"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-				"name": "OCLC matching on Instance UUID MARC-MARC ",
+				"name": "OCLC - Default Instance UUID match for existing SRS record",
 				"deleted": false,
 				"metadata": {
 					"createdDate": 1606727161520,
@@ -981,7 +981,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 					"userName": "System",
 					"firstName": "System"
 				},
-				"description": "",
+				"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 				"matchDetails": [{
 						"matchCriterion": "EXACTLY_MATCHES",
 						"existingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -1243,7 +1243,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 ('d27d71ce-8a1e-44c6-acea-96961b5592c6',
 '{
 	"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-	"name": "OCLC matching on Instance UUID MARC-MARC ",
+	"name": "OCLC - Default Instance UUID match for existing SRS record",
 	"deleted": false,
 	"metadata": {
 		"createdDate": "2020-11-30T09:06:01.52",
@@ -1256,7 +1256,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 	"matchDetails": [{
 			"matchCriterion": "EXACTLY_MATCHES",
 			"existingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -1512,7 +1512,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 ('31dbb554-0826-48ec-a0a4-3c55293d4dee',
 '{
 	"id": "31dbb554-0826-48ec-a0a4-3c55293d4dee",
-	"name": "OCLC Match Profile by Instance UUID",
+	"name": "OCLC - Default Instance UUID match for no SRS record",
 	"deleted": false,
 	"metadata": {
 		"createdDate": "2020-11-30T09:06:57.367",
@@ -1525,7 +1525,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the UUID of the existing Instance record",
 	"matchDetails": [{
 			"matchCriterion": "EXACTLY_MATCHES",
 			"existingRecordType": "INSTANCE",
@@ -1590,7 +1590,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 			"order": 0,
 			"content": {
 				"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-				"name": "OCLC matching on Instance UUID MARC-MARC ",
+				"name": "OCLC - Default Instance UUID match for existing SRS record",
 				"deleted": false,
 				"metadata": {
 					"createdDate": 1606727161520,
@@ -1603,7 +1603,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 					"userName": "System",
 					"firstName": "System"
 				},
-				"description": "",
+				"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 				"matchDetails": [{
 						"matchCriterion": "EXACTLY_MATCHES",
 						"existingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -1866,7 +1866,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 ('862000b9-84ea-4cae-a223-5fc0552f2b42',
 '{
 	"id": "862000b9-84ea-4cae-a223-5fc0552f2b42",
-	"name": "OCLC Update instance",
+	"name": "OCLC - Default Update Instance",
 	"deleted": false,
 	"metadata": {
 		"createdDate": "2020-11-30T09:01:29.039",
@@ -1879,7 +1879,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Updates existing Inventory Instances based on OCLC single record imports",
 	"childProfiles": [],
 	"mappingDetails": {
 		"name": "instance",
@@ -2093,7 +2093,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 			"order": 0,
 			"content": {
 				"id": "cddff0e1-233c-47ba-8be5-553c632709d9",
-				"name": "OCLC Update instance",
+				"name": "OCLC - Default Update Instance",
 				"action": "UPDATE",
 				"deleted": false,
 				"metadata": {
@@ -2107,7 +2107,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 					"userName": "System",
 					"firstName": "System"
 				},
-				"description": "",
+				"description": "Updates existing Inventory Instances based on OCLC single record imports",
 				"folioRecord": "INSTANCE",
 				"childProfiles": [{
 						"id": "862000b9-84ea-4cae-a223-5fc0552f2b42",
@@ -2350,7 +2350,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 						"order": 0,
 						"content": {
 							"id": "31dbb554-0826-48ec-a0a4-3c55293d4dee",
-							"name": "OCLC Match Profile by Instance UUID",
+							"name": "OCLC - Default Instance UUID match for no SRS record",
 							"deleted": false,
 							"metadata": {
 								"createdDate": 1606727217367,
@@ -2363,7 +2363,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"userName": "System",
 								"firstName": "System"
 							},
-							"description": "",
+							"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the UUID of the existing Instance record",
 							"matchDetails": [{
 									"matchCriterion": "EXACTLY_MATCHES",
 									"existingRecordType": "INSTANCE",
@@ -2428,7 +2428,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 									"order": 0,
 									"content": {
 										"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-										"name": "OCLC matching on Instance UUID MARC-MARC ",
+										"name": "OCLC - Default Instance UUID match for existing SRS record",
 										"deleted": false,
 										"metadata": {
 											"createdDate": 1606727161520,
@@ -2441,7 +2441,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 											"userName": "System",
 											"firstName": "System"
 										},
-										"description": "",
+										"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 										"matchDetails": [{
 												"matchCriterion": "EXACTLY_MATCHES",
 												"existingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -2717,7 +2717,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 ('f90864ef-8030-480f-a43f-8cdd21233252',
 '{
 	"id": "f90864ef-8030-480f-a43f-8cdd21233252",
-	"name": "OCLC Update MARC Bib",
+	"name": "OCLC - Default Update MARC Bib",
 	"deleted": false,
 	"metadata": {
 		"createdDate": "2020-11-30T09:02:06.555",
@@ -2730,7 +2730,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Updates existing SRS MARC Bib records based on OCLC single record imports",
 	"childProfiles": [],
 	"mappingDetails": {
 		"name": "marcBib",
@@ -2744,7 +2744,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 			"order": 0,
 			"content": {
 				"id": "6aa8e98b-0d9f-41dd-b26f-15658d07eb52",
-				"name": "OCLC Update MARC Bib",
+				"name": "OCLC - Default Update MARC Bib",
 				"action": "UPDATE",
 				"deleted": false,
 				"metadata": {
@@ -2758,7 +2758,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 					"userName": "System",
 					"firstName": "System"
 				},
-				"description": "",
+				"description": "Updates existing SRS MARC Bib records based on OCLC single record imports",
 				"folioRecord": "MARC_BIBLIOGRAPHIC",
 				"childProfiles": [{
 						"id": "f90864ef-8030-480f-a43f-8cdd21233252",
@@ -2801,7 +2801,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 						"order": 0,
 						"content": {
 							"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-							"name": "OCLC matching on Instance UUID MARC-MARC ",
+							"name": "OCLC - Default Instance UUID match for existing SRS record",
 							"deleted": false,
 							"metadata": {
 								"createdDate": 1606727161520,
@@ -2814,7 +2814,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"userName": "System",
 								"firstName": "System"
 							},
-							"description": "",
+							"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 							"matchDetails": [{
 									"matchCriterion": "EXACTLY_MATCHES",
 									"existingRecordType": "MARC_BIBLIOGRAPHIC",
@@ -3071,7 +3071,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 						"order": 0,
 						"content": {
 							"id": "d27d71ce-8a1e-44c6-acea-96961b5592c6",
-							"name": "OCLC matching on Instance UUID MARC-MARC ",
+							"name": "OCLC - Default Instance UUID match for existing SRS record",
 							"deleted": false,
 							"metadata": {
 								"createdDate": 1606727161520,
@@ -3084,7 +3084,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 								"userName": "System",
 								"firstName": "System"
 							},
-							"description": "",
+							"description": "Matches the Instance UUID from the 999 ff $i in the incoming OCLC MARC record to the same field in any SRS MARC Bib",
 							"matchDetails": [{
 									"matchCriterion": "EXACTLY_MATCHES",
 									"existingRecordType": "MARC_BIBLIOGRAPHIC",

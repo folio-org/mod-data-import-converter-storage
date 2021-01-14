@@ -3,9 +3,9 @@ package org.folio.services.snapshot;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.dao.snapshot.ProfileSnapshotDao;
 import org.folio.dao.snapshot.ProfileSnapshotItem;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,8 +31,8 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_
 @Service
 public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ProfileSnapshotServiceImpl.class);
-  private ProfileSnapshotDao profileSnapshotDao;
+  private static final Logger LOGGER = LogManager.getLogger();
+  private final ProfileSnapshotDao profileSnapshotDao;
 
   public ProfileSnapshotServiceImpl(@Autowired ProfileSnapshotDao profileSnapshotDao) {
     this.profileSnapshotDao = profileSnapshotDao;
@@ -43,7 +42,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
     return profileSnapshotDao.getById(id, tenantId)
       .map(optionalWrapper ->
-        optionalWrapper.isPresent() ? Optional.of(convertProfileSnapshotWrapperContent(optionalWrapper.get())) : optionalWrapper);
+        optionalWrapper.map(this::convertProfileSnapshotWrapperContent));
   }
 
   @Override
@@ -141,13 +140,7 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
    */
   private void removeDuplicatesByAssociationId(List<ProfileSnapshotItem> snapshotItems) {
     Set<String> duplicates = new HashSet<>(snapshotItems.size());
-    Iterator<ProfileSnapshotItem> iterator = snapshotItems.listIterator();
-    while (iterator.hasNext()) {
-      ProfileSnapshotItem current = iterator.next();
-      if (!duplicates.add(current.getAssociationId())) {
-        iterator.remove();
-      }
-    }
+    snapshotItems.removeIf(current -> !duplicates.add(current.getAssociationId()));
   }
 
   /**

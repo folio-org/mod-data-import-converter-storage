@@ -30,7 +30,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 ('d0ebba8a-2f0f-11eb-adc1-0242ac120002',
 '{
 	"id": "d0ebba8a-2f0f-11eb-adc1-0242ac120002",
-	"name": "OCLC Create Instance",
+	"name": "OCLC - Default Create Instance",
 	"action": "CREATE",
 	"deleted": false,
 	"userInfo": {
@@ -38,7 +38,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Creates new Inventory Instances and SRS MARC Bib records based on OCLC single record imports",
 	"folioRecord": "INSTANCE",
 	"childProfiles": [],
 	"parentProfiles": [],
@@ -56,14 +56,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 ('d0ebbc2e-2f0f-11eb-adc1-0242ac120002',
 '{
 	"id": "d0ebbc2e-2f0f-11eb-adc1-0242ac120002",
-	"name": "OCLC Create Instance",
+	"name": "OCLC - Default Create Instance",
 	"deleted": false,
 	"userInfo": {
 		"lastName": "System",
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "",
+	"description": "Creates new Inventory Instances and SRS MARC Bib records based on OCLC single record imports",
 	"childProfiles": [],
 	"mappingDetails": {
 		"name": "instance",
