@@ -28,6 +28,7 @@ public class ModTenantAPI extends TenantAPI {
   private static final String DEFAULT_OCLC_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_oclc_job_profile.sql";
   private static final String DEFAULT_OCLC_UPDATE_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_oclc_update_job_profile.sql";
   private static final String DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL = "templates/db_scripts/defaultData/default_marc_field_protection_settings.sql";
+  private static final String DEFAULT_INSTANCE_AND_MARC_BIB_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_instance_and_srs_marc_bib_create_job_profile.sql";
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
 
@@ -42,6 +43,7 @@ public class ModTenantAPI extends TenantAPI {
           .compose(r -> setupDefaultData(DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL, headers, context))
           .compose(d -> setupDefaultData(DEFAULT_OCLC_JOB_PROFILE_SQL, headers, context))
           .compose(u -> setupDefaultData(DEFAULT_OCLC_UPDATE_JOB_PROFILE_SQL, headers, context))
+          .compose(m -> setupDefaultData(DEFAULT_INSTANCE_AND_MARC_BIB_CREATE_JOB_PROFILE, headers, context))
           .onComplete(event -> handlers.handle(ar));
       }
     }, context);
