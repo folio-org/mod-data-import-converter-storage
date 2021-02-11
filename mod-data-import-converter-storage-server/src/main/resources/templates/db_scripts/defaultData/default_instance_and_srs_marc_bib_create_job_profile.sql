@@ -46,7 +46,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 	"parentProfiles": []
 }') ON CONFLICT DO NOTHING;
 
-INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
+INSERT INTO tern_mod_data_import_converter_storage.mapping_profiles (id, jsonb) values
     ('991c0300-44a6-47e3-8ea2-b01bb56a38cc',
     '{
 	"id": "991c0300-44a6-47e3-8ea2-b01bb56a38cc",
@@ -280,9 +280,11 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 '), 
 ('2ad182ee-75e8-4bdb-b859-530543a064dc',
     '{
+  "id": "2ad182ee-75e8-4bdb-b859-530543a064dc",
   "name": "Default - GOBI monograph invoice",
   "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "INVOICE",
+  "deleted": false,
   "description": "Default EDIFACT invoice field mapping profile for GOBI. Edit to add details specific to your library and invoices. If additional GOBI invoice profiles are needed, duplicate this one. If no GOBI invoice profile is needed, delete this one.",
   "metadata": {
 		"createdDate": "2021-01-14T14:00:00.000",
@@ -424,7 +426,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "enabled": true,
         "path": "invoice.vendorInvoiceNo",
         "subfields": [],
-        "value": " BGM+380+[1]"
+        "value": "BGM+380+[1]"
       },
       {
         "name": "vendorId",
@@ -591,7 +593,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "fundDistributions",
         "enabled": true,
         "path": "invoice_line.fundDistributions[]",
-        "repeatableFieldAction": "",
         "value": "",
         "subfields": []
       },
