@@ -182,14 +182,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "chkSubscriptionOverlap",
         "enabled": true,
         "path": "invoice.chkSubscriptionOverlap",
-        "value": false,
+        "booleanFieldAction": "ALL_FALSE",
         "subfields": []
       },
       {
         "name": "exportToAccounting",
         "enabled": true,
         "path": "invoice.exportToAccounting",
-        "value": true,
+        "booleanFieldAction": "ALL_TRUE",
         "subfields": []
       },
       {
@@ -319,7 +319,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
                 "name": "releaseEncumbrance",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].releaseEncumbrance",
-                "value": "",
                 "booleanFieldAction": "ALL_TRUE",
                 "subfields": []
               },
