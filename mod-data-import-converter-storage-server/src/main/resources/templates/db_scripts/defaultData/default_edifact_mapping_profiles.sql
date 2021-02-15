@@ -34,7 +34,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "status",
         "enabled": false,
         "path": "invoice.status",
-        "value": "Open",
+        "value": "\"Open\"",
         "subfields": []
       },
       {
@@ -67,8 +67,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
       },
       {
         "name": "acqUnitIds",
-        "enabled": true,
-        "path": "invoice.acqUnitIds",
+        "enabled": "true",
+        "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
         "acceptedValues": {
@@ -126,7 +126,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "lockTotal",
         "enabled": true,
         "path": "invoice.lockTotal",
-        "value": " MOA+9[2]",
+        "value": "MOA+9[2]",
         "subfields": []
       },
       {
@@ -214,116 +214,132 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "subfields": []
       },
       {
-        "name": "description",
-        "enabled": true,
-        "path": "invoice_line.description",
-        "value": "{POL_title}; else IMD+L+050+[4-5]",
-        "subfields": []
-      },
-      {
-        "name": "poLineNumber",
-        "enabled": true,
-        "path": "invoice_line.poLineNumber",
-        "value": " RFF+LI[2]",
-        "subfields": []
-      },
-      {
-        "name": "invoiceLineNumber",
-        "enabled": false,
-        "path": "invoice_line.invoiceLineNumber",
+        "name": "invoiceLines",
+        "enabled": "true",
+        "path": "invoice.invoiceLines[]",
         "value": "",
-        "subfields": []
-      },
-      {
-        "name": "vendorRefNo",
-        "enabled": true,
-        "path": "invoice_line.vendorRefNo",
-        "value": " RFF+SLI[2]",
-        "subfields": []
-      },
-      {
-        "name": "invoiceLineStatus",
-        "enabled": false,
-        "path": "invoice_line.invoiceLineStatus",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "subscriptionInfo",
-        "enabled": true,
-        "path": "invoice_line.subscriptionInfo",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "subscriptionStart",
-        "enabled": true,
-        "path": "invoice_line.subscriptionStart",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "subscriptionEnd",
-        "enabled": true,
-        "path": "invoice_line.subscriptionEnd",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "comment",
-        "enabled": true,
-        "path": "invoice_line.comment",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "lineAccountingCode",
-        "enabled": false,
-        "path": "invoice_line.accountingCode",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "accountNumber",
-        "enabled": true,
-        "path": "invoice_line.accountNumber",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "quantity",
-        "enabled": true,
-        "path": "invoice_line.quantity",
-        "value": " QTY+47[2]",
-        "subfields": []
-      },
-      {
-        "name": "lineSubTotal",
-        "enabled": true,
-        "path": "invoice_line.subTotal",
-        "value": " MOA+203[2]",
-        "subfields": []
-      },
-      {
-        "name": "releaseEncumbrance",
-        "enabled": true,
-        "path": "invoice_line.releaseEncumbrance",
-        "value": true,
-        "subfields": []
-      },
-      {
-        "name": "fundDistributions",
-        "enabled": true,
-        "path": "invoice_line.fundDistributions[]",
-        "value": "",
-        "subfields": []
-      },
-      {
-        "name": "lineAdjustments",
-        "enabled": true,
-        "path": "invoice_line.adjustments[]",
-        "value": "",
-        "subfields": []
+        "repeatableFieldAction": "EXTEND_EXISTING",
+        "subfields": [
+          {
+            "order": 0,
+            "path": "invoice.invoiceLines[]",
+            "fields": [
+              {
+                "name": "description",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].description",
+                "value": "{POL_title}; else IMD+L+050+[4-5]",
+                "subfields": []
+              },
+              {
+                "name": "poLineNumber",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].poLineNumber",
+                "value": "RFF+LI[2]",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineNumber",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "vendorRefNo",
+                "enabled": true,
+                "path": "invoice_line.vendorRefNo",
+                "value": "RFF+SLI[2]",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": "false",
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "subscriptionInfo",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].subscriptionInfo",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "subscriptionStart",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].subscriptionStart",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "subscriptionEnd",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].subscriptionEnd",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "comment",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].comment",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "lineAccountingCode",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].accountingCode",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "accountNumber",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].accountNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "quantity",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].quantity",
+                "value": "QTY+47[2]",
+                "subfields": []
+              },
+              {
+                "name": "lineSubTotal",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].subTotal",
+                "value": "MOA+203[2]",
+                "subfields": []
+              },
+              {
+                "name": "releaseEncumbrance",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].releaseEncumbrance",
+                "value": "",
+                "booleanFieldAction": "ALL_TRUE",
+                "subfields": []
+              },
+              {
+                "name": "fundDistributions",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].fundDistributions[]",
+                "value": "{POL_FUND_DISTRIBUTIONS}",
+                "subfields": []
+              },
+              {
+                "name": "lineAdjustments",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].adjustments[]",
+                "value": "",
+                "subfields": []
+              }
+            ]
+          }
+        ]
       }
     ]
   }
