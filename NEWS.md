@@ -1,4 +1,5 @@
 ## 2020-11-25 v1.10.0-SNAPSHOT 
+* [MODDICONV-162](https://issues.folio.org/browse/MODDICONV-163) Update to the RMB 32.
 * [MODDICONV-148](https://issues.folio.org/browse/MODDICONV-148) Create default OCLC Create Instance profile
 * [MODDICONV-149](https://issues.folio.org/browse/MODDICONV-149) Create default OCLC Update Instance profile
 * [MODDICONV-158](https://issues.folio.org/browse/MODDICONV-158) Update the names and descriptions of the default OCLC profiles.
