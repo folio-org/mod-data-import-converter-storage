@@ -6,6 +6,7 @@
 * [MODDICONV-160](https://issues.folio.org/browse/MODDICONV-160) Update the names and descriptions of the default OCLC match, action, field mapping profiles.
 * [MODDICONV-163](https://issues.folio.org/browse/MODDICONV-163) Add default job profile for creating instances and SRS MARC Bibs.
 * [MODDICONV-173](https://issues.folio.org/browse/MODDICONV-173) Make tenant API asynchronous.
+* [MODDICONV-161](https://issues.folio.org/browse/MODDICONV-161) Add personal data disclosure form.
 
 ## 2020-11-06 v1.9.2
 * [MODDICONV-152](https://issues.folio.org/browse/MODDICONV-150) Upgrade to RMB v31.1.5
