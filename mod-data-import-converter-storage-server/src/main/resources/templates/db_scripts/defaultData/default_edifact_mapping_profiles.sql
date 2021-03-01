@@ -4116,6 +4116,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       }
     ]
   }
-}'),
+}')
 
 ON CONFLICT DO NOTHING;
