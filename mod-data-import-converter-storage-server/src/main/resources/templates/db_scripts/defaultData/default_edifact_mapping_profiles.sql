@@ -67,7 +67,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -215,7 +215,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -274,7 +274,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -430,7 +430,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -578,7 +578,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -637,7 +637,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -793,7 +793,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -941,7 +941,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -1000,7 +1000,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -1156,7 +1156,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -1304,7 +1304,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -1363,7 +1363,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -1519,7 +1519,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -1667,7 +1667,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -1699,14 +1699,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "referenceNumbers",
-                "enabled": "true",
+                "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -1862,7 +1862,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -2010,7 +2010,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -2069,7 +2069,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -2165,8 +2165,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
   "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "INVOICE",
   "deleted": false,
-  "description": "Default EDIFACT invoice field mapping profile for CNPIEC. Edit to add details specific to your library and invoices. If additional CNPIEC invoice profiles are needed, duplicate this one. If no CNPIEC invoice profile is needed, delete this one.
-",
+  "description": "Default EDIFACT invoice field mapping profile for CNPIEC. Edit to add details specific to your library and invoices. If additional CNPIEC invoice profiles are needed, duplicate this one. If no CNPIEC invoice profile is needed, delete this one.",
   "metadata": {
     "createdDate": "2021-03-01T15:00:00.000",
     "updatedDate": "2021-03-01T16:00:00.462+0000",
@@ -2226,7 +2225,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -2374,7 +2373,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -2433,7 +2432,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -2589,7 +2588,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -2737,7 +2736,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -2769,14 +2768,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "referenceNumbers",
-                "enabled": "true",
+                "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -2932,7 +2931,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -3080,7 +3079,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -3112,14 +3111,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "referenceNumbers",
-                "enabled" "true",
+                "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -3275,7 +3274,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -3423,7 +3422,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -3482,7 +3481,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -3638,7 +3637,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -3786,7 +3785,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -3845,7 +3844,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
@@ -4001,7 +4000,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "acqUnitIds",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
         "subfields": [],
@@ -4149,7 +4148,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "invoiceLines",
-        "enabled": "true",
+        "enabled": true,
         "path": "invoice.invoiceLines[]",
         "value": "",
         "repeatableFieldAction": "EXTEND_EXISTING",
@@ -4181,14 +4180,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
               },
               {
                 "name": "referenceNumbers",
-                "enabled": "true",
+                "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
-                "enabled": "false",
+                "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
