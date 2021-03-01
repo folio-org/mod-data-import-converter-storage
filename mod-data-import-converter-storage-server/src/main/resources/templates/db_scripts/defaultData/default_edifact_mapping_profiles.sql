@@ -1257,7 +1257,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "description",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].description",
-                "value": "{POL_title}; else IMD+L+050+[4-5]",
+                "value": "{POL_title}; else IMD+F+050+[4-5]",
                 "subfields": []
               },
               {
