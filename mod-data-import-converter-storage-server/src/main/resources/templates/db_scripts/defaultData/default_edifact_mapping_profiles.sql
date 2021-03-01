@@ -1,5 +1,5 @@
 
-INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
+INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
 
 ('2ad182ee-75e8-4bdb-b859-530543a064dc', '{
   "id": "2ad182ee-75e8-4bdb-b859-530543a064dc",
@@ -9,16 +9,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
   "deleted": false,
   "description": "Default EDIFACT invoice field mapping profile for GOBI. Edit to add details specific to your library and invoices. If additional GOBI invoice profiles are needed, duplicate this one. If no GOBI invoice profile is needed, delete this one.",
   "metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
-	"userInfo": {
-		"lastName": "System",
-		"userName": "System",
-		"firstName": "System"
-	},
+    "createdDate": "2021-01-14T14:00:00.000",
+    "updatedDate": "2021-01-14T15:00:00.462+0000",
+    "createdByUserId": "00000000-0000-0000-0000-000000000000",
+    "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+  },
+  "userInfo": {
+    "lastName": "System",
+    "userName": "System",
+    "firstName": "System"
+  },
   "mappingDetails": {
     "name": "invoice",
     "recordType": "INVOICE",
@@ -352,16 +352,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
   "deleted": false,
   "description": "Default EDIFACT invoice field mapping profile for EBSCO. Edit to add details specific to your library and invoices. If additional EBSCO invoice profiles are needed, duplicate this one. If no EBSCO invoice profile is needed, delete this one.",
   "metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
-	"userInfo": {
-		"lastName": "System",
-		"userName": "System",
-		"firstName": "System"
-	},
+    "createdDate": "2021-03-01T14:00:00.000",
+    "updatedDate": "2021-03-01T15:00:00.462+0000",
+    "createdByUserId": "00000000-0000-0000-0000-000000000000",
+    "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+  },
+  "userInfo": {
+    "lastName": "System",
+    "userName": "System",
+    "firstName": "System"
+  },
   "mappingDetails": {
     "name": "invoice",
     "recordType": "INVOICE",
@@ -695,16 +695,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
   "deleted": false,
   "description": "Default EDIFACT invoice field mapping profile for WT Cox. Edit to add details specific to your library and invoices. If additional WT Cox invoice profiles are needed, duplicate this one. If no WT Cox invoice profile is needed, delete this one.",
   "metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
-	"userInfo": {
-		"lastName": "System",
-		"userName": "System",
-		"firstName": "System"
-	},
+    "createdDate": "2021-03-01T14:00:00.000",
+    "updatedDate": "2021-03-01T15:00:00.462+0000",
+    "createdByUserId": "00000000-0000-0000-0000-000000000000",
+    "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+  },
+  "userInfo": {
+    "lastName": "System",
+    "userName": "System",
+    "firstName": "System"
+  },
   "mappingDetails": {
     "name": "invoice",
     "recordType": "INVOICE",
@@ -1038,16 +1038,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
   "deleted": false,
   "description": "Default EDIFACT invoice field mapping profile for Harrassowitz. Edit to add details specific to your library and invoices. If additional Harrassowitz invoice profiles are needed, duplicate this one. If no Harrassowitz invoice profile is needed, delete this one.",
   "metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
-	"userInfo": {
-		"lastName": "System",
-		"userName": "System",
-		"firstName": "System"
-	},
+    "createdDate": "2021-03-01T14:00:00.000",
+    "updatedDate": "2021-03-01T15:00:00.462+0000",
+    "createdByUserId": "00000000-0000-0000-0000-000000000000",
+    "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+  },
+  "userInfo": {
+    "lastName": "System",
+    "userName": "System",
+    "firstName": "System"
+  },
   "mappingDetails": {
     "name": "invoice",
     "recordType": "INVOICE",
