@@ -246,11 +246,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "RFF+SLI[2]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "RFF+SLI[2]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -589,11 +609,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "RFF+SNA[2]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "RFF+SNA[2]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -932,11 +972,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "RFF+SNA[2]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "RFF+SNA[2]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -1275,11 +1335,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "RFF+SNA[2]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "RFF+SNA[2]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -1618,11 +1698,11 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
-                "enabled": true,
-                "path": "invoice_line.vendorRefNo",
+                "name": "referenceNumbers",
+                "enabled": "true",
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": []
+                "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -1961,11 +2041,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "RFF+SNA[2]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "RFF+SNA[2]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -2305,11 +2405,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "PIA+1+[1]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "PIA+1+[1]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -2648,11 +2768,11 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
-                "enabled": true,
-                "path": "invoice_line.vendorRefNo",
+                "name": "referenceNumbers",
+                "enabled": "true",
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": []
+                "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -2991,11 +3111,11 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
-                "enabled": true,
-                "path": "invoice_line.vendorRefNo",
+                "name": "referenceNumbers",
+                "enabled" "true",
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": []
+                "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -3334,11 +3454,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "PIA<5<?SA[1]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "PIA<5<?SA[1]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -3677,11 +3817,31 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
+                "name": "referenceNumbers",
                 "enabled": true,
-                "path": "invoice_line.vendorRefNo",
-                "value": "RFF+SLI[2]",
-                "subfields": []
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "repeatableFieldAction": "EXTEND_EXISTING",
+                "value": "",
+                "subfields": [
+                  {
+                    "order": 0,
+                    "path": "invoice.invoiceLines[].referenceNumbers[]",
+                    "fields": [
+                      {
+                        "name": "refNumber",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
+                        "value": "RFF+SLI[2]"
+                      },
+                      {
+                        "name": "refNumberType",
+                        "enabled": true,
+                        "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
+                        "value": "\"Vendor order reference number\""
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "invoiceLineStatus",
@@ -4020,11 +4180,11 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "vendorRefNo",
-                "enabled": true,
-                "path": "invoice_line.vendorRefNo",
+                "name": "referenceNumbers",
+                "enabled": "true",
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": []
+                "subfields": [ ]
               },
               {
                 "name": "invoiceLineStatus",
