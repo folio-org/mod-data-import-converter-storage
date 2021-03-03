@@ -246,6 +246,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -271,13 +278,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -609,6 +609,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -634,13 +641,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -972,6 +972,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -997,13 +1004,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -1335,6 +1335,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -1360,13 +1367,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -1698,18 +1698,18 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "value": "",
+                "subfields": [ ]
               },
               {
                 "name": "subscriptionInfo",
@@ -2041,6 +2041,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -2066,13 +2073,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -2404,6 +2404,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -2429,13 +2436,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -2767,18 +2767,18 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "value": "",
+                "subfields": [ ]
               },
               {
                 "name": "subscriptionInfo",
@@ -3110,18 +3110,18 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "value": "",
+                "subfields": [ ]
               },
               {
                 "name": "subscriptionInfo",
@@ -3453,6 +3453,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -3478,13 +3485,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -3816,6 +3816,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
                 "name": "referenceNumbers",
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
@@ -3841,13 +3848,6 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -4179,18 +4179,18 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
+                "value": "",
+                "subfields": [ ]
               },
               {
                 "name": "subscriptionInfo",
