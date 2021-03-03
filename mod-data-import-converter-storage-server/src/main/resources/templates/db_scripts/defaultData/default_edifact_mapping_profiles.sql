@@ -1455,7 +1455,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
 
 ('fedf651c-5287-4775-9bc4-dd2460df97e3', '{
   "id": "fedf651c-5287-4775-9bc4-dd2460df97e3",
-  "name": "Amalivre monograph invoice",
+  "name": "Default - Amalivre monograph invoice",
   "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "INVOICE",
   "deleted": false,
