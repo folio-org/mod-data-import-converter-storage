@@ -75,7 +75,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -450,7 +450,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -825,7 +825,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -1200,7 +1200,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -1575,7 +1575,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -1928,7 +1928,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -2303,7 +2303,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -2678,7 +2678,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -3031,7 +3031,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -3384,7 +3384,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -3759,7 +3759,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
@@ -4134,7 +4134,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
           "path": "invoice.acqUnitIds[]",
           "fields": [{
             "name": "acqUnitIds",
-            "enabled": "true",
+            "enabled": true,
             "path": "invoice.acqUnitIds[]",
             "value": "",
             "subfields": []
