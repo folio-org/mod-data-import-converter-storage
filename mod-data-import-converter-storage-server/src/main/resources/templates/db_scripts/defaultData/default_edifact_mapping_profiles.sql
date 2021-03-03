@@ -277,13 +277,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SLI[2]"
+                        "value": "RFF+SLI[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -650,13 +652,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -1023,13 +1027,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -1396,13 +1402,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -1759,7 +1767,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": [ ]
+                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -2122,13 +2130,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -2495,13 +2505,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "PIA+1+[1]"
+                        "value": "PIA+1+[1]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -2858,7 +2870,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": [ ]
+                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -3211,7 +3223,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": [ ]
+                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -3574,13 +3586,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "PIA<5<?SA[1]"
+                        "value": "PIA<5<?SA[1]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -3947,13 +3961,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SLI[2]"
+                        "value": "RFF+SLI[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
@@ -4310,7 +4326,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "enabled": true,
                 "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
-                "subfields": [ ]
+                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
