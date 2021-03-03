@@ -70,7 +70,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -232,9 +242,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -242,6 +252,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -260,24 +277,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SLI[2]"
+                        "value": "RFF+SLI[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -433,7 +445,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -595,9 +617,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -605,6 +627,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -623,24 +652,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -796,7 +820,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -958,9 +992,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -968,6 +1002,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -986,24 +1027,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -1159,7 +1195,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -1321,9 +1367,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+SNL[2]",
                 "subfields": []
               },
@@ -1331,6 +1377,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -1349,24 +1402,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -1455,7 +1503,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
 
 ('fedf651c-5287-4775-9bc4-dd2460df97e3', '{
   "id": "fedf651c-5287-4775-9bc4-dd2460df97e3",
-  "name": "Amalivre monograph invoice",
+  "name": "Default - Amalivre monograph invoice",
   "incomingRecordType": "EDIFACT_INVOICE",
   "existingRecordType": "INVOICE",
   "deleted": false,
@@ -1522,7 +1570,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -1684,9 +1742,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+SNL[2]",
                 "subfields": []
               },
@@ -1698,16 +1756,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": []
               },
@@ -1865,7 +1923,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -2027,9 +2095,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -2037,6 +2105,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -2055,24 +2130,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SNA[2]"
+                        "value": "RFF+SNA[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -2228,7 +2298,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -2390,9 +2470,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -2400,6 +2480,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -2418,24 +2505,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "PIA+1+[1]"
+                        "value": "PIA+1+[1]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -2591,7 +2673,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -2753,9 +2845,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -2767,16 +2859,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": []
               },
@@ -2934,7 +3026,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -3096,9 +3198,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -3110,16 +3212,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": []
               },
@@ -3277,7 +3379,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -3439,9 +3551,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF<ON[2]",
                 "subfields": []
               },
@@ -3449,6 +3561,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -3467,24 +3586,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "PIA<5<?SA[1]"
+                        "value": "PIA<5<?SA[1]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -3640,7 +3754,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -3802,9 +3926,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -3812,6 +3936,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "name": "invoiceLineNumber",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineNumber",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "invoiceLineStatus",
+                "enabled": false,
+                "path": "invoice.invoiceLines[].invoiceLineStatus",
                 "value": "",
                 "subfields": []
               },
@@ -3830,24 +3961,19 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                         "name": "refNumber",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumber",
-                        "value": "RFF+SLI[2]"
+                        "value": "RFF+SLI[2]",
+                        "subfields": []
                       },
                       {
                         "name": "refNumberType",
                         "enabled": true,
                         "path": "invoice.invoiceLines[].referenceNumbers[].refNumberType",
-                        "value": "\"Vendor order reference number\""
+                        "value": "\"Vendor order reference number\"",
+                        "subfields": []
                       }
                     ]
                   }
                 ]
-              },
-              {
-                "name": "invoiceLineStatus",
-                "enabled": false,
-                "path": "invoice.invoiceLines[].invoiceLineStatus",
-                "value": "",
-                "subfields": []
               },
               {
                 "name": "subscriptionInfo",
@@ -4003,7 +4129,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": true,
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -4165,9 +4301,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+ON[2]",
                 "subfields": []
               },
@@ -4179,16 +4315,16 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "referenceNumbers",
-                "enabled": true,
-                "path": "invoice.invoiceLines[].referenceNumbers[]",
-                "value": "",
-                "subfields": [ ]
-              },
-              {
                 "name": "invoiceLineStatus",
                 "enabled": false,
                 "path": "invoice.invoiceLines[].invoiceLineStatus",
+                "value": "",
+                "subfields": []
+              },
+              {
+                "name": "referenceNumbers",
+                "enabled": true,
+                "path": "invoice.invoiceLines[].referenceNumbers[]",
                 "value": "",
                 "subfields": []
               },
