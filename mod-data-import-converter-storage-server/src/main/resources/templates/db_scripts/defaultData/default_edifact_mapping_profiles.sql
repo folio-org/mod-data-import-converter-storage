@@ -232,9 +232,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -595,9 +595,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -958,9 +958,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -1321,9 +1321,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+SNL[2]",
                 "subfields": []
               },
@@ -1684,9 +1684,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+SNL[2]",
                 "subfields": []
               },
@@ -2027,9 +2027,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -2390,9 +2390,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -2753,9 +2753,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -3096,9 +3096,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -3439,9 +3439,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF<ON[2]",
                 "subfields": []
               },
@@ -3802,9 +3802,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+LI[2]",
                 "subfields": []
               },
@@ -4165,9 +4165,9 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
                 "subfields": []
               },
               {
-                "name": "poLineNumber",
+                "name": "poLineId",
                 "enabled": true,
-                "path": "invoice.invoiceLines[].poLineNumber",
+                "path": "invoice.invoiceLines[].poLineId",
                 "value": "RFF+ON[2]",
                 "subfields": []
               },
