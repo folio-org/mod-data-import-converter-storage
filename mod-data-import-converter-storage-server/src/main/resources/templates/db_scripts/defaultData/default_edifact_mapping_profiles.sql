@@ -70,7 +70,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -433,7 +443,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -796,7 +816,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -1159,7 +1189,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -1522,7 +1562,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -1865,7 +1915,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -2228,7 +2288,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -2591,7 +2661,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -2934,7 +3014,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -3277,7 +3367,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -3640,7 +3740,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
@@ -4003,7 +4113,17 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
         "enabled": true,
         "path": "invoice.acqUnitIds[]",
         "value": "",
-        "subfields": [],
+        "subfields": [{
+          "order": 0,
+          "path": "invoice.acqUnitIds[]",
+          "fields": [{
+            "name": "acqUnitIds",
+            "enabled": "true",
+            "path": "invoice.acqUnitIds[]",
+            "value": "",
+            "subfields": []
+          }]
+        }],
         "acceptedValues": {
           "0ebb1f7d-983f-3026-8a4c-5318e0ebc041": "main"
         }
