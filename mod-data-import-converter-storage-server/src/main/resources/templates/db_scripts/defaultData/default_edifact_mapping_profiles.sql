@@ -32,7 +32,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -407,7 +407,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -782,7 +782,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -1157,7 +1157,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -1532,7 +1532,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -1885,7 +1885,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -2260,7 +2260,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -2635,7 +2635,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -2988,7 +2988,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -3341,7 +3341,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -3716,7 +3716,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
@@ -4091,7 +4091,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) VALUES
       },
       {
         "name": "status",
-        "enabled": false,
+        "enabled": true,
         "path": "invoice.status",
         "value": "\"Open\"",
         "subfields": []
