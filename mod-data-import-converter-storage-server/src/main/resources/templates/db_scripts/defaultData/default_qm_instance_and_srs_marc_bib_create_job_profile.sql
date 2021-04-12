@@ -1,7 +1,7 @@
 INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
     ('6409dcff-71fa-433a-bc6a-e70ad38a9604', '{
 	"id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
-	"name": "Default - Create instance and SRS MARC Bib",
+	"name": "quickMARC Derive - Create SRS MARC Bib and Instance",
 	"deleted": false,
 	"dataType": "MARC",
 	"metadata": {
@@ -15,7 +15,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "This job profile creates SRS MARC Bib records and corresponding Inventory Instances using the library''s default MARC-to-Instance mapping. It can be edited, duplicated, or deleted.",
+	"description": "This job profile is used by the quickMARC Derive action to create a new SRS MARC Bib record and corresponding Inventory Instance. It cannot be edited or deleted.",
 	"childProfiles": [],
 	"parentProfiles": []
 }
@@ -26,7 +26,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
     ('f8e58651-f651-485d-aead-d2fa8700e2d1',
 '{
 	"id": "f8e58651-f651-485d-aead-d2fa8700e2d1",
-	"name": "Default - Create instance",
+	"name": "quickMARC Derive - Create Inventory Instance",
 	"action": "CREATE",
 	"deleted": false,
 	"metadata": {
@@ -40,7 +40,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "This action profile is used with FOLIO''s default job profile for creating Inventory Instances and SRS MARC Bibliographic records. It can be edited, duplicated, or deleted.",
+	"description": "This action profile is used by the quickMARC Derive action to create a new Inventory Instance. It cannot be edited or deleted.",
 	"folioRecord": "INSTANCE",
 	"childProfiles": [],
 	"parentProfiles": []
@@ -50,7 +50,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     ('991c0300-44a6-47e3-8ea2-b01bb56a38cc',
     '{
 	"id": "991c0300-44a6-47e3-8ea2-b01bb56a38cc",
-	"name": "Default - Create instance",
+	"name": "quickMARC Derive - Create Inventory Instance",
 	"deleted": false,
 	"metadata": {
 		"createdDate": "2021-01-14T14:00:00.000",
@@ -63,7 +63,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "This field mapping profile is used with FOLIO''s default job profile for creating Inventory Instances and SRS MARC Bibliographic records. It can be edited, duplicated, deleted, or linked to additional action profiles.",
+	"description": "This field mapping profile is used by the quickMARC Derive action to create an Inventory Instance. It cannot be edited or deleted.",
 	"childProfiles": [],
 	"mappingDetails": {
 		"name": "instance",

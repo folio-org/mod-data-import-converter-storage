@@ -25,7 +25,7 @@ public class DefaultJobProfileTest extends AbstractRestVerticleTest {
       .get(JOB_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(5));
+      .body("totalRecords", is(6));
   }
 
   @Test
