@@ -1,4 +1,4 @@
-## 2021-XX-XX v1.11.0-SNAPSHOT
+## 2021-XX-XX v1.10.1-SNAPSHOT
 * [MODDICONV-180](https://issues.folio.org/browse/MODDICONV-180) Add a new default job profile for creating instances and SRS MARC Bibs.
 
 ## 2021-03-17 v1.10.0
