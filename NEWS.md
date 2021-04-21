@@ -1,3 +1,6 @@
+## 2021-XX-XX v1.10.2-SNAPSHOT
+* [MODDICONV-185](https://issues.folio.org/browse/MODDICONV-185) Enable updated job profile.
+
 ## 2021-XX-XX v1.10.1-SNAPSHOT
 * [MODDICONV-180](https://issues.folio.org/browse/MODDICONV-180) Add a new default job profile for creating instances and SRS MARC Bibs.
 * [MODDICONV-181](https://issues.folio.org/browse/MODDICONV-181) Update the existing default job profile for creating MARC Bibs and Instances to be quickMARC-related.
