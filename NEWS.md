@@ -1,4 +1,4 @@
-## 2021-XX-XX v1.10.2-SNAPSHOT
+## 2021-04-22 v1.10.2
 * [MODDICONV-185](https://issues.folio.org/browse/MODDICONV-185) Enable updated job profile.
 
 ## 2021-04-16 v1.10.1
