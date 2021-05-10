@@ -29,6 +29,7 @@ public class ModTenantAPI extends TenantAPI {
   private static final String DEFAULT_INSTANCE_AND_MARC_BIB_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_instance_and_marc_bib_create_job_profile.sql";
   private static final String DEFAULT_EDIFACT_MAPPING_PROFILES = "templates/db_scripts/defaultData/default_edifact_mapping_profiles.sql";
   private static final String DEFAULT_MARC_AUTHORITY_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_marc_authority_job_profile.sql";
+  private static final String UPDATE_DATA_TYPES = "templates/db_scripts/data-migration/update_data_types.sql";
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
 
@@ -44,6 +45,7 @@ public class ModTenantAPI extends TenantAPI {
         .compose(m -> setupDefaultData(DEFAULT_EDIFACT_MAPPING_PROFILES, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_MARC_AUTHORITY_CREATE_JOB_PROFILE, headers, context))
         .compose(m -> setupDefaultData(UPDATE_DEFAULT_QM_INSTANCE_AND_SRS_MARC_BIB_CREATE_JOB_PROFILE, headers, context))
+        .compose(m -> setupDefaultData(UPDATE_DATA_TYPES, headers, context))
         .map(num));
   }
 
