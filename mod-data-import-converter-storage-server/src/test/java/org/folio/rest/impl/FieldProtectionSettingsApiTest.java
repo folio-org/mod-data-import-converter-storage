@@ -11,6 +11,7 @@ import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -210,6 +211,7 @@ public class FieldProtectionSettingsApiTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  @Ignore
   public void shouldReturnBadRequestIfSourceSystem() {
     Response createResponse = RestAssured.given()
       .spec(spec)
@@ -230,6 +232,7 @@ public class FieldProtectionSettingsApiTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  @Ignore
   public void shouldUpdateExistingSettingOnPut(TestContext context) {
     Async async = context.async();
     Response createResponse = RestAssured.given()

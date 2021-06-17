@@ -19,6 +19,7 @@ import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,6 +42,7 @@ import static org.hamcrest.Matchers.is;
 import com.google.common.collect.Lists;
 
 @RunWith(VertxUnitRunner.class)
+@Ignore
 public class MappingProfileTest extends AbstractRestVerticleTest {
 
   static final String MAPPING_PROFILES_TABLE_NAME = "mapping_profiles";
