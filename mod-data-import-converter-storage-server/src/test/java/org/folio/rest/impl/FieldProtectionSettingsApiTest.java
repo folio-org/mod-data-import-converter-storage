@@ -11,7 +11,6 @@ import org.folio.rest.jaxrs.model.MarcFieldProtectionSetting;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
