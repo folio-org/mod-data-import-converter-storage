@@ -211,7 +211,6 @@ public class FieldProtectionSettingsApiTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  @Ignore
   public void shouldReturnBadRequestIfSourceSystem() {
     Response createResponse = RestAssured.given()
       .spec(spec)
@@ -232,7 +231,6 @@ public class FieldProtectionSettingsApiTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  @Ignore
   public void shouldUpdateExistingSettingOnPut(TestContext context) {
     Async async = context.async();
     Response createResponse = RestAssured.given()
