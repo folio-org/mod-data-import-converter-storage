@@ -35,8 +35,7 @@ import static org.folio.rest.impl.MatchProfileTest.MATCH_PROFILES_PATH;
 import static org.folio.rest.impl.MatchProfileTest.MATCH_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
-import static org.folio.rest.jaxrs.model.JobProfile.DataType.DELIMITED;
-import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC_BIB;
+import static org.folio.rest.jaxrs.model.JobProfile.DataType.*;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MATCH_PROFILE;
@@ -64,15 +63,15 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   static JobProfileUpdateDto jobProfile_1 = new JobProfileUpdateDto()
     .withProfile(new JobProfile().withName("Bla")
       .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
-      .withDataType(MARC_BIB));
+      .withDataType(MARC));
   static JobProfileUpdateDto jobProfile_2 = new JobProfileUpdateDto()
     .withProfile(new JobProfile().withName("Boo")
       .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
-      .withDataType(MARC_BIB));
+      .withDataType(MARC));
   static JobProfileUpdateDto jobProfile_3 = new JobProfileUpdateDto()
     .withProfile(new JobProfile().withName("Foo")
       .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
-      .withDataType(MARC_BIB));
+      .withDataType(MARC));
 
   private static final String OCLC_DEFAULT_JOB_PROFILE_ID = "d0ebb7b0-2f0f-11eb-adc1-0242ac120002";
 
@@ -240,7 +239,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   public void shouldReturnBadRequestOnPostJobProfileWithInvalidField() {
     JsonObject jobProfile = new JsonObject()
       .put("name", "Bla")
-      .put("dataType", MARC_BIB)
+      .put("dataType", MARC)
       .put("invalidField", "value");
 
     RestAssured.given()
@@ -482,7 +481,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
 
     JobProfile newJobProfile = new JobProfile()
       .withName("Boo")
-      .withDataType(MARC_BIB)
+      .withDataType(MARC)
       .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")));
     Response createResponse = RestAssured.given()
       .spec(spec)
@@ -508,7 +507,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     JobProfileUpdateDto jobProfileToDelete = RestAssured.given()
       .spec(spec)
       .body(new JobProfileUpdateDto().withProfile(new JobProfile().withName("ProfileToDelete")
-        .withDataType(MARC_BIB)))
+        .withDataType(MARC)))
       .when()
       .post(JOB_PROFILES_PATH)
       .then()
@@ -540,7 +539,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     JobProfileUpdateDto jobProfileToDelete = RestAssured.given()
       .spec(spec)
       .body(new JobProfileUpdateDto().withProfile(new JobProfile().withName("ProfileToDelete")
-        .withDataType(MARC_BIB)))
+        .withDataType(MARC)))
       .when()
       .post(JOB_PROFILES_PATH)
       .then()
@@ -569,7 +568,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldCreateProfileOnPostWhenWasDeletedProfileWithSameNameBefore() {
     JobProfile jobProfile = new JobProfile().withName("profileName")
-      .withDataType(MARC_BIB);
+      .withDataType(MARC);
 
     JobProfileUpdateDto jobProfileToDelete = RestAssured.given()
       .spec(spec)
