@@ -34,7 +34,7 @@ import java.util.UUID;
 
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
-import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC_BIB;
+import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileAssociation.ReactTo.MATCH;
 import static org.folio.rest.jaxrs.model.ProfileAssociation.ReactTo.NON_MATCH;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
@@ -67,7 +67,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
 
 
   private JobProfileUpdateDto jobProfile = new JobProfileUpdateDto()
-    .withProfile(new JobProfile().withName("testJobProfile1").withDataType(MARC_BIB).withDescription("test-description"));
+    .withProfile(new JobProfile().withName("testJobProfile1").withDataType(MARC).withDescription("test-description"));
 
   private MatchProfileUpdateDto matchProfile = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("testMatchProfile1")
@@ -278,7 +278,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
     actionProfile2 = postProfile(testContext, actionProfile2, ACTION_PROFILES_PATH).body().as(ActionProfileUpdateDto.class);
 
     JobProfileUpdateDto jobProfile2 = new JobProfileUpdateDto()
-      .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC_BIB).withDescription("test-description"))
+      .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description"))
       .withAddedRelations(Arrays.asList(
         new ProfileAssociation()
           .withDetailProfileId(matchProfile.getId())

@@ -36,7 +36,7 @@ import java.util.UUID;
 
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
-import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC_BIB;
+import static org.folio.rest.jaxrs.model.JobProfile.DataType.MARC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
@@ -69,11 +69,11 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
   private static final String MASTERS_BY_DETAIL_URL = "/data-import-profiles/profileAssociations/{detailId}/masters";
 
   JobProfileUpdateDto jobProfile1 = new JobProfileUpdateDto()
-    .withProfile(new JobProfile().withName("testJobProfile1").withDataType(MARC_BIB).withDescription("test-description"));
+    .withProfile(new JobProfile().withName("testJobProfile1").withDataType(MARC).withDescription("test-description"));
   JobProfileUpdateDto jobProfile2 = new JobProfileUpdateDto()
-    .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC_BIB).withDescription("test-description"));
+    .withProfile(new JobProfile().withName("testJobProfile2").withDataType(MARC).withDescription("test-description"));
   JobProfileUpdateDto jobProfile3 = new JobProfileUpdateDto()
-    .withProfile(new JobProfile().withName("testJobProfile3").withDataType(MARC_BIB));
+    .withProfile(new JobProfile().withName("testJobProfile3").withDataType(MARC));
 
   ActionProfileUpdateDto actionProfile1 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("testActionProfile1").withDescription("test-description")

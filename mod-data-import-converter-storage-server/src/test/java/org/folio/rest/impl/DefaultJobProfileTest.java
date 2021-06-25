@@ -37,6 +37,6 @@ public class DefaultJobProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK).extract().as(JobProfile.class);
     Assert.assertEquals( "Default - Create SRS MARC Authority", profile.getName());
-    Assert.assertEquals( JobProfile.DataType.MARC_AUTHORITY, profile.getDataType());
+    Assert.assertEquals( JobProfile.DataType.MARC, profile.getDataType());
   }
 }
