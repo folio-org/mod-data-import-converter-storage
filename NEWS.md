@@ -1,4 +1,5 @@
-## xxxx-xx-xx v1.11.1
+## 2021-06-25 v1.11.1
+* [MODDICONV-191](https://issues.folio.org/browse/MODDICONV-191) Change dataType to have have common type for MARC related subtypes
 
 ## 2021-06-17 v1.11.0
 * [MODDICONV-187](https://issues.folio.org/browse/MODDICONV-187) Store MARC Authority record
