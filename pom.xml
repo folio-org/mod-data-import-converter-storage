@@ -79,6 +79,7 @@
           <argLine>
             --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -Dio.netty.tryReflectionSetAccessible=true --illegal-access=warn
           </argLine>
+          <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
 
