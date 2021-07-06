@@ -27,6 +27,7 @@
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.exclusions>**/ModTenantAPI.java</sonar.exclusions>
+    <testcontainers.version>1.15.3</testcontainers.version>
   </properties>
 
   <dependencyManagement>
@@ -47,6 +48,18 @@
         <groupId>io.vertx</groupId>
         <artifactId>vertx-pg-client</artifactId>
         <version>${vertx.version}-FOLIO</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${testcontainers.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${testcontainers.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
