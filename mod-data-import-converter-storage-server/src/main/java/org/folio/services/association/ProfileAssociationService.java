@@ -107,4 +107,6 @@ public interface ProfileAssociationService { //NOSONAR
    * @return - boolean result of operation
    */
   Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
+
+  Future<Boolean> deleteByMasterId(String masterId, ContentType masterType, ContentType detailType, String tenantId);
 }

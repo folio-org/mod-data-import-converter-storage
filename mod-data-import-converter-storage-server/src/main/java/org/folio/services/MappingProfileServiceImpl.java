@@ -1,7 +1,9 @@
 package org.folio.services;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.okapi.common.GenericCompositeFuture;
 import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileCollection;
@@ -12,9 +14,22 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class MappingProfileServiceImpl extends AbstractProfileService<MappingProfile, MappingProfileCollection, MappingProfileUpdateDto> {
+
+  @Override
+  public Future<MappingProfile> saveProfile(MappingProfileUpdateDto profileDto, OkapiConnectionParams params) {
+    return deleteExistingActionToMappingAssociations(profileDto, params.getTenantId())
+      .compose(deleteAr -> super.saveProfile(profileDto, params));
+  }
+
+  @Override
+  public Future<MappingProfile> updateProfile(MappingProfileUpdateDto profileDto, OkapiConnectionParams params) {
+    return deleteExistingActionToMappingAssociations(profileDto, params.getTenantId())
+      .compose(deleteAr -> super.updateProfile(profileDto, params));
+  }
 
   @Override
   MappingProfile setProfileId(MappingProfile profile) {
@@ -84,4 +99,24 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   protected MappingProfile getProfile(MappingProfileUpdateDto dto) {
     return dto.getProfile();
   }
+
+  private Future<Boolean> deleteExistingActionToMappingAssociations(MappingProfileUpdateDto profileDto, String tenantId) {
+    Promise<Boolean> promise = Promise.promise();
+    List<Future<Boolean>> futures = profileDto.getAddedRelations().stream()
+      .filter(profileAssociation -> profileAssociation.getMasterProfileType().equals(ProfileAssociation.MasterProfileType.ACTION_PROFILE))
+      .map(ProfileAssociation::getMasterProfileId)
+      .map(actionProfileId -> profileAssociationService.deleteByMasterId(actionProfileId, ProfileSnapshotWrapper.ContentType.ACTION_PROFILE,
+        ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE, tenantId))
+      .collect(Collectors.toList());
+
+    GenericCompositeFuture.all(futures).onComplete(ar -> {
+      if (ar.succeeded()) {
+        promise.complete(true);
+      } else {
+        promise.fail(ar.cause());
+      }
+    });
+    return promise.future();
+  }
+
 }

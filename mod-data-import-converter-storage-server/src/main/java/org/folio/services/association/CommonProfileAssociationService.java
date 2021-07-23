@@ -76,7 +76,6 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
     return profileAssociationDao.delete(id, masterType, detailType, tenantId);
   }
 
-
   @Override
   public Future<Optional<ProfileSnapshotWrapper>> findDetails(String masterId, ContentType masterType, ContentType detailType, String query, int offset, int limit, String tenantId) {
     Promise<Optional<ProfileSnapshotWrapper>> result = Promise.promise();
@@ -115,6 +114,11 @@ public class CommonProfileAssociationService implements ProfileAssociationServic
   @Override
   public Future<Boolean> delete(String masterId, String detailId, ContentType masterType, ContentType detailType, String tenantId) {
     return profileAssociationDao.delete(masterId, detailId, masterType, detailType, tenantId);
+  }
+
+  @Override
+  public Future<Boolean> deleteByMasterId(String masterId, ContentType masterType, ContentType detailType, String tenantId) {
+    return profileAssociationDao.deleteByMasterId(masterId, masterType, detailType, tenantId);
   }
 
   /**
