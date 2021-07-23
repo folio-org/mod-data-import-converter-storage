@@ -97,7 +97,7 @@ public interface ProfileAssociationService { //NOSONAR
   Future<Optional<ProfileSnapshotWrapper>> findMasters(String detailId, ContentType detailType, ContentType masterType, String query, int offset, int limit, String tenantId);
 
   /**
-   * Delete ProfileAssociation  by masterId and detailId
+   * Delete ProfileAssociation by masterId and detailId
    *
    * @param masterId   - UUID of masterProfile
    * @param detailId   - UUID of detailProfile
@@ -108,5 +108,14 @@ public interface ProfileAssociationService { //NOSONAR
    */
   Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
 
+  /**
+   * Delete profile associations for particular master profile by masterId
+   *
+   * @param masterId   - master profile id
+   * @param masterType - master profile type
+   * @param detailType - detail profile type
+   * @param tenantId   - tenant id
+   * @return future with boolean
+   */
   Future<Boolean> deleteByMasterId(String masterId, ContentType masterType, ContentType detailType, String tenantId);
 }

@@ -78,5 +78,14 @@ public interface ProfileAssociationDao {
    */
   Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
 
+  /**
+   * Delete profile associations for particular master profile by masterId
+   *
+   * @param masterId   - master profile id
+   * @param masterType - master profile type
+   * @param detailType - detail profile type
+   * @param tenantId   - tenant id
+   * @return future with boolean
+   */
   Future<Boolean> deleteByMasterId(String masterId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId);
 }
