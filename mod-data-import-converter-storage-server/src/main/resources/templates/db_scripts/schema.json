@@ -207,6 +207,16 @@
       "run": "after",
       "snippetPath": "data-migration/update_action_types.sql",
       "fromModuleVersion": "mod-data-import-converter-storage-1.9.0"
+    },
+    {
+      "run": "after",
+      "snippetPath": "data-migration/update_data_types.sql",
+      "fromModuleVersion": "mod-data-import-converter-storage-1.11.0"
+    },
+    {
+      "run": "after",
+      "snippetPath": "data-migration/return_data_types.sql",
+      "fromModuleVersion": "mod-data-import-converter-storage-1.12.0"
     }
   ]
 }
