@@ -6,7 +6,6 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
@@ -41,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -602,9 +600,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .map(deleted -> deleted
             ? DeleteDataImportProfilesProfileAssociationsByIdResponse.respond204WithTextPlain(
             format("Profile association with id '%s' was successfully deleted", id))
-            :
-            DeleteDataImportProfilesProfileAssociationsByIdResponse.respond404WithTextPlain(
-              format("Profile association with id '%s' was not found", id)))
+            : DeleteDataImportProfilesProfileAssociationsByIdResponse.respond404WithTextPlain(
+            format("Profile association with id '%s' was not found", id)))
           .map(Response.class::cast)
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
@@ -779,7 +776,8 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesProfileSnapshotsByProfileId(String id, String profileType, String jobProfileId, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
+  public void getDataImportProfilesProfileSnapshotsByProfileId(String id, String profileType, String jobProfileId, Map<String, String> okapiHeaders,
+                                                               Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
         profileSnapshotService.constructSnapshot(id, mapContentType(profileType), jobProfileId, tenantId)

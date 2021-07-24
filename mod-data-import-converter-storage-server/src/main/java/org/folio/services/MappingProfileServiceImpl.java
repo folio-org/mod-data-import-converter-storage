@@ -3,6 +3,8 @@ package org.folio.services;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.okapi.common.GenericCompositeFuture;
 import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.MappingProfile;
@@ -10,14 +12,19 @@ import org.folio.rest.jaxrs.model.MappingProfileCollection;
 import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.folio.rest.jaxrs.model.ProfileAssociation.MasterProfileType.ACTION_PROFILE;
+
 @Component
 public class MappingProfileServiceImpl extends AbstractProfileService<MappingProfile, MappingProfileCollection, MappingProfileUpdateDto> {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public Future<MappingProfile> saveProfile(MappingProfileUpdateDto profileDto, OkapiConnectionParams params) {
@@ -66,8 +73,8 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   }
 
   @Override
-  protected ProfileSnapshotWrapper.ContentType getProfileContentType() {
-    return ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
+  protected ContentType getProfileContentType() {
+    return ContentType.MAPPING_PROFILE;
   }
 
   @Override
@@ -103,18 +110,19 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   private Future<Boolean> deleteExistingActionToMappingAssociations(MappingProfileUpdateDto profileDto, String tenantId) {
     Promise<Boolean> promise = Promise.promise();
     List<Future<Boolean>> futures = profileDto.getAddedRelations().stream()
-      .filter(profileAssociation -> profileAssociation.getMasterProfileType().equals(ProfileAssociation.MasterProfileType.ACTION_PROFILE))
+      .filter(profileAssociation -> profileAssociation.getMasterProfileType().equals(ACTION_PROFILE))
       .map(ProfileAssociation::getMasterProfileId)
-      .map(actionProfileId -> profileAssociationService.deleteByMasterId(actionProfileId, ProfileSnapshotWrapper.ContentType.ACTION_PROFILE,
-        ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE, tenantId))
+      .map(actionProfileId -> profileAssociationService.deleteByMasterId(actionProfileId, ContentType.ACTION_PROFILE,
+        ContentType.MAPPING_PROFILE, tenantId))
       .collect(Collectors.toList());
 
     GenericCompositeFuture.all(futures).onComplete(ar -> {
-      if (ar.succeeded()) {
-        promise.complete(true);
-      } else {
+      if (ar.failed()) {
+        LOGGER.error("Failed to delete existing action-to-mapping associations", ar.cause());
         promise.fail(ar.cause());
+        return;
       }
+      promise.complete(true);
     });
     return promise.future();
   }
