@@ -117,12 +117,12 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
       .collect(Collectors.toList());
 
     GenericCompositeFuture.all(futures).onComplete(ar -> {
-      if (ar.failed()) {
-        LOGGER.error("Failed to delete existing action-to-mapping associations", ar.cause());
-        promise.fail(ar.cause());
+      if (ar.succeeded()) {
+        promise.complete(true);
         return;
       }
-      promise.complete(true);
+      LOGGER.error("Failed to delete existing action-to-mapping associations", ar.cause());
+      promise.fail(ar.cause());
     });
     return promise.future();
   }
