@@ -108,7 +108,6 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
   }
 
   private Future<Boolean> deleteExistingActionToMappingAssociations(MappingProfileUpdateDto profileDto, String tenantId) {
-    Promise<Boolean> promise = Promise.promise();
     List<Future<Boolean>> futures = profileDto.getAddedRelations().stream()
       .filter(profileAssociation -> profileAssociation.getMasterProfileType().equals(ACTION_PROFILE))
       .map(ProfileAssociation::getMasterProfileId)
@@ -116,15 +115,9 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
         ContentType.MAPPING_PROFILE, tenantId))
       .collect(Collectors.toList());
 
-    GenericCompositeFuture.all(futures).onComplete(ar -> {
-      if (ar.succeeded()) {
-        promise.complete(true);
-        return;
-      }
-      LOGGER.error("Failed to delete existing action-to-mapping associations", ar.cause());
-      promise.fail(ar.cause());
-    });
-    return promise.future();
+    return GenericCompositeFuture.all(futures)
+      .onFailure(th -> LOGGER.error("Failed to delete existing action-to-mapping associations", th))
+      .map(true);
   }
 
 }
