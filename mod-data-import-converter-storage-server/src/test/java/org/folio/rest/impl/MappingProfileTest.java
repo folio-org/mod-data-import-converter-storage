@@ -49,8 +49,10 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
-  public static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
-  public static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
+  private static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
+  private static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
+  private static final String MATCH_TO_MATCH_PROFILES_TABLE = "match_to_match_profiles";
+  private static final String MATCH_TO_ACTION_PROFILES_TABLE = "match_to_action_profiles";
   static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
 
   private static final String OCLC_DEFAULT_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
@@ -699,14 +701,17 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
       pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
         pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event3 ->
-          pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event4 ->
-            pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event5 ->
-              pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event6 ->
-                pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event7 -> {
-                  if (event7.failed()) {
-                  context.fail(event7.cause());
-                }
-                async.complete();
-              })))))));
+          pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event4 ->
+            pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE, new Criterion(), event5 ->
+              pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event6 ->
+                pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event7 ->
+                  pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event8 ->
+                    pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event9 -> {
+                      if (event7.failed()) {
+                        context.fail(event7.cause());
+                      }
+                      async.complete();
+                    })))))))));
   }
+
 }
