@@ -1,5 +1,6 @@
 package org.folio.rest.impl;
 
+import com.google.common.collect.Lists;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.vertx.core.json.JsonObject;
@@ -15,6 +16,8 @@ import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
 import org.folio.rest.jaxrs.model.MappingRule;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileAssociation.DetailProfileType;
+import org.folio.rest.jaxrs.model.ProfileAssociation.MasterProfileType;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -38,8 +41,6 @@ import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
-import com.google.common.collect.Lists;
-
 @RunWith(VertxUnitRunner.class)
 public class MappingProfileTest extends AbstractRestVerticleTest {
 
@@ -48,8 +49,10 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   static final String MAPPING_PROFILES_PATH = "/data-import-profiles/mappingProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
   private static final String JOB_PROFILES_TABLE_NAME = "job_profiles";
-  public static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
-  public static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
+  private static final String JOB_TO_ACTION_PROFILES_TABLE = "job_to_action_profiles";
+  private static final String JOB_TO_MATCH_PROFILES_TABLE = "job_to_match_profiles";
+  private static final String MATCH_TO_MATCH_PROFILES_TABLE = "match_to_match_profiles";
+  private static final String MATCH_TO_ACTION_PROFILES_TABLE = "match_to_action_profiles";
   static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
 
   private static final String OCLC_DEFAULT_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
@@ -528,6 +531,157 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .body("mappingProfiles*.deleted", everyItem(is(false)));
   }
 
+  @Test
+  public void shouldCreateProfileOnPostAndReplaceExistingAssociationWithActionProfile() {
+    MappingProfileUpdateDto mappingProfile1 = RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_1)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(MappingProfileUpdateDto.class);
+
+    ActionProfileUpdateDto actionProfile = RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfileUpdateDto()
+        .withProfile(new ActionProfile()
+          .withName("testActionProfile")
+          .withAction(CREATE)
+          .withFolioRecord(MARC_BIBLIOGRAPHIC))
+        .withAddedRelations(List.of(new ProfileAssociation()
+          .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+          .withDetailProfileType(DetailProfileType.MAPPING_PROFILE)
+          .withDetailProfileId(mappingProfile1.getProfile().getId()))))
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(ActionProfileUpdateDto.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", ACTION_PROFILE.value())
+      .queryParam("detail", MAPPING_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("profileAssociations.size", is(1))
+      .body("profileAssociations[0].masterProfileId", is(actionProfile.getProfile().getId()))
+      .body("profileAssociations[0].detailProfileId", is(mappingProfile1.getProfile().getId()));
+
+    MappingProfileUpdateDto mappingProfile2 = RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfileUpdateDto()
+        .withProfile(new MappingProfile().withName("mapping profile 2")
+          .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+          .withExistingRecordType(EntityType.INSTANCE))
+        .withAddedRelations(List.of(new ProfileAssociation()
+          .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+          .withDetailProfileType(DetailProfileType.MAPPING_PROFILE)
+          .withMasterProfileId(actionProfile.getProfile().getId()))))
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(MappingProfileUpdateDto.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", ACTION_PROFILE.value())
+      .queryParam("detail", MAPPING_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(1))
+      .body("profileAssociations.size", is(1))
+      .body("profileAssociations[0].masterProfileId", is(actionProfile.getProfile().getId()))
+      .body("profileAssociations[0].detailProfileId", is(mappingProfile2.getProfile().getId()));
+  }
+
+  @Test
+  public void shouldUpdateProfileOnPutAndReplaceExistingAssociationWithActionProfile() {
+    MappingProfileUpdateDto mappingProfile1 = RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_1)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(MappingProfileUpdateDto.class);
+
+    MappingProfileUpdateDto mappingProfile2 = RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_2)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is("Boo"))
+      .extract().body().as(MappingProfileUpdateDto.class);
+
+    ActionProfileUpdateDto actionProfile = RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfileUpdateDto()
+        .withProfile(new ActionProfile()
+          .withName("testActionProfile")
+          .withAction(CREATE)
+          .withFolioRecord(MARC_BIBLIOGRAPHIC))
+        .withAddedRelations(List.of(new ProfileAssociation()
+          .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+          .withDetailProfileType(DetailProfileType.MAPPING_PROFILE)
+          .withDetailProfileId(mappingProfile1.getProfile().getId()))))
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(ActionProfileUpdateDto.class);
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", ACTION_PROFILE.value())
+      .queryParam("detail", MAPPING_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("profileAssociations.size", is(1))
+      .body("profileAssociations[0].masterProfileId", is(actionProfile.getProfile().getId()))
+      .body("profileAssociations[0].detailProfileId", is(mappingProfile1.getProfile().getId()));
+
+    mappingProfile2.getProfile().setName("mapping profile 2");
+    RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfileUpdateDto()
+        .withProfile(new MappingProfile().withName("mapping profile 2")
+          .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+          .withExistingRecordType(EntityType.INSTANCE))
+        .withAddedRelations(List.of(new ProfileAssociation()
+          .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+          .withDetailProfileType(DetailProfileType.MAPPING_PROFILE)
+          .withMasterProfileId(actionProfile.getProfile().getId())
+          .withDetailProfileId(mappingProfile2.getProfile().getId()))))
+      .when()
+      .put(MAPPING_PROFILES_PATH + "/" + mappingProfile2.getProfile().getId())
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("name", is("mapping profile 2"));
+
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", ACTION_PROFILE.value())
+      .queryParam("detail", MAPPING_PROFILE.value())
+      .when()
+      .get(ASSOCIATED_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("profileAssociations.size", is(1))
+      .body("profileAssociations[0].masterProfileId", is(actionProfile.getProfile().getId()))
+      .body("profileAssociations[0].detailProfileId", is(mappingProfile2.getProfile().getId()));
+  }
+
   private void createProfiles() {
     List<MappingProfileUpdateDto> mappingProfilesToPost = Arrays.asList(mappingProfile_1, mappingProfile_2, mappingProfile_3);
     for (MappingProfileUpdateDto profile : mappingProfilesToPost) {
@@ -548,14 +702,17 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     pgClient.delete(JOB_TO_ACTION_PROFILES_TABLE, new Criterion(), event ->
       pgClient.delete(JOB_TO_MATCH_PROFILES_TABLE, new Criterion(), event2 ->
         pgClient.delete(ACTION_TO_MAPPING_PROFILES_TABLE, new Criterion(), event3 ->
-          pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event4 ->
-            pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event5 ->
-              pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event6 ->
-                pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event7 -> {
-                  if (event7.failed()) {
-                  context.fail(event7.cause());
-                }
-                async.complete();
-              })))))));
+          pgClient.delete(MATCH_TO_MATCH_PROFILES_TABLE, new Criterion(), event4 ->
+            pgClient.delete(MATCH_TO_ACTION_PROFILES_TABLE, new Criterion(), event5 ->
+              pgClient.delete(JOB_PROFILES_TABLE_NAME, new Criterion(), event6 ->
+                pgClient.delete(MATCH_PROFILES_TABLE_NAME, new Criterion(), event7 ->
+                  pgClient.delete(ACTION_PROFILES_TABLE_NAME, new Criterion(), event8 ->
+                    pgClient.delete(MAPPING_PROFILES_TABLE_NAME, new Criterion(), event9 -> {
+                      if (event7.failed()) {
+                        context.fail(event7.cause());
+                      }
+                      async.complete();
+                    })))))))));
   }
+
 }
