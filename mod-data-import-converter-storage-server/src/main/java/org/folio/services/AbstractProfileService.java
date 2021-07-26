@@ -39,7 +39,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
   private static final String DELETE_PROFILE_ERROR_MESSAGE = "Can not delete profile by id '%s' cause profile associated with other profiles";
 
   @Autowired
-  private ProfileAssociationService profileAssociationService;
+  protected ProfileAssociationService profileAssociationService;
   private final EntityTypeCollection entityTypeCollection;
 
   protected AbstractProfileService() {
