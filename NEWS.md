@@ -1,3 +1,6 @@
+## 2021-07-30 v1.11.2
+* [MODDICONV-192](https://issues.folio.org/browse/MODDICONV-192) Disallow linking multiple mapping profiles to one action profile
+
 ## 2021-06-25 v1.11.1
 * [MODDICONV-191](https://issues.folio.org/browse/MODDICONV-191) Change dataType to have have common type for MARC related subtypes
 
