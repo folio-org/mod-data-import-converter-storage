@@ -19,9 +19,10 @@
   </modules>
 
   <properties>
-    <raml-module-builder.version>32.1.0</raml-module-builder.version>
-    <vertx.version>4.0.0</vertx.version>
+    <raml-module-builder.version>33.0.2</raml-module-builder.version>
+    <vertx.version>4.1.0</vertx.version>
     <junit.version>4.13</junit.version>
+    <mockito.version>3.5.13</mockito.version>
     <rest-assured.version>4.3.3</rest-assured.version>
     <main.basedir>${project.basedir}</main.basedir>
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
@@ -85,30 +86,6 @@
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <id>git submodule update</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>git</executable>
-              <arguments>
-                <argument>submodule</argument>
-                <argument>update</argument>
-                <argument>--init</argument>
-                <argument>--recursive</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
@@ -185,6 +162,14 @@
     <developerConnection>scm:git:git@github.com:folio-org/mod-data-import-converter-storage.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>folio-nexus</id>
+      <name>FOLIO Maven repository</name>
+      <url>https://repository.folio.org/repository/maven-folio</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <repositories>
     <repository>

@@ -7,12 +7,13 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import org.folio.postgres.testing.PostgresTesterContainer;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
 import org.folio.rest.jaxrs.model.TenantAttributes;
 import org.folio.rest.jaxrs.model.TenantJob;
 import org.folio.rest.persist.PostgresClient;
-import org.folio.rest.tools.PomReader;
+import org.folio.rest.tools.utils.ModuleName;
 import org.folio.rest.tools.utils.NetworkUtils;
 import org.folio.spring.SpringContextUtil;
 import org.junit.After;
@@ -39,15 +40,14 @@ public abstract class AbstractUnitTest {
     int port = NetworkUtils.nextFreePort();
     String okapiUrl = "http://localhost:" + port;
     PostgresClient.closeAllClients();
-    PostgresClient.setIsEmbedded(true);
-    PostgresClient.getInstance(vertx).startEmbeddedPostgres();
+    PostgresClient.setPostgresTester(new PostgresTesterContainer());
     TenantClient tenantClient = new TenantClient(okapiUrl, TENANT_ID, TOKEN);
 
     final DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put(HTTP_PORT, port));
     vertx.deployVerticle(RestVerticle.class.getName(), options, res -> {
       try {
         TenantAttributes tenantAttributes = new TenantAttributes();
-        tenantAttributes.setModuleTo(PomReader.INSTANCE.getModuleName());
+        tenantAttributes.setModuleTo(ModuleName.getModuleName());
         tenantClient.postTenant(tenantAttributes, res2 -> {
           if (res2.result().statusCode() == 204) {
             return;
