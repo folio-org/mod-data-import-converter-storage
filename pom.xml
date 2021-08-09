@@ -146,7 +146,7 @@
           <execution>
             <id>rename-descriptor-outputs</id>
             <phase>generate-resources</phase>
-            <goals>c
+            <goals>
               <goal>rename</goal>
             </goals>
             <configuration>
