@@ -1,4 +1,5 @@
 ## 2021-XX-XX v1.12.0-SNAPSHOT
+* [MODDICONV-196](https://issues.folio.org/browse/MODDICONV-196) Upgrade to RAML Module Builder 33.x
 
 ## 2021-XX-XX v1.11.2-SNAPSHOT
 * [MODDICONV-192](https://issues.folio.org/browse/MODDICONV-192) Disallow linking multiple mapping profiles to one action profile

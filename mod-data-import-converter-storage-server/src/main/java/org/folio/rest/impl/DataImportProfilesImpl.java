@@ -6,9 +6,9 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.plexus.util.StringUtils;
 import org.folio.rest.impl.util.ExceptionHelper;
 import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -793,7 +793,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   private <T, S, D> Future<Errors> validateProfile(T profile, ProfileService<T, S, D> profileService, String tenantId) {
-    String profileTypeName = StringUtils.uncapitalise(profile.getClass().getSimpleName());
+    String profileTypeName = StringUtils.uncapitalize(profile.getClass().getSimpleName());
     Errors errors = new Errors()
       .withTotalRecords(0);
     return profileService.isProfileExistByProfileName(profile, tenantId)
