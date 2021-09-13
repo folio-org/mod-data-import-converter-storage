@@ -1,3 +1,6 @@
+## 2021-09-13 v1.11.3
+* [MODDICONV-204](https://issues.folio.org/browse/MODDICONV-204) When removing an action profile from a job profile, it sometimes removes that action from ALL job profiles
+
 ## 2021-07-30 v1.11.2
 * [MODDICONV-192](https://issues.folio.org/browse/MODDICONV-192) Disallow linking multiple mapping profiles to one action profile
 

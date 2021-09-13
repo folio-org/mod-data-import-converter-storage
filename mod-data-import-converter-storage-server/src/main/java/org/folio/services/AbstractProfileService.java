@@ -100,7 +100,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
     profileAssociations.forEach(association -> futureList.add(profileAssociationService.delete(association.getMasterProfileId(),
       association.getDetailProfileId(),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
-      ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
+      ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId, association.getJobProfileId())));
     GenericCompositeFuture.all(futureList).onComplete(ar -> {
       if (ar.succeeded()) {
         result.complete(true);
