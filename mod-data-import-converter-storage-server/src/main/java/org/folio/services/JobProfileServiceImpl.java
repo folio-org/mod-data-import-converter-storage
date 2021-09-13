@@ -52,6 +52,11 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
         association.setJobProfileId(profileDto.getProfile().getId());
       }
     });
+    profileDto.getDeletedRelations().forEach(association -> {
+      if (association.getMasterProfileType() == MATCH_PROFILE) {
+        association.setJobProfileId(profileDto.getProfile().getId());
+      }
+    });
     return profileDto;
   }
 

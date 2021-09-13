@@ -40,6 +40,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
   private static final String ID_FIELD = "'id'";
   private static final String MASTER_ID_FIELD = "masterProfileId";
   private static final String DETAIL_ID_FIELD = "detailProfileId";
+  private static final String JOB_PROFILE_ID_FIELD = "jobProfileId";
   private static final Logger LOGGER = LogManager.getLogger();
   private static final String CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE = "Correct ProfileAssociation types: " +
     "ACTION_PROFILE_TO_ACTION_PROFILE, " +
@@ -133,10 +134,14 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
   }
 
   @Override
-  public Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId) {
+  public Future<Boolean> delete(String masterId, String detailId, ProfileSnapshotWrapper.ContentType masterType, ProfileSnapshotWrapper.ContentType detailType, String tenantId, String jobProfileId) {
     Promise<RowSet<Row>> promise = Promise.promise();
     try {
-      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId + ")");
+      CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType),
+        MASTER_ID_FIELD + "==" + masterId + " AND " + DETAIL_ID_FIELD + "==" + detailId +
+          // if jobProfileId field defined in jsonb - perform matching on it, if not - match all records.
+          " AND (" + JOB_PROFILE_ID_FIELD + "==" + jobProfileId + " OR (cql.allRecords=1 NOT " + JOB_PROFILE_ID_FIELD + "=\"\"))");
+
       pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, promise);
     } catch (Exception e) {
       return Future.failedFuture(e);
