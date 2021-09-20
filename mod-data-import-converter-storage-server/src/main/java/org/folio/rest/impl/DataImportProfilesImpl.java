@@ -794,7 +794,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     Promise<Errors> promise = Promise.promise();
     String profileTypeName = StringUtils.uncapitalize(profile.getClass().getSimpleName());
     List<Future<Boolean>> futureList = List.of(profileService.isProfileExistByProfileName(profile, tenantId),
-      profileService.isProfileExistByProfileId(profile, tenantId));
+      method == HttpMethod.POST ? profileService.isProfileExistByProfileId(profile, tenantId) : Future.succeededFuture(false));
     GenericCompositeFuture.all(futureList).onComplete(ar -> {
       if(ar.succeeded()) {
         List<Error> errors = new ArrayList<>();
@@ -802,7 +802,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         Boolean isProfileExistByProfileId = ar.result().resultAt(1);
         if(isProfileExistByProfileName)
           errors.add(new Error().withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName)));
-        if(isProfileExistByProfileId && method.equals(HttpMethod.POST))
+        if(isProfileExistByProfileId)
           errors.add(new Error().withMessage(format(DUPLICATE_PROFILE_ID_ERROR_CODE, profileTypeName)));
         promise.complete(new Errors().withErrors(errors).withTotalRecords(errors.size()));
       } else {

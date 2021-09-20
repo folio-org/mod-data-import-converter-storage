@@ -158,7 +158,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
   @Override
   public Future<Boolean> isProfileExistByProfileId(T profile, String tenantId) {
     String profileId = getProfileId(profile);
-    return profileDao.isProfileExistById(profileId, tenantId);
+    return profileId == null ? Future.succeededFuture(false) : profileDao.isProfileExistById(profileId, tenantId);
   }
 
   @Override
