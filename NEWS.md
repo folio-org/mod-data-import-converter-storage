@@ -2,7 +2,7 @@
 * [MODDICONV-196](https://issues.folio.org/browse/MODDICONV-196) Upgrade to RAML Module Builder 33.x
 * [MODDICONV-199](https://issues.folio.org/browse/MODDICONV-199) MODDICONV-199 - Add default mapping profile to default Holdings profile
 * [MODDICONV-204](https://issues.folio.org/browse/MODDICONV-204) When removing an action profile from a job profile, it sometimes removes that action from ALL job profiles
-
+* [MODDICONV-179](https://issues.folio.org/browse/MODDICONV-179) Update endpoints for profiles creation to respect UUID from the request body
 ## 2021-XX-XX v1.11.2-SNAPSHOT
 * [MODDICONV-192](https://issues.folio.org/browse/MODDICONV-192) Disallow linking multiple mapping profiles to one action profile
 

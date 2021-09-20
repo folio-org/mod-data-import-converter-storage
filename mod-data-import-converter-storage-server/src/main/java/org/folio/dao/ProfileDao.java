@@ -73,6 +73,15 @@ public interface ProfileDao<T, S> {
   Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId);
 
   /**
+   * Search in database profile with the same id
+   *
+   * @param profileId   - profile name
+   * @param tenantId    - tenant id from request
+   * @return - boolean value. True if job profile with the same id already exist
+   */
+  Future<Boolean> isProfileExistById(String profileId, String tenantId);
+
+  /**
    * Checks is profile by specified id associated as detail with other profiles
    *
    * @param profileId - profile id

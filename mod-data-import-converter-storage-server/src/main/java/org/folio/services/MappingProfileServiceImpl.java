@@ -1,7 +1,6 @@
 package org.folio.services;
 
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,7 +39,8 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
 
   @Override
   MappingProfile setProfileId(MappingProfile profile) {
-    return profile.withId(UUID.randomUUID().toString());
+    return profile.withId(profile.getId() == null ?
+      UUID.randomUUID().toString() : profile.getId());
   }
 
   @Override

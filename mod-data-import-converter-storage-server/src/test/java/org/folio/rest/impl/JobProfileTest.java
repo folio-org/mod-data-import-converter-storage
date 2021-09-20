@@ -32,7 +32,6 @@ import java.util.UUID;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
 import static org.folio.rest.impl.MatchProfileTest.MATCH_PROFILES_PATH;
-import static org.folio.rest.impl.MatchProfileTest.MATCH_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.JobProfile.DataType.*;
@@ -59,6 +58,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
   private static final String ACTION_TO_ACTION_PROFILES_TABLE_NAME = "action_to_action_profiles";
   private static final String MATCH_TO_MATCH_PROFILES_TABLE_NAME = "match_to_match_profiles";
+  private static final String JOB_PROFILE_UUID = "b81c283c-131d-4470-ab91-e92bb415c000";
 
   static JobProfileUpdateDto jobProfile_1 = new JobProfileUpdateDto()
     .withProfile(new JobProfile().withName("Bla")
@@ -71,6 +71,11 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   static JobProfileUpdateDto jobProfile_3 = new JobProfileUpdateDto()
     .withProfile(new JobProfile().withName("Foo")
       .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withDataType(MARC));
+  static JobProfileUpdateDto jobProfile_4 = new JobProfileUpdateDto()
+    .withProfile(new JobProfile().withId(JOB_PROFILE_UUID)
+      .withName("OLA")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
       .withDataType(MARC));
 
   private static final String OCLC_DEFAULT_JOB_PROFILE_ID = "d0ebb7b0-2f0f-11eb-adc1-0242ac120002";
@@ -218,7 +223,36 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .then().log().all()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
       .body("errors[0].message", is("jobProfile.duplication.invalid"));
+  }
 
+  @Test
+  public void shouldCreateProfileWithGivenIdOnPost() {
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfile_4)
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then().log().all()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is(jobProfile_4.getProfile().getName()))
+      .body("profile.tags.tagList", is(jobProfile_4.getProfile().getTags().getTagList()))
+      .body("profile.userInfo.lastName", is("Doe"))
+      .body("profile.userInfo.firstName", is("Jane"))
+      .body("profile.userInfo.userName", is("@janedoe"))
+      .body("profile.dataType", is(jobProfile_4.getProfile().getDataType().value()));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new JobProfileUpdateDto()
+        .withProfile(new JobProfile().withId(JOB_PROFILE_UUID)
+          .withName("GOA")
+          .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+          .withDataType(MARC)))
+      .when()
+      .post(JOB_PROFILES_PATH)
+      .then().log().all()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors[0].message", is("jobProfile.duplication.id"));
   }
 
   @Test

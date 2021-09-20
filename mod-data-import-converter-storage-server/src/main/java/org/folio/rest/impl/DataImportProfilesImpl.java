@@ -1,14 +1,12 @@
 package org.folio.rest.impl;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Context;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.netty.handler.codec.http.HttpMethod;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.okapi.common.GenericCompositeFuture;
 import org.folio.rest.impl.util.ExceptionHelper;
 import org.folio.rest.impl.util.OkapiConnectionParams;
 import org.folio.rest.jaxrs.model.ActionProfile;
@@ -44,7 +42,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +54,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
   private static final Logger logger = LogManager.getLogger();
   private static final String DUPLICATE_PROFILE_ERROR_CODE = "%s.duplication.invalid";
+  private static final String DUPLICATE_PROFILE_ID_ERROR_CODE = "%s.duplication.id";
   private static final String PROFILE_VALIDATE_ERROR_MESSAGE = "Failed to validate %s";
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
@@ -100,7 +98,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
+        validateProfile(HttpMethod.POST, entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -147,7 +145,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with"))));
         } else {
           entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-          validateProfile(entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
+          validateProfile(HttpMethod.PUT, entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
             if (errors.failed()) {
               logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
               asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -218,7 +216,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
+        validateProfile(HttpMethod.POST, entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -265,7 +263,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with"))));
         } else {
           entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-          validateProfile(entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
+          validateProfile(HttpMethod.PUT, entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
             if (errors.failed()) {
               logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
               asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -311,7 +309,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
+        validateMappingProfile(HttpMethod.POST, entity.getProfile(), tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -357,7 +355,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Mapping Profile"))));
         } else {
           entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-          validateMappingProfile(entity.getProfile(), tenantId).onComplete(errors -> {
+          validateMappingProfile(HttpMethod.PUT, entity.getProfile(), tenantId).onComplete(errors -> {
             if (errors.failed()) {
               logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
               asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -450,7 +448,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-        validateProfile(entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
+        validateProfile(HttpMethod.POST, entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
             logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -497,7 +495,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Action Profile"))));
         } else {
           entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-          validateProfile(entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
+          validateProfile(HttpMethod.PUT, entity.getProfile(), actionProfileService, tenantId).onComplete(errors -> {
             if (errors.failed()) {
               logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
               asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
@@ -792,20 +790,30 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     });
   }
 
-  private <T, S, D> Future<Errors> validateProfile(T profile, ProfileService<T, S, D> profileService, String tenantId) {
+  private <T, S, D> Future<Errors> validateProfile(HttpMethod method, T profile, ProfileService<T, S, D> profileService, String tenantId) {
+    Promise<Errors> promise = Promise.promise();
     String profileTypeName = StringUtils.uncapitalize(profile.getClass().getSimpleName());
-    Errors errors = new Errors()
-      .withTotalRecords(0);
-    return profileService.isProfileExistByProfileName(profile, tenantId)
-      .map(isExist -> isExist
-        ? errors.withErrors(Collections.singletonList(new Error()
-        .withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName))))
-        .withTotalRecords(errors.getTotalRecords() + 1)
-        : errors);
+    List<Future<Boolean>> futureList = List.of(profileService.isProfileExistByProfileName(profile, tenantId),
+      profileService.isProfileExistByProfileId(profile, tenantId));
+    GenericCompositeFuture.all(futureList).onComplete(ar -> {
+      if(ar.succeeded()) {
+        List<Error> errors = new ArrayList<>();
+        Boolean isProfileExistByProfileName = ar.result().resultAt(0);
+        Boolean isProfileExistByProfileId = ar.result().resultAt(1);
+        if(isProfileExistByProfileName)
+          errors.add(new Error().withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName)));
+        if(isProfileExistByProfileId && method.equals(HttpMethod.POST))
+          errors.add(new Error().withMessage(format(DUPLICATE_PROFILE_ID_ERROR_CODE, profileTypeName)));
+        promise.complete(new Errors().withErrors(errors).withTotalRecords(errors.size()));
+      } else {
+        promise.fail(ar.cause());
+      }
+    });
+    return promise.future();
   }
 
-  private Future<Errors> validateMappingProfile(MappingProfile mappingProfile, String tenantId) {
-    return validateProfile(mappingProfile, mappingProfileService, tenantId)
+  private Future<Errors> validateMappingProfile(HttpMethod method, MappingProfile mappingProfile, String tenantId) {
+    return validateProfile(method, mappingProfile, mappingProfileService, tenantId)
       .map(errors -> {
         List<Error> fieldsValidationErrors = validateRepeatableFields(mappingProfile);
         errors.withTotalRecords(errors.getTotalRecords() + fieldsValidationErrors.size())

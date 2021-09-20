@@ -175,6 +175,27 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   }
 
   @Override
+  public Future<Boolean> isProfileExistById(String profileId, String tenantId) {
+    Promise<Boolean> promise = Promise.promise();
+    PostgresClient client = pgClientFactory.createInstance(tenantId);
+    StringBuilder selectQuery = new StringBuilder("SELECT jsonb FROM ") //NOSONAR
+      .append(PostgresClient.convertToPsqlStandard(tenantId))
+      .append(".")
+      .append(getTableName())
+      .append(" WHERE jsonb ->>").append(ID_FIELD).append("= '").append(profileId)
+      .append("' LIMIT 1;");
+    client.select(selectQuery.toString(), reply -> {
+      if (reply.succeeded()) {
+        promise.complete(reply.result().rowCount() > 0);
+      } else {
+        logger.error("Error during counting profiles by its id. Profile id {}", profileId, reply.cause());
+        promise.fail(reply.cause());
+      }
+    });
+    return promise.future();
+  }
+
+  @Override
   public Future<Boolean> isProfileAssociatedAsDetail(String profileId, String tenantId) {
     Promise<Boolean> promise = Promise.promise();
     String preparedSql = format(IS_PROFILE_ASSOCIATED_AS_DETAIL_BY_ID_SQL, profileId);
