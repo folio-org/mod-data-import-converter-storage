@@ -4,6 +4,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.folio.dao.ProfileDao;
@@ -153,6 +154,18 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
     String profileName = getProfileName(profile);
     String profileId = getProfileId(profile);
     return profileDao.isProfileExistByName(profileName, profileId, tenantId);
+  }
+
+  @Override
+  public Future<Boolean> isProfileExistByProfileId(T profile, String tenantId) {
+    Promise<Boolean> promise = Promise.promise();
+    String profileId = getProfileId(profile);
+    if(StringUtils.isBlank(profileId)) {
+      promise.complete(false);
+      return promise.future();
+    } else {
+      return getProfileById(profileId, false, tenantId).map(Optional::isPresent);
+    }
   }
 
   @Override

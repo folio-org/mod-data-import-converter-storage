@@ -10,19 +10,8 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
-import org.folio.rest.jaxrs.model.ActionProfile;
-import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
-import org.folio.rest.jaxrs.model.EntityType;
-import org.folio.rest.jaxrs.model.Field;
-import org.folio.rest.jaxrs.model.JobProfileUpdateDto;
-import org.folio.rest.jaxrs.model.MatchDetail;
-import org.folio.rest.jaxrs.model.MatchExpression;
-import org.folio.rest.jaxrs.model.MatchProfile;
-import org.folio.rest.jaxrs.model.MatchProfileUpdateDto;
-import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.*;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
-import org.folio.rest.jaxrs.model.Qualifier;
-import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.Assert;
@@ -72,6 +61,7 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
   private static final String OCLC_DEFAULT_MATCH_PROFILE_ID = "d27d71ce-8a1e-44c6-acea-96961b5592c6";
+  private static final String MATCH_PROFILE_UUID = "48a54656-8a2c-43c1-96b4-da96a70a0a62";
 
 
   private static MatchProfileUpdateDto matchProfile_1 = new MatchProfileUpdateDto()
@@ -87,6 +77,11 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   private static MatchProfileUpdateDto matchProfile_3 = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("Foo")
       .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC));
+  private static MatchProfileUpdateDto matchProfile_4 = new MatchProfileUpdateDto()
+    .withProfile(new MatchProfile().withId(MATCH_PROFILE_UUID).withName("OLA")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
       .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
       .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC));
 
@@ -248,6 +243,35 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
       .post(MATCH_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldCreateProfileWithGivenIdOnPost() {
+    RestAssured.given()
+      .spec(spec)
+      .body(matchProfile_4)
+      .when()
+      .post(MATCH_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is(matchProfile_4.getProfile().getName()))
+      .body("profile.tags.tagList", is(matchProfile_4.getProfile().getTags().getTagList()))
+      .body("profile.userInfo.lastName", is("Doe"))
+      .body("profile.userInfo.firstName", is("Jane"))
+      .body("profile.userInfo.userName", is("@janedoe"));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new MatchProfileUpdateDto()
+        .withProfile(new MatchProfile().withId(MATCH_PROFILE_UUID).withName("GOA")
+          .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+          .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+          .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)))
+      .when()
+      .post(MATCH_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors[0].message", is("matchProfile.duplication.id"));
   }
 
   @Test

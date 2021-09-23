@@ -18,7 +18,9 @@ public class ActionProfileServiceImpl extends AbstractProfileService<ActionProfi
 
   @Override
   ActionProfile setProfileId(ActionProfile profile) {
-    return profile.withId(UUID.randomUUID().toString());
+    String profileId = profile.getId();
+    return profile.withId(StringUtils.isBlank(profileId) ?
+      UUID.randomUUID().toString() : profileId);
   }
 
   @Override

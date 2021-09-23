@@ -54,6 +54,7 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_TO_MATCH_PROFILES_TABLE = "match_to_match_profiles";
   private static final String MATCH_TO_ACTION_PROFILES_TABLE = "match_to_action_profiles";
   static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
+  private static final String MAPPING_PROFILE_UUID = "608ab35e-5f8b-49c3-bcf1-1fb5e57d5130";
 
   private static final String OCLC_DEFAULT_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
 
@@ -73,6 +74,12 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
       .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
       .withExistingRecordType(EntityType.INSTANCE));
+  private static MappingProfileUpdateDto mappingProfile_4 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withId(MAPPING_PROFILE_UUID).withName("OLA")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
+
 
   private static final List<MappingRule> fields = Lists.newArrayList(new MappingRule()
     .withName("repeatableField")
@@ -241,6 +248,35 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .post(MAPPING_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldCreateProfileWithGivenIdOnPost() {
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_4)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is(mappingProfile_4.getProfile().getName()))
+      .body("profile.tags.tagList", is(mappingProfile_4.getProfile().getTags().getTagList()))
+      .body("profile.userInfo.lastName", is("Doe"))
+      .body("profile.userInfo.firstName", is("Jane"))
+      .body("profile.userInfo.userName", is("@janedoe"));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfileUpdateDto()
+        .withProfile(new MappingProfile().withId(MAPPING_PROFILE_UUID).withName("OLA")
+          .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum")))
+          .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+          .withExistingRecordType(EntityType.INSTANCE)))
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors[0].message", is("mappingProfile.duplication.id"));
   }
 
   @Test

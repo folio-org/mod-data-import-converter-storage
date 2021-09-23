@@ -29,7 +29,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.folio.rest.impl.MappingProfileTest.MAPPING_PROFILES_PATH;
-import static org.folio.rest.impl.MappingProfileTest.MAPPING_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.INSTANCE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
@@ -57,6 +56,8 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   private static final String SNAPSHOTS_TABLE_NAME = "profile_snapshots";
   private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
   private static final String MATCH_TO_MATCH_PROFILES_TABLE_NAME = "match_to_match_profiles";
+  private static final String ACTION_PROFILE_UUID = "16449d21-ad7c-4f69-b31e-a521fe4ae893";
+
 
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
@@ -76,6 +77,11 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   static ActionProfileUpdateDto actionProfile_3 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("Foo")
       .withTags(new Tags().withTagList(Collections.singletonList("lorem")))
+      .withAction(CREATE)
+      .withFolioRecord(MARC_BIBLIOGRAPHIC));
+  static ActionProfileUpdateDto actionProfile_4 = new ActionProfileUpdateDto()
+    .withProfile(new ActionProfile().withId(ACTION_PROFILE_UUID).withName("OLA")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
       .withAction(CREATE)
       .withFolioRecord(MARC_BIBLIOGRAPHIC));
 
@@ -180,6 +186,35 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .post(ACTION_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldCreateProfileWithGivenIdOnPost() {
+    RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_4)
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is(actionProfile_4.getProfile().getName()))
+      .body("profile.tags.tagList", is(actionProfile_4.getProfile().getTags().getTagList()))
+      .body("profile.userInfo.lastName", is("Doe"))
+      .body("profile.userInfo.firstName", is("Jane"))
+      .body("profile.userInfo.userName", is("@janedoe"));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfileUpdateDto()
+        .withProfile(new ActionProfile().withId(ACTION_PROFILE_UUID).withName("GOA")
+          .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+          .withAction(CREATE)
+          .withFolioRecord(MARC_BIBLIOGRAPHIC)))
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors[0].message", is("actionProfile.duplication.id"));
   }
 
   @Test

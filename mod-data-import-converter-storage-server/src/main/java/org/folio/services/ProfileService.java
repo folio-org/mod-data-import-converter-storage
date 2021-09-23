@@ -65,6 +65,15 @@ public interface ProfileService<T, S, D> {
   Future<Boolean> isProfileExistByProfileName(T profile, String tenantId);
 
   /**
+   * Search in database profile with the same id which contains in specified profile
+   *
+   * @param profile  - T entity
+   * @param tenantId - tenant id from request
+   * @return - boolean value. True if job profile with the same id already exist
+   */
+  Future<Boolean> isProfileExistByProfileId(T profile, String tenantId);
+
+  /**
    * Marks profile as deleted by its id
    *
    * @param id       Profile id
