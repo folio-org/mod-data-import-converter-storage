@@ -2,7 +2,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ('80898dee-449f-44dd-9c8e-37d5eb469b1d', '{
   "id": "80898dee-449f-44dd-9c8e-37d5eb469b1d",
   "name": "Default - Create Holdings and SRS MARC Holdings",
-  "description": "Load MARC Holdings and inventory holdings to create SRS MARC Holdings and Holdings",
+  "description": "Load MARC Holdings to create SRS MARC Holdings and Inventory Holdings",
   "deleted": false,
   "dataType": "MARC",
   "tags": {
@@ -287,8 +287,8 @@ INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (id, jsonb) value
 ON CONFLICT DO NOTHING;
 
 INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (id, jsonb) values
-('8aa0b850-9182-4005-8435-340b704b2a19', '{
-  "id": "8aa0b850-9182-4005-8435-340b704b2a19",
+('42f66e86-cacb-479d-aa80-50a200d0b6b6', '{
+  "id": "42f66e86-cacb-479d-aa80-50a200d0b6b6",
   "order": 0,
   "triggered": false,
   "detailProfileId": "13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a",

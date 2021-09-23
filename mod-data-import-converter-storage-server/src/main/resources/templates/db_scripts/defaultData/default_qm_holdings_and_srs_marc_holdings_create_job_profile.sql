@@ -2,7 +2,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ('fa0262c7-5816-48d0-b9b3-7b7a862a5bc7', '{
   "id": "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7",
   "name": "quickMARC Derive - Create Holdings and SRS MARC Holdings",
-  "description": "Load MARC Holdings and inventory holdings to create SRS MARC Holdings and Holdings",
+  "description": "Load MARC Holdings to create SRS MARC Holdings and Inventory Holdings",
   "deleted": false,
   "dataType": "MARC",
   "tags": {
@@ -30,7 +30,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
   "name": "Default derive - Create holdings",
   "action": "CREATE",
   "deleted": false,
-  "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It can be edited, duplicated.",
+  "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited or deleted.",
   "folioRecord": "HOLDINGS",
   "childProfiles": [],
   "parentProfiles": [],
@@ -65,7 +65,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
     "userName": "System",
     "firstName": "System"
   },
-  "description": "This field mapping profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It can be edited, duplicated, deleted, or linked to additional action profiles.",
+  "description": "This field mapping profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited or deleted.",
   "childProfiles": [],
   "mappingDetails": {
     "name": "holdings",
@@ -279,8 +279,8 @@ INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (id, jsonb) value
   "id": "adbe1e5c-7796-4902-b18e-794b1d58caac",
   "order": 0,
   "triggered": false,
-  "detailProfileId": "8aa0b850-9182-4005-8435-340b704b2a19",
-  "masterProfileId": "80898dee-449f-44dd-9c8e-37d5eb469b1d",
+  "detailProfileId": "f5feddba-f892-4fad-b702-e4e77f04f9a3",
+  "masterProfileId": "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7",
   "detailProfileType": "ACTION_PROFILE",
   "masterProfileType": "JOB_PROFILE"
 }')
@@ -292,7 +292,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (id, jsonb) v
   "order": 0,
   "triggered": false,
   "detailProfileId": "e0fbaad5-10c0-40d5-9228-498b351dbbaa",
-  "masterProfileId": "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7",
+  "masterProfileId": "f5feddba-f892-4fad-b702-e4e77f04f9a3",
   "detailProfileType": "MAPPING_PROFILE",
   "masterProfileType": "ACTION_PROFILE"
 }')
