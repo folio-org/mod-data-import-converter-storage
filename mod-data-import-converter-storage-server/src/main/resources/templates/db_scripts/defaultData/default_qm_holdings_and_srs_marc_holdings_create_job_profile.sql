@@ -291,8 +291,8 @@ INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (id, jsonb) v
   "id": "3c73fa82-97bb-4960-aa6b-e4c8f230bcdc",
   "order": 0,
   "triggered": false,
-  "detailProfileId": "13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a",
-  "masterProfileId": "8aa0b850-9182-4005-8435-340b704b2a19",
+  "detailProfileId": "e0fbaad5-10c0-40d5-9228-498b351dbbaa",
+  "masterProfileId": "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7",
   "detailProfileType": "MAPPING_PROFILE",
   "masterProfileType": "ACTION_PROFILE"
 }')
