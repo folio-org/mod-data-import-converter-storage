@@ -162,17 +162,10 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
     String profileId = getProfileId(profile);
     if(StringUtils.isBlank(profileId)) {
       promise.complete(false);
+      return promise.future();
     } else {
-      getProfileById(profileId, false, tenantId).onComplete(ar -> {
-        if(ar.succeeded()) {
-          Optional<T> optionalProfile = ar.result();
-          promise.complete(optionalProfile.isPresent());
-        } else {
-          promise.fail(ar.cause());
-        }
-      });
+      return getProfileById(profileId, false, tenantId).map(Optional::isPresent);
     }
-    return promise.future();
   }
 
   @Override
