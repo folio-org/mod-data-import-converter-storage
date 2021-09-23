@@ -158,14 +158,9 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
 
   @Override
   public Future<Boolean> isProfileExistByProfileId(T profile, String tenantId) {
-    Promise<Boolean> promise = Promise.promise();
     String profileId = getProfileId(profile);
-    if(StringUtils.isBlank(profileId)) {
-      promise.complete(false);
-      return promise.future();
-    } else {
-      return getProfileById(profileId, false, tenantId).map(Optional::isPresent);
-    }
+    return StringUtils.isBlank(profileId) ?
+      Future.succeededFuture(false) : getProfileById(profileId, false, tenantId).map(Optional::isPresent);
   }
 
   @Override
