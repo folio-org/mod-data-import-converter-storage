@@ -39,8 +39,9 @@ public class MappingProfileServiceImpl extends AbstractProfileService<MappingPro
 
   @Override
   MappingProfile setProfileId(MappingProfile profile) {
-    return profile.withId(profile.getId() == null ?
-      UUID.randomUUID().toString() : profile.getId());
+    String profileId = profile.getId();
+    return profile.withId(StringUtils.isBlank(profileId) ?
+      UUID.randomUUID().toString() : profileId);
   }
 
   @Override

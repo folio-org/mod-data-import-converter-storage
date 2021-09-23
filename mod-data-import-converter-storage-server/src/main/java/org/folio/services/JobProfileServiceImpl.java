@@ -20,8 +20,9 @@ public class JobProfileServiceImpl extends AbstractProfileService<JobProfile, Jo
 
   @Override
   JobProfile setProfileId(JobProfile profile) {
-    return profile.withId(profile.getId() == null ?
-      UUID.randomUUID().toString() : profile.getId());
+    String profileId = profile.getId();
+    return profile.withId(StringUtils.isBlank(profileId) ?
+      UUID.randomUUID().toString() : profileId);
   }
 
   @Override

@@ -18,8 +18,9 @@ public class MatchProfileServiceImpl extends AbstractProfileService<MatchProfile
 
   @Override
   MatchProfile setProfileId(MatchProfile profile) {
-    return profile.withId(profile.getId() == null ?
-      UUID.randomUUID().toString() : profile.getId());
+    String profileId = profile.getId();
+    return profile.withId(StringUtils.isBlank(profileId) ?
+      UUID.randomUUID().toString() : profileId);
   }
 
   @Override

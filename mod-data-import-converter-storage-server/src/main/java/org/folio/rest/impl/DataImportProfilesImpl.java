@@ -23,12 +23,8 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
@@ -777,23 +773,30 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private <T, S, D> Future<Errors> validateProfile(OperationType operationType, T profile, ProfileService<T, S, D> profileService, String tenantId) {
     Promise<Errors> promise = Promise.promise();
     String profileTypeName = StringUtils.uncapitalize(profile.getClass().getSimpleName());
-    List<Future<Boolean>> futureList = List.of(profileService.isProfileExistByProfileName(profile, tenantId),
-      operationType == OperationType.CREATE ? profileService.isProfileExistByProfileId(profile, tenantId) : Future.succeededFuture(false));
-    GenericCompositeFuture.all(futureList).onComplete(ar -> {
+    Map<String, Future<Boolean>> validateConditions = getValidateConditions(operationType, profile, profileService, tenantId);
+    List<String> errorCodes = new ArrayList<>(validateConditions.keySet());
+    List<Future<Boolean>> futures = new ArrayList<>(validateConditions.values());
+    GenericCompositeFuture.all(futures).onComplete( ar -> {
       if(ar.succeeded()) {
-        List<Error> errors = new ArrayList<>();
-        Boolean isProfileExistByProfileName = ar.result().resultAt(0);
-        Boolean isProfileExistByProfileId = ar.result().resultAt(1);
-        if(isProfileExistByProfileName)
-          errors.add(new Error().withMessage(format(DUPLICATE_PROFILE_ERROR_CODE, profileTypeName)));
-        if(isProfileExistByProfileId)
-          errors.add(new Error().withMessage(format(DUPLICATE_PROFILE_ID_ERROR_CODE, profileTypeName)));
+        List<Error> errors = new ArrayList<>(errorCodes).stream()
+          .filter(errorCode -> ar.result().resultAt(errorCodes.indexOf(errorCode)))
+          .map(errorCode -> new Error().withMessage(format(errorCode, profileTypeName)))
+          .collect(Collectors.toList());
         promise.complete(new Errors().withErrors(errors).withTotalRecords(errors.size()));
       } else {
         promise.fail(ar.cause());
       }
     });
     return promise.future();
+  }
+
+  private <T, S, D> Map<String, Future<Boolean>> getValidateConditions(OperationType operationType, T profile, ProfileService<T, S, D> profileService, String tenantId) {
+    Map<String, Future<Boolean>> validateConditions = new LinkedHashMap<>();
+    validateConditions.put(DUPLICATE_PROFILE_ERROR_CODE, profileService.isProfileExistByProfileName(profile, tenantId));
+    if(operationType == OperationType.CREATE) {
+      validateConditions.put(DUPLICATE_PROFILE_ID_ERROR_CODE, profileService.isProfileExistByProfileId(profile, tenantId));
+    }
+    return validateConditions;
   }
 
   private Future<Errors> validateMappingProfile(OperationType operationType, MappingProfile mappingProfile, String tenantId) {
