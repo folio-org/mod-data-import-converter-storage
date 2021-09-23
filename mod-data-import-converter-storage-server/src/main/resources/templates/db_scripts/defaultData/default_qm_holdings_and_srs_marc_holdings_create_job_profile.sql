@@ -1,7 +1,7 @@
 INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
-('80898dee-449f-44dd-9c8e-37d5eb469b1d', '{
-  "id": "80898dee-449f-44dd-9c8e-37d5eb469b1d",
-  "name": "Default - Create Holdings and SRS MARC Holdings",
+('fa0262c7-5816-48d0-b9b3-7b7a862a5bc7', '{
+  "id": "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7",
+  "name": "quickMARC Derive - Create Holdings and SRS MARC Holdings",
   "description": "Load MARC Holdings and inventory holdings to create SRS MARC Holdings and Holdings",
   "deleted": false,
   "dataType": "MARC",
@@ -25,9 +25,9 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 ON CONFLICT DO NOTHING;
 
 INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
-('8aa0b850-9182-4005-8435-340b704b2a19', '{
-  "id": "8aa0b850-9182-4005-8435-340b704b2a19",
-  "name": "Default - Create Holdings",
+('f5feddba-f892-4fad-b702-e4e77f04f9a3', '{
+  "id": "f5feddba-f892-4fad-b702-e4e77f04f9a3",
+  "name": "Default derive - Create holdings",
   "action": "CREATE",
   "deleted": false,
   "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It can be edited, duplicated.",
@@ -50,9 +50,9 @@ ON CONFLICT DO NOTHING;
 
 
 INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
-('13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a', '{
-  "id": "13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a",
-  "name": "Default - Create holdings",
+('e0fbaad5-10c0-40d5-9228-498b351dbbaa', '{
+  "id": "e0fbaad5-10c0-40d5-9228-498b351dbbaa",
+  "name": "Default derive - Create holdings",
   "deleted": false,
   "metadata": {
     "createdDate": "2021-08-05T14:00:00.000",
@@ -275,8 +275,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 ON CONFLICT DO NOTHING;
 
 INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (id, jsonb) values
-('866a90ce-53b2-4b7b-afb5-d3a564e5087e', '{
-  "id": "866a90ce-53b2-4b7b-afb5-d3a564e5087e",
+('adbe1e5c-7796-4902-b18e-794b1d58caac', '{
+  "id": "adbe1e5c-7796-4902-b18e-794b1d58caac",
   "order": 0,
   "triggered": false,
   "detailProfileId": "8aa0b850-9182-4005-8435-340b704b2a19",
@@ -287,8 +287,8 @@ INSERT INTO ${myuniversity}_${mymodule}.job_to_action_profiles (id, jsonb) value
 ON CONFLICT DO NOTHING;
 
 INSERT INTO ${myuniversity}_${mymodule}.action_to_mapping_profiles (id, jsonb) values
-('8aa0b850-9182-4005-8435-340b704b2a19', '{
-  "id": "8aa0b850-9182-4005-8435-340b704b2a19",
+('3c73fa82-97bb-4960-aa6b-e4c8f230bcdc', '{
+  "id": "3c73fa82-97bb-4960-aa6b-e4c8f230bcdc",
   "order": 0,
   "triggered": false,
   "detailProfileId": "13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a",
