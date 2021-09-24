@@ -50,6 +50,9 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID = "d0ebba8a-2f0f-11eb-adc1-0242ac120002";
   private static final String OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID = "cddff0e1-233c-47ba-8be5-553c632709d9";
   private static final String OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID = "6aa8e98b-0d9f-41dd-b26f-15658d07eb52";
+  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID = "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7";
+  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID = "e0fbaad5-10c0-40d5-9228-498b351dbbaa";
+  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID = "adbe1e5c-7796-4902-b18e-794b1d58caac";
 
 
   @Autowired
@@ -171,7 +174,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (id.equals(OCLC_CREATE_INSTANCE_JOB_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID)) {
+        if (id.equals(OCLC_CREATE_INSTANCE_JOB_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID) || id.equals(DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID)) {
           logger.error("Can`t delete default OCLC Job Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Job Profile with"))));
         } else {
@@ -330,7 +333,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (id.equals(OCLC_CREATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID)) {
+        if (isDeletedProfile(id, OCLC_CREATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID)) {
           logger.error("Can`t update default OCLC Mapping Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Mapping Profile"))));
         } else {
@@ -361,7 +364,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void deleteDataImportProfilesMappingProfilesById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (id.equals(OCLC_CREATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MAPPING_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID)) {
+        if (isDeletedProfile(id, OCLC_CREATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID)) {
           logger.error("Can`t delete default OCLC Mapping Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Mapping Profile"))));
         } else {
@@ -470,7 +473,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (id.equals(OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID)) {
+        if (isDeletedProfile(id, OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID)) {
           logger.error("Can`t update default OCLC Action Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Action Profile"))));
         } else {
@@ -719,7 +722,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                          Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (id.equals(OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID) || id.equals(OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID)) {
+        if (isDeletedProfile(id, OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID)) {
           logger.error("Can`t delete default OCLC Action Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Action Profile"))));
         } else {
@@ -735,6 +738,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
+  }
+
+  private boolean isDeletedProfile(String id, String oclcCreateInstanceActionProfileId,
+                                   String oclcUpdateInstanceActionProfileId, String oclcUpdateMarcBibActionProfileId,
+                                   String defaultCreateDeriveHoldingsActionProfileId) {
+    return id.equals(oclcCreateInstanceActionProfileId) || id.equals(oclcUpdateInstanceActionProfileId) || id.equals(oclcUpdateMarcBibActionProfileId) || id.equals(defaultCreateDeriveHoldingsActionProfileId);
   }
 
   @Override
