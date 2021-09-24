@@ -25,6 +25,7 @@ public class ModTenantAPI extends TenantAPI {
   private static final String DEFAULT_OCLC_UPDATE_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_oclc_update_job_profile.sql";
   private static final String DEFAULT_MARC_FIELD_PROTECTION_SETTINGS_SQL = "templates/db_scripts/defaultData/default_marc_field_protection_settings.sql";
   private static final String DEFAULT_QM_INSTANCE_AND_SRS_MARC_BIB_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_qm_instance_and_srs_marc_bib_create_job_profile.sql";
+  private static final String DEFAULT_QM_HOLDINGS_AND_SRS_MARC_HOLDINGS_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_qm_holdings_and_srs_marc_holdings_create_job_profile.sql";
   private static final String UPDATE_DEFAULT_QM_INSTANCE_AND_SRS_MARC_BIB_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_qm_instance_and_srs_marc_bib_create_job_profile.sql";
   private static final String DEFAULT_INSTANCE_AND_MARC_BIB_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_instance_and_marc_bib_create_job_profile.sql";
   private static final String DEFAULT_EDIFACT_MAPPING_PROFILES = "templates/db_scripts/defaultData/default_edifact_mapping_profiles.sql";
@@ -41,6 +42,7 @@ public class ModTenantAPI extends TenantAPI {
         .compose(d -> setupDefaultData(DEFAULT_OCLC_JOB_PROFILE_SQL, headers, context))
         .compose(u -> setupDefaultData(DEFAULT_OCLC_UPDATE_JOB_PROFILE_SQL, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_QM_INSTANCE_AND_SRS_MARC_BIB_CREATE_JOB_PROFILE, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_QM_HOLDINGS_AND_SRS_MARC_HOLDINGS_CREATE_JOB_PROFILE, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_INSTANCE_AND_MARC_BIB_CREATE_JOB_PROFILE, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_EDIFACT_MAPPING_PROFILES, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_MARC_AUTHORITY_CREATE_JOB_PROFILE, headers, context))
