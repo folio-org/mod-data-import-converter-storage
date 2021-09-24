@@ -60,6 +60,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_TO_MATCH_PROFILES_TABLE_NAME = "match_to_match_profiles";
   private static final String JOB_PROFILE_UUID = "b81c283c-131d-4470-ab91-e92bb415c000";
   private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID = "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7";
+  private static final String DEFAULT_CREATE_DERIVE_INSTANCE_JOB_PROFILE_ID = "6409dcff-71fa-433a-bc6a-e70ad38a9604";
 
   static JobProfileUpdateDto jobProfile_1 = new JobProfileUpdateDto()
     .withProfile(new JobProfile().withName("Bla")
@@ -208,6 +209,17 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .when()
       .delete(JOB_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnDeleteDefaultDeriveMarcInstance() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(JOB_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_INSTANCE_JOB_PROFILE_ID)
       .then()
       .statusCode(HttpStatus.SC_BAD_REQUEST);
   }
