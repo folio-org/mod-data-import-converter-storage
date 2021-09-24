@@ -1,7 +1,6 @@
 package org.folio.rest.impl;
 
 import static java.lang.String.format;
-
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
 import static org.folio.rest.RestVerticle.OKAPI_USERID_HEADER;
 
@@ -14,22 +13,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Context;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.folio.okapi.common.GenericCompositeFuture;
 import org.folio.rest.impl.util.ExceptionHelper;
 import org.folio.rest.impl.util.OkapiConnectionParams;
@@ -58,6 +49,15 @@ import org.folio.services.ProfileService;
 import org.folio.services.association.ProfileAssociationService;
 import org.folio.services.snapshot.ProfileSnapshotService;
 import org.folio.spring.SpringContextUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Context;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 
 public class DataImportProfilesImpl implements DataImportProfiles {
 
@@ -69,22 +69,27 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
   private static final String INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE = "Invalid repeatableFieldAction for empty subfields: %s";
 
-  private static final String OCLC_CREATE_INSTANCE_JOB_PROFILE_ID = "d0ebb7b0-2f0f-11eb-adc1-0242ac120002";
-  private static final String OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID = "91f9b8d6-d80e-4727-9783-73fb53e3c786";
-  private static final String OCLC_MARC_MARC_MATCH_PROFILE_ID = "d27d71ce-8a1e-44c6-acea-96961b5592c6";
-  private static final String OCLC_INSTANCE_UUID_MATCH_PROFILE_ID = "31dbb554-0826-48ec-a0a4-3c55293d4dee";
-  private static final String OCLC_CREATE_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
-  private static final String OCLC_UPDATE_MAPPING_PROFILE_ID = "862000b9-84ea-4cae-a223-5fc0552f2b42";
-  private static final String OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID = "f90864ef-8030-480f-a43f-8cdd21233252";
-  private static final String OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID = "d0ebba8a-2f0f-11eb-adc1-0242ac120002";
-  private static final String OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID = "cddff0e1-233c-47ba-8be5-553c632709d9";
-  private static final String OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID = "6aa8e98b-0d9f-41dd-b26f-15658d07eb52";
-  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID = "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7";
-  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID = "e0fbaad5-10c0-40d5-9228-498b351dbbaa";
-  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID = "adbe1e5c-7796-4902-b18e-794b1d58caac";
-  private static final String DEFAULT_CREATE_DERIVE_INSTANCE_JOB_PROFILE_ID = "6409dcff-71fa-433a-bc6a-e70ad38a9604";
-  private static final String DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID = "991c0300-44a6-47e3-8ea2-b01bb56a38cc";
-  private static final String DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID = "f8e58651-f651-485d-aead-d2fa8700e2d1";
+  private static final String[] MATCH_PROFILES = {
+    "d27d71ce-8a1e-44c6-acea-96961b5592c6", //OCLC_MARC_MARC_MATCH_PROFILE_ID
+    "31dbb554-0826-48ec-a0a4-3c55293d4dee", //OCLC_INSTANCE_UUID_MATCH_PROFILE_ID
+  };
+  private static final String[] JOB_PROFILES = {
+    "d0ebb7b0-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_INSTANCE_JOB_PROFILE_ID,
+    "91f9b8d6-d80e-4727-9783-73fb53e3c786", //OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID,
+    "d27d71ce-8a1e-44c6-acea-96961b5592c6", //DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID
+  };
+  private static final String[] MAPPING_PROFILES = {
+    "d0ebbc2e-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_MAPPING_PROFILE_ID
+    "862000b9-84ea-4cae-a223-5fc0552f2b42", //OCLC_UPDATE_MAPPING_PROFILE_ID
+    "f90864ef-8030-480f-a43f-8cdd21233252", //OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID
+    "e0fbaad5-10c0-40d5-9228-498b351dbbaa", //DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID
+  };
+  private static final String[] ACTION_PROFILES = {
+    "d0ebba8a-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID
+    "cddff0e1-233c-47ba-8be5-553c632709d9", //OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID
+    "6aa8e98b-0d9f-41dd-b26f-15658d07eb52", //OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID
+    "adbe1e5c-7796-4902-b18e-794b1d58caac", //DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID
+  };
 
 
   @Autowired
@@ -155,7 +160,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, OCLC_CREATE_INSTANCE_JOB_PROFILE_ID, OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, JOB_PROFILES)) {
           logger.error("Can`t update default OCLC Job Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with"))));
         } else {
@@ -206,7 +211,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, OCLC_CREATE_INSTANCE_JOB_PROFILE_ID, OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID, DEFAULT_CREATE_DERIVE_INSTANCE_JOB_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, JOB_PROFILES)) {
           logger.error("Can`t delete default OCLC Job Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Job Profile with"))));
         } else {
@@ -273,7 +278,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, OCLC_MARC_MARC_MATCH_PROFILE_ID, OCLC_INSTANCE_UUID_MATCH_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, MATCH_PROFILES)) {
           logger.error("Can`t update default OCLC Match Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with"))));
         } else {
@@ -365,7 +370,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, OCLC_CREATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID, DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, MAPPING_PROFILES)) {
           logger.error("Can`t update default OCLC Mapping Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Mapping Profile"))));
         } else {
@@ -396,7 +401,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void deleteDataImportProfilesMappingProfilesById(String id, String lang, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, OCLC_CREATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MAPPING_PROFILE_ID, OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID, DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, MAPPING_PROFILES)) {
           logger.error("Can`t delete default OCLC Mapping Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Mapping Profile"))));
         } else {
@@ -438,7 +443,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                         Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (id.equals(OCLC_MARC_MARC_MATCH_PROFILE_ID) || id.equals(OCLC_INSTANCE_UUID_MATCH_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, MATCH_PROFILES)) {
           logger.error("Can`t delete default OCLC Match Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Match Profile"))));
         } else {
@@ -505,7 +510,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID, DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, ACTION_PROFILES)) {
           logger.error("Can`t update default OCLC Action Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Action Profile"))));
         } else {
@@ -754,7 +759,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                          Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID, OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID, DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID, DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID)) {
+        if (canDeleteOrUpdateProfile(id, ACTION_PROFILES)) {
           logger.error("Can`t delete default OCLC Action Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Action Profile"))));
         } else {
