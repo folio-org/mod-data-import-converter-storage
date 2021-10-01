@@ -1,15 +1,18 @@
-## 2021-XX-XX v1.12.0-SNAPSHOT
+## 2021-10-01 v1.12.0
 * [MODDICONV-196](https://issues.folio.org/browse/MODDICONV-196) Upgrade to RAML Module Builder 33.x
-* [MODDICONV-199](https://issues.folio.org/browse/MODDICONV-199) MODDICONV-199 - Add default mapping profile to default Holdings profile
-* [MODDICONV-204](https://issues.folio.org/browse/MODDICONV-204) When removing an action profile from a job profile, it sometimes removes that action from ALL job profiles
+* [MODDICONV-193](https://issues.folio.org/browse/MODDICONV-193) Create default profile for importing new MARC Holdings
+* [MODDICONV-199](https://issues.folio.org/browse/MODDICONV-199) Add default mapping profile to default Holdings profile
 * [MODDICONV-179](https://issues.folio.org/browse/MODDICONV-179) Update endpoints for profiles creation to respect UUID from the request body
 * [MODDICONV-207](https://issues.folio.org/browse/MODDICONV-207) Add default job profile for Derive Holdings and SRS MARC Holdings
 
-## 2021-XX-XX v1.11.2-SNAPSHOT
+## 2021-09-13 v1.11.3
+* [MODDICONV-204](https://issues.folio.org/browse/MODDICONV-204) When removing an action profile from a job profile, it sometimes removes that action from ALL job profiles
+
+## 2021-07-30 v1.11.2
 * [MODDICONV-192](https://issues.folio.org/browse/MODDICONV-192) Disallow linking multiple mapping profiles to one action profile
 
 ## 2021-06-25 v1.11.1
-* [MODDICONV-191](https://issues.folio.org/browse/MODDICONV-191) Change dataType to have have common type for MARC related subtypes
+* [MODDICONV-191](https://issues.folio.org/browse/MODDICONV-191) Change dataType to have common type for MARC related subtypes
 
 ## 2021-06-17 v1.11.0
 * [MODDICONV-187](https://issues.folio.org/browse/MODDICONV-187) Store MARC Authority record
