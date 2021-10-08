@@ -4,6 +4,7 @@
 * [MODDICONV-199](https://issues.folio.org/browse/MODDICONV-199) Add default mapping profile to default Holdings profile
 * [MODDICONV-179](https://issues.folio.org/browse/MODDICONV-179) Update endpoints for profiles creation to respect UUID from the request body
 * [MODDICONV-207](https://issues.folio.org/browse/MODDICONV-207) Add default job profile for Derive Holdings and SRS MARC Holdings
+* [MODDICONV-209](https://issues.folio.org/browse/MODDICONV-209) Create default Action profile and Mapping profile for Authority
 
 ## 2021-09-13 v1.11.3
 * [MODDICONV-204](https://issues.folio.org/browse/MODDICONV-204) When removing an action profile from a job profile, it sometimes removes that action from ALL job profiles
