@@ -62,6 +62,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static final String OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID = "d0ebba8a-2f0f-11eb-adc1-0242ac120002";
+  private static final String DEFAULT_CREATE_DERIVE_AUTHORITIES_ACTION_PROFILE_ID = "7915c72e-c6af-4962-969d-403c7238b051";
   private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID = "adbe1e5c-7796-4902-b18e-794b1d58caac";
   private static final String DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID = "f8e58651-f651-485d-aead-d2fa8700e2d1";
 
@@ -243,6 +244,18 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcAuthorities() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .body(actionProfile_1)
+      .when()
+      .put(ACTION_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_AUTHORITIES_ACTION_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
   public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcHoldings() {
     createProfiles();
     RestAssured.given()
@@ -273,6 +286,17 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .when()
       .delete(ACTION_PROFILES_PATH + "/" + OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  public void shouldReturnBadRequestOnDeleteDefaultDeriveMarcAuthorities() {
+    createProfiles();
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .delete(ACTION_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_AUTHORITIES_ACTION_PROFILE_ID)
       .then()
       .statusCode(HttpStatus.SC_BAD_REQUEST);
   }
