@@ -30,7 +30,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
   "action": "CREATE",
   "deleted": false,
   "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Authorities and SRS MARC Authorities records. It can be edited, duplicated.",
-  "folioRecord": "AUTHORITIES",
+  "folioRecord": "AUTHORITY",
   "childProfiles": [],
   "parentProfiles": [],
     "metadata": {
@@ -66,14 +66,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
   "description": "This field mapping profile is used with FOLIO''s default job profile for creating Inventory Authorities and SRS MARC Authorities records. It can be edited, duplicated, deleted, or linked to additional action profiles.",
   "childProfiles": [],
   "mappingDetails": {
-    "name": "authorities",
-    "recordType": "AUTHORITIES",
+    "name": "authority",
+    "recordType": "AUTHORITY",
     "mappingFields": [],
     "marcMappingDetails": []
   },
   "parentProfiles": [],
-  "existingRecordType": "AUTHORITIES",
-  "incomingRecordType": "MARC_AUTHORITIES",
+  "existingRecordType": "AUTHORITY",
+  "incomingRecordType": "MARC_AUTHORITY",
   "marcFieldProtectionSettings": []
 }')
 ON CONFLICT DO NOTHING;
