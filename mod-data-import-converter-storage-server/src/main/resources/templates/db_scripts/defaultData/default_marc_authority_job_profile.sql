@@ -68,7 +68,69 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
   "mappingDetails": {
     "name": "authority",
     "recordType": "AUTHORITY",
-    "mappingFields": [],
+    "mappingFields": [
+      {
+        "name": "personalName",
+        "path": "authority.personalName",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "corporateName",
+        "path": "authority.corporateName",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "meetingName",
+        "path": "authority.meetingName",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "uniformTitle",
+        "path": "authority.uniformTitle",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "topicalTerm",
+        "path": "authority.topicalTerm",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "subjectHeadings",
+        "path": "authority.subjectHeadings",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "geographicName",
+        "path": "authority.geographicName",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "genreTerm",
+        "path": "authority.genreTerm",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "identifiers",
+        "path": "authority.identifiers",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "notes",
+        "path": "authority.notes[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }
+    ],
     "marcMappingDetails": []
   },
   "parentProfiles": [],
