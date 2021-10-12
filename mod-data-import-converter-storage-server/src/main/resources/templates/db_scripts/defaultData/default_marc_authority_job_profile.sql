@@ -94,8 +94,8 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "enabled": "false",
         "subfields": []
       }, {
-        "name": "topicalTerm",
-        "path": "authority.topicalTerm",
+        "name": "subject",
+        "path": "authority.subject",
         "value": "",
         "enabled": "false",
         "subfields": []
@@ -106,14 +106,14 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "enabled": "false",
         "subfields": []
       }, {
-        "name": "geographicName",
-        "path": "authority.geographicName",
+        "name": "geographicPlace",
+        "path": "authority.geographicPlace",
         "value": "",
         "enabled": "false",
         "subfields": []
       }, {
-        "name": "genreTerm",
-        "path": "authority.genreTerm",
+        "name": "genre",
+        "path": "authority.genre",
         "value": "",
         "enabled": "false",
         "subfields": []

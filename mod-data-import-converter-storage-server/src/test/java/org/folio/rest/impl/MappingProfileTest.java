@@ -57,7 +57,6 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   private static final String MAPPING_PROFILE_UUID = "608ab35e-5f8b-49c3-bcf1-1fb5e57d5130";
 
   private static final String OCLC_DEFAULT_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
-  private static final String DEFAULT_CREATE_DERIVE_AUTHORITY_MAPPING_PROFILE_ID = "6a0ec1de-68eb-4833-bdbf-0741db25c314";
   private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID = "e0fbaad5-10c0-40d5-9228-498b351dbbaa";
   private static final String DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID = "991c0300-44a6-47e3-8ea2-b01bb56a38cc";
 
@@ -219,18 +218,6 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcAuthorities() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(mappingProfile_1)
-      .when()
-      .put(MAPPING_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_AUTHORITY_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
   public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcHoldings() {
     createProfiles();
     RestAssured.given()
@@ -261,17 +248,6 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .spec(spec)
       .when()
       .delete(MAPPING_PROFILES_PATH + "/" + OCLC_DEFAULT_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnDeleteDefaultDeriveMarcAuthorities() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_AUTHORITY_MAPPING_PROFILE_ID)
       .then()
       .statusCode(HttpStatus.SC_BAD_REQUEST);
   }
