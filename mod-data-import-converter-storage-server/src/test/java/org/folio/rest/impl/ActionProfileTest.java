@@ -62,7 +62,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
 
   private static final String OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID = "d0ebba8a-2f0f-11eb-adc1-0242ac120002";
-  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID = "adbe1e5c-7796-4902-b18e-794b1d58caac";
+  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID = "f5feddba-f892-4fad-b702-e4e77f04f9a3";
   private static final String DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID = "f8e58651-f651-485d-aead-d2fa8700e2d1";
 
 

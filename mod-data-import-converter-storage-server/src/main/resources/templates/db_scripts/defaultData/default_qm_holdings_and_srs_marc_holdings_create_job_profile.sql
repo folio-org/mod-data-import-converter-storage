@@ -27,7 +27,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 ('f5feddba-f892-4fad-b702-e4e77f04f9a3', '{
   "id": "f5feddba-f892-4fad-b702-e4e77f04f9a3",
-  "name": "Default derive - Create holdings",
+  "name": "quickMARC Derive - Create Inventory Holdings",
   "action": "CREATE",
   "deleted": false,
   "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited or deleted.",
@@ -52,7 +52,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 ('e0fbaad5-10c0-40d5-9228-498b351dbbaa', '{
   "id": "e0fbaad5-10c0-40d5-9228-498b351dbbaa",
-  "name": "Default derive - Create holdings",
+  "name": "quickMARC Derive - Create Inventory Holdings",
   "deleted": false,
   "metadata": {
     "createdDate": "2021-08-05T14:00:00.000",
