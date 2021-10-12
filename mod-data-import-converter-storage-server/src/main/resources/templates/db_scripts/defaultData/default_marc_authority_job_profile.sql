@@ -119,7 +119,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "subfields": []
       }, {
         "name": "identifiers",
-        "path": "authority.identifiers",
+        "path": "authority.identifiers[]",
         "value": "",
         "enabled": "false",
         "subfields": []
