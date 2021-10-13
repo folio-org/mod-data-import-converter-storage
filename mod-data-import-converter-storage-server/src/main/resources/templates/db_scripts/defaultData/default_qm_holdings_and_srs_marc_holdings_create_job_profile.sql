@@ -87,7 +87,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "discoverySuppress",
         "path": "holdings.discoverySuppress",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "formerIds",
@@ -99,7 +99,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "instanceId",
         "path": "holdings.instanceId",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "permanentLocationId",
@@ -111,13 +111,13 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "temporaryLocationId",
         "path": "holdings.temporaryLocationId",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "effectiveLocationId",
         "path": "holdings.effectiveLocationId",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "callNumberTypeId",
@@ -153,37 +153,37 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "acquisitionFormat",
         "path": "holdings.acquisitionFormat",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "acquisitionMethod",
         "path": "holdings.acquisitionMethod",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "receiptStatus",
         "path": "holdings.receiptStatus",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "illPolicyId",
         "path": "holdings.illPolicyId",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "retentionPolicy",
         "path": "holdings.retentionPolicy",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "digitizationPolicy",
         "path": "holdings.digitizationPolicy",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "copyNumber",
@@ -195,7 +195,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "numberOfItems",
         "path": "holdings.numberOfItems",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "electronicAccess",
@@ -231,37 +231,37 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "name": "receivingHistory",
         "path": "holdings.receivingHistory",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "statisticalCodeIds",
         "path": "holdings.statisticalCodeIds[]",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "holdingsItems",
         "path": "holdings.holdingsItems[]",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "bareHoldingsItems",
         "path": "holdings.bareHoldingsItems[]",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "holdingsInstance",
         "path": "holdings.holdingsInstance",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }, {
         "name": "sourceId",
         "path": "holdings.sourceId",
         "value": "",
-        "enabled": "false",
+        "enabled": "true",
         "subfields": []
       }
     ],
