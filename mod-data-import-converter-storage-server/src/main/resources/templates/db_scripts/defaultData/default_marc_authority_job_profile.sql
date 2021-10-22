@@ -76,14 +76,50 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "enabled": "false",
         "subfields": []
       }, {
+        "name": "sftPersonalName",
+        "path": "authority.sftPersonalName[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "saftPersonalName",
+        "path": "authority.saftPersonalName[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
         "name": "corporateName",
         "path": "authority.corporateName",
         "value": "",
         "enabled": "false",
         "subfields": []
       }, {
+        "name": "sftCorporateName",
+        "path": "authority.sftCorporateName[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "saftCorporateName",
+        "path": "authority.saftCorporateName[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
         "name": "meetingName",
-        "path": "authority.meetingName",
+        "path": "authority.meetingName[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      },  {
+        "name": "sftMeetingName",
+        "path": "authority.sftMeetingName[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "saftMeetingName",
+        "path": "authority.saftMeetingName[]",
         "value": "",
         "enabled": "false",
         "subfields": []
@@ -94,8 +130,32 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "enabled": "false",
         "subfields": []
       }, {
-        "name": "subject",
-        "path": "authority.subject",
+        "name": "sftUniformTitle",
+        "path": "authority.sftUniformTitle[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "saftUniformTitle",
+        "path": "authority.saftUniformTitle[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "topicalTerm",
+        "path": "authority.topicalTerm",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "sftTopicalTerm",
+        "path": "authority.sftTopicalTerm[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "saftTopicalTerm",
+        "path": "authority.saftTopicalTerm[]",
         "value": "",
         "enabled": "false",
         "subfields": []
@@ -106,8 +166,20 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
         "enabled": "false",
         "subfields": []
       }, {
-        "name": "geographicPlace",
-        "path": "authority.geographicPlace",
+        "name": "geographicName",
+        "path": "authority.geographicName",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "sftGeographicTerm",
+        "path": "authority.sftGeographicTerm[]",
+        "value": "",
+        "enabled": "false",
+        "subfields": []
+      }, {
+        "name": "saftGeographicTerm",
+        "path": "authority.saftGeographicTerm[]",
         "value": "",
         "enabled": "false",
         "subfields": []
