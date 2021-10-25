@@ -1,4 +1,4 @@
-## 2021-XX-XX.13.0-SNAPSHOT
+## 2021-XX-XX v1.13.0-SNAPSHOT
 * [MODDICONV-211](https://issues.folio.org/browse/MODDICONV-211) Settings : Updates to default job profiles
 
 ## 2021-10-01 v1.12.0
