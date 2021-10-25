@@ -57,14 +57,16 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_TO_ACTION_PROFILES_TABLE_NAME = "match_to_action_profiles";
   private static final String MATCH_TO_MATCH_PROFILES_TABLE_NAME = "match_to_match_profiles";
   private static final String ACTION_PROFILE_UUID = "16449d21-ad7c-4f69-b31e-a521fe4ae893";
-
-
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
-
-  private static final String OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID = "d0ebba8a-2f0f-11eb-adc1-0242ac120002";
-  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID = "f5feddba-f892-4fad-b702-e4e77f04f9a3";
-  private static final String DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID = "f8e58651-f651-485d-aead-d2fa8700e2d1";
-
+  private List<String> defaultActionProfileIds = Arrays.asList(
+    "d0ebba8a-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_INSTANCE_ACTION_PROFILE_ID
+    "cddff0e1-233c-47ba-8be5-553c632709d9", //OCLC_UPDATE_INSTANCE_ACTION_PROFILE_ID
+    "6aa8e98b-0d9f-41dd-b26f-15658d07eb52", //OCLC_UPDATE_MARC_BIB_ACTION_PROFILE_ID
+    "f8e58651-f651-485d-aead-d2fa8700e2d1", //DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID
+    "f5feddba-f892-4fad-b702-e4e77f04f9a3", //DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID
+    "8aa0b850-9182-4005-8435-340b704b2a19", //DEFAULT_CREATE_HOLDINGS_ACTION_PROFILE_ID
+    "7915c72e-c6af-4962-969d-403c7238b051"  //DEFAULT_CREATE_AUTHORITIES_ACTION_PROFILE_ID
+  );
 
   static ActionProfileUpdateDto actionProfile_1 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("Bla")
@@ -233,70 +235,28 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
     createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(actionProfile_1)
-      .when()
-      .put(ACTION_PROFILES_PATH + "/" + OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcHoldings() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(actionProfile_1)
-      .when()
-      .put(ACTION_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcInstance() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(actionProfile_1)
-      .when()
-      .put(ACTION_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+    for (String id : defaultActionProfileIds) {
+      RestAssured.given()
+        .spec(spec)
+        .body(actionProfile_1)
+        .when()
+        .put(ACTION_PROFILES_PATH + "/" + id)
+        .then()
+        .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
   }
 
   @Test
   public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
     createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(ACTION_PROFILES_PATH + "/" + OCLC_DEFAULT_INSTANCE_ACTION_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnDeleteDefaultDeriveMarcHoldings() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(ACTION_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_HOLDINGS_ACTION_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnDeleteDefaultDeriveMarcInstance() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(ACTION_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_INSTANCE_ACTION_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+    for (String id : defaultActionProfileIds) {
+      RestAssured.given()
+        .spec(spec)
+        .when()
+        .delete(ACTION_PROFILES_PATH + "/" + id)
+        .then()
+        .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
   }
 
   @Test

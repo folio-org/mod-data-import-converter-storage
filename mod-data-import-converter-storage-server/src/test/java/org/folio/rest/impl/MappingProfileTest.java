@@ -55,11 +55,15 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_TO_ACTION_PROFILES_TABLE = "match_to_action_profiles";
   static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
   private static final String MAPPING_PROFILE_UUID = "608ab35e-5f8b-49c3-bcf1-1fb5e57d5130";
-
-  private static final String OCLC_DEFAULT_MAPPING_PROFILE_ID = "d0ebbc2e-2f0f-11eb-adc1-0242ac120002";
-  private static final String DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID = "e0fbaad5-10c0-40d5-9228-498b351dbbaa";
-  private static final String DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID = "991c0300-44a6-47e3-8ea2-b01bb56a38cc";
-
+  private List<String> defaultMappingProfileIds = Arrays.asList(
+    "d0ebbc2e-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_MAPPING_PROFILE_ID
+    "862000b9-84ea-4cae-a223-5fc0552f2b42", //OCLC_UPDATE_MAPPING_PROFILE_ID
+    "f90864ef-8030-480f-a43f-8cdd21233252", //OCLC_UPDATE_MARC_BIB_MAPPING_PROFILE_ID
+    "991c0300-44a6-47e3-8ea2-b01bb56a38cc", //DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID
+    "e0fbaad5-10c0-40d5-9228-498b351dbbaa", //DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID
+    "13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a", //DEFAULT_CREATE_HOLDINGS_MAPPING_PROFILE_ID
+    "6a0ec1de-68eb-4833-bdbf-0741db25c314"  //DEFAULT_CREATE_AUTHORITIES_MAPPING_PROFILE_ID
+  );
 
   private static MappingProfileUpdateDto mappingProfile_1 = new MappingProfileUpdateDto()
     .withProfile(new MappingProfile().withName("Bla")
@@ -206,72 +210,31 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
+  public void shouldReturnBadRequestOnPutWithDefaultProfile() {
     createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(mappingProfile_1)
-      .when()
-      .put(MAPPING_PROFILES_PATH + "/" + OCLC_DEFAULT_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+    for (String id : defaultMappingProfileIds) {
+      RestAssured.given()
+        .spec(spec)
+        .body(mappingProfile_1)
+        .when()
+        .put(MAPPING_PROFILES_PATH + "/" + id)
+        .then()
+        .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
   }
 
   @Test
-  public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcHoldings() {
+  public void shouldReturnBadRequestOnDeleteWithDefaultProfile() {
     createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(mappingProfile_1)
-      .when()
-      .put(MAPPING_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnPutWithDefaultDeriveMarcInstance() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(mappingProfile_1)
-      .when()
-      .put(MAPPING_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + OCLC_DEFAULT_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnDeleteDefaultDeriveMarcHoldings() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_HOLDINGS_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
-  public void shouldReturnBadRequestOnDeleteDefaultDeriveMarcInstance() {
-    createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(MAPPING_PROFILES_PATH + "/" + DEFAULT_CREATE_DERIVE_INSTANCE_MAPPING_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+    for (String id : defaultMappingProfileIds) {
+      RestAssured.given()
+        .spec(spec)
+        .body(mappingProfile_1)
+        .when()
+        .delete(MAPPING_PROFILES_PATH + "/" + id)
+        .then()
+        .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
   }
 
   @Test

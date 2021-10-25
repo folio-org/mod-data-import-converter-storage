@@ -62,7 +62,7 @@ public class DefaultJobProfileTest extends AbstractRestVerticleTest {
       .get(JOB_PROFILES_PATH + "/" + DEFAULT_DERIVE_MARC_HOLDINGS_PROFILE_ID)
       .then()
       .statusCode(HttpStatus.SC_OK).extract().as(JobProfile.class);
-    Assert.assertEquals( "quickMARC Derive - Create Holdings and SRS MARC Holdings", profile.getName());
+    Assert.assertEquals( "quickMARC- Create Holdings and SRS MARC Holdings", profile.getName());
     Assert.assertEquals( JobProfile.DataType.MARC, profile.getDataType());
   }
 
