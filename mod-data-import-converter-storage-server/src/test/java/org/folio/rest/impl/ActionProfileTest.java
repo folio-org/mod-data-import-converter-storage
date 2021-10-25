@@ -233,7 +233,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
+  public void shouldReturnBadRequestOnPutWithDefaultProfiles() {
     createProfiles();
     for (String id : defaultActionProfileIds) {
       RestAssured.given()
@@ -247,7 +247,7 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
+  public void shouldReturnBadRequestOnDeleteWithDefaultProfiles() {
     createProfiles();
     for (String id : defaultActionProfileIds) {
       RestAssured.given()

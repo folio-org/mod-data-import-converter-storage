@@ -66,7 +66,7 @@ SET jsonb =  '{
         "subfields": []
       }, {
         "name": "formerIds",
-        "path": "holdings.formerIds",
+        "path": "holdings.formerIds[]",
         "value": "",
         "enabled": "false",
         "subfields": []
