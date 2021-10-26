@@ -1,3 +1,6 @@
+## 2021-XX-XX v1.13.0-SNAPSHOT
+* [MODDICONV-211](https://issues.folio.org/browse/MODDICONV-211) Settings : Updates to default job profiles
+
 ## 2021-10-01 v1.12.0
 * [MODDICONV-196](https://issues.folio.org/browse/MODDICONV-196) Upgrade to RAML Module Builder 33.x
 * [MODDICONV-193](https://issues.folio.org/browse/MODDICONV-193) Create default profile for importing new MARC Holdings

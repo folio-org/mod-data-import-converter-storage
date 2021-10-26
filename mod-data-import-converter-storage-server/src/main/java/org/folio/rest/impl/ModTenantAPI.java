@@ -31,6 +31,10 @@ public class ModTenantAPI extends TenantAPI {
   private static final String DEFAULT_EDIFACT_MAPPING_PROFILES = "templates/db_scripts/defaultData/default_edifact_mapping_profiles.sql";
   private static final String DEFAULT_MARC_AUTHORITY_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_marc_authority_job_profile.sql";
   private static final String DEFAULT_MARC_HOLDINGS_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_marc_holdings_job_profile.sql";
+  private static final String DEFAULT_UPDATE_MARC_AUTHORITY_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_marc_authority_job_profile.sql";
+  private static final String DEFAULT_UPDATE_MARC_HOLDINGS_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_marc_holdings_job_profile.sql";
+  private static final String DEFAULT_UPDATE_QM_SRS_MARC_HOLDINGS_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_qm_holdings_and_srs_marc_holdings_create_job_profile.sql";
+
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
 
@@ -48,6 +52,9 @@ public class ModTenantAPI extends TenantAPI {
         .compose(m -> setupDefaultData(DEFAULT_MARC_AUTHORITY_CREATE_JOB_PROFILE, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_MARC_HOLDINGS_CREATE_JOB_PROFILE, headers, context))
         .compose(m -> setupDefaultData(UPDATE_DEFAULT_QM_INSTANCE_AND_SRS_MARC_BIB_CREATE_JOB_PROFILE, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_UPDATE_MARC_AUTHORITY_JOB_PROFILE, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_UPDATE_MARC_HOLDINGS_JOB_PROFILE, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_UPDATE_QM_SRS_MARC_HOLDINGS_JOB_PROFILE, headers, context))
         .map(num));
   }
 

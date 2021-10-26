@@ -54,15 +54,13 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(VertxUnitRunner.class)
 public class MatchProfileTest extends AbstractRestVerticleTest {
-
-  static final String MATCH_PROFILES_TABLE_NAME = "match_profiles";
-  private static final String MATCH_TO_MATCH_PROFILES_TABLE = "match_to_match_profiles";
-  public static final String MATCH_TO_ACTION_PROFILES_TABLE = "match_to_action_profiles";
   static final String MATCH_PROFILES_PATH = "/data-import-profiles/matchProfiles";
   private static final String ASSOCIATED_PROFILES_PATH = "/data-import-profiles/profileAssociations";
-  private static final String OCLC_DEFAULT_MATCH_PROFILE_ID = "d27d71ce-8a1e-44c6-acea-96961b5592c6";
   private static final String MATCH_PROFILE_UUID = "48a54656-8a2c-43c1-96b4-da96a70a0a62";
-
+  private List<String> defaultMatchedProfileIds = Arrays.asList(
+    "d27d71ce-8a1e-44c6-acea-96961b5592c6", //OCLC_MARC_MARC_MATCH_PROFILE_ID
+    "31dbb554-0826-48ec-a0a4-3c55293d4dee"  //OCLC_INSTANCE_UUID_MATCH_PROFILE_ID
+  );
 
   private static MatchProfileUpdateDto matchProfile_1 = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("Bla")
@@ -199,26 +197,30 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
-  public void shouldReturnBadRequestOnPutWithDefaultOCLCRecord() {
+  public void shouldReturnBadRequestOnPutWithDefaultProfiles() {
     createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .body(matchProfile_1)
-      .when()
-      .put(MATCH_PROFILES_PATH + "/" + OCLC_DEFAULT_MATCH_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+    for (String id : defaultMatchedProfileIds) {
+      RestAssured.given()
+        .spec(spec)
+        .body(matchProfile_1)
+        .when()
+        .put(MATCH_PROFILES_PATH + "/" + id)
+        .then()
+        .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
   }
 
   @Test
-  public void shouldReturnBadRequestOnDeleteDefaultOCLCRecord() {
+  public void shouldReturnBadRequestOnDeleteWithDefaultProfiles() {
     createProfiles();
-    RestAssured.given()
-      .spec(spec)
-      .when()
-      .delete(MATCH_PROFILES_PATH + "/" + OCLC_DEFAULT_MATCH_PROFILE_ID)
-      .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+    for (String id : defaultMatchedProfileIds) {
+      RestAssured.given()
+        .spec(spec)
+        .when()
+        .delete(MATCH_PROFILES_PATH + "/" + id)
+        .then()
+        .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
   }
 
   @Test
