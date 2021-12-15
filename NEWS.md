@@ -1,5 +1,6 @@
 ## 2021-XX-XX v1.13.0-SNAPSHOT
 * [MODDICONV-211](https://issues.folio.org/browse/MODDICONV-211) Settings : Updates to default job profiles
+* [MODDICONV-215](https://issues.folio.org/browse/MODDICONV-215) Upgrade to RMB 33.2.2 (includes fix of log4j vulnerability)
 
 ## 2021-10-01 v1.12.0
 * [MODDICONV-196](https://issues.folio.org/browse/MODDICONV-196) Upgrade to RAML Module Builder 33.x
