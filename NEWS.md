@@ -1,4 +1,4 @@
-## 2021-12-xx v1.11.4
+## 2021-12-16 v1.11.4
 * [MODDICONV-218](https://issues.folio.org/browse/MODDICONV-218) Juniper R2 2021 - Log4j vulnerability verification and correction
 
 ## 2021-09-13 v1.11.3
