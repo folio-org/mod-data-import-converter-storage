@@ -1,7 +1,7 @@
 UPDATE ${myuniversity}_${mymodule}.job_profiles
 SET jsonb =  '{
   "id": "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7",
-  "name": "quickMARC- Create Holdings and SRS MARC Holdings",
+  "name": "quickMARC - Create Holdings and SRS MARC Holdings",
   "description": "This job profile is used by the quickMARC to allow a user to create a new SRS MARC holdings record and corresponding Inventory holdings. Profile cannot be edited or deleted",
   "deleted": false,
   "dataType": "MARC",
