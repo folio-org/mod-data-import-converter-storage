@@ -1,7 +1,7 @@
 INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
     ('6409dcff-71fa-433a-bc6a-e70ad38a9604', '{
 	"id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
-	"name": "quickMARC Derive - Create SRS MARC Bib and Instance",
+	"name": "quickMARC - Derive a new SRS MARC Bib and Instance",
 	"deleted": false,
 	"dataType": "MARC",
 	"metadata": {
