@@ -23,3 +23,27 @@ SET jsonb =  '{
   }
 }'
 WHERE id = '6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3';
+
+UPDATE ${myuniversity}_${mymodule}.action_profiles
+SET jsonb =  '{
+  "id": "7915c72e-c6af-4962-969d-403c7238b051",
+  "name": "Create MARC authority",
+  "action": "CREATE",
+  "deleted": false,
+  "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Authorities and SRS MARC Authorities records. It can be edited, duplicated.",
+  "folioRecord": "AUTHORITY",
+  "childProfiles": [],
+  "parentProfiles": [],
+    "metadata": {
+      "createdDate": "2021-10-08T14:00:00.000",
+      "updatedDate": "2021-10-08T15:00:00.462+0000",
+      "createdByUserId": "00000000-0000-0000-0000-000000000000",
+      "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+    },
+    "userInfo": {
+      "lastName": "System",
+      "userName": "System",
+      "firstName": "System"
+    }
+}'
+WHERE id = '7915c72e-c6af-4962-969d-403c7238b051';

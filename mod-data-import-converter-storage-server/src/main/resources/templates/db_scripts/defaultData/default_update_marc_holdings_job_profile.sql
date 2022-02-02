@@ -24,6 +24,30 @@ SET jsonb =  '{
 }'
 WHERE id = '80898dee-449f-44dd-9c8e-37d5eb469b1d';
 
+UPDATE ${myuniversity}_${mymodule}.action_profiles
+SET jsonb =  '{
+  "id": "8aa0b850-9182-4005-8435-340b704b2a19",
+  "name": "Default - Create MARC holdings",
+  "action": "CREATE",
+  "deleted": false,
+  "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It can be edited, duplicated.",
+  "folioRecord": "HOLDINGS",
+  "childProfiles": [],
+  "parentProfiles": [],
+    "metadata": {
+      "createdDate": "2021-08-05T14:00:00.000",
+      "updatedDate": "2021-08-05T15:00:00.462+0000",
+      "createdByUserId": "00000000-0000-0000-0000-000000000000",
+      "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+    },
+    "userInfo": {
+      "lastName": "System",
+      "userName": "System",
+      "firstName": "System"
+    }
+}'
+WHERE id = '8aa0b850-9182-4005-8435-340b704b2a19';
+
 UPDATE ${myuniversity}_${mymodule}.mapping_profiles
 SET jsonb =  '{
   "id": "13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a",
