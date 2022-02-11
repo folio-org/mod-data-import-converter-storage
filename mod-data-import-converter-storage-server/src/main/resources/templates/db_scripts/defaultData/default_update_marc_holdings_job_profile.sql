@@ -30,21 +30,21 @@ SET jsonb =  '{
   "name": "Default - Create MARC holdings",
   "action": "CREATE",
   "deleted": false,
-  "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It can be edited, duplicated.",
+  "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited, duplicated, or deleted.",
   "folioRecord": "HOLDINGS",
   "childProfiles": [],
   "parentProfiles": [],
-    "metadata": {
-      "createdDate": "2021-08-05T14:00:00.000",
-      "updatedDate": "2021-08-05T15:00:00.462+0000",
-      "createdByUserId": "00000000-0000-0000-0000-000000000000",
-      "updatedByUserId": "00000000-0000-0000-0000-000000000000"
-    },
-    "userInfo": {
-      "lastName": "System",
-      "userName": "System",
-      "firstName": "System"
-    }
+  "metadata": {
+    "createdDate": "2021-08-05T14:00:00.000",
+    "updatedDate": "2021-08-05T15:00:00.462+0000",
+    "createdByUserId": "00000000-0000-0000-0000-000000000000",
+    "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+  },
+  "userInfo": {
+    "lastName": "System",
+    "userName": "System",
+    "firstName": "System"
+  }
 }'
 WHERE id = '8aa0b850-9182-4005-8435-340b704b2a19';
 
