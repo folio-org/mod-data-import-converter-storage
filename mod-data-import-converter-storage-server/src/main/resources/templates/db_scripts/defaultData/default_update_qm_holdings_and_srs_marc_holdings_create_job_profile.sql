@@ -40,7 +40,7 @@ SET jsonb =  '{
     "userName": "System",
     "firstName": "System"
   },
-  "description": "This field mapping profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited or deleted.",
+  "description": "This field mapping profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited, duplicated, or deleted.",
   "childProfiles": [],
   "mappingDetails": {
     "name": "holdings",
