@@ -5,6 +5,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
   "description": "This job profile is used for deleting an MARC authority record via the MARC authority app. This profile deletes the authority record stored in source-record-storage and mod-inventory-storage. This job profile cannot be edited, duplicated, or deleted.",
   "dataType": "MARC",
   "deleted": false,
+  "hidden": true,
   "userInfo": {
     "firstName": "System",
     "lastName": "System",
@@ -28,6 +29,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
   "incomingRecordType": "MARC_AUTHORITY",
   "existingRecordType": "MARC_AUTHORITY",
   "deleted": false,
+  "hidden": true,
   "userInfo": {
     "firstName": "System",
     "lastName": "System",
@@ -58,6 +60,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
   "action": "DELETE",
   "folioRecord": "MARC_AUTHORITY",
   "deleted": false,
+  "hidden": true,
   "userInfo": {
     "firstName": "System",
     "lastName": "System",
@@ -132,6 +135,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
     }
   ],
   "deleted": false,
+  "hidden": true,
   "userInfo": {
     "firstName": "System",
     "lastName": "System",
