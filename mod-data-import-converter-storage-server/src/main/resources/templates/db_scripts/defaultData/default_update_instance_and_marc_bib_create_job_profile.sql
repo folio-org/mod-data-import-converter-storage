@@ -1,37 +1,13 @@
-UPDATE ${myuniversity}_${mymodule}.job_profiles
-    SET jsonb =  '{
-	"id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
-	"name": "quickMARC - Derive a new SRS MARC Bib and Instance",
-	"deleted": false,
-	"hidden": false,
-	"dataType": "MARC",
-	"metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
-	"userInfo": {
-		"lastName": "System",
-		"userName": "System",
-		"firstName": "System"
-	},
-	"description": "This job profile is used by the quickMARC Derive action to create a new SRS MARC Bib record and corresponding Inventory Instance. It cannot be edited or deleted.",
-	"childProfiles": [],
-	"parentProfiles": []
-}'
-WHERE id = '6409dcff-71fa-433a-bc6a-e70ad38a9604';
-
 UPDATE ${myuniversity}_${mymodule}.action_profiles
 SET jsonb =  '{
-	"id": "f8e58651-f651-485d-aead-d2fa8700e2d1",
-	"name": "quickMARC Derive - Create Inventory Instance",
+	"id": "fa45f3ec-9b83-11eb-a8b3-0242ac130003",
+	"name": "Default - Create instance",
 	"action": "CREATE",
 	"deleted": false,
 	"hidden": false,
 	"metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
+		"createdDate": "2021-04-13T14:00:00.000",
+		"updatedDate": "2021-00-13T15:00:00.462+0000",
 		"createdByUserId": "00000000-0000-0000-0000-000000000000",
 		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
 	},
@@ -40,22 +16,23 @@ SET jsonb =  '{
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "This action profile is used by the quickMARC Derive action to create a new Inventory Instance. It cannot be edited or deleted.",
+	"description": "This action profile is used with FOLIO''s default job profile for creating Inventory Instances and SRS MARC Bibliographic records. It can be edited, duplicated, or deleted.",
 	"folioRecord": "INSTANCE",
 	"childProfiles": [],
 	"parentProfiles": []
 }'
-WHERE id = 'f8e58651-f651-485d-aead-d2fa8700e2d1';
+WHERE id = 'fa45f3ec-9b83-11eb-a8b3-0242ac130003';
 
-UPDATE ${myuniversity}_${mymodule}.mapping_profiles
+UPDATE ${myuniversity}_${mymodule}.job_profiles
 SET jsonb =  '{
-	"id": "991c0300-44a6-47e3-8ea2-b01bb56a38cc",
-	"name": "quickMARC Derive - Create Inventory Instance",
+	"id": "e34d7b92-9b83-11eb-a8b3-0242ac130003",
+	"name": "Default - Create instance and SRS MARC Bib",
 	"deleted": false,
 	"hidden": false,
+	"dataType": "MARC",
 	"metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
+		"createdDate": "2021-04-13T14:00:00.000",
+		"updatedDate": "2021-00-13T15:00:00.462+0000",
 		"createdByUserId": "00000000-0000-0000-0000-000000000000",
 		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
 	},
@@ -64,7 +41,30 @@ SET jsonb =  '{
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "This field mapping profile is used by the quickMARC Derive action to create an Inventory Instance. It cannot be edited or deleted.",
+	"description": "This job profile creates SRS MARC Bib records and corresponding Inventory Instances using the library''s default MARC-to-Instance mapping. It can be edited, duplicated, or deleted.",
+	"childProfiles": [],
+	"parentProfiles": []
+}'
+WHERE id = 'e34d7b92-9b83-11eb-a8b3-0242ac130003';
+
+UPDATE ${myuniversity}_${mymodule}.mapping_profiles
+SET jsonb =  '{
+	"id": "bf7b3b86-9b84-11eb-a8b3-0242ac130003",
+	"name": "Default - Create instance",
+	"deleted": false,
+	"hidden": false,
+	"metadata": {
+		"createdDate": "2021-04-13T14:00:00.000",
+		"updatedDate": "2021-00-13T15:00:00.462+0000",
+		"createdByUserId": "00000000-0000-0000-0000-000000000000",
+		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
+	},
+	"userInfo": {
+		"lastName": "System",
+		"userName": "System",
+		"firstName": "System"
+	},
+	"description": "This field mapping profile is used with FOLIO''s default job profile for creating Inventory Instances and SRS MARC Bibliographic records. It can be edited, duplicated, deleted, or linked to additional action profiles.",
 	"childProfiles": [],
 	"mappingDetails": {
 		"name": "instance",
@@ -278,5 +278,4 @@ SET jsonb =  '{
 	"incomingRecordType": "MARC_BIBLIOGRAPHIC",
 	"marcFieldProtectionSettings": []
 }'
-WHERE id = '991c0300-44a6-47e3-8ea2-b01bb56a38cc';
-
+WHERE id = 'bf7b3b86-9b84-11eb-a8b3-0242ac130003';

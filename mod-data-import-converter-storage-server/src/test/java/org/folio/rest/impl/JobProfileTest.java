@@ -108,7 +108,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
-      .body("jobProfiles*.deleted", everyItem(is(false)));
+      .body("jobProfiles*.deleted", everyItem(is(false)))
+      .body("jobProfiles*.hidden", everyItem(is(false)));
   }
 
   @Test
@@ -122,6 +123,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
       .body("jobProfiles*.deleted", everyItem(is(false)))
+      .body("jobProfiles*.hidden", everyItem(is(false)))
       .body("jobProfiles*.userInfo.lastName", everyItem(is("Doe")));
   }
 
@@ -136,6 +138,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(2))
       .body("jobProfiles*.deleted", everyItem(is(false)))
+      .body("jobProfiles*.hidden", everyItem(is(false)))
       .body("jobProfiles.get(0).tags.tagList", hasItem("ipsum"))
       .body("jobProfiles.get(1).tags.tagList", hasItem("ipsum"));
   }
@@ -151,6 +154,7 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .body("jobProfiles.size()", is(2))
       .body("jobProfiles*.deleted", everyItem(is(false)))
+      .body("jobProfiles*.hidden", everyItem(is(false)))
       .body("totalRecords", is(3));
   }
 
@@ -606,7 +610,8 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
-      .body("jobProfiles*.deleted", everyItem(is(false)));
+      .body("jobProfiles*.deleted", everyItem(is(false)))
+      .body("jobProfiles*.hidden", everyItem(is(false)));
   }
 
   @Test

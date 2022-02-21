@@ -154,7 +154,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
-      .body("mappingProfiles*.deleted", everyItem(is(false)));
+      .body("mappingProfiles*.deleted", everyItem(is(false)))
+      .body("mappingProfiles*.hidden", everyItem(is(false)));
   }
 
   @Test
@@ -575,7 +576,8 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .then()
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(3))
-      .body("mappingProfiles*.deleted", everyItem(is(false)));
+      .body("mappingProfiles*.deleted", everyItem(is(false)))
+      .body("mappingProfiles*.hidden", everyItem(is(false)));
   }
 
   @Test

@@ -18,6 +18,7 @@ public interface ProfileService<T, S, D> {
    * Searches for T entities
    *
    * @param showDeleted   indicates to return T entities marked as deleted or not
+   * @param showHidden    indicates to return T entities marked as hidden or not
    * @param query         query from URL
    * @param offset        starting index in a list of results
    * @param limit         limit of records for pagination
@@ -25,7 +26,7 @@ public interface ProfileService<T, S, D> {
    * @param tenantId      tenant id
    * @return future with S, a collection of T entities
    */
-  Future<S> getProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String tenantId);
+  Future<S> getProfiles(boolean showDeleted, boolean withRelations, boolean showHidden, String query, int offset, int limit, String tenantId);
 
   /**
    * Searches for T by id
