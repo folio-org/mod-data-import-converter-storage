@@ -149,7 +149,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesJobProfiles(boolean showDeleted, boolean withRelations, boolean showHidden,
+  public void getDataImportProfilesJobProfiles(boolean showDeleted, boolean showHidden, boolean withRelations,
                                                String query, int offset, int limit, String lang,
                                                Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler,
                                                Context vertxContext) {
@@ -270,7 +270,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMatchProfiles(boolean showDeleted, boolean withRelations, boolean showHidden,
+  public void getDataImportProfilesMatchProfiles(boolean showDeleted, boolean showHidden, boolean withRelations,
                                                  String query, int offset, int limit, String lang,
                                                  Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler,
                                                  Context vertxContext) {
@@ -366,7 +366,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesMappingProfiles(boolean showDeleted, boolean withRelations, boolean showHidden,
+  public void getDataImportProfilesMappingProfiles(boolean showDeleted, boolean showHidden, boolean withRelations,
                                                    String query, int offset, int limit, String lang,
                                                    Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler,
                                                    Context vertxContext) {
@@ -508,7 +508,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   }
 
   @Override
-  public void getDataImportProfilesActionProfiles(boolean showDeleted, boolean withRelations, boolean showHidden,
+  public void getDataImportProfilesActionProfiles(boolean showDeleted, boolean showHidden, boolean withRelations,
                                                   String query, int offset, int limit, String lang,
                                                   Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler,
                                                   Context vertxContext) {
