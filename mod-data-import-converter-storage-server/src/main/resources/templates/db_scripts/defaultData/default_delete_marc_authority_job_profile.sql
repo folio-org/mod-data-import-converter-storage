@@ -106,7 +106,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
           },
           {
             "label": "recordSubfield",
-            "value": "$s"
+            "value": "s"
           }
         ]
       },
@@ -128,7 +128,7 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
           },
           {
             "label": "recordSubfield",
-            "value": "$s"
+            "value": "s"
           }
         ]
       }
