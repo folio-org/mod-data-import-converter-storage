@@ -1,4 +1,4 @@
-## 2021-XX-XX v1.13.0-SNAPSHOT
+## 2021-02-24 v1.13.0
 * [MODDICONV-211](https://issues.folio.org/browse/MODDICONV-211) Settings : Updates to default job profiles
 * [MODDICONV-215](https://issues.folio.org/browse/MODDICONV-215) Upgrade to RMB 33.2.2 (includes fix of log4j vulnerability)
 
