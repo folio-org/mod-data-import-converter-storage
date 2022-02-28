@@ -1,23 +1,12 @@
 package org.folio.rest.impl;
 
-import static java.lang.String.format;
-import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
-import static org.folio.rest.RestVerticle.OKAPI_USERID_HEADER;
-
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Context;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,13 +40,22 @@ import org.folio.services.snapshot.ProfileSnapshotService;
 import org.folio.spring.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Context;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
+import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
+import static org.folio.rest.RestVerticle.OKAPI_USERID_HEADER;
 
 public class DataImportProfilesImpl implements DataImportProfiles {
 
@@ -74,6 +72,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     "31dbb554-0826-48ec-a0a4-3c55293d4dee"  //OCLC_INSTANCE_UUID_MATCH_PROFILE_ID
   };
   private static final String[] JOB_PROFILES = {
+    "d0ebb7b0-2f0f-11eb-adc1-0242ac120777",
     "d0ebb7b0-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_INSTANCE_JOB_PROFILE_ID,
     "91f9b8d6-d80e-4727-9783-73fb53e3c786", //OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID,
     "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7", //DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID
@@ -169,32 +168,61 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canDeleteOrUpdateProfile(id, JOB_PROFILES)) {
-          logger.error("Can`t update default OCLC Job Profile with id {}", id);
-          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with"))));
-        } else {
-          entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-          validateProfile(OperationType.UPDATE, entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
-            if (errors.failed()) {
-              logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
-              asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
-            } else if (errors.result().getTotalRecords() > 0) {
-              asyncResultHandler.handle(Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors.result())));
+        isValidProfileDtoForUpdate(entity, JOB_PROFILES, jobProfileService)
+          .compose(valid -> {
+            if (!valid) {
+              logger.error("Can`t update default OCLC Job Profile with id {}", id);
+              return Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with")));
             } else {
-              entity.getProfile().setId(id);
-              jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
-                .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity))
-                .otherwise(ExceptionHelper::mapExceptionToResponse)
-                .onComplete(asyncResultHandler);
+              entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+              return validateProfile(OperationType.UPDATE, entity.getProfile(), jobProfileService, tenantId).compose(errors -> {
+                if (errors.getTotalRecords() > 0) {
+                  return Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors));
+                } else {
+                  entity.getProfile().setId(id);
+                  return jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
+                    .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity));
+                }
+              });
             }
-          });
-        }
+          })
+          .otherwise(ExceptionHelper::mapExceptionToResponse)
+          .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to update Job Profile with id {}", id, e);
-        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+          logger.error("Failed to update Job Profile with id {}", id, e);
+          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
   }
+
+  private <T, C, D>  Future<Boolean> isValidProfileDtoForUpdate(D profileUpdateDto, String[] systemProfilesIds,
+                                                  ProfileService<T, C, D> service) {
+    if (canDeleteOrUpdateProfile(profileUpdateDto.getId(), systemProfilesIds)) {
+      return isTagsOnlyUpdated(profileUpdateDto, service);
+    } else {
+      return Future.succeededFuture(false);
+    }
+  }
+
+  public <T, C, D> Future<Boolean> isTagsOnlyUpdated(JobProfile profileUpdateDto, ProfileService<T, C, D> profileService) {
+
+    return profileService.getProfileById(profileUpdateDto.getId(), false, tenantId)
+      .compose(jobProfileOptional -> jobProfileOptional
+        .map(jobProfile -> Future.succeededFuture(isEqualsExceptTags(profileUpdateDto, jobProfile)))
+        .orElseGet(() -> Future.failedFuture(new NotFoundException())));
+  }
+
+  private <D, T> Boolean isEqualsExceptTags(D profileUpdateDto, T jobProfile) {
+    JsonObject updateDtoJson = JsonObject.mapFrom(profileUpdateDto.getProfile());
+    JsonObject profileJson = JsonObject.mapFrom(jobProfile);
+
+    updateDtoJson.remove("tags");
+    updateDtoJson.remove("metadata");
+    profileJson.remove("metadata");
+
+    return updateDtoJson.equals(profileJson);
+  }
+
 
   @Override
   public void getDataImportProfilesJobProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
