@@ -72,7 +72,6 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     "31dbb554-0826-48ec-a0a4-3c55293d4dee"  //OCLC_INSTANCE_UUID_MATCH_PROFILE_ID
   };
   private static final String[] JOB_PROFILES = {
-    "d0ebb7b0-2f0f-11eb-adc1-0242ac120777",
     "d0ebb7b0-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_INSTANCE_JOB_PROFILE_ID,
     "91f9b8d6-d80e-4727-9783-73fb53e3c786", //OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID,
     "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7", //DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID
@@ -168,61 +167,27 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        isValidProfileDtoForUpdate(entity, JOB_PROFILES, jobProfileService)
-          .compose(valid -> {
-            if (!valid) {
-              logger.error("Can`t update default OCLC Job Profile with id {}", id);
-              return Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with")));
-            } else {
-              entity.getProfile().setMetadata(getMetadata(okapiHeaders));
-              return validateProfile(OperationType.UPDATE, entity.getProfile(), jobProfileService, tenantId).compose(errors -> {
-                if (errors.getTotalRecords() > 0) {
-                  return Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors));
-                } else {
-                  entity.getProfile().setId(id);
-                  return jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
-                    .map(updatedEntity -> (Response) PutDataImportProfilesJobProfilesByIdResponse.respond200WithApplicationJson(updatedEntity));
-                }
-              });
-            }
-          })
-          .otherwise(ExceptionHelper::mapExceptionToResponse)
-          .onComplete(asyncResultHandler);
+        isValidProfileDtoForUpdate(id, entity, JOB_PROFILES, jobProfileService).compose(valid -> {
+          if (valid) {
+            entity.getProfile().setMetadata(getMetadata(okapiHeaders));
+            return validateProfile(OperationType.UPDATE, entity.getProfile(), jobProfileService, tenantId).compose(errors -> {
+              entity.getProfile().setId(id);
+              return errors.getTotalRecords() > 0 ?
+                Future.succeededFuture(PutDataImportProfilesJobProfilesByIdResponse.respond422WithApplicationJson(errors)) :
+                jobProfileService.updateProfile(entity, new OkapiConnectionParams(okapiHeaders))
+                  .map(PutDataImportProfilesJobProfilesByIdResponse::respond200WithApplicationJson);
+            });
+          } else {
+            logger.error("Can`t update default OCLC Job Profile with id {}", id);
+            return Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t update default OCLC Job Profile with")));
+          }
+        }).otherwise(ExceptionHelper::mapExceptionToResponse).onComplete(asyncResultHandler);
       } catch (Exception e) {
-          logger.error("Failed to update Job Profile with id {}", id, e);
-          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
+        logger.error("Failed to update Job Profile with id {}", id, e);
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
   }
-
-  private <T, C, D>  Future<Boolean> isValidProfileDtoForUpdate(D profileUpdateDto, String[] systemProfilesIds,
-                                                  ProfileService<T, C, D> service) {
-    if (canDeleteOrUpdateProfile(profileUpdateDto.getId(), systemProfilesIds)) {
-      return isTagsOnlyUpdated(profileUpdateDto, service);
-    } else {
-      return Future.succeededFuture(false);
-    }
-  }
-
-  public <T, C, D> Future<Boolean> isTagsOnlyUpdated(JobProfile profileUpdateDto, ProfileService<T, C, D> profileService) {
-
-    return profileService.getProfileById(profileUpdateDto.getId(), false, tenantId)
-      .compose(jobProfileOptional -> jobProfileOptional
-        .map(jobProfile -> Future.succeededFuture(isEqualsExceptTags(profileUpdateDto, jobProfile)))
-        .orElseGet(() -> Future.failedFuture(new NotFoundException())));
-  }
-
-  private <D, T> Boolean isEqualsExceptTags(D profileUpdateDto, T jobProfile) {
-    JsonObject updateDtoJson = JsonObject.mapFrom(profileUpdateDto.getProfile());
-    JsonObject profileJson = JsonObject.mapFrom(jobProfile);
-
-    updateDtoJson.remove("tags");
-    updateDtoJson.remove("metadata");
-    profileJson.remove("metadata");
-
-    return updateDtoJson.equals(profileJson);
-  }
-
 
   @Override
   public void getDataImportProfilesJobProfilesById(String id, boolean withRelations, String lang, Map<String, String> okapiHeaders,
@@ -897,6 +862,29 @@ public class DataImportProfilesImpl implements DataImportProfiles {
       }
     }
     return errorList;
+  }
+
+  private <T, C, D>  Future<Boolean> isValidProfileDtoForUpdate(String entityProfileId, D profileUpdateDto, String[] systemProfilesIds, ProfileService<T, C, D> service) {
+    return canDeleteOrUpdateProfile(entityProfileId, systemProfilesIds) ?
+      isTagsOnlyUpdated(entityProfileId, profileUpdateDto, service) : Future.succeededFuture(true);
+  }
+
+  public <T, C, D> Future<Boolean> isTagsOnlyUpdated(String entityProfileId, D profileUpdateDto, ProfileService<T, C, D> profileService) {
+    return profileService.getProfileById(entityProfileId, false, tenantId).compose(jobProfileOptional ->
+      jobProfileOptional.map(jobProfile -> Future.succeededFuture(isEqualsExceptTags(profileUpdateDto, jobProfile)))
+        .orElseGet(() -> Future.succeededFuture(false)));
+  }
+
+  private <D, T> Boolean isEqualsExceptTags(D profileUpdateDto, T jobProfile) {
+    JsonObject updateDtoJson = JsonObject.mapFrom(profileUpdateDto).getJsonObject("profile");
+    JsonObject profileJson = JsonObject.mapFrom(jobProfile);
+
+    updateDtoJson.remove("tags");
+    updateDtoJson.remove("metadata");
+    profileJson.remove("tags");
+    profileJson.remove("metadata");
+
+    return updateDtoJson.equals(profileJson);
   }
 
   private ContentType mapContentType(String contentType) {
