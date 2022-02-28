@@ -166,7 +166,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                    Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        isValidProfileDtoForUpdate(id, entity, JOB_PROFILES, jobProfileService).compose(isDtoValidForUpdate -> {
+        jobProfileService.isProfileDtoValidForUpdate(id, entity, canDeleteOrUpdateProfile(id, JOB_PROFILES), tenantId).compose(isDtoValidForUpdate -> {
           if (isDtoValidForUpdate) {
             entity.getProfile().setMetadata(getMetadata(okapiHeaders));
             return validateProfile(OperationType.UPDATE, entity.getProfile(), jobProfileService, tenantId).compose(errors -> {
@@ -279,7 +279,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                      Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        isValidProfileDtoForUpdate(id, entity, MATCH_PROFILES, matchProfileService).compose(isDtoValidForUpdate -> {
+        matchProfileService.isProfileDtoValidForUpdate(id, entity, canDeleteOrUpdateProfile(id, MATCH_PROFILES), tenantId).compose(isDtoValidForUpdate -> {
           if(isDtoValidForUpdate) {
             entity.getProfile().setMetadata(getMetadata(okapiHeaders));
             return validateProfile(OperationType.UPDATE, entity.getProfile(), matchProfileService, tenantId).compose(errors -> {
@@ -366,7 +366,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   public void putDataImportProfilesMappingProfilesById(String id, String lang, MappingProfileUpdateDto entity, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        isValidProfileDtoForUpdate(id, entity, MAPPING_PROFILES, mappingProfileService).compose(isDtoValidForUpdate -> {
+        mappingProfileService.isProfileDtoValidForUpdate(id, entity, canDeleteOrUpdateProfile(id, MAPPING_PROFILES), tenantId).compose(isDtoValidForUpdate -> {
           if(isDtoValidForUpdate) {
             entity.getProfile().setMetadata(getMetadata(okapiHeaders));
             return validateMappingProfile(OperationType.UPDATE, entity.getProfile(), tenantId).compose(errors -> {
@@ -501,7 +501,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        isValidProfileDtoForUpdate(id, entity, ACTION_PROFILES, actionProfileService).compose(isDtoValidForUpdate -> {
+        actionProfileService.isProfileDtoValidForUpdate(id, entity, canDeleteOrUpdateProfile(id, ACTION_PROFILES), tenantId).compose(isDtoValidForUpdate -> {
           if(isDtoValidForUpdate) {
             entity.getProfile().setMetadata(getMetadata(okapiHeaders));
             return validateProfile(OperationType.UPDATE, entity.getProfile(), actionProfileService, tenantId).compose(errors -> {
@@ -846,29 +846,6 @@ public class DataImportProfilesImpl implements DataImportProfiles {
       }
     }
     return errorList;
-  }
-
-  private <T, C, D>  Future<Boolean> isValidProfileDtoForUpdate(String entityProfileId, D profileUpdateDto, String[] systemProfilesIds, ProfileService<T, C, D> service) {
-    return canDeleteOrUpdateProfile(entityProfileId, systemProfilesIds) ?
-      isTagsOnlyUpdated(entityProfileId, profileUpdateDto, service) : Future.succeededFuture(true);
-  }
-
-  public <T, C, D> Future<Boolean> isTagsOnlyUpdated(String entityProfileId, D profileUpdateDto, ProfileService<T, C, D> profileService) {
-    return profileService.getProfileById(entityProfileId, false, tenantId).compose(jobProfileOptional ->
-      jobProfileOptional.map(jobProfile -> Future.succeededFuture(isEqualsExceptTags(profileUpdateDto, jobProfile)))
-        .orElseGet(() -> Future.succeededFuture(false)));
-  }
-
-  private <D, T> Boolean isEqualsExceptTags(D profileUpdateDto, T jobProfile) {
-    JsonObject updateDtoJson = JsonObject.mapFrom(profileUpdateDto).getJsonObject("profile");
-    JsonObject profileJson = JsonObject.mapFrom(jobProfile);
-
-    updateDtoJson.remove("tags");
-    updateDtoJson.remove("metadata");
-    profileJson.remove("tags");
-    profileJson.remove("metadata");
-
-    return updateDtoJson.equals(profileJson);
   }
 
   private ContentType mapContentType(String contentType) {
