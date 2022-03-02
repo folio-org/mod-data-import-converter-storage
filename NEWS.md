@@ -1,4 +1,7 @@
-## 2021-02-24 v1.13.0
+## 2022-XX-XX v1.14.0-SNAPSHOT
+* [MODDICONV-235](https://issues.folio.org/browse/MODDICONV-235) Adding a tag to some profiles displays an error message and a success message
+
+## 2022-02-24 v1.13.0
 * [MODDICONV-211](https://issues.folio.org/browse/MODDICONV-211) Settings : Updates to default job profiles
 * [MODDICONV-215](https://issues.folio.org/browse/MODDICONV-215) Upgrade to RMB 33.2.2 (includes fix of log4j vulnerability)
 
