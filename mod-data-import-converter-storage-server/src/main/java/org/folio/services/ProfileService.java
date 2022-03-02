@@ -74,6 +74,17 @@ public interface ProfileService<T, S, D> {
   Future<Boolean> isProfileExistByProfileId(T profile, String tenantId);
 
   /**
+   * Check profile to access another fields except tags
+   *
+   * @param id               - Profile id
+   * @param profile          - D DTO
+   * @param isDefaultProfile - True if the profile lists as default
+   * @param tenantId         - Tenant id from request
+   * @return - boolean value. True if in the profile DTO has been changed only Tags
+   */
+  Future<Boolean> isProfileDtoValidForUpdate(String id, D profile, boolean isDefaultProfile, String tenantId);
+
+  /**
    * Marks profile as deleted by its id
    *
    * @param id       Profile id
