@@ -3,10 +3,17 @@ package org.folio.rest.impl;
 import io.restassured.RestAssured;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
+import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.jaxrs.model.JobProfile;
+import org.folio.rest.jaxrs.model.JobProfileUpdateDto;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.folio.rest.impl.JobProfileTest.JOB_PROFILES_PATH;
 import static org.hamcrest.Matchers.is;
@@ -75,6 +82,40 @@ public class DefaultJobProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK).extract().as(JobProfile.class);
     Assert.assertEquals( "quickMARC - Create Holdings and SRS MARC Holdings", profile.getName());
     Assert.assertEquals( JobProfile.DataType.MARC, profile.getDataType());
+  }
+
+  @Test
+  public void shouldAddAndRemoveTagsDefaultProfile() {
+    Tags tags = new Tags().withTagList(Arrays.asList("Lorem", "ipsum"));
+    var profile = getJobProfileById(DEFAULT_MARC_AUTHORITY_PROFILE_ID);
+//    Add tags to default profile
+    RestAssured.given()
+      .spec(spec)
+      .body(new JobProfileUpdateDto().withProfile(profile.withTags(tags)))
+      .when()
+      .put(JOB_PROFILES_PATH + "/" + DEFAULT_MARC_AUTHORITY_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("tags.tagList", Is.is(tags.getTagList()));
+
+    profile = getJobProfileById(DEFAULT_MARC_AUTHORITY_PROFILE_ID);
+//    Delete tags from default profile
+    RestAssured.given()
+      .spec(spec)
+      .body(new JobProfileUpdateDto().withProfile(profile.withTags(new Tags().withTagList(Collections.emptyList()))))
+      .when()
+      .put(JOB_PROFILES_PATH + "/" + DEFAULT_MARC_AUTHORITY_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("tags.tagList", Is.is(Matchers.empty()));
+  }
+
+  private JobProfile getJobProfileById(String id) {
+    return RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(JOB_PROFILES_PATH + "/" + id)
+      .then().extract().as(JobProfile.class);
   }
 
 }

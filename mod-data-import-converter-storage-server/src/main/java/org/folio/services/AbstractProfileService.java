@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Generic implementation of the {@link ProfileService}
@@ -161,6 +162,16 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
     String profileId = getProfileId(profile);
     return StringUtils.isBlank(profileId) ?
       Future.succeededFuture(false) : getProfileById(profileId, false, tenantId).map(Optional::isPresent);
+  }
+
+  @Override
+  public Future<Boolean> isProfileDtoValidForUpdate(String id, D profile, boolean isDefaultProfile, String tenantId) {
+    return isDefaultProfile ? getProfileById(id, false, tenantId).map(profileOptional ->
+        profileOptional.map(fetchedProfile -> Stream.of(getProfile(profile), fetchedProfile).map(JsonObject::mapFrom)
+          .peek(jsonObject -> {
+            jsonObject.remove("tags");
+            jsonObject.remove("metadata");
+          }).distinct().count() <= 1).orElse(false)) : Future.succeededFuture(true);
   }
 
   @Override
