@@ -59,7 +59,8 @@ public class MatchProfileTest extends AbstractRestVerticleTest {
   private static final String MATCH_PROFILE_UUID = "48a54656-8a2c-43c1-96b4-da96a70a0a62";
   private List<String> defaultMatchedProfileIds = Arrays.asList(
     "d27d71ce-8a1e-44c6-acea-96961b5592c6", //OCLC_MARC_MARC_MATCH_PROFILE_ID
-    "31dbb554-0826-48ec-a0a4-3c55293d4dee"  //OCLC_INSTANCE_UUID_MATCH_PROFILE_ID
+    "31dbb554-0826-48ec-a0a4-3c55293d4dee", //OCLC_INSTANCE_UUID_MATCH_PROFILE_ID
+    "4be5d1d2-1f5a-42ff-a9bd-fc90609d94b6"  //DEFAULT_DELETE_MARC_AUTHORITY_MATCH_PROFILE_ID
   );
 
   private static MatchProfileUpdateDto matchProfile_1 = new MatchProfileUpdateDto()

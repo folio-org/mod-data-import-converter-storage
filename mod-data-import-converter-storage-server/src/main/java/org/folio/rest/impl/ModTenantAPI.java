@@ -38,6 +38,7 @@ public class ModTenantAPI extends TenantAPI {
   private static final String DEFAULT_UPDATE_OCLC_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_update_oclc_job_profile.sql";
   private static final String DEFAULT_UPDATE_OCLC_UPDATE_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_update_oclc_update_job_profile.sql";
   private static final String DEFAULT_UPDATE_EDIFACT_MAPPING_PROFILES = "templates/db_scripts/defaultData/default_update_edifact_mapping_profiles.sql";
+  private static final String DEFAULT_DELETE_MARC_AUTHORITY_JOB_PROFILES = "templates/db_scripts/defaultData/default_delete_marc_authority_job_profile.sql";
 
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
   private static final String MODULE_PLACEHOLDER = "${mymodule}";
@@ -63,6 +64,7 @@ public class ModTenantAPI extends TenantAPI {
         .compose(m -> setupDefaultData(DEFAULT_UPDATE_OCLC_JOB_PROFILE_SQL, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_UPDATE_OCLC_UPDATE_JOB_PROFILE_SQL, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_UPDATE_EDIFACT_MAPPING_PROFILES, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_DELETE_MARC_AUTHORITY_JOB_PROFILES, headers, context))
         .map(num));
   }
 
