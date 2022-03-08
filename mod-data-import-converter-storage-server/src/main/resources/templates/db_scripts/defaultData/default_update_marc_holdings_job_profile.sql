@@ -4,6 +4,7 @@ SET jsonb =  '{
   "name": "Default - Create Holdings and SRS MARC Holdings",
   "description": "Default job profile for creating MARC holdings and corresponding Inventory holdings. Profile cannot be edited or deleted",
   "deleted": false,
+  "hidden": false,
   "dataType": "MARC",
   "tags": {
     "tagList": []
@@ -30,6 +31,7 @@ SET jsonb =  '{
   "name": "Default - Create MARC holdings",
   "action": "CREATE",
   "deleted": false,
+  "hidden": false,
   "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited, duplicated, or deleted.",
   "folioRecord": "HOLDINGS",
   "childProfiles": [],
@@ -53,6 +55,7 @@ SET jsonb =  '{
   "id": "13cf7adf-c7a7-4c2e-838f-14d0ac36ec0a",
   "name": "Default Create MARC holdings and Inventory holdings",
   "deleted": false,
+  "hidden": false,
   "metadata": {
     "createdDate": "2021-08-05T14:00:00.000",
     "updatedDate": "2021-08-05T15:00:00.462+0000",

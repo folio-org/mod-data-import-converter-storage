@@ -41,16 +41,19 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   public static final String IS_PROFILE_ASSOCIATED_AS_DETAIL_BY_ID_SQL = "SELECT exists (SELECT association_id FROM associations_view WHERE detail_id = '%s')";
 
   @Override
-  public Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId) {
+  public Future<S> getProfiles(boolean showDeleted, boolean showHidden, String query, int offset, int limit, String tenantId) {
     Promise<Results<T>> promise = Promise.promise();
     try {
       String[] fieldList = {"*"};
-      String notDeletedProfilesFilter = null;
-      if (!showDeleted) {
-        notDeletedProfilesFilter = "deleted==false";
-      }
       CQLWrapper cql = getCQLWrapper(getTableName(), query, limit, offset);
-      cql.addWrapper(getCQLWrapper(getTableName(), notDeletedProfilesFilter));
+      if (!showDeleted) {
+        var notDeletedProfilesFilter = "deleted==false";
+        cql.addWrapper(getCQLWrapper(getTableName(), notDeletedProfilesFilter));
+      }
+      if (!showHidden) {
+        var notHiddenProfilesFilter = "hidden==false";
+        cql.addWrapper(getCQLWrapper(getTableName(), notHiddenProfilesFilter));
+      }
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, promise);
     } catch (Exception e) {
       logger.error("Error while searching for {}", getProfileType().getSimpleName(), e);

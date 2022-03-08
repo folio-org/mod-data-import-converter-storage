@@ -17,13 +17,14 @@ public interface ProfileDao<T, S> {
    * Searches for T entities in database
    *
    * @param showDeleted indicates to return T entities marked as deleted or not
+   * @param showHidden  indicates to return T entities marked as hidden or not
    * @param query       query from URL
    * @param offset      starting index in a list of results
    * @param limit       limit of records for pagination
    * @param tenantId    tenant id
    * @return future with S, a collection of T entities
    */
-  Future<S> getProfiles(boolean showDeleted, String query, int offset, int limit, String tenantId);
+  Future<S> getProfiles(boolean showDeleted, boolean showHidden, String query, int offset, int limit, String tenantId);
 
   /**
    * Searches for T entity by id

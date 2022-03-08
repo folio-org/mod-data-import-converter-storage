@@ -18,6 +18,7 @@ public interface ProfileService<T, S, D> {
    * Searches for T entities
    *
    * @param showDeleted   indicates to return T entities marked as deleted or not
+   * @param showHidden    indicates to return T entities marked as hidden or not
    * @param query         query from URL
    * @param offset        starting index in a list of results
    * @param limit         limit of records for pagination
@@ -25,7 +26,7 @@ public interface ProfileService<T, S, D> {
    * @param tenantId      tenant id
    * @return future with S, a collection of T entities
    */
-  Future<S> getProfiles(boolean showDeleted, boolean withRelations, String query, int offset, int limit, String tenantId);
+  Future<S> getProfiles(boolean showDeleted, boolean withRelations, boolean showHidden, String query, int offset, int limit, String tenantId);
 
   /**
    * Searches for T by id
@@ -72,6 +73,17 @@ public interface ProfileService<T, S, D> {
    * @return - boolean value. True if job profile with the same id already exist
    */
   Future<Boolean> isProfileExistByProfileId(T profile, String tenantId);
+
+  /**
+   * Check profile to access another fields except tags
+   *
+   * @param id               - Profile id
+   * @param profile          - D DTO
+   * @param isDefaultProfile - True if the profile lists as default
+   * @param tenantId         - Tenant id from request
+   * @return - boolean value. True if in the profile DTO has been changed only Tags
+   */
+  Future<Boolean> isProfileDtoValidForUpdate(String id, D profile, boolean isDefaultProfile, String tenantId);
 
   /**
    * Marks profile as deleted by its id

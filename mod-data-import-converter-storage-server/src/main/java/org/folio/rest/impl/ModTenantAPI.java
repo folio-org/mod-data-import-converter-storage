@@ -34,6 +34,10 @@ public class ModTenantAPI extends TenantAPI {
   private static final String DEFAULT_UPDATE_MARC_AUTHORITY_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_marc_authority_job_profile.sql";
   private static final String DEFAULT_UPDATE_MARC_HOLDINGS_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_marc_holdings_job_profile.sql";
   private static final String DEFAULT_UPDATE_QM_SRS_MARC_HOLDINGS_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_qm_holdings_and_srs_marc_holdings_create_job_profile.sql";
+  private static final String DEFAULT_UPDATE_INSTANCE_AND_MARC_BIB_CREATE_JOB_PROFILE = "templates/db_scripts/defaultData/default_update_instance_and_marc_bib_create_job_profile.sql";
+  private static final String DEFAULT_UPDATE_OCLC_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_update_oclc_job_profile.sql";
+  private static final String DEFAULT_UPDATE_OCLC_UPDATE_JOB_PROFILE_SQL = "templates/db_scripts/defaultData/default_update_oclc_update_job_profile.sql";
+  private static final String DEFAULT_UPDATE_EDIFACT_MAPPING_PROFILES = "templates/db_scripts/defaultData/default_update_edifact_mapping_profiles.sql";
   private static final String DEFAULT_DELETE_MARC_AUTHORITY_JOB_PROFILES = "templates/db_scripts/defaultData/default_delete_marc_authority_job_profile.sql";
 
   private static final String TENANT_PLACEHOLDER = "${myuniversity}";
@@ -56,6 +60,10 @@ public class ModTenantAPI extends TenantAPI {
         .compose(m -> setupDefaultData(DEFAULT_UPDATE_MARC_AUTHORITY_JOB_PROFILE, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_UPDATE_MARC_HOLDINGS_JOB_PROFILE, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_UPDATE_QM_SRS_MARC_HOLDINGS_JOB_PROFILE, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_UPDATE_INSTANCE_AND_MARC_BIB_CREATE_JOB_PROFILE, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_UPDATE_OCLC_JOB_PROFILE_SQL, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_UPDATE_OCLC_UPDATE_JOB_PROFILE_SQL, headers, context))
+        .compose(m -> setupDefaultData(DEFAULT_UPDATE_EDIFACT_MAPPING_PROFILES, headers, context))
         .compose(m -> setupDefaultData(DEFAULT_DELETE_MARC_AUTHORITY_JOB_PROFILES, headers, context))
         .map(num));
   }

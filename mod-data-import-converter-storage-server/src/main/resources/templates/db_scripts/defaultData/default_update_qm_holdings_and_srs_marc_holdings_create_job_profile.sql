@@ -4,6 +4,7 @@ SET jsonb =  '{
   "name": "quickMARC - Create Holdings and SRS MARC Holdings",
   "description": "This job profile is used by the quickMARC to allow a user to create a new SRS MARC holdings record and corresponding Inventory holdings. Profile cannot be edited or deleted",
   "deleted": false,
+  "hidden": false,
   "dataType": "MARC",
   "tags": {
     "tagList": []
@@ -24,11 +25,37 @@ SET jsonb =  '{
 }'
 WHERE id = 'fa0262c7-5816-48d0-b9b3-7b7a862a5bc7';
 
+UPDATE ${myuniversity}_${mymodule}.action_profiles
+SET jsonb =  '{
+  "id": "f5feddba-f892-4fad-b702-e4e77f04f9a3",
+  "name": "quickMARC Derive - Create Inventory Holdings",
+  "action": "CREATE",
+  "deleted": false,
+  "hidden": false,
+  "description": "This action profile is used with FOLIO''s default job profile for creating Inventory Holdings and SRS MARC Holdings records. It cannot be edited or deleted.",
+  "folioRecord": "HOLDINGS",
+  "childProfiles": [],
+  "parentProfiles": [],
+    "metadata": {
+      "createdDate": "2021-08-05T14:00:00.000",
+      "updatedDate": "2021-08-05T15:00:00.462+0000",
+      "createdByUserId": "00000000-0000-0000-0000-000000000000",
+      "updatedByUserId": "00000000-0000-0000-0000-000000000000"
+    },
+    "userInfo": {
+      "lastName": "System",
+      "userName": "System",
+      "firstName": "System"
+    }
+}'
+WHERE id = 'f5feddba-f892-4fad-b702-e4e77f04f9a3';
+
 UPDATE ${myuniversity}_${mymodule}.mapping_profiles
 SET jsonb =  '{
   "id": "e0fbaad5-10c0-40d5-9228-498b351dbbaa",
   "name": "quickMARC - Create MARC holdings and Inventory holdings",
   "deleted": false,
+  "hidden": false,
   "metadata": {
     "createdDate": "2021-08-05T14:00:00.000",
     "updatedDate": "2021-08-05T15:00:00.462+0000",
