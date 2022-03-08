@@ -34,7 +34,7 @@ public class DefaultJobProfileTest extends AbstractRestVerticleTest {
       .get(JOB_PROFILES_PATH)
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(8));
+      .body("totalRecords", is(7));
   }
 
   @Test
@@ -45,7 +45,7 @@ public class DefaultJobProfileTest extends AbstractRestVerticleTest {
       .get(JOB_PROFILES_PATH + "?showHidden=true")
       .then()
       .statusCode(HttpStatus.SC_OK)
-      .body("totalRecords", is(7));
+      .body("totalRecords", is(8));
   }
 
   @Test
