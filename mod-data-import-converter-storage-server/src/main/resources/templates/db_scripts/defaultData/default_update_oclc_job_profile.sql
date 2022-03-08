@@ -1,70 +1,71 @@
 UPDATE ${myuniversity}_${mymodule}.job_profiles
-    SET jsonb =  '{
-	"id": "6409dcff-71fa-433a-bc6a-e70ad38a9604",
-	"name": "quickMARC - Derive a new SRS MARC Bib and Instance",
-	"deleted": false,
-	"hidden": false,
-	"dataType": "MARC",
-	"metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
-	"userInfo": {
-		"lastName": "System",
-		"userName": "System",
-		"firstName": "System"
-	},
-	"description": "This job profile is used by the quickMARC Derive action to create a new SRS MARC Bib record and corresponding Inventory Instance. It cannot be edited or deleted.",
-	"childProfiles": [],
-	"parentProfiles": []
+SET jsonb =  '{
+  "id": "d0ebb7b0-2f0f-11eb-adc1-0242ac120002",
+  "name": "Inventory Single Record - Default Create Instance",
+  "description": "Triggered by an action in Inventory, this job profile imports a single record from an external system, to create an Instance and MARC record",
+  "dataType": "MARC",
+  "tags": {
+    "tagList": []
+  },
+  "deleted": false,
+  "hidden": false,
+  "userInfo": {
+    "firstName": "System",
+    "lastName": "System",
+    "userName": "System"
+  },
+  "childProfiles": [],
+  "parentProfiles": [],
+  "metadata": {
+    "createdDate": "2020-11-23T12:00:00.000",
+    "createdByUserId": "00000000-0000-0000-0000-000000000000",
+    "createdByUsername": "System",
+    "updatedDate": "2020-11-24T12:00:00.000",
+    "updatedByUserId": "00000000-0000-0000-0000-000000000000",
+    "updatedByUsername": "System"
+  }
 }'
-WHERE id = '6409dcff-71fa-433a-bc6a-e70ad38a9604';
+WHERE id = 'd0ebb7b0-2f0f-11eb-adc1-0242ac120002';
 
 UPDATE ${myuniversity}_${mymodule}.action_profiles
 SET jsonb =  '{
-	"id": "f8e58651-f651-485d-aead-d2fa8700e2d1",
-	"name": "quickMARC Derive - Create Inventory Instance",
+	"id": "d0ebba8a-2f0f-11eb-adc1-0242ac120002",
+	"name": "Inventory Single Record - Default Create Instance",
 	"action": "CREATE",
 	"deleted": false,
 	"hidden": false,
-	"metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
 	"userInfo": {
 		"lastName": "System",
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "This action profile is used by the quickMARC Derive action to create a new Inventory Instance. It cannot be edited or deleted.",
+	"description": "Creates new Inventory Instances and SRS MARC Bib records based on Inventory single record imports",
 	"folioRecord": "INSTANCE",
 	"childProfiles": [],
-	"parentProfiles": []
+	"parentProfiles": [],
+	"metadata": {
+        "createdDate": "2020-11-23T12:00:00.000",
+        "createdByUserId": "00000000-0000-0000-0000-000000000000",
+        "createdByUsername": "System",
+        "updatedDate": "2020-11-24T12:00:00.000",
+        "updatedByUserId": "00000000-0000-0000-0000-000000000000",
+        "updatedByUsername": "System"
+	}
 }'
-WHERE id = 'f8e58651-f651-485d-aead-d2fa8700e2d1';
+WHERE id = 'd0ebba8a-2f0f-11eb-adc1-0242ac120002';
 
 UPDATE ${myuniversity}_${mymodule}.mapping_profiles
 SET jsonb =  '{
-	"id": "991c0300-44a6-47e3-8ea2-b01bb56a38cc",
-	"name": "quickMARC Derive - Create Inventory Instance",
+	"id": "d0ebbc2e-2f0f-11eb-adc1-0242ac120002",
+	"name": "Inventory Single Record - Default Create Instance",
 	"deleted": false,
 	"hidden": false,
-	"metadata": {
-		"createdDate": "2021-01-14T14:00:00.000",
-		"updatedDate": "2021-01-14T15:00:00.462+0000",
-		"createdByUserId": "00000000-0000-0000-0000-000000000000",
-		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
-	},
 	"userInfo": {
 		"lastName": "System",
 		"userName": "System",
 		"firstName": "System"
 	},
-	"description": "This field mapping profile is used by the quickMARC Derive action to create an Inventory Instance. It cannot be edited or deleted.",
+	"description": "Creates new Inventory Instances and SRS MARC Bib records based on Inventory single record imports",
 	"childProfiles": [],
 	"mappingDetails": {
 		"name": "instance",
@@ -276,7 +277,14 @@ SET jsonb =  '{
 	"parentProfiles": [],
 	"existingRecordType": "INSTANCE",
 	"incomingRecordType": "MARC_BIBLIOGRAPHIC",
-	"marcFieldProtectionSettings": []
+	"marcFieldProtectionSettings": [],
+	"metadata": {
+		"createdDate": "2020-11-23T12:00:00.000",
+		"createdByUserId": "00000000-0000-0000-0000-000000000000",
+		"createdByUsername": "System",
+		"updatedDate": "2020-11-24T12:00:00.000",
+		"updatedByUserId": "00000000-0000-0000-0000-000000000000",
+		"updatedByUsername": "System"
+  }
 }'
-WHERE id = '991c0300-44a6-47e3-8ea2-b01bb56a38cc';
-
+WHERE id = 'd0ebbc2e-2f0f-11eb-adc1-0242ac120002';

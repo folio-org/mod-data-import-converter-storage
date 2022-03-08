@@ -63,6 +63,12 @@ resourceTypes:
           type: boolean
           default: false
           required: false
+        showHidden:
+          description: selection condition of Job Profiles by field 'hidden'
+          example: false
+          type: boolean
+          default: false
+          required: false
         withRelations:
           description: Load profile with related child and parent profiles
           example: false
@@ -125,6 +131,12 @@ resourceTypes:
       queryParameters:
         showDeleted:
           description: selection condition of Match Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
+        showHidden:
+          description: selection condition of Match Profiles by field 'hidden'
           example: false
           type: boolean
           default: false
@@ -195,6 +207,12 @@ resourceTypes:
           type: boolean
           default: false
           required: false
+        showHidden:
+          description: selection condition of Mapping Profiles by field 'hidden'
+          example: false
+          type: boolean
+          default: false
+          required: false
         withRelations:
           description: Load profile with related child and parent profiles
           example: false
@@ -257,6 +275,12 @@ resourceTypes:
       queryParameters:
         showDeleted:
           description: selection condition of Action Profiles by field 'deleted'
+          example: false
+          type: boolean
+          default: false
+          required: false
+        showHidden:
+          description: selection condition of Action Profiles by field 'hidden'
           example: false
           type: boolean
           default: false

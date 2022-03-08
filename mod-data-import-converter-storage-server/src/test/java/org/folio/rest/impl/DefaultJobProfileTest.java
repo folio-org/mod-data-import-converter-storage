@@ -38,6 +38,17 @@ public class DefaultJobProfileTest extends AbstractRestVerticleTest {
   }
 
   @Test
+  public void shouldReturnWithHiddenProfilesOnGet() {
+    RestAssured.given()
+      .spec(spec)
+      .when()
+      .get(JOB_PROFILES_PATH + "?showHidden=true")
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(7));
+  }
+
+  @Test
   public void shouldReturnMarcAuthorityProfileOnGetById() {
     final var profile = RestAssured.given()
       .spec(spec)

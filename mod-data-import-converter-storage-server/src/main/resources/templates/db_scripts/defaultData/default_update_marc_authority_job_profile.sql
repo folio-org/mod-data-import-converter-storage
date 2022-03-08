@@ -4,6 +4,7 @@ SET jsonb =  '{
   "name": "Default - Create SRS MARC Authority",
   "description": "Default job profile for creating MARC authority records. These records are stored in source record storage (SRS). Profile cannot be edited or deleted",
   "deleted": false,
+  "hidden": false,
   "dataType": "MARC",
   "tags": {
     "tagList": []
@@ -30,6 +31,7 @@ SET jsonb =  '{
   "name": "Default - Create MARC Authority",
   "action": "CREATE",
   "deleted": false,
+  "hidden": false,
   "description": "This action profile is used with FOLIO''s default job profile for creating a MARC authority record in source-record-storage. It cannot be edited, duplicated, or deleted.",
   "folioRecord": "AUTHORITY",
   "childProfiles": [],
@@ -53,6 +55,7 @@ SET jsonb =  '{
   "id": "6a0ec1de-68eb-4833-bdbf-0741db25c314",
   "name": "Default - Create MARC Authority",
   "deleted": false,
+  "hidden": false,
   "metadata": {
     "createdDate": "2021-10-08T14:00:00.000",
     "updatedDate": "2021-10-08T15:00:00.462+0000",
