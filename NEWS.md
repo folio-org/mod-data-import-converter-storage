@@ -1,4 +1,4 @@
-## 2022-XX-XX v1.14.0-SNAPSHOT
+## 2022-03-10 v1.13.1
 * [MODDICONV-235](https://issues.folio.org/browse/MODDICONV-235) Adding a tag to some profiles displays an error message and a success message
 
 ## 2022-02-24 v1.13.0
