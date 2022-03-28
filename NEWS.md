@@ -1,3 +1,6 @@
+## 2022-03-28 v1.13.2
+* Update raml-storage reference
+
 ## 2022-03-10 v1.13.1
 * [MODDICONV-235](https://issues.folio.org/browse/MODDICONV-235) Adding a tag to some profiles displays an error message and a success message
 
