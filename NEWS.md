@@ -1,3 +1,6 @@
+## 2022-04-04 v1.13.3
+* [MODDICONV-241](https://issues.folio.org/browse/MODDICONV-241) Update dependencies fixing CVE-2020-36518, CVE-2021-43797
+
 ## 2022-03-28 v1.13.2
 * Update raml-storage reference
 
