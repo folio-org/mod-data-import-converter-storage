@@ -1,4 +1,5 @@
 ## 2022-XX-XX v1.14.0-SNAPSHOT
+* [MODDICONV-210](https://issues.folio.org/browse/MODDICONV-210) Updated associations_view to fetch and display indirect relationships between job and action profiles
 * [MODDICONV-235](https://issues.folio.org/browse/MODDICONV-235) Adding a tag to some profiles displays an error message and a success message
 
 ## 2022-02-24 v1.13.0
