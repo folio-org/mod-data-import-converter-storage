@@ -42,7 +42,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 		"firstName": "System"
 	},
 	"description": "Updates existing SRS MARC holdings record",
-	"folioRecord": "MARC_BIBLIOGRAPHIC",
+	"folioRecord": "MARC_HOLDINGS",
 	"childProfiles": [],
 	"parentProfiles": []
 }
@@ -70,8 +70,8 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 	"description": "Matches the UUID from the 999 ff $s in the incoming MARC record to the same field in any SRS MARC holdings",
 	"matchDetails": [{
 			"matchCriterion": "EXACTLY_MATCHES",
-			"existingRecordType": "MARC_BIBLIOGRAPHIC",
-			"incomingRecordType": "MARC_BIBLIOGRAPHIC",
+			"existingRecordType": "MARC_HOLDINGS",
+			"incomingRecordType": "MARC_HOLDINGS",
 			"existingMatchExpression": {
 				"fields": [{
 						"label": "field",
@@ -110,8 +110,8 @@ INSERT INTO ${myuniversity}_${mymodule}.match_profiles (id, jsonb) values
 	],
 	"childProfiles": [],
 	"parentProfiles": [],
-	"existingRecordType": "MARC_BIBLIOGRAPHIC",
-	"incomingRecordType": "MARC_BIBLIOGRAPHIC"
+	"existingRecordType": "MARC_HOLDINGS",
+	"incomingRecordType": "MARC_HOLDINGS"
 }
 ') ON CONFLICT DO NOTHING;
 
@@ -136,15 +136,15 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 	"description": "Updates existing SRS MARC holdings record",
 	"childProfiles": [],
 	"mappingDetails": {
-		"name": "marcBib",
-		"recordType": "MARC_BIBLIOGRAPHIC",
+		"name": "marcHoldings",
+		"recordType": "MARC_HOLDINGS",
 		"mappingFields": [],
 		"marcMappingOption": "UPDATE",
 		"marcMappingDetails": []
 	},
 	"parentProfiles": [],
-	"existingRecordType": "MARC_BIBLIOGRAPHIC",
-	"incomingRecordType": "MARC_BIBLIOGRAPHIC",
+	"existingRecordType": "MARC_HOLDINGS",
+	"incomingRecordType": "MARC_HOLDINGS",
 	"marcFieldProtectionSettings": []
 }
 ') ON CONFLICT DO NOTHING;
