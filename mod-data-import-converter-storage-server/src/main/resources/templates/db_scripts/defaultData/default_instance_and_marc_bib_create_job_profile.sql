@@ -6,7 +6,7 @@ INSERT INTO ${myuniversity}_${mymodule}.job_profiles (id, jsonb) values
 	"dataType": "MARC",
 	"metadata": {
 		"createdDate": "2021-04-13T14:00:00.000",
-		"updatedDate": "2021-00-13T15:00:00.462+0000",
+		"updatedDate": "2021-04-13T15:00:00.462+0000",
 		"createdByUserId": "00000000-0000-0000-0000-000000000000",
 		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
 	},
@@ -31,7 +31,7 @@ INSERT INTO ${myuniversity}_${mymodule}.action_profiles (id, jsonb) values
 	"deleted": false,
 	"metadata": {
 		"createdDate": "2021-04-13T14:00:00.000",
-		"updatedDate": "2021-00-13T15:00:00.462+0000",
+		"updatedDate": "2021-04-13T15:00:00.462+0000",
 		"createdByUserId": "00000000-0000-0000-0000-000000000000",
 		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
 	},
@@ -54,7 +54,7 @@ INSERT INTO ${myuniversity}_${mymodule}.mapping_profiles (id, jsonb) values
 	"deleted": false,
 	"metadata": {
 		"createdDate": "2021-04-13T14:00:00.000",
-		"updatedDate": "2021-00-13T15:00:00.462+0000",
+		"updatedDate": "2021-04-13T15:00:00.462+0000",
 		"createdByUserId": "00000000-0000-0000-0000-000000000000",
 		"updatedByUserId": "00000000-0000-0000-0000-000000000000"
 	},
