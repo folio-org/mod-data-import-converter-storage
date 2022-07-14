@@ -1,3 +1,6 @@
+## 2022-07-14 v1.14.1
+* [MODDICONV-252](https://issues.folio.org/browse/MODDICONV-252) Correct date in a script for creation of default job profile
+
 ## 2022-06-28 v1.14.0
 * [MODDICONV-210](https://issues.folio.org/browse/MODDICONV-210) Updated associations_view to fetch and display indirect relationships between job and action profiles
 * [MODDICONV-235](https://issues.folio.org/browse/MODDICONV-235) Adding a tag to some profiles displays an error message and a success message
