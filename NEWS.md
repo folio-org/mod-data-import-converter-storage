@@ -1,6 +1,8 @@
-## 2022-XX-XX v1.14.0-SNAPSHOT
+## 2022-06-28 v1.14.0
 * [MODDICONV-210](https://issues.folio.org/browse/MODDICONV-210) Updated associations_view to fetch and display indirect relationships between job and action profiles
 * [MODDICONV-235](https://issues.folio.org/browse/MODDICONV-235) Adding a tag to some profiles displays an error message and a success message
+* [MODDICONV-244](https://issues.folio.org/browse/MODDICONV-244) Created default update profiles for quickMarc
+* [MODDICONV-228](https://issues.folio.org/browse/MODDICONV-228) Delete Authority: Create default job profile
 
 ## 2022-02-24 v1.13.0
 * [MODDICONV-211](https://issues.folio.org/browse/MODDICONV-211) Settings : Updates to default job profiles
