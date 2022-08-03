@@ -1,8 +1,13 @@
 package org.folio.services.snapshot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.JOB_PROFILE;
 
@@ -33,16 +40,41 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final ProfileSnapshotDao profileSnapshotDao;
+  private final Cache<String, ProfileSnapshotWrapper> profileSnapshotWrapperCache;
+  private final Executor cacheExecutor = runnable -> {
+    Context context = Vertx.currentContext();
+    if (context != null) {
+      context.runOnContext(ar -> runnable.run());
+    } else {
+      // The common pool below is used because it is the  default executor for caffeine
+      ForkJoinPool.commonPool().execute(runnable);
+    }
+  };
 
   public ProfileSnapshotServiceImpl(@Autowired ProfileSnapshotDao profileSnapshotDao) {
     this.profileSnapshotDao = profileSnapshotDao;
+    this.profileSnapshotWrapperCache = Caffeine.newBuilder()
+      .maximumSize(20)
+      .executor(cacheExecutor)
+      .build();
   }
 
   @Override
   public Future<Optional<ProfileSnapshotWrapper>> getById(String id, String tenantId) {
-    return profileSnapshotDao.getById(id, tenantId)
-      .map(optionalWrapper ->
-        optionalWrapper.map(this::convertProfileSnapshotWrapperContent));
+    final String cacheKey = tenantId + id;
+    ProfileSnapshotWrapper profileSnapshotWrapper = profileSnapshotWrapperCache.getIfPresent(cacheKey);
+    if (profileSnapshotWrapper == null) {
+      return profileSnapshotDao.getById(id, tenantId)
+        .map(optionalWrapper ->
+          optionalWrapper.map(this::convertProfileSnapshotWrapperContent))
+        .onSuccess(wrapper -> {
+          if (wrapper.isEmpty()) {
+            return;
+          }
+          profileSnapshotWrapperCache.put(cacheKey, wrapper.get());
+        });
+    }
+    return Future.succeededFuture(Optional.of(profileSnapshotWrapper));
   }
 
   @Override
