@@ -5,6 +5,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
+import io.vertx.sqlclient.Tuple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.folio.cql2pgjson.CQL2PgJSON;
@@ -39,6 +40,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   @Autowired
   protected PostgresClientFactory pgClientFactory;
   public static final String IS_PROFILE_ASSOCIATED_AS_DETAIL_BY_ID_SQL = "SELECT exists (SELECT association_id FROM associations_view WHERE detail_id = '%s')";
+  public static final String IS_PROFILE_EXIST_BY_NAME = "SELECT jsonb FROM %s WHERE trim(both ' ' from lower(jsonb ->> 'name')) = $1 AND jsonb ->> %s != $2 AND jsonb ->> 'deleted' = 'false'  LIMIT 1;";
 
   @Override
   public Future<S> getProfiles(boolean showDeleted, boolean showHidden, String query, int offset, int limit, String tenantId) {
@@ -157,16 +159,10 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
   public Future<Boolean> isProfileExistByName(String profileName, String profileId, String tenantId) {
     Promise<Boolean> promise = Promise.promise();
     PostgresClient client = pgClientFactory.createInstance(tenantId);
-    StringBuilder selectQuery = new StringBuilder("SELECT jsonb FROM ") //NOSONAR
-      .append(PostgresClient.convertToPsqlStandard(tenantId))
-      .append(".")
-      .append(getTableName())
-      .append(" WHERE trim(both ' ' from lower(jsonb ->> 'name')) ='")
-      .append(profileName.toLowerCase().trim())
-      .append("' AND jsonb ->>").append(ID_FIELD).append("!= '").append(profileId)
-      .append("' AND jsonb ->> 'deleted' = 'false' ")
-      .append(" LIMIT 1;");
-    client.select(selectQuery.toString(), reply -> {
+    String tableName = PostgresClient.convertToPsqlStandard(tenantId) + "." + getTableName();
+    String sql = String.format(IS_PROFILE_EXIST_BY_NAME, tableName, ID_FIELD);
+    Tuple tuple = Tuple.of(profileName.toLowerCase().trim(), String.valueOf(profileId));
+    client.select(sql, tuple, reply -> {
       if (reply.succeeded()) {
         promise.complete(reply.result().rowCount() > 0);
       } else {
