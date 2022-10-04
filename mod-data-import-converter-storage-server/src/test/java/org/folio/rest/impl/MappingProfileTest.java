@@ -86,6 +86,12 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
       .withExistingRecordType(EntityType.INSTANCE));
 
+  private static MappingProfileUpdateDto mappingProfile_5 = new MappingProfileUpdateDto()
+    .withProfile(new MappingProfile().withName("B'oom")
+      .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
+
 
   private static final List<MappingRule> fields = Lists.newArrayList(new MappingRule()
     .withName("repeatableField")
@@ -322,6 +328,30 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
     RestAssured.given()
       .spec(spec)
       .body(mappingProfileWithEmptySubfieldsAndNotDeleteExistingAction)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  public void shouldCreateProfileOnPostWithApostropheInName() {
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_5)
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.name", is(mappingProfile_5.getProfile().getName()))
+      .body("profile.tags.tagList", is(mappingProfile_5.getProfile().getTags().getTagList()))
+      .body("profile.userInfo.lastName", is("Doe"))
+      .body("profile.userInfo.firstName", is("Jane"))
+      .body("profile.userInfo.userName", is("@janedoe"));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(mappingProfile_5)
       .when()
       .post(MAPPING_PROFILES_PATH)
       .then()
