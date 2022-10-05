@@ -162,7 +162,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
     String tableName = PostgresClient.convertToPsqlStandard(tenantId) + "." + getTableName();
     String sql = String.format(IS_PROFILE_EXIST_BY_NAME, tableName, ID_FIELD);
     Tuple tuple = Tuple.of(profileName.toLowerCase().trim(), String.valueOf(profileId));
-    client.select(sql, tuple, reply -> {
+    client.selectRead(sql, tuple, reply -> {
       if (reply.succeeded()) {
         promise.complete(reply.result().rowCount() > 0);
       } else {
