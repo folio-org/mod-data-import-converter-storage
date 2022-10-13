@@ -89,7 +89,7 @@ public abstract class AbstractRestVerticleTest {
     vertx.deployVerticle(RestVerticle.class.getName(), restVerticleDeploymentOptions, res -> {
       try {
         TenantAttributes tenantAttributes = new TenantAttributes();
-        tenantAttributes.setModuleTo(ModuleName.getModuleName());
+        tenantAttributes.setModuleTo(ModuleName.getModuleName() + "-1.0.0");
         tenantClient.postTenant(tenantAttributes, res2 -> {
           if (res2.result().statusCode() == 204) {
             return;
