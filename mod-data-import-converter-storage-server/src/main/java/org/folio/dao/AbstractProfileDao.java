@@ -53,7 +53,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
         cql.addWrapper(getCQLWrapper(getTableName(), notDeletedProfilesFilter));
       }
       if (!showHidden) {
-        var notHiddenProfilesFilter = "cql.allRecords=1 NOT hidden == true";
+        var notHiddenProfilesFilter = "hidden==false";
         cql.addWrapper(getCQLWrapper(getTableName(), notHiddenProfilesFilter));
       }
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, promise);
