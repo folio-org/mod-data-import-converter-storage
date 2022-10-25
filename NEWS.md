@@ -1,3 +1,19 @@
+## 2022-10-25 v1.15.1
+* [MODDICONV-270](https://issues.folio.org/browse/MODDICONV-270) Data import job profiles created prior to morning glory are hidden
+
+## 2022-10-19 v1.15.0
+* [MODDICONV-260](https://issues.folio.org/browse/MODDICONV-260) spring-beans 5.3.20, Vert.x 4.3.3 fixing vulns
+* [MODDICONV-258](https://issues.folio.org/browse/MODDICONV-258) Apostrophe not escaped in input when creating field mapping profile (possible SQL injection)
+* [MODDICONV-254](https://issues.folio.org/browse/MODDICONV-254) Cache Job Profile Snapshot of Data Import Job
+* [MODDICONV-267](https://issues.folio.org/browse/MODDICONV-267) Upgrade to RMB v35.0.1
+* [MODDICONV-269](https://issues.folio.org/browse/MODDICONV-269) Change registration module in tests
+
+## 2022-10-25 v1.14.2
+* [MODDICONV-270](https://issues.folio.org/browse/MODDICONV-270) Data import job profiles created prior to morning glory are hidden
+
+## 2022-07-14 v1.14.1
+* [MODDICONV-252](https://issues.folio.org/browse/MODDICONV-252) Correct date in a script for creation of default job profile
+
 ## 2022-06-28 v1.14.0
 * [MODDICONV-210](https://issues.folio.org/browse/MODDICONV-210) Updated associations_view to fetch and display indirect relationships between job and action profiles
 * [MODDICONV-235](https://issues.folio.org/browse/MODDICONV-235) Adding a tag to some profiles displays an error message and a success message
