@@ -1,4 +1,4 @@
-## 2022-07-14 v1.14.2
+## 2022-10-25 v1.14.2
 * [MODDICONV-270](https://issues.folio.org/browse/MODDICONV-270) Data import job profiles created prior to morning glory are hidden
 
 ## 2022-07-14 v1.14.1
