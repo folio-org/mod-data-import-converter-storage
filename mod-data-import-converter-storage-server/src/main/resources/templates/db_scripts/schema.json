@@ -222,6 +222,11 @@
       "run": "after",
       "snippetPath": "data-migration/set_deleted_hidden_defaults.sql",
       "fromModuleVersion": "mod-data-import-converter-storage-1.15.1"
+    },
+    {
+      "run": "after",
+      "snippetPath": "data-migration/set_administrative_notes.sql",
+      "fromModuleVersion": "mod-data-import-converter-storage-1.14.3"
     }
   ]
 }
