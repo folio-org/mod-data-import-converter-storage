@@ -6,8 +6,8 @@ WHERE jsonb -> 'mappingDetails' ->> 'recordType' = 'INSTANCE' AND jsonb -> 'mapp
 
 UPDATE ${myuniversity}_${mymodule}.mapping_profiles
 SET jsonb = jsonb_insert(jsonb, '{mappingDetails,mappingFields,0}', '{"name": "administrativeNotes", "path": "item.administrativeNotes[]", "value": "", "enabled": "true", "subfields": []}')
-WHERE (jsonb ->> 'mappingDetails')::json ->> 'recordType' = 'ITEM' AND (jsonb ->> 'mappingDetails')::json ->> 'mappingFields' NOT LIKE '%"name": "administrativeNotes"%';
+WHERE jsonb -> 'mappingDetails' ->> 'recordType' = 'ITEM' AND jsonb -> 'mappingDetails' ->> 'mappingFields' NOT LIKE '%"name": "administrativeNotes"%';
 
 UPDATE ${myuniversity}_${mymodule}.mapping_profiles
 SET jsonb = jsonb_insert(jsonb, '{mappingDetails,mappingFields,0}', '{"name": "administrativeNotes", "path": "holdings.administrativeNotes[]", "value": "", "enabled": "true", "subfields": []}')
-WHERE (jsonb ->> 'mappingDetails')::json ->> 'recordType' = 'HOLDINGS' AND (jsonb ->> 'mappingDetails')::json ->> 'mappingFields' NOT LIKE '%"name": "administrativeNotes"%';
+WHERE jsonb -> 'mappingDetails' ->> 'recordType' = 'HOLDINGS' AND jsonb -> 'mappingDetails' ->> 'mappingFields' NOT LIKE '%"name": "administrativeNotes"%';
