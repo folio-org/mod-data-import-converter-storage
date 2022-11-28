@@ -1,3 +1,6 @@
+## 2022-11-28 v1.15.2
+* [MODDICONV-276](https://issues.folio.org/browse/MODDICONV-276) Holding and item field mapping profile fields mis-numbered upon editing or duplicating
+
 ## 2022-10-25 v1.15.1
 * [MODDICONV-270](https://issues.folio.org/browse/MODDICONV-270) Data import job profiles created prior to morning glory are hidden
 
