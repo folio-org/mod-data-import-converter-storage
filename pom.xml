@@ -28,6 +28,7 @@
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.exclusions>**/ModTenantAPI.java</sonar.exclusions>
+    <spring-framework.version>5.2.22.RELEASE</spring-framework.version>
     <testcontainers.version>1.16.3</testcontainers.version>
   </properties>
 
@@ -44,6 +45,13 @@
         <groupId>io.vertx</groupId>
         <artifactId>vertx-stack-depchain</artifactId>
         <version>${vertx.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring-framework.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
