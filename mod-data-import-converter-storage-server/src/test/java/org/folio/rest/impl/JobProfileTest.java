@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import java.util.ArrayList;
 import org.apache.http.HttpStatus;
 import org.folio.rest.jaxrs.model.ActionProfile;
 import org.folio.rest.jaxrs.model.ActionProfileUpdateDto;
@@ -59,13 +60,13 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   private static final String ACTION_TO_ACTION_PROFILES_TABLE_NAME = "action_to_action_profiles";
   private static final String MATCH_TO_MATCH_PROFILES_TABLE_NAME = "match_to_match_profiles";
   private static final String JOB_PROFILE_UUID = "b81c283c-131d-4470-ab91-e92bb415c000";
-  private List<String> defaultJobProfileIds = Arrays.asList(
+  private static final String DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID = "6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3";
+  private final List<String> defaultJobProfileIds = Arrays.asList(
     "d0ebb7b0-2f0f-11eb-adc1-0242ac120002", //OCLC_CREATE_INSTANCE_JOB_PROFILE_ID
     "91f9b8d6-d80e-4727-9783-73fb53e3c786", //OCLC_UPDATE_INSTANCE_JOB_PROFILE_ID
     "fa0262c7-5816-48d0-b9b3-7b7a862a5bc7", //DEFAULT_CREATE_DERIVE_HOLDINGS_JOB_PROFILE_ID
     "6409dcff-71fa-433a-bc6a-e70ad38a9604", //DEFAULT_CREATE_DERIVE_INSTANCE_JOB_PROFILE_ID
     "80898dee-449f-44dd-9c8e-37d5eb469b1d", //DEFAULT_CREATE_HOLDINGS_AND_SRS_MARC_HOLDINGS_JOB_PROFILE_ID
-    "6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3", //DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID
     "1a338fcd-3efc-4a03-b007-394eeb0d5fb9", //DEFAULT_DELETE_MARC_AUTHORITY_JOB_PROFILE_ID
     "cf6f2718-5aa5-482a-bba5-5bc9b75614da", //DEFAULT_QM_MARC_BIB_UPDATE_JOB_PROFILE_ID
     "6cb347c6-c0b0-4363-89fc-32cedede87ba", //DEFAULT_QM_HOLDINGS_UPDATE_JOB_PROFILE_ID
@@ -88,6 +89,11 @@ public class JobProfileTest extends AbstractRestVerticleTest {
     .withProfile(new JobProfile().withId(JOB_PROFILE_UUID)
       .withName("OLA")
       .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+      .withDataType(MARC));
+  static JobProfileUpdateDto jobProfile_5 = new JobProfileUpdateDto()
+    .withProfile(new JobProfile().withId(DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID)
+      .withName("Default - Create SRS MARC Authority")
+      .withDescription("Default job profile for creating MARC authority records.")
       .withDataType(MARC));
 
   @Test
@@ -194,7 +200,9 @@ public class JobProfileTest extends AbstractRestVerticleTest {
   @Test
   public void shouldReturnBadRequestOnDeleteDefaultProfiles() {
     createProfiles();
-    for (String id : defaultJobProfileIds) {
+    List<String> allDefaultJobProfilesIds = new ArrayList<>(defaultJobProfileIds);
+    allDefaultJobProfilesIds.add(DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID);
+    for (String id : allDefaultJobProfilesIds) {
       RestAssured.given()
         .spec(spec)
         .when()
@@ -351,6 +359,33 @@ public class JobProfileTest extends AbstractRestVerticleTest {
       .body("userInfo.lastName", is("Doe"))
       .body("userInfo.firstName", is("Jane"))
       .body("userInfo.userName", is("@janedoe"))
+      .body("dataType", is(jobProfile.getProfile().getDataType().value()));
+  }
+
+  @Test
+  public void shouldUpdateDefaultAuthorityJobProfileOnPut() {
+    Response createResponse = RestAssured.given()
+      .spec(spec)
+      .body(jobProfile_5)
+      .when()
+      .post(JOB_PROFILES_PATH);
+    Assert.assertThat(createResponse.statusCode(), is(HttpStatus.SC_CREATED));
+    JobProfileUpdateDto jobProfile = createResponse.body().as(JobProfileUpdateDto.class);
+
+    jobProfile.getProfile().setName("updated name");
+    jobProfile.getProfile().setDescription("updated description");
+    jobProfile.getProfile().setDataType(EDIFACT);
+
+    RestAssured.given()
+      .spec(spec)
+      .body(jobProfile)
+      .when()
+      .put(JOB_PROFILES_PATH + "/" + DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("id", is(DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID))
+      .body("name", is(jobProfile.getProfile().getName()))
+      .body("description", is(jobProfile.getProfile().getDescription()))
       .body("dataType", is(jobProfile.getProfile().getDataType().value()));
   }
 
