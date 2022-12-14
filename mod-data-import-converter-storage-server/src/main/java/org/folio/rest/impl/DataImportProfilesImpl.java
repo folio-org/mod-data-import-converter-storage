@@ -237,7 +237,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                                                       Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(v -> {
       try {
-        if (canNotBeDeleted(id)) {
+        if ("6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3".equals(id) || Arrays.asList(JOB_PROFILES).contains(id)) {
           logger.error("Can`t delete default OCLC Job Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Job Profile with"))));
         } else {
@@ -1082,15 +1082,9 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     return Arrays.asList(uids).contains(id);
   }
 
-  // DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID is excluded from JOB_PROFILES, so this id should be checked separately
-  private boolean canNotBeDeleted(String id) {
-    return "6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3".equals(id) || Arrays.asList(JOB_PROFILES).contains(id);
-  }
-
   private Errors addAll(Errors errors, List<Error> otherErrors) {
     errors.withTotalRecords(errors.getTotalRecords() + otherErrors.size())
       .getErrors().addAll(otherErrors);
     return errors;
   }
-
 }
