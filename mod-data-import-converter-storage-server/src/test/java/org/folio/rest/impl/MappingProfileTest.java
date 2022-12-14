@@ -18,6 +18,7 @@ import org.folio.rest.jaxrs.model.MappingRule;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
 import org.folio.rest.jaxrs.model.ProfileAssociation.DetailProfileType;
 import org.folio.rest.jaxrs.model.ProfileAssociation.MasterProfileType;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -33,11 +34,14 @@ import java.util.UUID;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_PATH;
 import static org.folio.rest.impl.ActionProfileTest.ACTION_PROFILES_TABLE_NAME;
 import static org.folio.rest.jaxrs.model.ActionProfile.Action.CREATE;
+import static org.folio.rest.jaxrs.model.ActionProfile.Action.UPDATE;
+import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.INSTANCE;
 import static org.folio.rest.jaxrs.model.ActionProfile.FolioRecord.MARC_BIBLIOGRAPHIC;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.ACTION_PROFILE;
 import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPPING_PROFILE;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
@@ -627,7 +631,7 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
         .withProfile(new ActionProfile()
           .withName("testActionProfile")
           .withAction(CREATE)
-          .withFolioRecord(MARC_BIBLIOGRAPHIC))
+          .withFolioRecord(INSTANCE))
         .withAddedRelations(List.of(new ProfileAssociation()
           .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
           .withDetailProfileType(DetailProfileType.MAPPING_PROFILE)
@@ -707,7 +711,7 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
         .withProfile(new ActionProfile()
           .withName("testActionProfile")
           .withAction(CREATE)
-          .withFolioRecord(MARC_BIBLIOGRAPHIC))
+          .withFolioRecord(INSTANCE))
         .withAddedRelations(List.of(new ProfileAssociation()
           .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
           .withDetailProfileType(DetailProfileType.MAPPING_PROFILE)
@@ -759,6 +763,106 @@ public class MappingProfileTest extends AbstractRestVerticleTest {
       .body("profileAssociations.size", is(1))
       .body("profileAssociations[0].masterProfileId", is(actionProfile.getProfile().getId()))
       .body("profileAssociations[0].detailProfileId", is(mappingProfile2.getProfile().getId()));
+  }
+
+
+  @Test
+  public void shouldNotCreateMappingProfilesWhenDifferentFolioRecord() {
+    var actionProfileUpdateDto = postActionProfile(new ActionProfileUpdateDto()
+      .withProfile(new ActionProfile()
+        .withName("Test Action Profile")
+        .withAction(CREATE)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC)));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfileUpdateDto()
+        .withProfile(new MappingProfile()
+          .withName("Test Action Profile")
+          .withExistingRecordType(EntityType.INSTANCE)
+          .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC))
+        .withAddedRelations(List.of(
+          new ProfileAssociation()
+            .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+            .withMasterProfileId(actionProfileUpdateDto.getProfile().getId())
+            .withDetailProfileType(DetailProfileType.MAPPING_PROFILE))))
+      .when()
+      .post(MAPPING_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors", hasItem(
+        hasEntry(is("message"),
+          is("Action profile 'Test Action Profile' can not be linked to this Mapping profile. FolioRecord and ExistingRecordType types are different")
+        )));
+  }
+
+  @Test
+  public void shouldNotUpdateMappingProfilesWhenDifferentFolioRecordAndUpdateRecordTypeWhenRecordTypesAreDifferent() {
+    var actionProfileUpdateDto = postActionProfile(new ActionProfileUpdateDto()
+      .withProfile(new ActionProfile()
+        .withName("Test Action Profile")
+        .withAction(CREATE)
+        .withFolioRecord(INSTANCE)));
+    var actionProfileUpdateDto1 = postActionProfile(new ActionProfileUpdateDto()
+      .withProfile(new ActionProfile()
+        .withName("Test Action Profile1")
+        .withAction(UPDATE)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC)));
+
+    var mappingProfileUpdateDto = postMappingProfile(new MappingProfileUpdateDto()
+      .withProfile(new MappingProfile()
+        .withName("Test Mapping Profile")
+        .withExistingRecordType(EntityType.INSTANCE)
+        .withIncomingRecordType(EntityType.INSTANCE))
+      .withAddedRelations(List.of(new ProfileAssociation()
+        .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+        .withMasterProfileId(actionProfileUpdateDto.getId())
+        .withDetailProfileType(DetailProfileType.MAPPING_PROFILE))));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfileUpdateDto()
+        .withProfile(new MappingProfile()
+          .withName("Test Mapping Profile")
+          .withExistingRecordType(EntityType.INSTANCE)
+          .withIncomingRecordType(EntityType.INSTANCE))
+        .withAddedRelations(List.of(new ProfileAssociation()
+          .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+          .withMasterProfileId(actionProfileUpdateDto1.getProfile().getId())
+          .withDetailProfileType(DetailProfileType.MAPPING_PROFILE))
+        )
+        .withDeletedRelations(List.of(new ProfileAssociation()
+          .withMasterProfileType(MasterProfileType.ACTION_PROFILE)
+          .withMasterProfileId(actionProfileUpdateDto.getProfile().getId())
+          .withDetailProfileType(DetailProfileType.MAPPING_PROFILE))))
+      .when()
+      .put(MAPPING_PROFILES_PATH + "/" + mappingProfileUpdateDto.getProfile().getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors", hasItem(
+        hasEntry(is("message"),
+          is("Action profile 'Test Action Profile1' can not be linked to this Mapping profile. FolioRecord and ExistingRecordType types are different")
+        )));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new MappingProfileUpdateDto()
+        .withProfile(new MappingProfile()
+          .withName("Test Mapping Profile")
+          .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+          .withIncomingRecordType(EntityType.INSTANCE)
+          .withParentProfiles(List.of(new ProfileSnapshotWrapper()
+            .withId(actionProfileUpdateDto.getProfile().getId())
+            .withContent(actionProfileUpdateDto)
+            .withContentType(ACTION_PROFILE)))))
+      .when()
+      .put(MAPPING_PROFILES_PATH + "/" + mappingProfileUpdateDto.getProfile().getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors", hasItem(
+        hasEntry(is("message"),
+          is("Can not update MappingProfile recordType and linked ActionProfile recordType are different")
+        )));
   }
 
   private void createProfiles() {
