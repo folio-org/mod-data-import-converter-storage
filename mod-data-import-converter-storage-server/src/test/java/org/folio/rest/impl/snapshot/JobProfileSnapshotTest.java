@@ -82,7 +82,7 @@ public class JobProfileSnapshotTest extends AbstractRestVerticleTest {
   private MappingProfileUpdateDto mappingProfile = new MappingProfileUpdateDto()
     .withProfile(new MappingProfile().withName("testMappingProfile1").withDescription("test-description")
       .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-      .withExistingRecordType(EntityType.INSTANCE));
+      .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC));
 
   @Before
   public void setUp(TestContext testContext) {

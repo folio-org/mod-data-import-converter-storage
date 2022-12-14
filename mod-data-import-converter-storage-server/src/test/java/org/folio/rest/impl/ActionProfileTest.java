@@ -13,6 +13,7 @@ import org.folio.rest.jaxrs.model.EntityType;
 import org.folio.rest.jaxrs.model.MappingProfile;
 import org.folio.rest.jaxrs.model.MappingProfileUpdateDto;
 import org.folio.rest.jaxrs.model.ProfileAssociation;
+import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper;
 import org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType;
 import org.folio.rest.jaxrs.model.Tags;
 import org.folio.rest.persist.Criteria.Criterion;
@@ -37,7 +38,10 @@ import static org.folio.rest.jaxrs.model.ProfileSnapshotWrapper.ContentType.MAPP
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItemInArray;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(VertxUnitRunner.class)
@@ -585,6 +589,110 @@ public class ActionProfileTest extends AbstractRestVerticleTest {
       .statusCode(HttpStatus.SC_OK)
       .body("totalRecords", is(entityTypesList.size()))
       .body("entityTypes", containsInAnyOrder(entityTypesList.toArray()));
+  }
+
+  @Test
+  public void shouldNotCreateActionProfilesWhenDifferentFolioRecord() {
+    var mappingProfileUpdateDto = postMappingProfile(new MappingProfileUpdateDto()
+      .withProfile(new MappingProfile()
+        .withName("Test Mapping Profile")
+        .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+        .withExistingRecordType(EntityType.ITEM)
+        .withIncomingRecordType(EntityType.HOLDINGS)));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfileUpdateDto()
+        .withProfile(new ActionProfile()
+          .withName("Test Action Profile")
+          .withAction(CREATE)
+          .withFolioRecord(MARC_BIBLIOGRAPHIC))
+        .withAddedRelations(List.of(
+          new ProfileAssociation()
+            .withDetailProfileType(ProfileAssociation.DetailProfileType.MAPPING_PROFILE)
+            .withDetailProfileId(mappingProfileUpdateDto.getId())
+            .withMasterProfileType(ProfileAssociation.MasterProfileType.ACTION_PROFILE))))
+      .when()
+      .post(ACTION_PROFILES_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors", hasItem(
+        hasEntry(is("message"),
+          is("Mapping profile 'Test Mapping Profile' can not be linked to this Action profile. ExistingRecordType and FolioRecord types are different")
+        )));
+  }
+
+  @Test
+  public void shouldNotUpdateActionProfilesWhenDifferentFolioRecord() {
+    var mappingProfileUpdateDto = postMappingProfile(new MappingProfileUpdateDto()
+      .withProfile(new MappingProfile()
+        .withName("Test Mapping Profile")
+        .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+        .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withIncomingRecordType(EntityType.HOLDINGS)));
+    var mappingProfileUpdateDto1 = postMappingProfile(new MappingProfileUpdateDto()
+      .withProfile(new MappingProfile()
+        .withName("Test Mapping Profile1")
+        .withTags(new Tags().withTagList(Arrays.asList("lorem", "ipsum", "dolor")))
+        .withExistingRecordType(EntityType.HOLDINGS)
+        .withIncomingRecordType(EntityType.HOLDINGS)));
+
+    var actionProfileUpdateDto = postActionProfile(new ActionProfileUpdateDto()
+      .withProfile(new ActionProfile()
+        .withName("Test Action Profile")
+        .withAction(CREATE)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC))
+      .withAddedRelations(List.of(
+        new ProfileAssociation()
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MAPPING_PROFILE)
+          .withDetailProfileId(mappingProfileUpdateDto.getProfile().getId())
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.ACTION_PROFILE))));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfileUpdateDto()
+        .withProfile(new ActionProfile()
+          .withName("Test Action Profile")
+          .withAction(CREATE)
+          .withFolioRecord(MARC_BIBLIOGRAPHIC))
+        .withAddedRelations(List.of(
+          new ProfileAssociation()
+            .withDetailProfileType(ProfileAssociation.DetailProfileType.MAPPING_PROFILE)
+            .withDetailProfileId(mappingProfileUpdateDto1.getProfile().getId())
+            .withMasterProfileType(ProfileAssociation.MasterProfileType.ACTION_PROFILE)))
+        .withDeletedRelations(List.of(
+          new ProfileAssociation()
+            .withDetailProfileType(ProfileAssociation.DetailProfileType.MAPPING_PROFILE)
+            .withDetailProfileId(mappingProfileUpdateDto.getProfile().getId())
+            .withMasterProfileType(ProfileAssociation.MasterProfileType.ACTION_PROFILE))))
+      .when()
+      .put(ACTION_PROFILES_PATH+ "/" + actionProfileUpdateDto.getProfile().getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors", hasItem(
+        hasEntry(is("message"),
+          is("Mapping profile 'Test Mapping Profile1' can not be linked to this Action profile. ExistingRecordType and FolioRecord types are different")
+        )));
+
+    RestAssured.given()
+      .spec(spec)
+      .body(new ActionProfileUpdateDto()
+        .withProfile(new ActionProfile()
+          .withName("Test Action Profile")
+          .withAction(CREATE)
+          .withFolioRecord(INSTANCE)
+          .withChildProfiles(List.of(new ProfileSnapshotWrapper()
+            .withId(mappingProfileUpdateDto.getId())
+            .withContent(mappingProfileUpdateDto)
+            .withContentType(MAPPING_PROFILE)))))
+      .when()
+      .put(ACTION_PROFILES_PATH+ "/" + actionProfileUpdateDto.getProfile().getId())
+      .then()
+      .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+      .body("errors", hasItem(
+        hasEntry(is("message"),
+          is("Can not update ActionProfile recordType and linked MappingProfile recordType are different")
+        )));
   }
 
   private void createProfiles() {
