@@ -66,7 +66,6 @@ public class DataImportProfilesImpl implements DataImportProfiles {
   private static final String MASTER_PROFILE_NOT_FOUND_MSG = "Master profile with id '%s' was not found";
   private static final String DETAIL_PROFILE_NOT_FOUND_MSG = "Detail profile with id '%s' was not found";
   private static final String INVALID_REPEATABLE_FIELD_ACTION_FOR_EMPTY_SUBFIELDS_MESSAGE = "Invalid repeatableFieldAction for empty subfields: %s";
-  private static final String DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID = "6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3";
   private static final String[] MATCH_PROFILES = {
     "d27d71ce-8a1e-44c6-acea-96961b5592c6", //OCLC_MARC_MARC_MATCH_PROFILE_ID
     "31dbb554-0826-48ec-a0a4-3c55293d4dee", //OCLC_INSTANCE_UUID_MATCH_PROFILE_ID
@@ -918,8 +917,9 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     return Arrays.asList(uids).contains(id);
   }
 
+  // DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID is excluded from JOB_PROFILES, so this id should be checked separately
   private boolean isDefaultJobProfile(String id) {
-    return DEFAULT_CREATE_SRS_MARC_AUTHORITY_JOB_PROFILE_ID.equals(id) || Arrays.asList(JOB_PROFILES).contains(id);
+    return "6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3".equals(id) || Arrays.asList(JOB_PROFILES).contains(id);
   }
 
 }
