@@ -2,7 +2,7 @@ UPDATE ${myuniversity}_${mymodule}.job_profiles
 SET jsonb =  '{
 	"id": "6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3",
   "name": "Default - Create SRS MARC Authority",
-  "description": "Default job profile for creating MARC authority records. These records are stored in source record storage (SRS). Profile cannot be edited or deleted",
+  "description": "Default job profile for creating MARC authority records. These records are stored in source record storage (SRS). Profile cannot be deleted",
   "deleted": false,
   "hidden": false,
   "dataType": "MARC",
