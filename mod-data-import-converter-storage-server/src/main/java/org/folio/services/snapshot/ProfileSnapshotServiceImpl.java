@@ -99,8 +99,8 @@ public class ProfileSnapshotServiceImpl implements ProfileSnapshotService {
     return profileSnapshotDao.getSnapshotItems(profileId, profileType, jobProfileId, tenantId)
       .compose(snapshotItems -> {
         if (CollectionUtils.isEmpty(snapshotItems)) {
-          String errorMessage = "Cannot build snapshot for Profile " + profileId;
-          LOGGER.error(errorMessage);
+          String errorMessage = "constructSnapshot:: Cannot build snapshot for Profile " + profileId;
+          LOGGER.warn(errorMessage);
           promise.fail(errorMessage);
         } else {
           promise.complete(buildSnapshot(snapshotItems));

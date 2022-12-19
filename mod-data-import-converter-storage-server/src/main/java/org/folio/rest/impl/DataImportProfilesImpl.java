@@ -148,7 +148,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
         validateProfile(OperationType.CREATE, entity.getProfile(), jobProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
-            logger.error(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
+            logger.warn(PROFILE_VALIDATE_ERROR_MESSAGE, errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesJobProfilesResponse.respond422WithApplicationJson(errors.result())));
@@ -161,7 +161,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           }
         });
       } catch (Exception e) {
-        logger.error("Failed to create Job Profile", e);
+        logger.warn("postDataImportProfilesJobProfiles:: Failed to create Job Profile", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -180,7 +180,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Job Profiles");
+        logger.warn("getDataImportProfilesJobProfiles:: Failed to get Job Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -202,12 +202,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                   .map(PutDataImportProfilesJobProfilesByIdResponse::respond200WithApplicationJson);
             });
           } else {
-            logger.error("Can`t update default OCLC Job Profile with id {}", id);
+            logger.warn("putDataImportProfilesJobProfilesById:: Can`t update default OCLC Job Profile with id {}", id);
             return Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException(String.format("Can`t update default OCLC Job Profile with id %s", id))));
           }
         }).otherwise(ExceptionHelper::mapExceptionToResponse).onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to update Job Profile with id {}", id, e);
+        logger.warn("putDataImportProfilesJobProfilesById:: Failed to update Job Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -226,7 +226,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Job Profile by id {}", id, e);
+        logger.warn("getDataImportProfilesJobProfilesById:: Failed to get Job Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -238,7 +238,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         if ("6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3".equals(id) || Arrays.asList(JOB_PROFILES).contains(id)) {
-          logger.error("Can`t delete default OCLC Job Profile with id {}", id);
+          logger.warn("deleteDataImportProfilesJobProfilesById:: Can`t delete default OCLC Job Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Job Profile with"))));
         } else {
           OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
@@ -250,7 +250,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .onComplete(asyncResultHandler);
         }
       } catch (Exception e) {
-        logger.error("Failed to delete Job Profile with id {}", id, e);
+        logger.warn("deleteDataImportProfilesJobProfilesById:: Failed to delete Job Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -264,7 +264,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
         entity.getProfile().setMetadata(getMetadata(okapiHeaders));
         validateProfile(OperationType.CREATE, entity.getProfile(), matchProfileService, tenantId).onComplete(errors -> {
           if (errors.failed()) {
-            logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
+            logger.warn(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMatchProfilesResponse.respond422WithApplicationJson(errors.result())));
@@ -277,7 +277,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           }
         });
       } catch (Exception e) {
-        logger.error("Failed to create Match Profile", e);
+        logger.warn("postDataImportProfilesMatchProfiles:: Failed to create Match Profile", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -296,7 +296,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Match Profiles");
+        logger.warn("getDataImportProfilesMatchProfiles:: Failed to get Match Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -318,12 +318,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                   .map(PutDataImportProfilesMatchProfilesByIdResponse::respond200WithApplicationJson);
             });
           } else {
-            logger.error("Can`t update default OCLC Match Profile with id {}", id);
+            logger.warn("putDataImportProfilesMatchProfilesById:: Can`t update default OCLC Match Profile with id {}", id);
             return Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException(String.format("Can`t update default OCLC Match Profile with id %s", id))));
           }
         }).otherwise(ExceptionHelper::mapExceptionToResponse).onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to update Match Profile with id {}", id, e);
+        logger.warn("putDataImportProfilesMatchProfilesById:: Failed to update Match Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -342,7 +342,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Match Profile by id {}", id, e);
+        logger.warn("getDataImportProfilesMatchProfilesById:: Failed to get Match Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -357,7 +357,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           validateMappingProfileAddedRelationsFolioRecord(entity, tenantId),
           validateMappingProfile(OperationType.CREATE, entity.getProfile(), tenantId)).onComplete(errors -> {
           if (errors.failed()) {
-            logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
+            logger.warn(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesMappingProfilesResponse.respond422WithApplicationJson(errors.result())));
@@ -370,7 +370,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           }
         });
       } catch (Exception e) {
-        logger.error("Failed to create Mapping Profile", e);
+        logger.warn("postDataImportProfilesMappingProfiles:: Failed to create Mapping Profile", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -389,7 +389,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Mapping Profiles");
+        logger.warn("getDataImportProfilesMappingProfiles:: Failed to get Mapping Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -414,12 +414,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                   .map(PutDataImportProfilesMappingProfilesByIdResponse::respond200WithApplicationJson);
             });
           } else {
-            logger.error("Can`t update default OCLC Mapping Profile with id {}", id);
+            logger.warn("putDataImportProfilesMappingProfilesById:: Can`t update default OCLC Mapping Profile with id {}", id);
             return Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException(String.format("Can`t update default OCLC Mapping Profile with id %s", id))));
           }
         }).otherwise(ExceptionHelper::mapExceptionToResponse).onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to update Mapping Profile with id {}", id, e);
+        logger.warn("putDataImportProfilesMappingProfilesById:: Failed to update Mapping Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -430,7 +430,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         if (canDeleteOrUpdateProfile(id, MAPPING_PROFILES)) {
-          logger.error("Can`t delete default OCLC Mapping Profile with id {}", id);
+          logger.warn("deleteDataImportProfilesMappingProfilesById:: Can`t delete default OCLC Mapping Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Mapping Profile"))));
         } else {
           OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
@@ -442,7 +442,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .onComplete(asyncResultHandler);
         }
       } catch (Exception e) {
-        logger.error("Failed to delete Mapping Profile with id {}", id, e);
+        logger.warn("deleteDataImportProfilesMappingProfilesById:: Failed to delete Mapping Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -460,7 +460,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Mapping Profile by id {}", id, e);
+        logger.warn("getDataImportProfilesMappingProfilesById:: Failed to get Mapping Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -472,7 +472,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         if (canDeleteOrUpdateProfile(id, MATCH_PROFILES)) {
-          logger.error("Can`t delete default OCLC Match Profile with id {}", id);
+          logger.warn("deleteDataImportProfilesMatchProfilesById:: Can`t delete default OCLC Match Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Match Profile"))));
         } else {
           OkapiConnectionParams params = new OkapiConnectionParams(okapiHeaders);
@@ -484,7 +484,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .onComplete(asyncResultHandler);
         }
       } catch (Exception e) {
-        logger.error("Failed to delete Match Profile with id {}", id, e);
+        logger.warn("deleteDataImportProfilesMatchProfilesById:: Failed to delete Match Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -500,7 +500,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           validateProfile(OperationType.CREATE, entity.getProfile(), actionProfileService, tenantId),
           validateActionProfileAddedRelationsFolioRecord(entity, tenantId)).onComplete(errors -> {
           if (errors.failed()) {
-            logger.error(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
+            logger.warn(format(PROFILE_VALIDATE_ERROR_MESSAGE, entity.getClass().getSimpleName()), errors.cause());
             asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(errors.cause())));
           } else if (errors.result().getTotalRecords() > 0) {
             asyncResultHandler.handle(Future.succeededFuture(PostDataImportProfilesActionProfilesResponse.respond422WithApplicationJson(errors.result())));
@@ -513,7 +513,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           }
         });
       } catch (Exception e) {
-        logger.error("Failed to create Action Profile", e);
+        logger.warn("postDataImportProfilesActionProfiles:: Failed to create Action Profile", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -532,7 +532,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Action Profiles");
+        logger.warn("getDataImportProfilesActionProfiles:: Failed to get Action Profiles");
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -558,12 +558,12 @@ public class DataImportProfilesImpl implements DataImportProfiles {
                   .map(PutDataImportProfilesActionProfilesByIdResponse::respond200WithApplicationJson);
             });
           } else {
-            logger.error("Can`t update default OCLC Action Profile with id {}", id);
+            logger.warn("putDataImportProfilesActionProfilesById:: Can`t update default OCLC Action Profile with id {}", id);
             return Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException(String.format("Can`t update default OCLC Action Profile with id %s", id))));
           }
         }).otherwise(ExceptionHelper::mapExceptionToResponse).onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to update Action Profile with id {}", id, e);
+        logger.warn("putDataImportProfilesActionProfilesById:: Failed to update Action Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -582,7 +582,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Action Profile by id {}", id, e);
+        logger.warn("getDataImportProfilesActionProfilesById:: Failed to get Action Profile by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -599,7 +599,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to create Profile association", e);
+        logger.warn("postDataImportProfilesProfileAssociations:: Failed to create Profile association", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -617,7 +617,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .otherwise(ExceptionHelper::mapExceptionToResponse)
             .onComplete(asyncResultHandler);
         } catch (Exception e) {
-          logger.error("Failed to get ProfileAssociations by masterType '{}' and detailType '{}", master, detail, e);
+          logger.warn("getDataImportProfilesProfileAssociations:: Failed to get ProfileAssociations by masterType '{}' and detailType '{}", master, detail, e);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
         }
       }
@@ -635,7 +635,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to update Profile association with id {}", id, e);
+        logger.warn("putDataImportProfilesProfileAssociationsById:: Failed to update Profile association with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -656,7 +656,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to delete Profile association with id {}", id, e);
+        logger.warn("deleteDataImportProfilesProfileAssociationsById:: Failed to delete Profile association with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -683,7 +683,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Profile association by id {}", id, e);
+        logger.warn("getDataImportProfilesProfileAssociationsById:: Failed to get Profile association by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -701,7 +701,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get Profile snapshot by id {}", id, e);
+        logger.warn("getDataImportProfilesJobProfileSnapshotsById:: Failed to get Profile snapshot by id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -717,7 +717,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to create Profile association", e);
+        logger.warn("postDataImportProfilesJobProfileSnapshotsById:: Failed to create Profile association", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -744,7 +744,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .otherwise(ExceptionHelper::mapExceptionToResponse)
             .onComplete(asyncResultHandler);
         } catch (Exception e) {
-          logger.error("Failed to retrieve details by master profile with id {}", id, e);
+          logger.warn("getDataImportProfilesProfileAssociationsDetailsById:: Failed to retrieve details by master profile with id {}", id, e);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
         }
       }
@@ -779,7 +779,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .otherwise(ExceptionHelper::mapExceptionToResponse)
             .onComplete(asyncResultHandler);
         } catch (Exception e) {
-          logger.error("Failed to retrieve masters by detail profile with id {}", id, e);
+          logger.warn("getDataImportProfilesProfileAssociationsMastersById:: Failed to retrieve masters by detail profile with id {}", id, e);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
         }
       }
@@ -792,7 +792,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
     vertxContext.runOnContext(v -> {
       try {
         if (canDeleteOrUpdateProfile(id, ACTION_PROFILES)) {
-          logger.error("Can`t delete default OCLC Action Profile with id {}", id);
+          logger.warn("deleteDataImportProfilesActionProfilesById:: Can`t delete default OCLC Action Profile with id {}", id);
           asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(new BadRequestException("Can`t delete default OCLC Action Profile"))));
         } else {
           actionProfileService.markProfileAsDeleted(id, tenantId)
@@ -803,7 +803,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             .onComplete(asyncResultHandler);
         }
       } catch (Exception e) {
-        logger.error("Failed to delete Action Profile with id {}", id, e);
+        logger.warn("deleteDataImportProfilesActionProfilesById:: Failed to delete Action Profile with id {}", id, e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -819,7 +819,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to get all entity types", e);
+        logger.warn("getDataImportProfilesEntityTypes:: Failed to get all entity types", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -836,7 +836,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
           .otherwise(ExceptionHelper::mapExceptionToResponse)
           .onComplete(asyncResultHandler);
       } catch (Exception e) {
-        logger.error("Failed to construct Profile Snapshot", e);
+        logger.warn("getDataImportProfilesProfileSnapshotsByProfileId:: Failed to construct Profile Snapshot", e);
         asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
       }
     });
@@ -898,7 +898,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
       .map(futureMappingProfile -> futureMappingProfile.onSuccess(optionalMappingProfile ->
         optionalMappingProfile.ifPresent(mappingProfile -> {
           if (!Objects.equals(mappingProfile.getExistingRecordType().value(), recordType.value())) {
-            logger.info("Can not update ActionProfile with ID:{} because FolioRecord:{}, linked MappingProfile FolioRecord:{}",
+            logger.info("validateActionProfileAddedRelationsFolioRecord:: Can not update ActionProfile with ID:{} because FolioRecord:{}, linked MappingProfile FolioRecord:{}",
               actionProfileUpdateDto.getProfile().getId(), recordType.value(), mappingProfile.getExistingRecordType().value());
             errors.add(new Error().withMessage(String.format(INVALID_RECORD_TYPE_LINKED_MAPPING_PROFILE_TO_ACTION_PROFILE, mappingProfile.getName())));
           }
@@ -935,7 +935,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
 
             existMappingProfiles.forEach(mappingProfile -> {
               if (!Objects.equals(((Map) mappingProfile.getContent()).get("existingRecordType"), recordType.value())) {
-                logger.info("Can not update ActionProfile with ID:{} because FolioRecord:{}, linked MappingProfile FolioRecord:{}",
+                logger.info("validateActionProfileChildProfilesFolioRecord:: Can not update ActionProfile with ID:{} because FolioRecord:{}, linked MappingProfile FolioRecord:{}",
                   id, recordType.value(), mappingProfile.getContentType());
                 errors.add(new Error().withMessage(INVALID_ACTION_PROFILE_NEW_RECORD_TYPE_LINKED_TO_MAPPING_PROFILE));
               }
@@ -965,7 +965,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
       .map(futureActionProfile -> futureActionProfile.onSuccess(optionalActionProfile ->
         optionalActionProfile.ifPresent(actionProfile -> {
           if (!Objects.equals(actionProfile.getFolioRecord().value(), recordType.value())) {
-            logger.info("Can not update MappingProfile with ID:{} because FolioRecord:{}, linked ActionProfile FolioRecord:{}",
+            logger.info("validateMappingProfileAddedRelationsFolioRecord:: Can not update MappingProfile with ID:{} because FolioRecord:{}, linked ActionProfile FolioRecord:{}",
               mappingProfileUpdateDto.getProfile().getId(), recordType.value(), actionProfile.getFolioRecord().value());
             errors.add(new Error().withMessage(String.format(INVALID_RECORD_TYPE_LINKED_ACTION_PROFILE_TO_MAPPING_PROFILE, actionProfile.getName())));
           }
@@ -1003,7 +1003,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
             existActionProfiles.forEach(actionProfile -> {
               if (!Objects.equals(((Map) actionProfile.getContent())
                 .get("folioRecord"), mappingProfileUpdateDto.getProfile().getExistingRecordType().value())) {
-                logger.info("Can not update MappingProfile with ID:{} because FolioRecord:{}, linked ActionProfile with ID:{} FolioRecord:{}",
+                logger.info("validateMappingProfileExistProfilesFolioRecord:: Can not update MappingProfile with ID:{} because FolioRecord:{}, linked ActionProfile with ID:{} FolioRecord:{}",
                   id, recordType.value(), actionProfile.getProfileId(), actionProfile.getContentType().value());
                 errors.add(new Error().withMessage(INVALID_MAPPING_PROFILE_NEW_RECORD_TYPE_LINKED_TO_ACTION_PROFILE));
               }
@@ -1068,7 +1068,7 @@ public class DataImportProfilesImpl implements DataImportProfiles {
       JsonObject j = new JsonObject(json);
       return j.getString("user_id");
     } catch (Exception e) {
-      logger.warn("Invalid x-okapi-token: {}", token, e);
+      logger.warn("userIdFromToken:: Invalid x-okapi-token: {}", token, e);
       return null;
     }
   }
