@@ -79,7 +79,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
       String[] fieldList = {"*"};
       pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, fieldList, null, true, promise);
     } catch (Exception e) {
-      LOGGER.error("Error while searching for ProfileAssociations", e);
+      LOGGER.warn("getAll:: Error while searching for ProfileAssociations", e);
       promise.fail(e);
     }
     return promise.future().map(profileAssociationResults -> new ProfileAssociationCollection()
@@ -94,7 +94,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
       Criteria idCrit = constructCriteria(ID_FIELD, id);
       pgClientFactory.createInstance(tenantId).get(getAssociationTableName(masterType, detailType), ProfileAssociation.class, new Criterion(idCrit), true, false, promise);
     } catch (Exception e) {
-      LOGGER.error("Error querying {} by id", ProfileAssociation.class.getSimpleName(), e);
+      LOGGER.warn("getById:: Error querying {} by id", ProfileAssociation.class.getSimpleName(), e);
       promise.fail(e);
     }
     return promise.future()
@@ -109,18 +109,18 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
       Criteria idCrit = constructCriteria(ID_FIELD, entity.getId());
       pgClientFactory.createInstance(tenantId).update(getAssociationTableName(masterType, detailType), entity, new Criterion(idCrit), true, updateResult -> {
         if (updateResult.failed()) {
-          LOGGER.error("Could not update {} with id {}", ProfileAssociation.class, entity.getId(), updateResult.cause());
+          LOGGER.warn("update:: Could not update {} with id {}", ProfileAssociation.class, entity.getId(), updateResult.cause());
           promise.fail(updateResult.cause());
         } else if (updateResult.result().rowCount() != 1) {
-          String errorMessage = format("%s with id '%s' was not found", ProfileAssociation.class, entity.getId());
-          LOGGER.error(errorMessage);
+          String errorMessage = format("update:: %s with id '%s' was not found", ProfileAssociation.class, entity.getId());
+          LOGGER.warn(errorMessage);
           promise.fail(new NotFoundException(errorMessage));
         } else {
           promise.complete(entity);
         }
       });
     } catch (Exception e) {
-      LOGGER.error("Error updating {} with id {}", ProfileAssociation.class, entity.getId(), e);
+      LOGGER.warn("update:: Error updating {} with id {}", ProfileAssociation.class, entity.getId(), e);
       promise.fail(e);
     }
     return promise.future();
@@ -144,6 +144,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
 
       pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, promise);
     } catch (Exception e) {
+      LOGGER.warn("delete:: Error deleting by master id {} and detail id {}", masterId, detailId, e);
       return Future.failedFuture(e);
     }
     return promise.future().map(updateResult -> updateResult.rowCount() == 1);
@@ -156,6 +157,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
       CQLWrapper filter = getCQLWrapper(getAssociationTableName(masterType, detailType), "(" + MASTER_ID_FIELD + "==" + masterId + ")");
       pgClientFactory.createInstance(tenantId).delete(getAssociationTableName(masterType, detailType), filter, promise);
     } catch (Exception e) {
+      LOGGER.warn("delete:: Error deleting by master id {}", masterId, e);
       return Future.failedFuture(e);
     }
     return promise.future().map(updateResult -> updateResult.rowCount() > 0);
@@ -172,7 +174,7 @@ public class CommonProfileAssociationDao implements ProfileAssociationDao {
     String associationTableName = associationTableNamesMap.get(masterType.value() + detailType.value());
     if (associationTableName == null) {
       String message = format("Invalid ProfileAssociation type with master type '%s' and detail type '%s'. ", masterType, detailType);
-      LOGGER.error(message);
+      LOGGER.warn(message);
       throw new BadRequestException(CORRECT_PROFILE_ASSOCIATION_TYPES_MESSAGE);
     }
     return associationTableName;

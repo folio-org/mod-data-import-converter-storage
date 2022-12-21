@@ -58,7 +58,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       }
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), fieldList, cql, true, false, promise);
     } catch (Exception e) {
-      logger.error("Error while searching for {}", getProfileType().getSimpleName(), e);
+      logger.warn("getProfiles:: Error while searching for {}", getProfileType().getSimpleName(), e);
       promise.fail(e);
     }
     return mapResultsToCollection(promise.future());
@@ -71,7 +71,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       Criteria idCrit = constructCriteria(ID_FIELD, id);
       pgClientFactory.createInstance(tenantId).get(getTableName(), getProfileType(), new Criterion(idCrit), true, false, promise);
     } catch (Exception e) {
-      logger.error("Error querying {} by id", getProfileType().getSimpleName(), e);
+      logger.warn("getProfileById:: Error querying {} by id", getProfileType().getSimpleName(), e);
       promise.fail(e);
     }
     return promise.future()
@@ -95,18 +95,18 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       Criteria idCrit = constructCriteria(ID_FIELD, getProfileId(profile));
       pgClientFactory.createInstance(tenantId).update(getTableName(), profile, new Criterion(idCrit), true, updateResult -> {
         if (updateResult.failed()) {
-          logger.error("Could not update {} with id {}", className, profileId, updateResult.cause());
+          logger.warn("updateProfile:: Could not update {} with id {}", className, profileId, updateResult.cause());
           promise.fail(updateResult.cause());
         } else if (updateResult.result().rowCount() != 1) {
-          String errorMessage = format("%s with id '%s' was not found", className, profileId);
-          logger.error(errorMessage);
+          String errorMessage = format("updateProfile:: %s with id '%s' was not found", className, profileId);
+          logger.warn(errorMessage);
           promise.fail(new NotFoundException(errorMessage));
         } else {
           promise.complete(profile);
         }
       });
     } catch (Exception e) {
-      logger.error("Error updating {} with id {}", className, profileId, e);
+      logger.warn("updateProfile:: Error updating {} with id {}", className, profileId, e);
       promise.fail(e);
     }
     return promise.future();
@@ -134,8 +134,8 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
           pgClientFactory.createInstance(tenantId).endTx(tx.future(), endTx -> promise.complete(updateAr.result()));
         } else {
           pgClientFactory.createInstance(tenantId).rollbackTx(tx.future(), rollbackAr -> {
-            String message = format("Rollback transaction. Error during %s update by id: %s ", getProfileType().getSimpleName(), profileId);
-            logger.error(message, updateAr.cause());
+            String message = format("updateBlocking:: Rollback transaction. Error during %s update by id: %s ", getProfileType().getSimpleName(), profileId);
+            logger.warn(message, updateAr.cause());
             promise.fail(updateAr.cause());
           });
         }
@@ -149,7 +149,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       CQLWrapper updateFilter = new CQLWrapper(new CQL2PgJSON(getTableName()), "id==" + profileId);
       pgClientFactory.createInstance(tenantId).update(tx, getTableName(), profile, updateFilter, true, promise);
     } catch (FieldException e) {
-      logger.error("Error during updating {} by ID ", getProfileType(), e);
+      logger.warn("updateProfile:: Error during updating {} by ID ", getProfileType(), e);
       promise.fail(e);
     }
     return promise.future().map(profile);
@@ -166,7 +166,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       if (reply.succeeded()) {
         promise.complete(reply.result().rowCount() > 0);
       } else {
-        logger.error("Error during counting profiles by its name. Profile name {}", profileName, reply.cause());
+        logger.warn("isProfileExistByName:: Error during counting profiles by its name. Profile name {}", profileName, reply.cause());
         promise.fail(reply.cause());
       }
     });
@@ -181,7 +181,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
       if (selectAr.succeeded()) {
         promise.complete(selectAr.result().iterator().next().getBoolean(0));
       } else {
-        logger.error("Error during retrieving associations for particular profile by its id. Profile id {}", profileId, selectAr.cause());
+        logger.warn("isProfileAssociatedAsDetail:: Error during retrieving associations for particular profile by its id. Profile id {}", profileId, selectAr.cause());
         promise.fail(selectAr.cause());
       }
     });
@@ -216,8 +216,8 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
           pgClient.endTx(tx.future(), endTx -> promise.complete(true));
         } else {
           pgClient.rollbackTx(tx.future(), rollbackAr -> {
-            String message = format("Rollback transaction. Error during mark %s as deleted by id: %s ", getProfileType().getSimpleName(), profileId);
-            logger.error(message, ar.cause());
+            String message = format("markProfileAsDeleted:: Rollback transaction. Error during mark %s as deleted by id: %s ", getProfileType().getSimpleName(), profileId);
+            logger.warn(message, ar.cause());
             promise.fail(ar.cause());
           });
         }
@@ -247,7 +247,7 @@ public abstract class AbstractProfileDao<T, S> implements ProfileDao<T, S> {
     String deleteQuery = String.format("DELETE FROM associations_view WHERE master_id = '%s'", profileId);
     pgClient.execute(txConnection, deleteQuery, deleteAr -> {
       if (deleteAr.failed()) {
-        logger.error("Error during delete associations of profile with other detail-profiles by its id '{}'", profileId, deleteAr.cause());
+        logger.warn("deleteAssociationsWithDetails:: Error during delete associations of profile with other detail-profiles by its id '{}'", profileId, deleteAr.cause());
         promise.fail(deleteAr.cause());
       } else {
         promise.complete(true);

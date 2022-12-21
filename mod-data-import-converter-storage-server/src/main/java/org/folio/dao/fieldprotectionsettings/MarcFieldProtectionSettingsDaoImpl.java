@@ -41,7 +41,7 @@ public class MarcFieldProtectionSettingsDaoImpl implements MarcFieldProtectionSe
       CQLWrapper cql = getCQLWrapper(MARC_FIELDS_PROTECTION_SETTINGS_TABLE, query, limit, offset);
       pgClientFactory.createInstance(tenantId).get(MARC_FIELDS_PROTECTION_SETTINGS_TABLE, MarcFieldProtectionSetting.class, fieldList, cql, true, false, promise);
     } catch (Exception e) {
-      LOGGER.error("Error while searching for MarcFieldProtectionSettings", e);
+      LOGGER.warn("getAll:: Error while searching for MarcFieldProtectionSettings", e);
       promise.fail(e);
     }
     return promise.future().map(results -> new MarcFieldProtectionSettingsCollection()
@@ -56,7 +56,7 @@ public class MarcFieldProtectionSettingsDaoImpl implements MarcFieldProtectionSe
       Criteria crit = constructCriteria(ID_FIELD, id);
       pgClientFactory.createInstance(tenantId).get(MARC_FIELDS_PROTECTION_SETTINGS_TABLE, MarcFieldProtectionSetting.class, new Criterion(crit), true, false, promise);
     } catch (Exception e) {
-      LOGGER.error("Error querying MarcFieldProtectionSetting by id {}", id, e);
+      LOGGER.warn("getById:: Error querying MarcFieldProtectionSetting by id {}", id, e);
       promise.fail(e);
     }
     return promise.future()
@@ -78,18 +78,18 @@ public class MarcFieldProtectionSettingsDaoImpl implements MarcFieldProtectionSe
       Criteria idCrit = constructCriteria(ID_FIELD, marcFieldProtectionSetting.getId());
       pgClientFactory.createInstance(tenantId).update(MARC_FIELDS_PROTECTION_SETTINGS_TABLE, marcFieldProtectionSetting, new Criterion(idCrit), true, updateResult -> {
         if (updateResult.failed()) {
-          LOGGER.error("Could not update MARC field protection setting with id {}", marcFieldProtectionSetting.getId(), updateResult.cause());
+          LOGGER.warn("update:: Could not update MARC field protection setting with id {}", marcFieldProtectionSetting.getId(), updateResult.cause());
           promise.fail(updateResult.cause());
         } else if (updateResult.result().rowCount() != 1) {
-          String errorMessage = String.format("MARC field protection setting with id '%s' was not found", marcFieldProtectionSetting.getId());
-          LOGGER.error(errorMessage);
+          String errorMessage = String.format("update:: MARC field protection setting with id '%s' was not found", marcFieldProtectionSetting.getId());
+          LOGGER.warn(errorMessage);
           promise.fail(new NotFoundException(errorMessage));
         } else {
           promise.complete(marcFieldProtectionSetting);
         }
       });
     } catch (Exception e) {
-      LOGGER.error("Error updating MARC field protection setting", e);
+      LOGGER.warn("update:: Error updating MARC field protection setting", e);
       promise.fail(e);
     }
     return promise.future();
