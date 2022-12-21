@@ -43,7 +43,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to get all MARC field protection settings", e);
+      LOGGER.warn("getFieldProtectionSettingsMarc:: Failed to get all MARC field protection settings", e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -56,7 +56,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to save MARC field protection setting", e);
+      LOGGER.warn("postFieldProtectionSettingsMarc:: Failed to save MARC field protection setting", e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -70,7 +70,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to update MARC field protection setting by id {}", id, e);
+      LOGGER.warn("putFieldProtectionSettingsMarcById:: Failed to update MARC field protection setting by id {}", id, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -86,7 +86,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to delete MARC field protection setting by id {}", id, e);
+      LOGGER.warn("deleteFieldProtectionSettingsMarcById:: Failed to delete MARC field protection setting by id {}", id, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }
@@ -102,7 +102,7 @@ public class FieldProtectionSettingsImpl implements FieldProtectionSettings {
         .otherwise(ExceptionHelper::mapExceptionToResponse)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
-      LOGGER.error("Failed to get MARC field protection setting by id {}", id, e);
+      LOGGER.warn("getFieldProtectionSettingsMarcById:: Failed to get MARC field protection setting by id {}", id, e);
       asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(e)));
     }
   }

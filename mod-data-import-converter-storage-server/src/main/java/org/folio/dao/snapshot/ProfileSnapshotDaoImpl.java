@@ -38,7 +38,7 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
     try {
       pgClientFactory.createInstance(tenantId).getById(TABLE_NAME, id, ProfileSnapshotWrapper.class, promise);
     } catch (Exception e) {
-      logger.error("Error querying {} by id", ProfileSnapshotWrapper.class.getSimpleName(), e);
+      logger.warn("getById:: Error querying {} by id", ProfileSnapshotWrapper.class.getSimpleName(), e);
       promise.fail(e);
     }
     return promise.future()
@@ -59,6 +59,7 @@ public class ProfileSnapshotDaoImpl implements ProfileSnapshotDao {
       String createSnapshotQuery = String.format(GET_PROFILE_SNAPSHOT, profileId, profileType.value(), snapshotProfileType.getTableName(), jobProfileId);
       pgClientFactory.createInstance(tenantId).select(createSnapshotQuery, promise);
     } catch (Exception e) {
+      logger.warn("getSnapshotItems:: Error while getSnapshotItems", e);
       promise.fail(e);
     }
     return promise.future()

@@ -163,7 +163,7 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
     try {
       pgClientFactory.createInstance(tenantId).select(sql, promise);
     } catch (Exception e) {
-      LOGGER.debug("Could not perform the sql query {} for the tenant {}", sql, tenantId, e);
+      LOGGER.debug("select:: Could not perform the sql query {} for the tenant {}", sql, tenantId, e);
       promise.fail(e);
     }
     return promise.future();

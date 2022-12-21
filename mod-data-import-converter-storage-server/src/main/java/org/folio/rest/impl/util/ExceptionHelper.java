@@ -47,11 +47,11 @@ public final class ExceptionHelper {
     if (validationFuture.future().isComplete()) {
       Response response = validationFuture.future().result();
       if (response.getStatus() == INTERNAL_SERVER_ERROR.getStatusCode()) {
-        LOGGER.error(throwable.getMessage(), throwable);
+        LOGGER.warn(throwable.getMessage(), throwable);
       }
       return response;
     }
-    LOGGER.error(throwable.getMessage(), throwable);
+    LOGGER.warn(throwable.getMessage(), throwable);
     return Response.status(INTERNAL_SERVER_ERROR.getStatusCode())
       .type(MediaType.TEXT_PLAIN)
       .entity(INTERNAL_SERVER_ERROR.getReasonPhrase())

@@ -273,7 +273,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
       if (ar.succeeded()) {
         result.complete(profilesCollection);
       } else {
-        logger.error("Error during fetching related profiles", ar.cause());
+        logger.warn("fetchRelationsForCollection:: Error during fetching related profiles", ar.cause());
         result.fail(ar.cause());
       }
     });
@@ -303,7 +303,7 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
       if (ar.succeeded()) {
         result.complete(profile);
       } else {
-        logger.error("Error during fetching related profiles", ar.cause());
+        logger.warn("fetchRelations:: Error during fetching related profiles", ar.cause());
         result.fail(ar.cause());
       }
     });
@@ -338,12 +338,12 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
           } else {
             int recordCount = response.getInteger("totalRecords");
             if (recordCount > 1) {
-              String errorMessage = "There are more then one user by requested user id : " + userId;
-              logger.error(errorMessage);
+              String errorMessage = "lookupUser:: There are more then one user by requested user id : " + userId;
+              logger.warn(errorMessage);
               promise.fail(errorMessage);
             } else if (recordCount == 0) {
               String errorMessage = "No user found by user id :" + userId;
-              logger.error(errorMessage);
+              logger.warn(errorMessage);
               promise.fail(errorMessage);
             } else {
               JsonObject jsonUser = response.getJsonArray("users").getJsonObject(0);

@@ -79,7 +79,7 @@ public class ModTenantAPI extends TenantAPI {
       InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(script);
 
       if (inputStream == null) {
-        LOGGER.info("Default data was not initialized: no resources found: {}", script);
+        LOGGER.info("setupDefaultData:: Default data was not initialized: no resources found: {}", script);
         return Future.succeededFuture();
       }
 
@@ -98,7 +98,7 @@ public class ModTenantAPI extends TenantAPI {
 
       return promise.future();
     } catch (IOException e) {
-      LOGGER.error("Failed to initialize default data", e);
+      LOGGER.warn("setupDefaultData:: Failed to initialize default data", e);
       return Future.failedFuture(e);
     }
   }
