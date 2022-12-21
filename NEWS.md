@@ -1,3 +1,6 @@
+## 2022-12-21 v1.14.4
+* [MODDICONV-279](https://issues.folio.org/browse/MODDICONV-279) Fix Spring 5.2.22 vulnerabilities (Spring4Shell, etc.)
+
 ## 2022-11-15 v1.14.3
 * [MODDICONV-276](https://issues.folio.org/browse/MODDICONV-276) Holding and item field mapping profile fields mis-numbered upon editing or duplicating
 
