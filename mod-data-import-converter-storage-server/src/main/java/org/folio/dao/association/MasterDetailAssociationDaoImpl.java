@@ -78,6 +78,8 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
   private List<ProfileSnapshotWrapper> mapToDetails(RowSet<Row> rowSet) {
     List<ProfileSnapshotWrapper> wrappers = new ArrayList<>();
     rowSet.forEach(row -> {
+      LOGGER.debug("PROFILE ROW" + row.toString());
+      LOGGER.debug("PROFILE DEEP ROW" + row.deepToString());
       ContentType detailType = ContentType.fromValue(row.getString(DETAIL_TYPE_FIELD));
       JsonObject detail = row.get(JsonArray.class, row.getColumnIndex(DETAIL_FIELD)).getJsonObject(0);
       ProfileSnapshotWrapper wrapper = new ProfileSnapshotWrapper();
@@ -107,7 +109,7 @@ public class MasterDetailAssociationDaoImpl implements MasterDetailAssociationDa
       case MAPPING_PROFILE:
         return object.mapTo(MappingProfile.class);
       default:
-        throw new IllegalStateException("Can not find profile by content type: " + contentType.toString());
+        throw new IllegalStateException("Can not find profile by content type: " + contentType);
     }
   }
 
