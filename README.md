@@ -13,6 +13,9 @@ See the file "[LICENSE](LICENSE)" for more information.
 * [Deploying the module](#deploying-the-module)
 * [REST Client](#rest-client)
 
+## DEPRECATED
+Renamed to [mod-di-converter-storage](https://github.com/folio-org/mod-di-converter-storage)
+
 ## Introduction
 
 Data Import Converter Storage.
