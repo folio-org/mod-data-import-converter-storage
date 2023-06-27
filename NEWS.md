@@ -1,3 +1,6 @@
+## 2023-06-27 v1.15.3
+* [MODDICONV-318](https://issues.folio.org/browse/MODDICONV-318) Match and action profiles cannot be re-used in an import job profile (MODDICONV-300)
+
 ## 2022-11-28 v1.15.2
 * [MODDICONV-276](https://issues.folio.org/browse/MODDICONV-276) Holding and item field mapping profile fields mis-numbered upon editing or duplicating
 
