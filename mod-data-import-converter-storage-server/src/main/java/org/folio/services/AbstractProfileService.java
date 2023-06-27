@@ -23,8 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -117,9 +121,12 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
     if (profileAssociations.isEmpty()) {
       return Future.succeededFuture(true);
     }
+    List<ProfileAssociation> uniqueProfileAssociations = profileAssociations.stream()
+      .filter(distinctByKeys(ProfileAssociation::getDetailProfileId, ProfileAssociation::getMasterProfileId))
+      .collect(Collectors.toList());
     Promise<Boolean> result = Promise.promise();
     List<Future<ProfileAssociation>> futureList = new ArrayList<>();
-    profileAssociations.forEach(association -> futureList.add(profileAssociationService.save(association,
+    uniqueProfileAssociations.forEach(association -> futureList.add(profileAssociationService.save(association,
       ProfileSnapshotWrapper.ContentType.fromValue(association.getMasterProfileType().name()),
       ProfileSnapshotWrapper.ContentType.fromValue(association.getDetailProfileType().name()), tenantId)));
     GenericCompositeFuture.all(futureList).onComplete(ar -> {
@@ -167,11 +174,11 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
   @Override
   public Future<Boolean> isProfileDtoValidForUpdate(String id, D profile, boolean isDefaultProfile, String tenantId) {
     return isDefaultProfile ? getProfileById(id, false, tenantId).map(profileOptional ->
-        profileOptional.map(fetchedProfile -> Stream.of(getProfile(profile), fetchedProfile).map(JsonObject::mapFrom)
-          .peek(jsonObject -> {
-            jsonObject.remove("tags");
-            jsonObject.remove("metadata");
-          }).distinct().count() <= 1).orElse(false)) : Future.succeededFuture(true);
+      profileOptional.map(fetchedProfile -> Stream.of(getProfile(profile), fetchedProfile).map(JsonObject::mapFrom)
+        .peek(jsonObject -> {
+          jsonObject.remove("tags");
+          jsonObject.remove("metadata");
+        }).distinct().count() <= 1).orElse(false)) : Future.succeededFuture(true);
   }
 
   @Override
@@ -358,6 +365,17 @@ public abstract class AbstractProfileService<T, S, D> implements ProfileService<
         }
       });
     return promise.future();
+  }
+
+  private <B> Predicate<B> distinctByKeys(final Function<? super B, ?>... keyExtractors) {
+    final Map<List<?>, Boolean> seen = new HashMap<>();
+    return e ->
+    {
+      final List<?> keys = Arrays.stream(keyExtractors)
+        .map(ke -> ke.apply(e))
+        .collect(Collectors.toList());
+      return seen.putIfAbsent(keys, Boolean.TRUE) == null;
+    };
   }
 
 }

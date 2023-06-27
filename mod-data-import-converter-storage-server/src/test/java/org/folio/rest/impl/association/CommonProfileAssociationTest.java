@@ -1,5 +1,6 @@
 package org.folio.rest.impl.association;
 
+import com.google.common.collect.Lists;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.vertx.core.Future;
@@ -77,49 +78,49 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
 
   ActionProfileUpdateDto actionProfile1 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("testActionProfile1").withDescription("test-description")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+      .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
   ActionProfileUpdateDto actionProfile2 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("testActionProfile2").withDescription("test-description")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+      .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
   ActionProfileUpdateDto actionProfile3 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("testActionProfile3").withDescription("test-description")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+      .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
   ActionProfileUpdateDto actionProfile4 = new ActionProfileUpdateDto()
     .withProfile(new ActionProfile().withName("testActionProfile4")
-    .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
+      .withAction(CREATE).withFolioRecord(MARC_BIBLIOGRAPHIC));
 
   MappingProfileUpdateDto mappingProfile1 = new MappingProfileUpdateDto()
     .withProfile(new MappingProfile().withName("testMappingProfile1").withDescription("test-description")
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE));
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
   MappingProfileUpdateDto mappingProfile2 = new MappingProfileUpdateDto()
     .withProfile(new MappingProfile().withName("testMappingProfile2").withDescription("test-description")
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE));
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
   MappingProfileUpdateDto mappingProfile3 = new MappingProfileUpdateDto()
     .withProfile(new MappingProfile().withName("testMappingProfile3")
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.INSTANCE));
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.INSTANCE));
 
   MatchProfileUpdateDto matchProfile1 = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("testMatchProfile1")
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withDescription("test-description"));
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withDescription("test-description"));
   MatchProfileUpdateDto matchProfile2 = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("testMatchProfile2")
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withDescription("test-description"));
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withDescription("test-description"));
   MatchProfileUpdateDto matchProfile3 = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("testMatchProfile3")
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withDescription("test-description"));
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withDescription("test-description"));
   MatchProfileUpdateDto matchProfile4 = new MatchProfileUpdateDto()
     .withProfile(new MatchProfile().withName("testMatchProfile4")
-    .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
-    .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC));
+      .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+      .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC));
 
   @Test
   public void runTestShouldReturnEmptyOkResultOnGetAll(TestContext testContext) {
@@ -1114,6 +1115,186 @@ public class CommonProfileAssociationTest extends AbstractRestVerticleTest {
       .body("childSnapshotWrappers.size()", is(2))
       .body("childSnapshotWrappers[0].content.name", is(masterWrapper1.getName()))
       .body("childSnapshotWrappers[1].content.name", is(masterWrapper2.getName()));
+
+    clearTables(testContext);
+  }
+
+  @Test
+  public void shouldSaveOnlyUniqueAssociations(TestContext testContext) {
+    Async async = testContext.async();
+
+    String mainMatchProfileId = "cfb7ad96-6bbb-4843-9e3a-0395190bd6c8";
+    String firstSubMatchProfileId = "fe7c81d1-6da5-4210-89dd-3c06208e2821";
+    String secondSubMatchProfileId = "8baf9046-068a-42a6-8b0f-150c8c934c1f";
+    String thirdSubMatchProfileId = "f14271b1-2f64-430c-b4f9-0e2ab30e1180";
+    String firstActionProfileId = "fa45f3ec-9b83-11eb-a8b3-0242ac130003";
+    String secondActionProfileId = "8aa0b850-9182-4005-8435-340b704b2a19";
+
+    String jobProfileId = UUID.randomUUID().toString();
+
+    MatchProfileUpdateDto mainMatchProfile = new MatchProfileUpdateDto()
+      .withProfile(new MatchProfile().withName("Main Test Match Profile")
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withDescription("test-description")
+        .withId(mainMatchProfileId));
+
+    MatchProfileUpdateDto firstSubMatchProfile = new MatchProfileUpdateDto()
+      .withProfile(new MatchProfile().withName("First Sub Match Profile")
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withDescription("test-description")
+        .withId(firstSubMatchProfileId));
+
+    MatchProfileUpdateDto secondSubMatchProfile = new MatchProfileUpdateDto()
+      .withProfile(new MatchProfile().withName("Second Sub Match Profile")
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withDescription("test-description")
+        .withId(secondSubMatchProfileId));
+
+    MatchProfileUpdateDto thirdSubMatchProfile = new MatchProfileUpdateDto()
+      .withProfile(new MatchProfile().withName("Third Sub Match Profile")
+        .withIncomingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withExistingRecordType(EntityType.MARC_BIBLIOGRAPHIC)
+        .withDescription("test-description")
+        .withId(thirdSubMatchProfileId));
+
+    ActionProfileUpdateDto firstActionProfile = new ActionProfileUpdateDto()
+      .withProfile(new ActionProfile()
+        .withAction(ActionProfile.Action.UPDATE)
+        .withName("First Testing Action Profile")
+        .withDeleted(false)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC)
+        .withId(firstActionProfileId));
+
+    ActionProfileUpdateDto secondActionProfile = new ActionProfileUpdateDto()
+      .withProfile(new ActionProfile()
+        .withAction(ActionProfile.Action.UPDATE)
+        .withName("Second Testing Action Profile")
+        .withDeleted(false)
+        .withFolioRecord(MARC_BIBLIOGRAPHIC)
+        .withId(secondActionProfileId));
+
+    postProfile(testContext, new MatchProfileWrapper(mainMatchProfile), MATCH_PROFILES_URL);
+    postProfile(testContext, new MatchProfileWrapper(firstSubMatchProfile), MATCH_PROFILES_URL);
+    postProfile(testContext, new MatchProfileWrapper(secondSubMatchProfile), MATCH_PROFILES_URL);
+    postProfile(testContext, new MatchProfileWrapper(thirdSubMatchProfile), MATCH_PROFILES_URL);
+
+    postProfile(testContext, new ActionProfileWrapper(firstActionProfile), ACTION_PROFILES_URL);
+    postProfile(testContext, new ActionProfileWrapper(secondActionProfile), ACTION_PROFILES_URL);
+
+    JobProfileWrapper mainJobProfileWrapper = new JobProfileWrapper(new JobProfileUpdateDto()
+      .withProfile(new JobProfile()
+        .withId(jobProfileId)
+        .withName("Testing JobProfile")
+        .withDataType(MARC)
+        .withDeleted(false)
+        .withHidden(false)
+        .withDescription("test-description"))
+      .withAddedRelations(Lists.newArrayList(
+        //0
+        new ProfileAssociation()
+          .withDetailProfileId(mainMatchProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.JOB_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withTriggered(false),
+        //1
+        new ProfileAssociation()
+          .withMasterProfileId(mainMatchProfileId)
+          .withDetailProfileId(firstSubMatchProfileId)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH),
+        //2
+        new ProfileAssociation()
+          .withMasterProfileId(secondSubMatchProfileId)
+          .withDetailProfileId(firstSubMatchProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH),
+        //3
+        new ProfileAssociation()
+          .withMasterProfileId(secondSubMatchProfileId)
+          .withDetailProfileId(firstActionProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH),
+        //4
+        new ProfileAssociation()
+          .withMasterProfileId(secondSubMatchProfileId)
+          .withDetailProfileId(secondActionProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH),
+        //5
+        new ProfileAssociation()
+          .withMasterProfileId(mainMatchProfileId)
+          .withDetailProfileId(thirdSubMatchProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.NON_MATCH),
+        //6
+        new ProfileAssociation()
+          .withMasterProfileId(thirdSubMatchProfileId)
+          .withDetailProfileId(firstSubMatchProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH),
+        //7
+        new ProfileAssociation()
+          .withMasterProfileId(firstSubMatchProfileId)
+          .withDetailProfileId(secondSubMatchProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.MATCH_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH),
+        //8
+        new ProfileAssociation()
+          .withMasterProfileId(secondSubMatchProfileId)
+          .withDetailProfileId(firstActionProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH),
+        //9
+        new ProfileAssociation()
+          .withMasterProfileId(secondSubMatchProfileId)
+          .withDetailProfileId(secondActionProfileId)
+          .withMasterProfileType(ProfileAssociation.MasterProfileType.MATCH_PROFILE)
+          .withDetailProfileType(ProfileAssociation.DetailProfileType.ACTION_PROFILE)
+          .withTriggered(false)
+          .withReactTo(ProfileAssociation.ReactTo.MATCH))));
+    RestAssured.given()
+      .spec(spec)
+      .body(mainJobProfileWrapper.getProfile())
+      .when()
+      .post(JOB_PROFILES_URL)
+      .then().log().all()
+      .statusCode(HttpStatus.SC_CREATED)
+      .body("profile.id", is(jobProfileId))
+      .body("addedRelations.size()", is(10))
+      .body("deletedRelations.size()", is(0));
+
+    async.complete();
+
+    async = testContext.async();
+    RestAssured.given()
+      .spec(spec)
+      .queryParam("master", MATCH_PROFILE)
+      .queryParam("detail", ACTION_PROFILE)
+      .when()
+      .get(ASSOCIATED_PROFILES_URL)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("totalRecords", is(2));
+    async.complete();
 
     clearTables(testContext);
   }
